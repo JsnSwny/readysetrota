@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+}
+.searchDateInput {
+  display: block;
+  margin: 0 auto;
+  background-color: #4b4b4b;
+  color: white;
+  border: none;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.dates {
+  background-color: #202020;
+  color: white;
+  padding: 20px 0;
+  &__container {
+    display: flex;
+  }
+  &__namesection {
+    width: 20%;
+  }
+  &__wrapper {
+    display: flex;
+    justify-content: space-around;
+    width: 75%;
+    padding-top: 20px;
+  }
+  &__date {
+    text-align: center;
+    width: 100px;
+    h1 {
+      font-size: 14px;
+    }
+    .btn-1 {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+}
+
+.employee__container {
+  width: 20%;
+}
+
+.employee__wrapper {
+  background-color: #dedede;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  margin-top: 5px;
+  padding: 0 20px;
+  height: 120px;
+  padding-top: 15px;
+}
+
+.employee__name {
+  font-size: 16px;
+  margin: 0;
+}
+
+.employee__position {
+  margin: 0;
+  font-size: 12px;
+  color: #818181;
+}
+
+.employee__hours {
+  margin: 0;
+  font-size: 12px;
+}
+
+.employee__surname {
+  font-weight: bold;
+}
+
+.create__employee__button {
+  border: none;
+  display: block;
+  margin: 0 auto;
+  background-color: #3e3e3e;
+  color: white;
+  margin-top: 5px;
+  width: 60%;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.rota__container {
+  display: flex;
+  margin-top: 20px;
+}
+
+.shift__container {
+  display: flex;
+  width: 75%;
+}
+
+.shift__wrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.shift__shift {
+  background-color: #8ee997;
+  border-radius: 10px;
+  margin: 3px;
+  flex: 1;
+  display: flex;
+  padding-top: 15px;
+  font-weight: bold;
+  flex-direction: column;
+  height: 120px;
+  overflow: auto;
+}
+
+.shift__shift p {
+  margin: 0;
+  align-self: flex-start;
+  margin-left: 15px;
+  font-size: 18px;
+}
+.shift__shift p:nth-of-type(even) {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.shift__shift-noshift {
+  background: #e0e0e0;
+}

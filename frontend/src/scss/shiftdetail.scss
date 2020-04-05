@@ -1,0 +1,55 @@
+.shiftDetail {
+  width: 85%;
+  margin: 0 auto;
+  margin-top: 30px;
+  .subtitle {
+    margin-bottom: 10px;
+  }
+  &__time {
+    font-size: 24px;
+  }
+  &__timeContainer {
+    margin: 40px 0;
+  }
+  &__shift {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    background-color: #dedede;
+    width: 20%;
+    justify-content: center;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+  &__employee {
+    font-size: 20px;
+    padding: 10px 0;
+    margin-left: 20px;
+  }
+  &__shiftTime {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: #8ee997;
+    flex-direction: column;
+    h2 {
+      margin-left: 20px;
+      font-size: 20px;
+    }
+    p {
+      font-size: 16px;
+      margin-left: 20px;
+    }
+  }
+  &__container {
+    display: flex;
+  }
+  .btn-1 {
+    padding: 7px 15px;
+    margin-right: 10px;
+    transition: 0.2s ease all;
+    &.active {
+      background-color: rgb(223, 167, 94);
+    }
+  }
+}
