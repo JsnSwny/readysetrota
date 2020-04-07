@@ -61,8 +61,7 @@ const Shifts = () => {
                     </p>
                     <div className="shiftDetail__shiftTime">
                       <h2>
-                        {shift.start_time.substr(0, 5)} -{" "}
-                        {shift.end_time.substr(0, 5)}
+                        {shift.start_time.substr(0, 5)} - {shift.end_time}
                       </h2>
                       <p>{shift.info}</p>
                     </div>

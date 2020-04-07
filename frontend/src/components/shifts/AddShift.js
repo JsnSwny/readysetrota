@@ -30,13 +30,24 @@ const AddShift = (props) => {
     const shift = {
       employee_id: employee,
       start_time: startTime + ":00",
-      end_time: endTime + ":00",
+      end_time: endTime,
       info,
       date: date,
     };
     dispatch(addShift(shift));
     setEmployee("");
   };
+
+  let minutes = ["00", "15", "30", "45"];
+  let hours = [];
+  for (let i = 0; i < 24; i++) {
+    if (
+      i.toString().length == 1
+        ? minutes.map((minute) => hours.push("0" + i.toString() + ":" + minute))
+        : minutes.map((minute) => hours.push(i.toString() + ":" + minute))
+    );
+  }
+
   return (
     <Fragment>
       <div className="staffForm">
@@ -62,23 +73,40 @@ const AddShift = (props) => {
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">Start Time:</label>
-            <input
+            <select
               className="staffForm__input"
-              type="time"
-              name="starttime"
               onChange={(e) => setStartTime(e.target.value)}
+              name="starttime"
               value={startTime}
-            ></input>
+            >
+              <option value="" disabled selected>
+                Select a start time
+              </option>
+              {hours.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">End Time:</label>
-            <input
+            <select
               className="staffForm__input"
-              type="time"
-              name="endtime"
               onChange={(e) => setEndTime(e.target.value)}
+              name="endtime"
               value={endTime}
-            ></input>
+            >
+              <option value="" disabled selected>
+                Select an end time
+              </option>
+              <option value="Finish">Finish</option>
+              {hours.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">Info:</label>

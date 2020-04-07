@@ -1,30 +1,76 @@
-import React, { Component, Fragment, useEffect, useState } from "react";
+import React, { Component, Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { getShifts } from "../../actions/shifts";
-import { format, parseISO, formatRelative, subDays, addDays } from "date-fns";
+import {
+  format,
+  parseISO,
+  addDays,
+  subDays,
+  addMonths,
+  subMonths,
+} from "date-fns";
 
 const UpdateDate = () => {
   const dispatch = useDispatch();
-  const dateChange = e => {
-    const formattedDate = parseISO(e.target.value);
-    var weekFromDate = addDays(formattedDate, 6);
-
-    weekFromDate = format(weekFromDate, "YYY-MM-dd");
-    dispatch(getShifts(e.target.value, weekFromDate));
-  };
-
-  const currentDate = useSelector(state => state.shifts.date);
-
+  let date = useSelector((state) => state.shifts.date);
   return (
-    <Fragment>
-      <input
-        className="searchDateInput"
-        type="date"
-        onChange={dateChange}
-        value={currentDate}
-      ></input>
-    </Fragment>
+    <div className="dates__picker">
+      <div className="dates__pickerWrapper">
+        <h2
+          onClick={() =>
+            dispatch(
+              getShifts(
+                format(subDays(parseISO(date), 7), "YYY-MM-dd"),
+                format(subDays(parseISO(date), 1), "YYY-MM-dd")
+              )
+            )
+          }
+        >
+          <i class="fas fa-angle-double-left"></i>
+        </h2>
+        <h2
+          onClick={() =>
+            dispatch(
+              getShifts(
+                format(subDays(parseISO(date), 1), "YYY-MM-dd"),
+                format(addDays(parseISO(date), 5), "YYY-MM-dd")
+              )
+            )
+          }
+        >
+          <i class="fas fa-angle-left"></i>
+        </h2>
+        <h2 className="dates__pickerDate">
+          {format(parseISO(date), "dd MMM")} -{" "}
+          {format(addDays(parseISO(date), 6), "dd MMM")}
+        </h2>
+        <h2
+          onClick={() =>
+            dispatch(
+              getShifts(
+                format(addDays(parseISO(date), 1), "YYY-MM-dd"),
+                format(addDays(parseISO(date), 7), "YYY-MM-dd")
+              )
+            )
+          }
+        >
+          <i class="fas fa-angle-right"></i>
+        </h2>
+        <h2
+          onClick={() =>
+            dispatch(
+              getShifts(
+                format(addDays(parseISO(date), 7), "YYY-MM-dd"),
+                format(addDays(parseISO(date), 13), "YYY-MM-dd")
+              )
+            )
+          }
+        >
+          <i class="fas fa-angle-double-right"></i>
+        </h2>
+      </div>
+    </div>
   );
 };
 

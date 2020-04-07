@@ -28,6 +28,50 @@ body {
 .subtitle {
   font-size: 24px; }
 
+.modal {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100; }
+  .modal__container {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 600px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    z-index: 9999;
+    -webkit-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75); }
+  .modal__message {
+    padding: 20px 40px; }
+  .modal__buttonsContainer {
+    padding: 20px 40px;
+    background-color: #f3f3f3;
+    border-top: #a1a1a1 solid 1px; }
+  .modal__buttons {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; }
+    .modal__buttons button {
+      border: none;
+      cursor: pointer;
+      color: white;
+      padding: 10px 15px; }
+  .modal__buttonCancel {
+    background-color: #c26666; }
+  .modal__buttonConfirm {
+    background-color: #66b866; }
+  .modal__button {
+    cursor: pointer;
+    color: white;
+    border: none;
+    margin-left: 20px; }
+
 nav {
   background-color: #222735;
   color: white;
@@ -120,19 +164,34 @@ a {
 * {
   margin: 0; }
 
-.searchDateInput {
-  display: block;
-  margin: 0 auto;
-  background-color: #4b4b4b;
-  color: white;
-  border: none;
-  padding: 5px;
-  font-size: 16px; }
-
 .dates {
   background-color: #202020;
   color: white;
-  padding: 20px 0; }
+  padding: 30px 0;
+  position: relative; }
+  .dates__picker {
+    display: flex;
+    justify-content: center; }
+  .dates__pickerWrapper {
+    display: flex;
+    width: auto;
+    text-align: center;
+    justify-content: space-between;
+    width: 40%; }
+    .dates__pickerWrapper i {
+      cursor: pointer;
+      transition: 0.2s all ease;
+      font-size: 40px;
+      align-self: center; }
+      .dates__pickerWrapper i:hover {
+        color: #ffb85c; }
+  .dates__pickerDate {
+    width: 30%;
+    background-color: #444444;
+    padding: 5px 0;
+    border-radius: 10px;
+    align-self: center;
+    font-size: 20px; }
   .dates__container {
     display: flex; }
   .dates__namesection {
@@ -163,7 +222,7 @@ a {
   margin-top: 5px;
   padding: 0 20px;
   height: 120px;
-  padding-top: 15px; }
+  justify-content: center; }
 
 .employee__name {
   font-size: 16px;
@@ -194,7 +253,7 @@ a {
 
 .rota__container {
   display: flex;
-  margin-top: 20px; }
+  margin-top: 10px; }
 
 .shift__container {
   display: flex;
@@ -211,10 +270,10 @@ a {
   margin: 3px;
   flex: 1;
   display: flex;
-  padding-top: 15px;
   font-weight: bold;
   flex-direction: column;
   height: 120px;
+  padding: 5px 0;
   overflow: auto; }
 
 .shift__shift p {
@@ -225,7 +284,7 @@ a {
 
 .shift__shift p:nth-of-type(even) {
   font-weight: normal;
-  font-size: 16px; }
+  font-size: 14px; }
 
 .shift__shift-noshift {
   background: #e0e0e0; }
@@ -253,12 +312,18 @@ a {
     width: 250px;
     margin-right: 50px;
     margin-top: 10px;
-    padding: 10px;
-    padding-left: 20px;
+    padding: 10px 20px;
     transition: 0.2s ease all;
-    cursor: pointer; }
-    .staff__employee:hover {
-      background-color: #d1d1d1; }
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+    .staff__employee i {
+      color: black;
+      font-size: 20px;
+      transition: 0.2s ease all;
+      cursor: pointer; }
+      .staff__employee i:hover {
+        color: #e63434; }
   .staff__position {
     margin-top: 20px; }
 

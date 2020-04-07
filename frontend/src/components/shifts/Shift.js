@@ -11,7 +11,7 @@ const Shift = (props) => {
       {shift.map((shift) => (
         <Fragment>
           <p>
-            {shift.start_time.substr(0, 5)} - {shift.end_time.substr(0, 5)}
+            {shift.start_time.substr(0, 5)} - {shift.end_time}
           </p>
           <p>{shift.info}</p>
         </Fragment>

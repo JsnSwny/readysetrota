@@ -34,6 +34,7 @@ export const getDailyShifts = (date) => (dispatch) => {
 
 // Add Employee
 export const addShift = (shift) => (dispatch) => {
+  console.log(shift);
   axios
     .post("/api/shifts/", shift)
     .then((res) => {

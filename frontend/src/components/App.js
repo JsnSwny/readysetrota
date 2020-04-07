@@ -17,6 +17,7 @@ const App = () => {
       <Router>
         <div className="App">
           <Nav />
+
           <Switch>
             <Route path="/" exact component={ShiftList} />
             <Route path="/staff" component={Staff} />

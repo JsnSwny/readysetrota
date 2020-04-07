@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
   getEmployees,
   getPositions,
   deleteEmployee,
 } from "../../actions/employees";
 import AddStaff from "./AddStaff";
+import Confirm from "../layout/Confirm";
 
 const Staff = () => {
+  const [open, setOpen] = useState(false);
+  const [employeeID, setEmployeeID] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
+
   const [addButtonToggle, setAddButtonToggle] = useState(false);
 
   let employees = useSelector((state) => state.employees.employees);
@@ -32,6 +37,17 @@ const Staff = () => {
 
   return (
     <section className="staff">
+      <Confirm
+        open={open}
+        onConfirm={() => {
+          setOpen(false);
+          dispatch(deleteEmployee(employeeID));
+        }}
+        message={`Are you sure you want to delete ${employeeName}?`}
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
       <h1 className="title">Staff Members</h1>
       <div className="staff__buttons">
         <button
@@ -61,25 +77,25 @@ const Staff = () => {
           Add Positions
         </button>
       </div>
-
       {addButtonToggle != false && <AddStaff form={addButtonToggle} />}
-
       {positions.map((position) => (
         <div key={position.id}>
           <h1 className="staff__position">{position.name}</h1>
           <div className="staff__employees">
             {getEmployeesFromPosition(position.name).length > 0 ? (
               getEmployeesFromPosition(position.name).map((employee) => (
-                <div>
-                  <p
-                    key={employee.id}
-                    className="staff__employee"
-                    onClick={() => {
-                      dispatch(deleteEmployee(employee.id));
-                    }}
-                  >
-                    {employee.name}
-                  </p>
+                <div key={employee.id} className="staff__employee">
+                  <p>{employee.name}</p>
+                  <div className="staff__icons">
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setEmployeeID(employee.id);
+                        setEmployeeName(employee.name);
+                      }}
+                      className="fas fa-trash"
+                    ></i>
+                  </div>
                 </div>
               ))
             ) : (
