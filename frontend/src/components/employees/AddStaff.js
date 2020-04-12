@@ -6,6 +6,7 @@ import {
   addEmployee,
   getPositions,
   getDepartments,
+  addDepartment,
   addPosition,
 } from "../../actions/employees";
 

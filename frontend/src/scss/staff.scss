@@ -21,12 +21,14 @@
     display: flex;
     flex-wrap: wrap;
   }
-  &__employee {
+  &__employeeContainer {
     background-color: #dedede;
     width: 250px;
     margin-right: 50px;
     margin-top: 10px;
     padding: 10px 20px;
+  }
+  &__employee {
     transition: 0.2s ease all;
     display: flex;
     justify-content: space-between;

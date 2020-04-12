@@ -36,6 +36,9 @@ const AddShift = (props) => {
     };
     dispatch(addShift(shift));
     setEmployee("");
+    setStartTime("");
+    setEndTime("");
+    setInfo("");
   };
 
   let minutes = ["00", "15", "30", "45"];

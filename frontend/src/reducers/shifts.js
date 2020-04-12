@@ -1,4 +1,9 @@
-import { GET_ALL_SHIFTS, ADD_SHIFT, GET_DAILY_SHIFTS } from "../actions/types";
+import {
+  GET_ALL_SHIFTS,
+  ADD_SHIFT,
+  GET_DAILY_SHIFTS,
+  LOGOUT_SUCCESS,
+} from "../actions/types";
 import { format, addDays } from "date-fns";
 
 const todayDate = format(new Date(), "YYY-MM-dd");
@@ -31,6 +36,12 @@ export default function (state = initialState, action) {
         ...state,
         shifts: [...state.shifts, action.payload],
         daily_shifts: [...state.daily_shifts, action.payload],
+      };
+    case LOGOUT_SUCCESS:
+      return {
+        ...state,
+        shifts: [],
+        daily_shifts: [],
       };
     default:
       return state;

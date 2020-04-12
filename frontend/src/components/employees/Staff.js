@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import React, { useEffect, useState, Fragment, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getEmployees,
   getPositions,
@@ -34,6 +34,17 @@ const Staff = () => {
       ? setAddButtonToggle(form)
       : setAddButtonToggle(false);
   };
+
+  const textAreaRef = useRef(null);
+
+  function copyToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
 
   return (
     <section className="staff">
@@ -84,19 +95,34 @@ const Staff = () => {
           <div className="staff__employees">
             {getEmployeesFromPosition(position.name).length > 0 ? (
               getEmployeesFromPosition(position.name).map((employee) => (
-                <div key={employee.id} className="staff__employee">
-                  <p>{employee.name}</p>
-                  <div className="staff__icons">
-                    <i
-                      onClick={() => {
-                        setOpen(true);
-                        setEmployeeID(employee.id);
-                        setEmployeeName(employee.name);
-                      }}
-                      className="fas fa-trash"
-                    ></i>
+                <Fragment>
+                  <div key={employee.id} className="staff__employeeContainer">
+                    <div className="staff__employee">
+                      <p>{employee.name}</p>
+                      <div className="staff__icons">
+                        <i
+                          onClick={() => {
+                            setOpen(true);
+                            setEmployeeID(employee.id);
+                            setEmployeeName(employee.name);
+                          }}
+                          className="fas fa-trash"
+                        ></i>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        onClick={(e) => {
+                          copyToClipboard(e.target.value);
+                        }}
+                        className="btn-1"
+                        value={employee.uuid}
+                      >
+                        <i class="fas fa-clipboard"></i> Copy UUID
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Fragment>
               ))
             ) : (
               <div>No Employees Found</div>

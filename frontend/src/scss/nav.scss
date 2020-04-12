@@ -9,11 +9,6 @@ nav {
   text-transform: uppercase;
 }
 
-nav .nav-container {
-  width: 60%;
-  margin: 0 auto;
-}
-
 nav h1 {
   font-size: 28px;
   font-weight: 700;
@@ -23,13 +18,14 @@ nav h1 {
 nav ul {
   list-style: none;
   display: flex;
-  width: 100%;
   justify-content: space-between;
   position: absolute;
-  left: 0;
+  left: 5%;
   top: 50%;
   transform: translateY(-50%);
   text-decoration: none;
+  align-items: center;
+  width: 90%;
 }
 
 nav li {
@@ -40,6 +36,19 @@ nav li {
   &:hover {
     color: #f39bda;
   }
+  &.nav__logout {
+    margin: 0;
+  }
+}
+
+.nav__welcome {
+  display: flex;
+  flex-direction: column;
+  margin: 0 40px;
+  align-items: flex-end;
+  span {
+    font-size: 12px;
+  }
 }
 
 .nav__lisection {
@@ -49,4 +58,10 @@ nav li {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+@media only screen and (max-width: 1000px) {
+  nav ul {
+    display: none;
+  }
 }

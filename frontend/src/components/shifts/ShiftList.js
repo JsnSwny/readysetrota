@@ -2,23 +2,39 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { getShifts } from "../../actions/shifts";
-import { getEmployees } from "../../actions/employees";
-import { format, parseISO, eachDayOfInterval, addDays } from "date-fns";
+import { getEmployees, checkUUID } from "../../actions/employees";
+import {
+  format,
+  parseISO,
+  eachDayOfInterval,
+  differenceInDays,
+  addDays,
+} from "date-fns";
 import Dates from "./Dates";
 import Shift from "./Shift";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
-
+  let user = useSelector((state) => state.auth.user);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
 
   useEffect(() => {
-    shifts_list = dispatch(getShifts(date, enddate));
     employees = dispatch(getEmployees());
+
+    shifts_list = dispatch(getShifts(date, enddate));
   }, []);
+
+  employees = useSelector((state) => state.employees.employees);
+  if (user && user.profile.role == "User") {
+    employees = employees.filter(
+      (employee) => employee.id !== user.employee[0].id
+    );
+    user.employee.push;
+    employees.unshift(user.employee[0]);
+  }
 
   var result = eachDayOfInterval({
     start: parseISO(date),
@@ -34,9 +50,16 @@ const ShiftList = () => {
     <Fragment>
       <Dates dates={result} />
       {employees.map((employee) => (
-        <div className="rota__container">
+        <div key={employee.id} className="rota__container">
           <div className="employee__container">
-            <div className="employee__wrapper">
+            <div
+              className={`employee__wrapper ${
+                user.profile.role == "User" &&
+                user.employee[0].id == employee.id
+                  ? " active"
+                  : ""
+              }`}
+            >
               <p className="employee__position">{employee.position.name}</p>
               <p className="employee__name">
                 {employee.name.split(" ")[0]}
@@ -60,7 +83,10 @@ const ShiftList = () => {
                   )}
                 />
               ) : (
-                <div className="shift__shift shift__shift-noshift"></div>
+                <div
+                  key={result}
+                  className="shift__shift shift__shift-noshift"
+                ></div>
               )
             )}
           </div>

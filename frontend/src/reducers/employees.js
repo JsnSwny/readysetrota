@@ -5,6 +5,7 @@ import {
   GET_DEPARTMENTS,
   ADD_POSITION,
   DELETE_EMPLOYEE,
+  ADD_DEPARTMENT,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -51,6 +52,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         positions: [...state.positions, action.payload],
+      };
+    case ADD_DEPARTMENT:
+      return {
+        ...state,
+        departments: [...state.departments, action.payload],
       };
     default:
       return state;

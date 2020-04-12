@@ -29,7 +29,7 @@
     }
   }
   &__pickerDate {
-    width: 30%;
+    width: 40%;
     background-color: rgb(68, 68, 68);
     padding: 5px 0;
     border-radius: 10px;
@@ -75,6 +75,9 @@
   padding: 0 20px;
   height: 120px;
   justify-content: center;
+  &.active {
+    background-color: #ffd0f2;
+  }
 }
 
 .employee__name {
@@ -126,7 +129,7 @@
 }
 
 .shift__shift {
-  background-color: #8ee997;
+  background-color: #ffd0f2;
   border-radius: 10px;
   margin: 3px;
   flex: 1;
@@ -151,4 +154,85 @@
 
 .shift__shift-noshift {
   background: #e0e0e0;
+}
+
+@media only screen and (max-width: 1000px) {
+  .employee__container {
+    width: 35%;
+  }
+  .shift__container {
+    width: 60%;
+  }
+  .dates__wrapper {
+    width: 60%;
+  }
+  .dates__namesection {
+    width: 35%;
+  }
+  .dates__pickerWrapper {
+    width: 80%;
+  }
+  .shift__shift:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
+    display: none;
+  }
+  .dates__wrapper {
+    .dates__date:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .shift__container {
+    width: 45%;
+  }
+
+  .dates {
+    position: fixed;
+    right: 0;
+    width: 100%;
+    bottom: 0;
+    background-color: rgba(32, 32, 32, 0.7);
+    &__wrapper {
+      width: 45%;
+    }
+    &__namesection {
+      width: 50%;
+    }
+    &__pickerWrapper {
+      width: 90%;
+    }
+    &__pickerDate {
+      font-size: 16px;
+    }
+    &__container {
+      display: none;
+    }
+  }
+
+  .employee {
+    &__container {
+      width: 50%;
+    }
+    &__name {
+      font-size: 14px;
+    }
+    &__wrapper {
+      height: 80px;
+    }
+  }
+  .shift__shift p {
+    font-size: 16px;
+  }
+  .shift__shift {
+    height: 80px;
+  }
+  .shift__shift:not(:first-child) {
+    display: none;
+  }
+  .dates__wrapper {
+    .dates__date:not(:first-child) {
+      display: none;
+    }
+  }
 }

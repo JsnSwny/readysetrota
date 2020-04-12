@@ -30,6 +30,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         depth = 1
 
+class CheckUUIDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ('__all__')
+        depth = 1
+
 class ShiftSerializer(serializers.ModelSerializer):
     employee = EmployeeSerializer(read_only=True)
 

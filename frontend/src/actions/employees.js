@@ -7,10 +7,13 @@ import {
   GET_DEPARTMENTS,
   ADD_POSITION,
   DELETE_EMPLOYEE,
+  ADD_DEPARTMENT,
 } from "./types";
 
-export const getEmployees = () => (dispatch) => {
-  axios.get(`/api/employees/`).then((res) => {
+import { tokenConfig } from "./auth";
+
+export const getEmployees = () => (dispatch, getState) => {
+  axios.get(`/api/employees/`, tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_EMPLOYEES,
       payload: res.data,
@@ -19,9 +22,9 @@ export const getEmployees = () => (dispatch) => {
 };
 
 // Add Employee
-export const deleteEmployee = (id) => (dispatch) => {
+export const deleteEmployee = (id) => (dispatch, getState) => {
   axios
-    .delete(`/api/employees/${id}/`)
+    .delete(`/api/employees/${id}/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: DELETE_EMPLOYEE,
@@ -34,8 +37,8 @@ export const deleteEmployee = (id) => (dispatch) => {
 };
 
 // Add Employee
-export const addEmployee = (employee) => (dispatch) => {
-  axios.post("/api/employees/", employee).then((res) => {
+export const addEmployee = (employee) => (dispatch, getState) => {
+  axios.post("/api/employees/", employee, tokenConfig(getState)).then((res) => {
     dispatch({
       type: ADD_EMPLOYEE,
       payload: res.data,
@@ -43,8 +46,8 @@ export const addEmployee = (employee) => (dispatch) => {
   });
 };
 // Get Positions(
-export const getPositions = () => (dispatch) => {
-  axios.get("/api/positions/").then((res) => {
+export const getPositions = () => (dispatch, getState) => {
+  axios.get("/api/positions/", tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_POSITIONS,
       payload: res.data,
@@ -53,21 +56,51 @@ export const getPositions = () => (dispatch) => {
 };
 
 // Add Employee
-export const addPosition = (position) => (dispatch) => {
-  axios.post("/api/positions/", position).then((res) => {
+export const addPosition = (position) => (dispatch, getState) => {
+  axios.post("/api/positions/", position, tokenConfig(getState)).then((res) => {
     dispatch({
       type: ADD_POSITION,
       payload: res.data,
     });
   });
 };
+// Add Employee
+export const addDepartment = (department) => (dispatch, getState) => {
+  axios
+    .post("/api/departments/", department, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_DEPARTMENT,
+        payload: res.data,
+      });
+    });
+};
 
 // Get Department
-export const getDepartments = () => (dispatch) => {
-  axios.get("/api/departments/").then((res) => {
+export const getDepartments = () => (dispatch, getState) => {
+  axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_DEPARTMENTS,
       payload: res.data,
     });
   });
+};
+
+// Get Department
+export const checkUUID = (uuid, userid) => (dispatch, getState) => {
+  axios
+    .get("/api-view/checkuuid", {
+      params: {
+        uuid,
+        userid,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      // dispatch({
+      //   type: GET_DEPARTMENTS,
+      //   payload: res.data,
+      // });
+    })
+    .catch((err) => console.log(err.response));
 };

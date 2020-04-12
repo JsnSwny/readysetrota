@@ -9,7 +9,7 @@ const Confirm = (props) => {
     open && (
       <div onClick={(e) => console.log(e)} className="modal">
         <div className="modal__container">
-          <div class="modal__message">
+          <div className="modal__message">
             <p>{message}</p>
           </div>
 

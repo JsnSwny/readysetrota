@@ -9,65 +9,52 @@ import {
   subDays,
   addMonths,
   subMonths,
+  differenceInDays,
 } from "date-fns";
 
-const UpdateDate = () => {
+const UpdateDate = (props) => {
   const dispatch = useDispatch();
+  const { daterange } = props;
   let date = useSelector((state) => state.shifts.date);
+  let formatDate = (date, add) => {
+    let newDate = format(addDays(parseISO(date), add), "YYY-MM-dd");
+    return newDate;
+  };
+
   return (
     <div className="dates__picker">
       <div className="dates__pickerWrapper">
         <h2
-          onClick={() =>
-            dispatch(
-              getShifts(
-                format(subDays(parseISO(date), 7), "YYY-MM-dd"),
-                format(subDays(parseISO(date), 1), "YYY-MM-dd")
-              )
-            )
-          }
+          onClick={() => {
+            dispatch(getShifts(formatDate(date, -7), formatDate(date, -7 + 6)));
+          }}
         >
-          <i class="fas fa-angle-double-left"></i>
+          <i className="fas fa-angle-double-left"></i>
         </h2>
         <h2
-          onClick={() =>
-            dispatch(
-              getShifts(
-                format(subDays(parseISO(date), 1), "YYY-MM-dd"),
-                format(addDays(parseISO(date), 5), "YYY-MM-dd")
-              )
-            )
-          }
+          onClick={() => {
+            dispatch(getShifts(formatDate(date, -1), formatDate(date, -1 + 6)));
+          }}
         >
-          <i class="fas fa-angle-left"></i>
+          <i className="fas fa-angle-left"></i>
         </h2>
         <h2 className="dates__pickerDate">
           {format(parseISO(date), "dd MMM")} -{" "}
           {format(addDays(parseISO(date), 6), "dd MMM")}
         </h2>
         <h2
-          onClick={() =>
-            dispatch(
-              getShifts(
-                format(addDays(parseISO(date), 1), "YYY-MM-dd"),
-                format(addDays(parseISO(date), 7), "YYY-MM-dd")
-              )
-            )
-          }
+          onClick={() => {
+            dispatch(getShifts(formatDate(date, 1), formatDate(date, 1 + 6)));
+          }}
         >
-          <i class="fas fa-angle-right"></i>
+          <i className="fas fa-angle-right"></i>
         </h2>
         <h2
-          onClick={() =>
-            dispatch(
-              getShifts(
-                format(addDays(parseISO(date), 7), "YYY-MM-dd"),
-                format(addDays(parseISO(date), 13), "YYY-MM-dd")
-              )
-            )
-          }
+          onClick={() => {
+            dispatch(getShifts(formatDate(date, 7), formatDate(date, 7 + 6)));
+          }}
         >
-          <i class="fas fa-angle-double-right"></i>
+          <i className="fas fa-angle-double-right"></i>
         </h2>
       </div>
     </div>
