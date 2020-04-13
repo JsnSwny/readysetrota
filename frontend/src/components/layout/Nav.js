@@ -17,6 +17,7 @@ const Nav = () => {
             <a
               onClick={() => {
                 dispatch(logout());
+                setBurger(false);
               }}
             >
               Logout
@@ -29,10 +30,18 @@ const Nav = () => {
 
   const guestLinks = (
     <Fragment>
-      <li>
+      <li
+        onClick={() => {
+          setBurger(false);
+        }}
+      >
         <Link to="/register">Register</Link>
       </li>
-      <li>
+      <li
+        onClick={() => {
+          setBurger(false);
+        }}
+      >
         <Link to="/login">Login</Link>
       </li>
     </Fragment>
@@ -76,14 +85,32 @@ const Nav = () => {
       <div className={`hamburger__dropdown ${burger ? " active" : ""}`}>
         <ul>
           <Link to="/">
-            <li>Home</li>
+            <li
+              onClick={() => {
+                setBurger(false);
+              }}
+            >
+              Home
+            </li>
           </Link>
           <Link to="/rota">
-            <li>Rota</li>
+            <li
+              onClick={() => {
+                setBurger(false);
+              }}
+            >
+              Rota
+            </li>
           </Link>
           {user && user.profile.role == "Business" && (
             <Link to="/staff">
-              <li>Staff</li>
+              <li
+                onClick={() => {
+                  setBurger(false);
+                }}
+              >
+                Staff
+              </li>
             </Link>
           )}
           {isAuthenticated ? authLinks : guestLinks}
