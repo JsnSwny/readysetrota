@@ -151,14 +151,29 @@
     height: auto;
     order: 1; }
   .login__right {
-    width: 100%;
-    font-size: 40px;
-    padding: 30px 0; }
+    display: none; }
   .login__left {
     padding: 40px 0;
     width: 100%; }
-  .login__part:nth-of-type(1) {
-    order: 2; } }
+    .login__left form {
+      width: 80%; }
+  .enterid__box {
+    width: 90%;
+    height: auto;
+    padding: 30px 0;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; }
+  .enterid form {
+    width: 80%; }
+  .enterid .btn-2 {
+    margin: 0 auto;
+    margin-top: 30px; }
+  .enterid h1 {
+    font-size: 18px;
+    width: 80%; } }
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,300,400,700&display=swap");
 * {
@@ -330,7 +345,9 @@ a {
         margin-right: 30px;
         color: white; }
         .hamburger__dropdown ul li {
-          padding: 10px 0; } }
+          padding: 10px 0; }
+      .hamburger__dropdown .nav__welcome {
+        margin: 0; } }
 
 .shiftDetail {
   width: 85%;
