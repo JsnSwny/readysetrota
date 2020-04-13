@@ -1,11 +1,9 @@
 .login {
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: -1;
   background-color: #f9f9f9;
-
   min-height: 100vh;
+  position: relative;
   &::after {
     content: "";
     width: 100px;
@@ -19,7 +17,6 @@
     background-image: linear-gradient(-90deg, #ec70c9, #f3a5a5);
     transform: skewY(-20deg);
     transform-origin: top left;
-    z-index: -1;
   }
 }
 
@@ -27,9 +24,11 @@
   width: 80%;
   padding: 140px 0;
   margin: 40px 0;
+  height: 10%;
   background-color: white;
   box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
   display: flex;
+  z-index: 1;
 }
 
 .login__right {
@@ -171,8 +170,6 @@
   .login__box {
     width: 90%;
     padding: 0;
-    display: flex;
-    height: auto;
     flex-direction: column;
   }
   .login__right {

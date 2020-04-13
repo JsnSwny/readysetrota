@@ -1,10 +1,9 @@
 .login {
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: -1;
   background-color: #f9f9f9;
-  min-height: 100vh; }
+  min-height: 100vh;
+  position: relative; }
   .login::after {
     content: "";
     width: 100px;
@@ -17,16 +16,17 @@
     height: 90%;
     background-image: linear-gradient(-90deg, #ec70c9, #f3a5a5);
     transform: skewY(-20deg);
-    transform-origin: top left;
-    z-index: -1; }
+    transform-origin: top left; }
 
 .login__box {
   width: 80%;
   padding: 140px 0;
   margin: 40px 0;
+  height: 10%;
   background-color: white;
   box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
-  display: flex; }
+  display: flex;
+  z-index: 1; }
 
 .login__right {
   width: 50%;
@@ -142,8 +142,6 @@
   .login__box {
     width: 90%;
     padding: 0;
-    display: flex;
-    height: auto;
     flex-direction: column; }
   .login__right {
     display: none; }
@@ -213,7 +211,7 @@ body {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 600px;
+    width: 40%;
     transform: translate(-50%, -50%);
     background-color: white;
     z-index: 9999;
@@ -257,6 +255,10 @@ body {
   .delete_icon i:hover {
     color: #e63434; }
 
+@media only screen and (max-width: 1000px) {
+  .modal__container {
+    width: 80%; } }
+
 nav {
   background-color: #222735;
   color: white;
@@ -265,7 +267,8 @@ nav {
   justify-content: center;
   align-items: center;
   position: relative;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  z-index: 10; }
 
 nav h1 {
   font-size: 28px;
@@ -313,7 +316,8 @@ a {
   display: none; }
 
 .hamburger__dropdown {
-  display: none; }
+  display: none;
+  z-index: 10; }
 
 @media only screen and (max-width: 1000px) {
   nav ul .nav__lisection {
@@ -330,7 +334,10 @@ a {
     .hamburger__dropdown {
       display: none;
       background-color: #282e3d;
-      position: relative; }
+      position: absolute;
+      right: 0;
+      top: 80px;
+      left: 0; }
       .hamburger__dropdown.active {
         display: block; }
       .hamburger__dropdown ul {
@@ -341,7 +348,7 @@ a {
         margin-right: 30px;
         color: white; }
         .hamburger__dropdown ul li {
-          padding: 10px 0; }
+          padding: 15px 0; }
       .hamburger__dropdown .nav__welcome {
         margin: 0; } }
 
@@ -360,7 +367,7 @@ a {
     display: flex;
     flex-direction: column;
     background-color: #dedede;
-    width: 20%;
+    width: 250px;
     justify-content: center;
     margin-right: 20px;
     margin-top: 20px; }
@@ -391,6 +398,11 @@ a {
     transition: 0.2s ease all; }
     .shiftDetail .btn-1.active {
       background-color: #dfa75e; }
+
+@media only screen and (max-width: 1000px) {
+  .shiftDetail__shift {
+    height: 130px;
+    width: 200px; } }
 
 * {
   margin: 0; }
@@ -611,15 +623,16 @@ a {
     bottom: 0;
     background-color: rgba(32, 32, 32, 0.7); }
     .dates__wrapper {
-      width: 45%; }
+      width: 100%;
+      padding-top: 5px; }
     .dates__namesection {
-      width: 50%; }
+      display: none; }
     .dates__pickerWrapper {
       width: 90%; }
     .dates__pickerDate {
       font-size: 16px; }
-    .dates__container {
-      width: 100%; }
+    .dates__date p {
+      display: none; }
   .employee__container {
     width: 50%; }
   .employee__name {

@@ -52,7 +52,10 @@ const Nav = () => {
       <nav>
         <div>
           <h1>
-            <span style={{ color: "#EC70C9" }}>Rota</span>Ready
+            <Link to="/">
+              <span style={{ color: "#EC70C9", cursor: "pointer" }}>Rota</span>
+              Ready
+            </Link>
           </h1>
           <ul>
             <div className="nav__lisection">

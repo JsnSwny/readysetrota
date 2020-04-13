@@ -39,8 +39,7 @@ const UpdateDate = (props) => {
           <i className="fas fa-angle-left"></i>
         </h2>
         <h2 className="dates__pickerDate">
-          {format(parseISO(date), "dd MMM")} -{" "}
-          {format(addDays(parseISO(date), 6), "dd MMM")}
+          {format(parseISO(date), "ccc do MMM")}
         </h2>
         <h2
           onClick={() => {

@@ -7,6 +7,7 @@ nav {
   align-items: center;
   position: relative;
   text-transform: uppercase;
+  z-index: 10;
 }
 
 nav h1 {
@@ -66,6 +67,7 @@ a {
 
 .hamburger__dropdown {
   display: none;
+  z-index: 10;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -88,7 +90,10 @@ a {
       }
       display: none;
       background-color: #282e3d;
-      position: relative;
+      position: absolute;
+      right: 0;
+      top: 80px;
+      left: 0;
       ul {
         display: flex;
         flex-direction: column;
@@ -97,7 +102,7 @@ a {
         margin-right: 30px;
         color: white;
         li {
-          padding: 10px 0;
+          padding: 15px 0;
         }
       }
       .nav__welcome {
