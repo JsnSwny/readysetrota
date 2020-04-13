@@ -22,7 +22,7 @@ const Register = () => {
     return (
       <div className="login">
         <div className="login__box">
-          <div className="login__left">
+          <div className="login__left login__part">
             <form onSubmit={onSubmit}>
               <div className="form-group">
                 <label>What role are you?</label>
@@ -99,7 +99,7 @@ const Register = () => {
               </p>
             </form>
           </div>
-          <div className="login__right">Register</div>
+          <div className="login__right login__part">Register</div>
         </div>
       </div>
     );

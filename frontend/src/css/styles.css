@@ -25,7 +25,7 @@
     z-index: -1; }
 
 .login__box {
-  width: 60%;
+  width: 80%;
   height: 80%;
   background-color: white;
   box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
@@ -139,6 +139,26 @@
   transition: 0.3s ease all; }
   .btn-2:hover {
     transform: scale(1.05); }
+
+@media only screen and (max-width: 1000px) {
+  .login__box {
+    width: 90%;
+    box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    order: 1; }
+  .login__right {
+    width: 100%;
+    font-size: 40px;
+    padding: 30px 0; }
+  .login__left {
+    padding: 40px 0;
+    width: 100%; }
+  .login__part:nth-of-type(1) {
+    order: 2; } }
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,300,400,700&display=swap");
 * {
@@ -278,9 +298,39 @@ a {
   text-decoration: none;
   color: inherit; }
 
+.hamburger {
+  display: none; }
+
+.hamburger__dropdown {
+  display: none; }
+
 @media only screen and (max-width: 1000px) {
-  nav ul {
-    display: none; } }
+  nav ul .nav__lisection {
+    display: none; }
+  .hamburger {
+    display: block;
+    position: absolute;
+    right: 0;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.2s ease all; }
+    .hamburger:hover {
+      color: #f39bda; }
+    .hamburger__dropdown {
+      display: none;
+      background-color: #282e3d;
+      position: relative; }
+      .hamburger__dropdown.active {
+        display: block; }
+      .hamburger__dropdown ul {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        align-items: flex-end;
+        margin-right: 30px;
+        color: white; }
+        .hamburger__dropdown ul li {
+          padding: 10px 0; } }
 
 .shiftDetail {
   width: 85%;

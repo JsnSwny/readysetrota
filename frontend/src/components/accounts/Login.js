@@ -18,7 +18,7 @@ const Login = () => {
     return (
       <div className="login">
         <div className="login__box">
-          <div className="login__left">
+          <div className="login__left login__part">
             <form onSubmit={onSubmit}>
               <div className="form-group">
                 <label>Email</label>
@@ -57,7 +57,7 @@ const Login = () => {
               </p>
             </form>
           </div>
-          <div className="login__right">Login</div>
+          <div className="login__right login__part">Login</div>
         </div>
       </div>
     );
