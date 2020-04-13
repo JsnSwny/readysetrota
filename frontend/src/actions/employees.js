@@ -10,6 +10,8 @@ import {
   ADD_DEPARTMENT,
 } from "./types";
 
+import { getErrors, resetErrors } from "./errors";
+
 import { tokenConfig } from "./auth";
 
 export const getEmployees = () => (dispatch, getState) => {
@@ -38,12 +40,18 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
 
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
-  axios.post("/api/employees/", employee, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: ADD_EMPLOYEE,
-      payload: res.data,
+  axios
+    .post("/api/employees/", employee, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_EMPLOYEE,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+    .catch((err) => {
+      dispatch(getErrors(err.response.data, err.response.status));
     });
-  });
 };
 // Get Positions(
 export const getPositions = () => (dispatch, getState) => {
@@ -57,12 +65,18 @@ export const getPositions = () => (dispatch, getState) => {
 
 // Add Employee
 export const addPosition = (position) => (dispatch, getState) => {
-  axios.post("/api/positions/", position, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: ADD_POSITION,
-      payload: res.data,
+  axios
+    .post("/api/positions/", position, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_POSITION,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+    .catch((err) => {
+      dispatch(getErrors(err.response.data, err.response.status));
     });
-  });
 };
 // Add Employee
 export const addDepartment = (department) => (dispatch, getState) => {
@@ -73,6 +87,10 @@ export const addDepartment = (department) => (dispatch, getState) => {
         type: ADD_DEPARTMENT,
         payload: res.data,
       });
+      dispatch(resetErrors());
+    })
+    .catch((err) => {
+      dispatch(getErrors(err.response.data, err.response.status));
     });
 };
 

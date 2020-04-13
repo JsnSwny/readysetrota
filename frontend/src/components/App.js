@@ -24,6 +24,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import { loadUser } from "../actions/auth";
 import { useSelector } from "react-redux";
 import Home from "./common/Home";
+import YourRota from "./shifts/YourRota";
 import { setWidth } from "../actions/responsive";
 
 const App = () => {
@@ -41,8 +42,9 @@ const App = () => {
           <Nav />
           <Switch>
             <PrivateRoute path="/" exact component={Home} />
-            <Route path="/register" exact component={Register} />
-            <Route path="/login" exact component={Login} />
+            <PrivateRoute path="/rota" exact component={ShiftList} />
+            <Route path="/register" component={Register} />
+            <Route path="/login" component={Login} />
             <PrivateRoute path="/staff" component={Staff} />
             <PrivateRoute path="/shift/:date" component={ShiftDetail} />
           </Switch>

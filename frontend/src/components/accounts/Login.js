@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +31,7 @@ const Login = () => {
                   }}
                   value={username}
                 />
+                <p className="error">{errors.username}</p>
               </div>
               <div className="form-group">
                 <label>Password</label>
@@ -42,6 +44,8 @@ const Login = () => {
                   }}
                   value={password}
                 />
+                <p className="error">{errors.password}</p>
+                <p className="error">{errors.non_field_errors}</p>
               </div>
               <div className="form-group">
                 <button type="submit" className="btn-2">

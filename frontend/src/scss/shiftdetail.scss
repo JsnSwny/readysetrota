@@ -23,8 +23,6 @@
   }
   &__employee {
     font-size: 20px;
-    padding: 10px 0;
-    margin-left: 20px;
   }
   &__shiftTime {
     flex: 1;
@@ -43,6 +41,12 @@
   }
   &__container {
     display: flex;
+  }
+  &__topContainer {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 20px;
+    padding: 10px 0;
   }
   .btn-1 {
     padding: 7px 15px;

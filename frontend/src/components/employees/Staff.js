@@ -35,8 +35,6 @@ const Staff = () => {
       : setAddButtonToggle(false);
   };
 
-  const textAreaRef = useRef(null);
-
   function copyToClipboard(text) {
     var dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
@@ -99,7 +97,7 @@ const Staff = () => {
                   <div key={employee.id} className="staff__employeeContainer">
                     <div className="staff__employee">
                       <p>{employee.name}</p>
-                      <div className="staff__icons">
+                      <div className="delete_icon">
                         <i
                           onClick={() => {
                             setOpen(true);

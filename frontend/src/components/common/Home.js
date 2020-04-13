@@ -6,6 +6,7 @@ import {
   deleteEmployee,
 } from "../../actions/employees";
 import Confirm from "../layout/Confirm";
+import YourRota from "../shifts/YourRota";
 import ShiftList from "../shifts/ShiftList";
 import EnterID from "./EnterID";
 
@@ -16,8 +17,10 @@ const Home = () => {
 
   return (
     <Fragment>
-      {user.profile.role == "Business" || user.employee.length > 0 ? (
+      {user.profile.role == "Business" ? (
         <ShiftList />
+      ) : user.employee.length > 0 ? (
+        <YourRota />
       ) : (
         <EnterID />
       )}

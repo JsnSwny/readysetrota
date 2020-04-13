@@ -10,6 +10,8 @@ import {
   REGISTER_FAIL,
 } from "./types";
 
+import { getErrors } from "./errors";
+
 export const loadUser = () => (dispatch, getState) => {
   //User Loading
   dispatch({
@@ -34,7 +36,7 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
-      console.log(err.response);
+      dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR,
       });
@@ -61,7 +63,7 @@ export const login = (username, password) => (dispatch) => {
       });
     })
     .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: LOGIN_FAIL,
       });
@@ -83,7 +85,9 @@ export const logout = () => (dispatch, getState) => {
 };
 
 // REGISTER USER
-export const register = ({ username, password, email, role }) => (dispatch) => {
+export const register = ({ username, password, password2, email, role }) => (
+  dispatch
+) => {
   // Headers
   const config = {
     headers: {
@@ -92,7 +96,7 @@ export const register = ({ username, password, email, role }) => (dispatch) => {
   };
 
   // Request Body
-  const body = JSON.stringify({ username, password, email, role });
+  const body = JSON.stringify({ username, password, password2, email, role });
 
   axios
     .post("/api/auth/register", body, config)
@@ -103,7 +107,7 @@ export const register = ({ username, password, email, role }) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err.response);
+      dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: REGISTER_FAIL,
       });

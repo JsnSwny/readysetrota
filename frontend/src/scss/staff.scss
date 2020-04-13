@@ -33,16 +33,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    i {
-      color: rgb(0, 0, 0);
-      font-size: 20px;
-      transition: 0.2s ease all;
-      cursor: pointer;
-      &:hover {
-        color: rgb(230, 52, 52);
-      }
-    }
   }
 
   &__position {

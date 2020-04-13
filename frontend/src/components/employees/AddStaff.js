@@ -15,7 +15,7 @@ const AddStaff = (props) => {
 
   let positions = useSelector((state) => state.employees.positions);
   let departments = useSelector((state) => state.employees.departments);
-
+  let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
   useEffect(() => {
     positions = dispatch(getPositions());
@@ -35,17 +35,21 @@ const AddStaff = (props) => {
         department_id: department,
       };
       dispatch(addEmployee(employee));
+      if (name.length > 0 && position.length > 0 && department.length > 0) {
+        setName("");
+        setPosition("");
+        setDepartment("");
+      }
     } else if (form == "Department") {
       dispatch(addDepartment({ name }));
+      setName("");
     } else if (form == "Position") {
       const position_obj = {
         name,
       };
       dispatch(addPosition(position_obj));
+      setName("");
     }
-    setName("");
-    setPosition("");
-    setDepartment("");
   };
   return (
     <Fragment>
@@ -61,6 +65,7 @@ const AddStaff = (props) => {
               onChange={(e) => setName(e.target.value)}
               value={name}
             ></input>
+            <p className="error">{errors.name}</p>
           </div>
           {form === "Staff" && (
             <Fragment>
@@ -81,6 +86,7 @@ const AddStaff = (props) => {
                     </option>
                   ))}
                 </select>
+                <p className="error">{errors.position_id}</p>
               </div>
               <div className="staffForm__control">
                 <label className="staffForm__label">Department:</label>
@@ -99,6 +105,7 @@ const AddStaff = (props) => {
                     </option>
                   ))}
                 </select>
+                <p className="error">{errors.department_id}</p>
               </div>
             </Fragment>
           )}

@@ -14,7 +14,7 @@ const AddShift = (props) => {
   const { date } = props;
 
   let employees = useSelector((state) => state.employees.employees);
-
+  let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
   useEffect(() => {
     employees = dispatch(getEmployees());
@@ -29,16 +29,21 @@ const AddShift = (props) => {
     e.preventDefault();
     const shift = {
       employee_id: employee,
-      start_time: startTime + ":00",
+      start_time: startTime,
       end_time: endTime,
       info,
       date: date,
     };
     dispatch(addShift(shift));
-    setEmployee("");
-    setStartTime("");
-    setEndTime("");
-    setInfo("");
+    console.log(employee);
+    console.log(startTime);
+    console.log(endTime);
+    if (employee && startTime && endTime) {
+      setEmployee("");
+      setStartTime("");
+      setEndTime("");
+      setInfo("");
+    }
   };
 
   let minutes = ["00", "15", "30", "45"];
@@ -73,6 +78,7 @@ const AddShift = (props) => {
                 </option>
               ))}
             </select>
+            <p className="error">{errors.employee_id}</p>
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">Start Time:</label>
@@ -82,15 +88,21 @@ const AddShift = (props) => {
               name="starttime"
               value={startTime}
             >
-              <option value="" disabled selected>
+              <option value="" selected disabled>
                 Select a start time
               </option>
               {hours.map((time) => (
-                <option key={time} value={time}>
+                <option key={time} value={`${time}:00`}>
                   {time}
                 </option>
               ))}
             </select>
+            {errors.start_time &&
+            errors.start_time[0].includes("Time has wrong format") ? (
+              <p className="error">This field may not be blank.</p>
+            ) : (
+              <p className="error">{errors.start_time}</p>
+            )}
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">End Time:</label>
@@ -110,6 +122,7 @@ const AddShift = (props) => {
                 </option>
               ))}
             </select>
+            <p className="error">{errors.end_time}</p>
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">Info:</label>

@@ -5,7 +5,6 @@ import ShiftList from "../shifts/ShiftList";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   let auth = useSelector((state) => state.auth);
-  console.log(auth);
   return (
     <Route
       {...rest}

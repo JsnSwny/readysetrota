@@ -46,6 +46,9 @@ const Nav = () => {
         <ul>
           <div className="nav__lisection">
             <Link to="/">
+              <li>Home</li>
+            </Link>
+            <Link to="/rota">
               <li>Rota</li>
             </Link>
             {user && user.profile.role == "Business" && (

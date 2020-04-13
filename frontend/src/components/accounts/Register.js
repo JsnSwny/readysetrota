@@ -9,15 +9,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [role, setRole] = useState("");
+  let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    if (password != password2) {
-      console.log("Passwords do not match");
-    } else {
-      const newUser = { username: email, password, email, role };
-      dispatch(register(newUser));
-    }
+    const newUser = { username: email, password, password2, email, role };
+    dispatch(register(newUser));
   };
   if (useSelector((state) => state.auth.isAuthenticated)) {
     return <Redirect to="/" />;
@@ -51,6 +48,7 @@ const Register = () => {
                     Business
                   </span>
                 </div>
+                <p className="error">{errors.role}</p>
               </div>
               <div className="form-group">
                 <label>Email</label>
@@ -63,6 +61,7 @@ const Register = () => {
                   }}
                   value={email}
                 />
+                <p className="error">{errors.username}</p>
               </div>
               <div className="form-group">
                 <label>Password</label>
@@ -75,6 +74,7 @@ const Register = () => {
                   }}
                   value={password}
                 />
+                <p className="error">{errors.password}</p>
               </div>
               <div className="form-group">
                 <label>Confirm Password</label>
@@ -87,6 +87,7 @@ const Register = () => {
                   }}
                   value={password2}
                 />
+                <p className="error">{errors.password2}</p>
               </div>
               <div className="form-group">
                 <button type="submit" className="btn-2">

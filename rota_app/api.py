@@ -16,7 +16,7 @@ class ShiftFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
     class Meta:
         model = Shift
-        fields = ['date']
+        fields = ['date', 'employee']
 
 class ShiftViewSet(viewsets.ModelViewSet):
     
@@ -52,16 +52,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-    # queryset = Employee.objects.all()
-    
-    # employee = Employee.objects.all().first()
-
-    # employee.user = User.objects.filter(username="megan").first()
-    # employee.save()
-
-    # print(employee.shifts.all())
-    # print(User.objects.filter(username="test24").first())
 
 class PositionViewSet(viewsets.ModelViewSet):
     permission_classes = [

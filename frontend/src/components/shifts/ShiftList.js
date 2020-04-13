@@ -20,7 +20,7 @@ const ShiftList = () => {
   let date = useSelector((state) => state.shifts.date);
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
-
+  let isLoading = useSelector((state) => state.shifts.isLoading);
   useEffect(() => {
     employees = dispatch(getEmployees());
 
@@ -49,6 +49,11 @@ const ShiftList = () => {
   return (
     <Fragment>
       <Dates dates={result} />
+      {isLoading && (
+        <div className="shiftsloading">
+          <span className="loader"></span>
+        </div>
+      )}
       {employees.map((employee) => (
         <div key={employee.id} className="rota__container">
           <div className="employee__container">
