@@ -25,7 +25,7 @@ SECRET_KEY = 'slrae8_tml#^9=@(htas#d18%w^d&3!s7!wd)toc=(pltaqzj&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rotaready.herokuapp.com']
+ALLOWED_HOSTS = ['rotaready.herokuapp.com', 'localhost']
 
 
 # Application definition
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'rotaready.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
