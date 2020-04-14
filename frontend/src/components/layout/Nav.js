@@ -54,7 +54,7 @@ const Nav = () => {
           <h1>
             <Link to="/">
               <span style={{ color: "#EC70C9", cursor: "pointer" }}>Rota</span>
-              Ready
+              App
             </Link>
           </h1>
           <ul>
