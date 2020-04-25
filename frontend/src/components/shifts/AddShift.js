@@ -35,9 +35,6 @@ const AddShift = (props) => {
       date: date,
     };
     dispatch(addShift(shift));
-    console.log(employee);
-    console.log(startTime);
-    console.log(endTime);
     if (employee && startTime && endTime) {
       setEmployee("");
       setStartTime("");

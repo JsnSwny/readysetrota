@@ -6,7 +6,7 @@ var gulpIf = require("gulp-if");
 var useref = require("gulp-useref");
 var concat = require("gulp-concat");
 
-gulp.task("sass", function() {
+gulp.task("sass", function () {
   return gulp
     .src("frontend/src/scss/**/*.scss")
     .pipe(sass())
@@ -16,7 +16,7 @@ gulp.task("sass", function() {
 
 gulp.task(
   "watch",
-  gulp.series("sass", function() {
+  gulp.series("sass", function () {
     gulp.watch("frontend/src/scss/**/*.scss", gulp.series(["sass"]));
     // Other watchers
   })

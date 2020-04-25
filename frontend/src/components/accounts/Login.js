@@ -3,17 +3,22 @@ import { Link, Redirect } from "react-router-dom";
 import { login } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 
-const Login = () => {
+const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { location } = props;
   let errors = useSelector((state) => state.errors.msg);
+  let path = "/";
+  if (location.state) {
+    path = location.state.path;
+  }
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password));
   };
   if (useSelector((state) => state.auth.isAuthenticated)) {
-    return <Redirect to="/" />;
+    return <Redirect to={path} />;
   } else {
     return (
       <div className="login">
