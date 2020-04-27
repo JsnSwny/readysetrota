@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getEmployees,
   addEmployee,
   getPositions,
   getDepartments,

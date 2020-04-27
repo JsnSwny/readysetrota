@@ -1,45 +1,35 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getEmployees,
-  getPositions,
-  getDepartments,
-  getDailyShifts,
-} from "../../actions/employees";
-
+import { getEmployees } from "../../actions/employees";
 import { addShift } from "../../actions/shifts";
 
 const AddShift = (props) => {
-  const { date } = props;
+  const { date, employeeID, employeeName, onClose } = props;
 
   let employees = useSelector((state) => state.employees.employees);
   let errors = useSelector((state) => state.errors.msg);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    employees = dispatch(getEmployees());
-  }, []);
 
-  const [employee, setEmployee] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
 
+  const dispatch = useDispatch();
+
   const onSubmit = (e) => {
     e.preventDefault();
     const shift = {
-      employee_id: employee,
+      employee_id: employeeID,
       start_time: startTime,
       end_time: endTime,
       info,
       date: date,
     };
     dispatch(addShift(shift));
-    if (employee && startTime && endTime) {
-      setEmployee("");
+    if (startTime && endTime) {
       setStartTime("");
       setEndTime("");
       setInfo("");
+      onClose();
     }
   };
 
@@ -54,29 +44,21 @@ const AddShift = (props) => {
   }
 
   return (
-    <Fragment>
-      <div className="staffForm">
-        <h1 style={{ fontSize: "20px" }}>Create Shift</h1>
-        <form onSubmit={onSubmit} className="staffForm__form">
-          <div className="staffForm__control">
-            <label className="staffForm__label">Employee:</label>
-            <select
-              className="staffForm__input"
-              onChange={(e) => setEmployee(e.target.value)}
-              name="employee"
-              value={employee}
-            >
-              <option value="" disabled selected>
-                Select an employee
-              </option>
-              {employees.map((employee) => (
-                <option key={employee.id} value={employee.id}>
-                  {employee.name}
-                </option>
-              ))}
-            </select>
-            <p className="error">{errors.employee_id}</p>
-          </div>
+    <div className="staffForm">
+      <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create Shift</h1>
+      <form onSubmit={onSubmit} className="staffForm__form">
+        <div className="staffForm__control">
+          <label className="staffForm__label">Employee:</label>
+          <input
+            className="staffForm__input"
+            type="text"
+            name="employee"
+            onChange={(e) => setEmployee(e.target.value)}
+            value={employeeName}
+            disabled
+          />
+        </div>
+        <div className="staffForm__times">
           <div className="staffForm__control">
             <label className="staffForm__label">Start Time:</label>
             <select
@@ -121,20 +103,35 @@ const AddShift = (props) => {
             </select>
             <p className="error">{errors.end_time}</p>
           </div>
-          <div className="staffForm__control">
-            <label className="staffForm__label">Info:</label>
-            <input
-              className="staffForm__input"
-              type="text"
-              name="info"
-              onChange={(e) => setInfo(e.target.value)}
-              value={info}
-            ></input>
-          </div>
-          <button className="btn-1">Create</button>
-        </form>
-      </div>
-    </Fragment>
+        </div>
+
+        <div className="staffForm__control">
+          <label className="staffForm__label">Info:</label>
+          <textarea
+            className="staffForm__input"
+            type="text"
+            name="info"
+            onChange={(e) => setInfo(e.target.value)}
+            value={info}
+            rows="2"
+          ></textarea>
+        </div>
+        <div className="staffForm__buttons">
+          <button
+            onClick={() => {
+              onClose();
+            }}
+            className="btn-1"
+            style={{ backgroundColor: "#d05b5b" }}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn-1">
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

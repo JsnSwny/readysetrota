@@ -1,20 +1,20 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import { getShifts } from "../../actions/shifts";
-import { getEmployees, checkUUID } from "../../actions/employees";
-import {
-  format,
-  parseISO,
-  eachDayOfInterval,
-  differenceInDays,
-  addDays,
-} from "date-fns";
+import { getEmployees } from "../../actions/employees";
+import { format, parseISO, eachDayOfInterval } from "date-fns";
 import Dates from "./Dates";
 import Shift from "./Shift";
+import CreateShift from "../layout/CreateShift";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(false);
+  const [employeeID, setEmployeeID] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
+  const [shiftDate, setShiftDate] = useState("");
+
   let user = useSelector((state) => state.auth.user);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
@@ -48,6 +48,18 @@ const ShiftList = () => {
 
   return (
     <Fragment>
+      <CreateShift
+        open={open}
+        onConfirm={() => {
+          setOpen(false);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        employeeID={employeeID}
+        employeeName={employeeName}
+        date={shiftDate}
+      />
       <Dates dates={result} />
       {isLoading && (
         <div className="shiftsloading">
@@ -73,7 +85,7 @@ const ShiftList = () => {
                   {employee.name.split(" ")[1]}
                 </span>
               </p>
-              <p className="employee__hours">30 Hours</p>
+              {/* <p className="employee__hours">30 Hours</p> */}
             </div>
           </div>
           <div className="shift__container">
@@ -89,6 +101,12 @@ const ShiftList = () => {
                 />
               ) : (
                 <div
+                  onClick={() => {
+                    setOpen(true);
+                    setEmployeeID(employee.id);
+                    setEmployeeName(employee.name);
+                    setShiftDate(format(result, "YYY-MM-dd"));
+                  }}
                   key={result}
                   className="shift__shift shift__shift-noshift"
                 ></div>

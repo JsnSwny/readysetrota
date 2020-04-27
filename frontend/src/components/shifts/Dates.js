@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { format } from "date-fns";
 import UpdateDate from "./UpdateDate";
 import { Link } from "react-router-dom";
@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 const Dates = (dates) => {
   let user = useSelector((state) => state.auth.user);
-  let width = useSelector((state) => state.responsive.width);
   return (
     <Fragment>
       <section className="dates">

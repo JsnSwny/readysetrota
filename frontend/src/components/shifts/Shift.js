@@ -1,7 +1,4 @@
-import React, { Fragment, useEffect } from "react";
-import { format } from "date-fns";
-import UpdateDate from "./UpdateDate";
-import { Link } from "react-router-dom";
+import React, { Fragment } from "react";
 
 const Shift = (props) => {
   const { shift } = props;
@@ -9,12 +6,12 @@ const Shift = (props) => {
   return (
     <div className="shift__shift">
       {shift.map((shift) => (
-        <Fragment>
-          <p>
+        <div className="shift__wrapper">
+          <p className="shift__time">
             {shift.start_time.substr(0, 5)} - {shift.end_time}
           </p>
-          <p>{shift.info}</p>
-        </Fragment>
+          {shift.info && <p className="shift__info">{shift.info}</p>}
+        </div>
       ))}
     </div>
   );

@@ -1,15 +1,10 @@
-import React, { Component, Fragment, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Nav from "./layout/Nav";
 
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import store from "../store";
 import ShiftList from "./shifts/ShiftList";
 import "../css/styles.css";
@@ -22,9 +17,7 @@ import Login from "./accounts/Login";
 import PrivateRoute from "./common/PrivateRoute";
 
 import { loadUser } from "../actions/auth";
-import { useSelector } from "react-redux";
 import Home from "./common/Home";
-import YourRota from "./shifts/YourRota";
 import { setWidth } from "../actions/responsive";
 
 const App = () => {
