@@ -43,6 +43,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = EmployeeSerializer
+    
     def get_queryset(self):
         if self.request.user.profile.role != "Business":
             return self.request.user.employee.first().owner.employees.all()
@@ -52,6 +53,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    ordering_fields = ('name',)
 
 class PositionViewSet(viewsets.ModelViewSet):
     permission_classes = [

@@ -15,12 +15,14 @@ import { getErrors, resetErrors } from "./errors";
 import { tokenConfig } from "./auth";
 
 export const getEmployees = () => (dispatch, getState) => {
-  axios.get(`/api/employees/`, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_EMPLOYEES,
-      payload: res.data,
+  axios
+    .get(`/api/employees/?ordering=name`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_EMPLOYEES,
+        payload: res.data,
+      });
     });
-  });
 };
 
 // Add Employee

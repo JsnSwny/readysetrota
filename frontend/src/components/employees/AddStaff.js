@@ -9,15 +9,17 @@ import {
 } from "../../actions/employees";
 
 const AddStaff = (props) => {
-  const { form } = props;
+  const { onClose, form, staffPosition } = props;
 
   let positions = useSelector((state) => state.employees.positions);
   let departments = useSelector((state) => state.employees.departments);
   let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
+
   useEffect(() => {
     positions = dispatch(getPositions());
     departments = dispatch(getDepartments());
+    staffPosition && setPosition(staffPosition.toString());
   }, []);
 
   const [name, setName] = useState("");
@@ -26,33 +28,40 @@ const AddStaff = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log(form);
     if (form == "Staff") {
       const employee = {
         name,
         position_id: position,
         department_id: department,
       };
-      dispatch(addEmployee(employee));
+      console.log(name);
+      console.log(position);
+      console.log(department);
       if (name.length > 0 && position.length > 0 && department.length > 0) {
+        dispatch(addEmployee(employee));
         setName("");
         setPosition("");
         setDepartment("");
+        onClose();
       }
     } else if (form == "Department") {
       dispatch(addDepartment({ name }));
       setName("");
+      onClose();
     } else if (form == "Position") {
       const position_obj = {
         name,
       };
       dispatch(addPosition(position_obj));
       setName("");
+      onClose();
     }
   };
   return (
     <Fragment>
       <div className="staffForm">
-        <h1 style={{ fontSize: "20px" }}>Add {form}</h1>
+        <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create {form}</h1>
         <form onSubmit={onSubmit} className="staffForm__form">
           <div className="staffForm__control">
             <label className="staffForm__label">Name:</label>
@@ -107,7 +116,20 @@ const AddStaff = (props) => {
               </div>
             </Fragment>
           )}
-          <button className="btn-1">Create</button>
+          <div className="staffForm__buttons">
+            <button
+              onClick={() => {
+                onClose();
+              }}
+              className="btn-1"
+              style={{ backgroundColor: "#d05b5b" }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn-1">
+              Create
+            </button>
+          </div>
         </form>
       </div>
     </Fragment>

@@ -1,30 +1,40 @@
 .staff {
-  width: 85%;
+  width: 95%;
   margin: 0 auto;
   margin-top: 30px;
   &__title {
     font-size: 36px;
+    text-align: center;
+  }
+  .staffForm__input {
+    width: 200px;
+    margin: 0 auto;
+    margin-top: 10px;
   }
   &__buttons {
     display: flex;
     margin-top: 20px;
   }
   .btn-1 {
-    padding: 7px 15px;
-    margin-right: 10px;
+    padding: 10px 25px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 10px;
     transition: 0.2s ease all;
+    font-size: 14px;
     &.active {
       background-color: rgb(223, 167, 94);
     }
   }
   &__employees {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
   }
   &__employeeContainer {
     background-color: #dedede;
     width: 250px;
-    margin-right: 50px;
+    margin-right: 10px;
     margin-top: 10px;
     padding: 10px 20px;
   }
@@ -34,8 +44,25 @@
     justify-content: space-between;
     align-items: center;
   }
-
+  &__positionContainer {
+    margin-top: 50px;
+    background-color: #ebebeb;
+    color: rgb(0, 0, 0);
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
   &__position {
-    margin-top: 20px;
+    font-size: 24px;
+  }
+  &__create {
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
   }
 }

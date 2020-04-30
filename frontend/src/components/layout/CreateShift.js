@@ -1,36 +1,36 @@
 import React from "react";
 import AddShift from "../shifts/AddShift";
+import AddStaff from "../employees/AddStaff";
 
 const CreateShift = (props) => {
-  const { open, onConfirm, onClose, employeeName, employeeID, date } = props;
+  const {
+    open,
+    onClose,
+    employeeName,
+    employeeID,
+    date,
+    type,
+    staffPosition,
+  } = props;
 
   return (
     open && (
       <div onClick={(e) => console.log(e)} className="modal">
         <div className="shiftModal__container">
-          <AddShift
-            employeeName={employeeName}
-            employeeID={employeeID}
-            date={date}
-            onClose={onClose}
-          />
-
-          <div class="shiftModal__buttonsContainer">
-            <div className="shiftModal__buttons">
-              {/* <button
-                className="shiftModal__buttonCancel modal__button"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
-              <button
-                className="shiftModal__buttonConfirm modal__button"
-                onClick={onConfirm}
-              >
-                Create
-              </button> */}
-            </div>
-          </div>
+          {type == "shift" ? (
+            <AddShift
+              employeeName={employeeName}
+              employeeID={employeeID}
+              date={date}
+              onClose={onClose}
+            />
+          ) : (
+            <AddStaff
+              onClose={onClose}
+              form={type}
+              staffPosition={staffPosition}
+            />
+          )}
         </div>
       </div>
     )

@@ -51,7 +51,10 @@ export default function (state = initialState, action) {
     case ADD_SHIFT:
       return {
         ...state,
-        shifts: [...state.shifts, action.payload],
+        shifts: [...state.shifts, action.payload].sort((a, b) =>
+          a.start_time.localeCompare(b.start_time)
+        ),
+
         daily_shifts: [...state.daily_shifts, action.payload],
       };
     case DELETE_SHIFT:

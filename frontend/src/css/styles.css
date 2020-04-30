@@ -219,6 +219,9 @@
     display: flex;
     width: 100%;
     justify-content: space-between; }
+  .staffForm__wrapper {
+    display: flex;
+    align-items: center; }
 
 @media only screen and (max-width: 600px) {
   .shiftModal__container {
@@ -468,8 +471,15 @@ a {
 .dates {
   background-color: #202020;
   color: white;
-  padding: 30px 0;
+  padding: 20px 0;
   position: relative; }
+  .dates.fixed {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    opacity: 0.9; }
   .dates__picker {
     display: flex;
     justify-content: center; }
@@ -494,15 +504,17 @@ a {
     align-self: center;
     font-size: 20px; }
   .dates__container {
-    display: flex; }
+    display: flex;
+    margin-top: 20px; }
   .dates__namesection {
     width: 15%; }
   .dates__wrapper {
     display: flex;
     justify-content: space-around;
     width: 85%;
-    padding-top: 20px;
-    margin-right: 10px; }
+    margin: 2px;
+    padding: 0 20px;
+    margin-left: 10px; }
   .dates__date {
     text-align: center;
     width: 100px; }
@@ -511,108 +523,137 @@ a {
     .dates__date .btn-1 {
       display: block;
       margin-top: 10px; }
+  .dates__sort {
+    cursor: pointer;
+    font-size: 24px;
+    transition: 0.2s ease all; }
+    .dates__sort:hover {
+      color: #ee6de7; }
 
 .employee__container {
   width: 15%; }
 
 .employee__wrapper {
   background-color: #dedede;
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  margin-top: 5px;
   padding: 0 20px;
-  height: 120px;
-  justify-content: center; }
+  height: 100px;
+  margin-top: 2px;
+  justify-content: center;
+  position: relative; }
   .employee__wrapper.active {
-    background-color: #ffd0f2; }
+    border: 3px #ee6de7 dotted; }
+
+.employee__copied {
+  font-size: 14px;
+  color: #1cad1c;
+  margin-left: 10px;
+  opacity: 0;
+  transition: 0.5s ease all; }
+  .employee__copied.copied {
+    opacity: 1; }
+
+.shiftList .rota__container:nth-child(even) .employee__wrapper {
+  background-color: #d1d1d1; }
+
+.shiftList .rota__container:nth-child(even) .shift__shift-noshift {
+  background-color: #d1d1d1; }
+  .shiftList .rota__container:nth-child(even) .shift__shift-noshift.filtered {
+    background-color: #8b8b8b; }
 
 .employee__name {
-  font-size: 16px;
-  margin: 0; }
+  font-size: 16px; }
 
 .employee__position {
-  margin: 0;
   font-size: 12px;
   color: #818181; }
 
 .employee__hours {
-  margin: 0;
   font-size: 12px; }
 
 .employee__surname {
   font-weight: bold; }
 
-.create__employee__button {
-  border: none;
-  display: block;
-  margin: 0 auto;
-  background-color: #3e3e3e;
-  color: white;
-  margin-top: 5px;
-  width: 60%;
-  padding: 5px 10px;
-  border-radius: 5px; }
-
 .rota__container {
   display: flex;
-  margin-top: 10px; }
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: 0 20px; }
 
 .shift__container {
   display: flex;
   width: 85%;
-  margin-right: 10px; }
-
-.shift__wrapper {
-  display: flex;
-  justify-content: space-around;
-  width: 100%; }
+  margin-left: 10px; }
 
 .shift__shift {
-  background-color: #9fe798;
+  background-color: #ee6de7;
   border-radius: 10px;
-  margin: 3px;
+  margin: 2px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 120px;
-  padding: 5px 0;
+  height: 100px;
+  justify-content: center;
   align-self: flex-start;
-  overflow-x: auto; }
+  overflow-x: auto;
+  position: relative;
+  padding: 5px 0;
+  overflow: auto; }
+  .shift__shift.filtered {
+    background-color: #7bc858; }
+
+.shift__wrapper {
+  width: 90%;
+  margin: 0 auto;
+  color: white;
+  margin-bottom: 5px; }
 
 .shift__time {
-  font-size: 14px; }
+  font-size: 16px; }
 
 .shift__info {
   font-weight: normal;
   font-size: 14px;
-  color: #5a5a5a;
-  word-wrap: break-word; }
+  color: white;
+  word-wrap: break-word;
+  margin-top: -5px; }
+  .shift__info i {
+    margin-right: 5px; }
 
-.shift__wrapper {
-  margin: 0 auto;
-  width: 90%;
-  background-color: #f3f3f3;
-  display: flex;
-  flex-direction: column;
-  padding: 3px 5px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3); }
+.shift__shift-noshift {
+  background: #e0e0e0; }
+  .shift__shift-noshift.filtered {
+    background: #b3b3b3; }
+
+.shift__add {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer; }
+
+.addStaffBtn {
+  width: 15%;
+  padding: 10px 0; }
+  .addStaffBtn__container {
+    padding: 0 20px;
+    margin: 10px 0; }
 
 .shift__shift-noshift {
   background: #e0e0e0; }
 
 .shiftsloading {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center; }
+  align-items: center;
+  z-index: 9999; }
 
 .loader {
   border: 16px solid #2a2a2a;
@@ -708,7 +749,7 @@ a {
   .employee__name {
     font-size: 14px; }
   .employee__wrapper {
-    height: 80px; }
+    min-height: 80px; }
   .shift__shift p {
     font-size: 16px; }
   .shift__shift {
@@ -730,27 +771,36 @@ a {
     text-align: center; } }
 
 .staff {
-  width: 85%;
+  width: 95%;
   margin: 0 auto;
   margin-top: 30px; }
   .staff__title {
-    font-size: 36px; }
+    font-size: 36px;
+    text-align: center; }
+  .staff .staffForm__input {
+    width: 200px;
+    margin: 0 auto;
+    margin-top: 10px; }
   .staff__buttons {
     display: flex;
     margin-top: 20px; }
   .staff .btn-1 {
-    padding: 7px 15px;
-    margin-right: 10px;
-    transition: 0.2s ease all; }
+    padding: 10px 25px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 10px;
+    transition: 0.2s ease all;
+    font-size: 14px; }
     .staff .btn-1.active {
       background-color: #dfa75e; }
   .staff__employees {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap; }
   .staff__employeeContainer {
     background-color: #dedede;
     width: 250px;
-    margin-right: 50px;
+    margin-right: 10px;
     margin-top: 10px;
     padding: 10px 20px; }
   .staff__employee {
@@ -758,5 +808,21 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center; }
+  .staff__positionContainer {
+    margin-top: 50px;
+    background-color: #ebebeb;
+    color: black;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center; }
   .staff__position {
-    margin-top: 20px; }
+    font-size: 24px; }
+  .staff__create {
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer; }

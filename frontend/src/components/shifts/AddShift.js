@@ -6,7 +6,6 @@ import { addShift } from "../../actions/shifts";
 const AddShift = (props) => {
   const { date, employeeID, employeeName, onClose } = props;
 
-  let employees = useSelector((state) => state.employees.employees);
   let errors = useSelector((state) => state.errors.msg);
 
   const [startTime, setStartTime] = useState("");
