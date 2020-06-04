@@ -6,6 +6,7 @@ import {
   ADD_POSITION,
   DELETE_EMPLOYEE,
   ADD_DEPARTMENT,
+  DELETE_POSITION,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -46,6 +47,13 @@ export default function (state = initialState, action) {
         ...state,
         employees: state.employees.filter(
           (employee) => employee.id !== action.payload
+        ),
+      };
+    case DELETE_POSITION:
+      return {
+        ...state,
+        positions: state.positions.filter(
+          (position) => position.id !== action.payload
         ),
       };
     case ADD_POSITION:

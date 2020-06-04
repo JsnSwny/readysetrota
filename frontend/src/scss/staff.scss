@@ -1,10 +1,13 @@
 .staff {
-  width: 95%;
+  width: 85%;
   margin: 0 auto;
   margin-top: 30px;
   &__title {
     font-size: 36px;
     text-align: center;
+  }
+  &__container {
+    margin-top: 20px;
   }
   .staffForm__input {
     width: 200px;
@@ -16,12 +19,14 @@
     margin-top: 20px;
   }
   .btn-1 {
-    padding: 10px 25px;
+    padding: 7px 0;
     margin: 0 auto;
+    width: 150px;
     display: block;
-    margin-top: 10px;
+    margin-top: 5px;
     transition: 0.2s ease all;
     font-size: 14px;
+    text-align: center;
     &.active {
       background-color: rgb(223, 167, 94);
     }
@@ -30,12 +35,13 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    background-color: rgb(231, 231, 231);
+    padding: 50px 0;
   }
   &__employeeContainer {
-    background-color: #dedede;
+    background-color: #fbfbfb;
     width: 250px;
     margin-right: 10px;
-    margin-top: 10px;
     padding: 10px 20px;
   }
   &__employee {
@@ -45,9 +51,8 @@
     align-items: center;
   }
   &__positionContainer {
-    margin-top: 50px;
-    background-color: #ebebeb;
-    color: rgb(0, 0, 0);
+    background-color: #424242;
+    color: rgb(255, 255, 255);
     padding: 20px 0;
     display: flex;
     align-items: center;

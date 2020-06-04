@@ -771,12 +771,14 @@ a {
     text-align: center; } }
 
 .staff {
-  width: 95%;
+  width: 85%;
   margin: 0 auto;
   margin-top: 30px; }
   .staff__title {
     font-size: 36px;
     text-align: center; }
+  .staff__container {
+    margin-top: 20px; }
   .staff .staffForm__input {
     width: 200px;
     margin: 0 auto;
@@ -785,23 +787,26 @@ a {
     display: flex;
     margin-top: 20px; }
   .staff .btn-1 {
-    padding: 10px 25px;
+    padding: 7px 0;
     margin: 0 auto;
+    width: 150px;
     display: block;
-    margin-top: 10px;
+    margin-top: 5px;
     transition: 0.2s ease all;
-    font-size: 14px; }
+    font-size: 14px;
+    text-align: center; }
     .staff .btn-1.active {
       background-color: #dfa75e; }
   .staff__employees {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    background-color: #e7e7e7;
+    padding: 50px 0; }
   .staff__employeeContainer {
-    background-color: #dedede;
+    background-color: #fbfbfb;
     width: 250px;
     margin-right: 10px;
-    margin-top: 10px;
     padding: 10px 20px; }
   .staff__employee {
     transition: 0.2s ease all;
@@ -809,9 +814,8 @@ a {
     justify-content: space-between;
     align-items: center; }
   .staff__positionContainer {
-    margin-top: 50px;
-    background-color: #ebebeb;
-    color: black;
+    background-color: #424242;
+    color: white;
     padding: 20px 0;
     display: flex;
     align-items: center;

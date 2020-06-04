@@ -8,6 +8,7 @@ import {
   ADD_POSITION,
   DELETE_EMPLOYEE,
   ADD_DEPARTMENT,
+  DELETE_POSITION,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -55,7 +56,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
-// Get Positions(
+// Get Positions
 export const getPositions = () => (dispatch, getState) => {
   axios.get("/api/positions/", tokenConfig(getState)).then((res) => {
     dispatch({
@@ -63,6 +64,21 @@ export const getPositions = () => (dispatch, getState) => {
       payload: res.data,
     });
   });
+};
+
+// Delete Position
+export const deletePosition = (id) => (dispatch, getState) => {
+  axios
+    .delete(`/api/positions/${id}/`, tokenConfig(getState))
+    .then(() => {
+      dispatch({
+        type: DELETE_POSITION,
+        payload: id,
+      });
+    })
+    .catch((error) => {
+      console.log(error.response);
+    });
 };
 
 // Add Employee

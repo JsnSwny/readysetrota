@@ -56,7 +56,7 @@ const ShiftList = () => {
 
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
-      return obj.employee.name === employee && obj.date === date;
+      return obj.employee.id === employee && obj.date === date;
     });
 
   function copyToClipboard(text) {
@@ -161,7 +161,7 @@ const ShiftList = () => {
             </div>
             <div className="shift__container">
               {result.map((result) =>
-                getEmployeeShift(employee.name, format(result, "YYY-MM-dd"))
+                getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
                   .length > 0 ? (
                   <div
                     className={`shift__shift ${
@@ -186,7 +186,7 @@ const ShiftList = () => {
                       </span>
                     )}
                     {getEmployeeShift(
-                      employee.name,
+                      employee.id,
                       format(result, "YYY-MM-dd")
                     ).map((shift) => (
                       <div className="shift__wrapper">

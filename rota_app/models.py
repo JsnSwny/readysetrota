@@ -19,8 +19,8 @@ class Department(models.Model):
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
-    position = models.ForeignKey(Position, related_name="position", on_delete=models.SET_NULL, null=True, blank=True)
-    department = models.ForeignKey(Department, related_name="department", on_delete=models.SET_NULL, null=True, blank=True)
+    position = models.ForeignKey(Position, related_name="position", on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(Department, related_name="department", on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.name
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="employee")

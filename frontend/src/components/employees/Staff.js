@@ -4,6 +4,7 @@ import {
   getEmployees,
   getPositions,
   deleteEmployee,
+  deletePosition,
 } from "../../actions/employees";
 import AddStaff from "./AddStaff";
 import Confirm from "../layout/Confirm";
@@ -12,10 +13,15 @@ import CreateShift from "../layout/CreateShift";
 const Staff = () => {
   const [open, setOpen] = useState(false);
   const [openStaff, setOpenStaff] = useState(false);
+  const [openPosition, setOpenPosition] = useState(false);
   const [type, setType] = useState("");
   const [employeeID, setEmployeeID] = useState("");
   const [employeeName, setEmployeeName] = useState("");
+
+  const [positionID, setPositionID] = useState("");
+  const [positionName, setPositionName] = useState("");
   const [staffPosition, setStaffPosition] = useState("");
+
   const [staffDepartment, setStaffDepartment] = useState("");
 
   const [addButtonToggle, setAddButtonToggle] = useState(false);
@@ -63,6 +69,7 @@ const Staff = () => {
         staffPosition={staffPosition}
         staffDepartment={staffDepartment}
       />
+
       <Confirm
         open={open}
         onConfirm={() => {
@@ -74,65 +81,91 @@ const Staff = () => {
           setOpen(false);
         }}
       />
+      <Confirm
+        open={openPosition}
+        onConfirm={() => {
+          setOpenPosition(false);
+          dispatch(deletePosition(positionID));
+        }}
+        message={`Are you sure you want to delete ${positionName}?`}
+        onClose={() => {
+          setOpenPosition(false);
+        }}
+      />
+
       <section className="staff">
-        <h1 className="staff__title">Staff Management</h1>
-        <select className="staffForm__input">
-          <option value="Floor">Floor</option>
-        </select>
+        <h1 className="staff__title">Floor Staff</h1>
         <p
-          style={{ textAlign: "center" }}
           onClick={() => {
             setOpenStaff(true);
             setType("Position");
           }}
-          className=""
+          className="btn-1"
         >
-          + Create Department
+          + Create Position
         </p>
         {addButtonToggle != false && <AddStaff form={addButtonToggle} />}
-        {positions.map((position) => (
-          <div className="staff__container" key={position.id}>
-            <div className="staff__positionContainer">
-              <h1 className="staff__position">{position.name} </h1>
-              <p
-                onClick={() => {
-                  setOpenStaff(true);
-                  setType("Staff");
-                  setStaffPosition(position.id);
-                }}
-                className="staff__create"
-              >
-                + Create Staff
-              </p>
-            </div>
+        <div className="staff__container">
+          {positions.map((position) => (
+            <Fragment>
+              <div className="staff__positionContainer">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <h1 className="staff__position">{position.name} </h1>
+                  <div className="delete_icon">
+                    <i
+                      onClick={() => {
+                        setOpenPosition(true);
+                        setPositionID(position.id);
+                        setPositionName(position.name);
+                      }}
+                      className="fas fa-trash"
+                      style={{ color: "white", marginLeft: "20px" }}
+                    ></i>
+                  </div>
+                </div>
+                <p
+                  onClick={() => {
+                    setOpenStaff(true);
+                    setType("Staff");
+                    setStaffPosition(position.id);
+                  }}
+                  className="staff__create"
+                >
+                  + Create Staff
+                </p>
+              </div>
 
-            <div className="staff__employees">
-              {getEmployeesFromPosition(position.name).length > 0 ? (
-                getEmployeesFromPosition(position.name).map((employee) => (
-                  <Fragment>
-                    <div key={employee.id} className="staff__employeeContainer">
-                      <div className="staff__employee">
-                        <p>{employee.name}</p>
-                        <div className="delete_icon">
-                          <i
-                            onClick={() => {
-                              setOpen(true);
-                              setEmployeeID(employee.id);
-                              setEmployeeName(employee.name);
-                            }}
-                            className="fas fa-trash"
-                          ></i>
+              <div className="staff__employees">
+                {getEmployeesFromPosition(position.name).length > 0 ? (
+                  getEmployeesFromPosition(position.name).map((employee) => (
+                    <Fragment>
+                      <div
+                        key={employee.id}
+                        className="staff__employeeContainer"
+                      >
+                        <div className="staff__employee">
+                          <p>{employee.name}</p>
+                          <div className="delete_icon">
+                            <i
+                              onClick={() => {
+                                setOpen(true);
+                                setEmployeeID(employee.id);
+                                setEmployeeName(employee.name);
+                              }}
+                              className="fas fa-trash"
+                            ></i>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Fragment>
-                ))
-              ) : (
-                <div>No Employees Found</div>
-              )}
-            </div>
-          </div>
-        ))}
+                    </Fragment>
+                  ))
+                ) : (
+                  <div>No Employees Found</div>
+                )}
+              </div>
+            </Fragment>
+          ))}
+        </div>
       </section>
     </Fragment>
   );
