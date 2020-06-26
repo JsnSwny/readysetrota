@@ -7,6 +7,9 @@ const AddShift = (props) => {
   const { date, employeeID, employeeName, onClose } = props;
 
   let errors = useSelector((state) => state.errors.msg);
+  let current_department = useSelector(
+    (state) => state.employees.current_department
+  );
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -22,6 +25,7 @@ const AddShift = (props) => {
       end_time: endTime,
       info,
       date: date,
+      department_id: current_department,
     };
     dispatch(addShift(shift));
     if (startTime && endTime) {

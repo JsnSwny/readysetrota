@@ -7,10 +7,13 @@ import {
   SHIFTS_LOADING,
   DELETE_SHIFT,
 } from "../actions/types";
-import { format, addDays } from "date-fns";
+import { format, addDays, startOfWeek } from "date-fns";
 
-const todayDate = format(new Date(), "YYY-MM-dd");
-var weekFromDate = addDays(new Date(), 6);
+const todayDate = format(
+  startOfWeek(new Date(), { weekStartsOn: 1 }),
+  "YYY-MM-dd"
+);
+var weekFromDate = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), 6);
 weekFromDate = format(weekFromDate, "YYY-MM-dd");
 
 const initialState = {

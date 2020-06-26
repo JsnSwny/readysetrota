@@ -21,7 +21,9 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
   });
   axios
     .get(
-      `/api/shifts/?date_after=${startdate}&date_before=${enddate}&ordering=date,start_time`,
+      `/api/shifts/?date_after=${startdate}&date_before=${enddate}&department=${
+        getState().employees.current_department
+      }&ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -31,7 +33,8 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
         date: startdate,
         enddate: enddate,
       });
-    });
+    })
+    .catch();
 };
 
 // Get Bookings
@@ -93,7 +96,5 @@ export const deleteShift = (id) => (dispatch, getState) => {
         payload: id,
       });
     })
-    .catch((error) => {
-      console.log(error.response);
-    });
+    .catch((error) => {});
 };

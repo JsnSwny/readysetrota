@@ -5,7 +5,7 @@ const Confirm = (props) => {
 
   return (
     open && (
-      <div onClick={(e) => console.log(e)} className="modal">
+      <div className="modal">
         <div className="modal__container">
           <div className="modal__message">
             <p>{message}</p>

@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'user_permissions', 'profile', 'employee')
-        depth = 2
+        depth = 3
 
 
 # Register Serializers

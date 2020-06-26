@@ -2,7 +2,13 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts } from "../../actions/shifts";
 import { getEmployees } from "../../actions/employees";
-import { format, parseISO, eachDayOfInterval } from "date-fns";
+import {
+  format,
+  parseISO,
+  eachDayOfInterval,
+  parse,
+  differenceInHours,
+} from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
 
@@ -24,11 +30,19 @@ const ShiftList = () => {
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
+  let currentDepartment = useSelector(
+    (state) => state.employees.current_department
+  );
+
   useEffect(() => {
     dispatch(getEmployees());
-
     shifts_list = dispatch(getShifts(date, enddate));
   }, []);
+
+  useEffect(() => {
+    dispatch(getEmployees());
+    shifts_list = dispatch(getShifts(date, enddate));
+  }, [currentDepartment]);
 
   useEffect(() => {
     setEmployeesList(employees);
@@ -85,6 +99,17 @@ const ShiftList = () => {
     setFilterDate(date);
   };
 
+  const getAllShifts = (employee) => {
+    let hours = 0;
+    let shifts = shifts_list.filter((obj) => obj.employee.id === employee);
+    for (let i = 0; i < shifts.length; i++) {
+      let start = parse(shifts[i].start_time, "HH:mm:ss", new Date());
+      let end = parse(shifts[i].end_time, "HH:mm", new Date());
+      if (end != "Invalid Date") hours += differenceInHours(end, start);
+    }
+    return hours;
+  };
+
   return (
     <Fragment>
       <CreateShift
@@ -106,21 +131,10 @@ const ShiftList = () => {
           <span className="loader"></span>
         </div>
       )}
-      <div className="addStaffBtn__container">
-        <button
-          onClick={() => {
-            setOpen(true);
-            setType("Staff");
-          }}
-          className="btn-1 addStaffBtn"
-        >
-          + Staff Member
-        </button>
-      </div>
-      <div className="shiftList">
+      <div className="shiftList container">
         {employeesList.map((employee) => (
           <div key={employee.id} className="rota__container">
-            <div className="employee__container">
+            <div className="container-left">
               <div
                 className={`employee__wrapper ${
                   user.profile.role == "User" &&
@@ -129,7 +143,14 @@ const ShiftList = () => {
                     : ""
                 }`}
               >
-                <p className="employee__position">{employee.position.name}</p>
+                <p className="employee__position">
+                  {employee.position.map(
+                    (item) =>
+                      item.department.id == parseInt(currentDepartment) && (
+                        <p>{item.name}</p>
+                      )
+                  )}
+                </p>
                 <p className="employee__name">
                   {employee.name.split(" ")[0]}
                   <span className="employee__surname">
@@ -156,15 +177,17 @@ const ShiftList = () => {
                     </Fragment>
                   )}
                 </p>
-                {/* <p className="employee__hours">30 Hours</p> */}
+                <p className="employee__hours">
+                  {getAllShifts(employee.id)} Hours
+                </p>
               </div>
             </div>
-            <div className="shift__container">
+            <div className="container-right">
               {result.map((result) =>
                 getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
                   .length > 0 ? (
                   <div
-                    className={`shift__shift ${
+                    className={`item-block shift__shift ${
                       filterDate == format(result, "YYY-MM-dd")
                         ? "filtered"
                         : ""
@@ -205,7 +228,7 @@ const ShiftList = () => {
                 ) : (
                   <div
                     key={result}
-                    className={`shift__shift shift__shift-noshift ${
+                    className={`item-block shift__shift-noshift ${
                       filterDate == format(result, "YYY-MM-dd")
                         ? "filtered"
                         : ""

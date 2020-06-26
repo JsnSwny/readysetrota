@@ -28,16 +28,25 @@ const Staff = () => {
 
   let employees = useSelector((state) => state.employees.employees);
   let positions = useSelector((state) => state.employees.positions);
+  let departments = useSelector((state) => state.employees.departments);
+  let currentDepartment = useSelector(
+    (state) => state.employees.current_department
+  );
 
   const dispatch = useDispatch();
   useEffect(() => {
     employees = dispatch(getEmployees());
-    positions = dispatch(getPositions());
+    positions = dispatch(getPositions(true));
   }, []);
+
+  useEffect(() => {
+    employees = dispatch(getEmployees());
+    positions = dispatch(getPositions(true));
+  }, [currentDepartment]);
 
   var getEmployeesFromPosition = (position) =>
     employees.filter((obj) => {
-      return obj.position.name === position;
+      return obj.position.some((item) => item.name == position);
     });
 
   var setAddButton = (form) => {
@@ -94,7 +103,12 @@ const Staff = () => {
       />
 
       <section className="staff">
-        <h1 className="staff__title">Floor Staff</h1>
+        <h1 className="staff__title">
+          {currentDepartment != 0 &&
+            departments.filter((item) => item.id == currentDepartment)[0]
+              .name}{" "}
+          Staff
+        </h1>
         <p
           onClick={() => {
             setOpenStaff(true);
@@ -123,7 +137,7 @@ const Staff = () => {
                     ></i>
                   </div>
                 </div>
-                <p
+                {/* <p
                   onClick={() => {
                     setOpenStaff(true);
                     setType("Staff");
@@ -132,7 +146,7 @@ const Staff = () => {
                   className="staff__create"
                 >
                   + Create Staff
-                </p>
+                </p> */}
               </div>
 
               <div className="staff__employees">

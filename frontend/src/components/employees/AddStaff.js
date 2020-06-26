@@ -7,42 +7,75 @@ import {
   addDepartment,
   addPosition,
 } from "../../actions/employees";
+import { contextType } from "react-modal";
 
 const AddStaff = (props) => {
   const { onClose, form, staffPosition } = props;
 
   let positions = useSelector((state) => state.employees.positions);
-  let departments = useSelector((state) => state.employees.departments);
   let errors = useSelector((state) => state.errors.msg);
+  let departments = useSelector((state) => state.employees.departments);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    positions = dispatch(getPositions());
-    departments = dispatch(getDepartments());
-    staffPosition && setPosition(staffPosition.toString());
+    if (form == "Staff") {
+      positions = dispatch(getPositions());
+      staffPosition && setPosition(staffPosition.toString());
+    }
   }, []);
+
+  // Disable Positions in Department of already selected positions
+  const getDepartment = (id) => {
+    let department = positions.filter((item) => item.id == id)[0].department.id;
+    let positionsInDepartment = positions
+      .filter((item) => item.department.id == department && item.id != id)
+      .map((pos) => pos.id);
+    for (let i = 0; i < position.length; i++) {
+      if (positionsInDepartment.includes(parseInt(position[i]))) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Prevent Shift Clicking to Select More Positions
+  const checkDepartment = (arr) => {
+    let obj = {};
+    let department_list = departments.map((item) => item.id);
+    let position_list = positions.filter((item) =>
+      arr.includes(item.id.toString())
+    );
+    for (const key of department_list) {
+      let test = position_list
+        .filter((item) => {
+          return item.department.id == key;
+        })
+        .map((pos) => pos.id);
+      obj[key] = test;
+    }
+    for (let key in obj) {
+      if (obj[key].length > 1) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
-  const [department, setDepartment] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
     if (form == "Staff") {
       const employee = {
         name,
         position_id: position,
-        department_id: department,
       };
-      console.log(name);
-      console.log(position);
-      console.log(department);
-      if (name.length > 0 && position.length > 0 && department.length > 0) {
+
+      if (name.length > 0 && position.length > 0) {
         dispatch(addEmployee(employee));
         setName("");
         setPosition("");
-        setDepartment("");
         onClose();
       }
     } else if (form == "Department") {
@@ -80,39 +113,36 @@ const AddStaff = (props) => {
                 <label className="staffForm__label">Position:</label>
                 <select
                   className="staffForm__input"
-                  onChange={(e) => setPosition(e.target.value)}
+                  onChange={(e) => {
+                    return checkDepartment(
+                      [...e.target.options]
+                        .filter((o) => o.selected)
+                        .map((o) => o.value)
+                    )
+                      ? setPosition(
+                          [...e.target.options]
+                            .filter((o) => o.selected)
+                            .map((o) => o.value)
+                        )
+                      : false;
+                  }}
                   name="position"
                   value={position}
+                  multiple
                 >
-                  <option value="" disabled selected>
-                    Select a position
-                  </option>
-                  {positions.map((position) => (
-                    <option key={position.id} value={position.id}>
-                      {position.name}
-                    </option>
-                  ))}
+                  {positions.map((item) =>
+                    getDepartment(item.id) ? (
+                      <option disabled key={item.id} value={item.id}>
+                        {item.name} ({item.department.name})
+                      </option>
+                    ) : (
+                      <option key={item.id} value={item.id}>
+                        {item.name} ({item.department.name})
+                      </option>
+                    )
+                  )}
                 </select>
                 <p className="error">{errors.position_id}</p>
-              </div>
-              <div className="staffForm__control">
-                <label className="staffForm__label">Department:</label>
-                <select
-                  className="staffForm__input"
-                  onChange={(e) => setDepartment(e.target.value)}
-                  name="department"
-                  value={department}
-                >
-                  <option value="" disabled selected>
-                    Select a department
-                  </option>
-                  {departments.map((department) => (
-                    <option key={department.id} value={department.id}>
-                      {department.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="error">{errors.department_id}</p>
               </div>
             </Fragment>
           )}

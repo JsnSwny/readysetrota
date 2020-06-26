@@ -22,39 +22,26 @@ const UpdateDate = (props) => {
   };
 
   return (
-    <div className="dates__picker">
+    <div className="dates__picker container">
       <div className="dates__pickerWrapper">
-        <h2
+        <p
           onClick={() => {
             dispatch(getShifts(formatDate(date, -7), formatDate(date, -7 + 6)));
           }}
         >
-          <i className="fas fa-angle-double-left"></i>
-        </h2>
-        <h2
-          onClick={() => {
-            dispatch(getShifts(formatDate(date, -1), formatDate(date, -1 + 6)));
-          }}
-        >
-          <i className="fas fa-angle-left"></i>
-        </h2>
+          <i className="fas fa-caret-left"></i>
+        </p>
         <h2 className="dates__pickerDate">
-          {format(parseISO(date), "ccc do MMM")}
+          {format(parseISO(date), "dd MMM")} -{" "}
+          {format(addDays(parseISO(date), 7), "dd MMM")}
         </h2>
-        <h2
-          onClick={() => {
-            dispatch(getShifts(formatDate(date, 1), formatDate(date, 1 + 6)));
-          }}
-        >
-          <i className="fas fa-angle-right"></i>
-        </h2>
-        <h2
+        <p
           onClick={() => {
             dispatch(getShifts(formatDate(date, 7), formatDate(date, 7 + 6)));
           }}
         >
-          <i className="fas fa-angle-double-right"></i>
-        </h2>
+          <i className="fas fa-caret-right"></i>
+        </p>
       </div>
     </div>
   );

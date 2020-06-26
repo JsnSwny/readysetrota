@@ -3,24 +3,24 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 import uuid
 
-class Position(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-
-    owner = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
 
 class Department(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
-
     owner = models.ForeignKey(User, related_name="departments", on_delete=models.CASCADE)
+
+class Position(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+    owner = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, related_name="pos_department", on_delete=models.CASCADE)
+
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
-    position = models.ForeignKey(Position, related_name="position", on_delete=models.CASCADE, null=True, blank=True)
-    department = models.ForeignKey(Department, related_name="department", on_delete=models.CASCADE, null=True, blank=True)
+    position = models.ManyToManyField(Position, related_name="position", null=True, blank=True)
     def __str__(self):
         return self.name
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="employee")
@@ -39,6 +39,7 @@ class Shift(models.Model):
     end_time = models.CharField(max_length=20)
     info = models.TextField(blank=True)
 
+    department = models.ForeignKey(Department, related_name="shift_department", on_delete=models.CASCADE, null=True, blank=True)
     owner = models.ForeignKey(User, related_name="shifts", on_delete=models.CASCADE)
 
 class UserProfile(models.Model):

@@ -14,7 +14,7 @@ body {
 
 .btn-1 {
   border: none;
-  background-color: #3e3e3e;
+  background-color: #202020;
   color: white;
   padding: 5px;
   border-radius: 5px;
@@ -108,8 +108,38 @@ body {
   }
 }
 
-@media only screen and (max-width: 1000px) {
-  .modal__container {
-    width: 80%;
+// @media only screen and (max-width: 1000px) {
+//   .modal__container {
+//     width: 80%;
+//   }
+// }
+
+.container {
+  width: calc(100vw - 40px);
+  margin: 0 auto;
+}
+
+.container-left {
+  width: 15%;
+}
+
+.container-right {
+  width: 85%;
+  display: flex;
+}
+
+.item-block {
+  flex: 1;
+  margin: 0 2px;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  justify-content: center;
+  align-self: flex-start;
+  &:first-child {
+    margin: 0 2px 0 4px;
+  }
+  &:last-child {
+    margin: 0 0 0 2px;
   }
 }

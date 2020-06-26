@@ -2,12 +2,14 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
+import UpdateDepartment from "../shifts/UpdateDepartment";
 
 const Nav = () => {
   let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   let user = useSelector((state) => state.auth.user);
   const [burger, setBurger] = useState(false);
   const dispatch = useDispatch();
+  let employee = [];
   const authLinks = (
     <div className="nav__lisection">
       {user && (
@@ -59,17 +61,24 @@ const Nav = () => {
           </h1>
           <ul>
             <div className="nav__lisection">
-              <Link to="/">
-                <li>Home</li>
-              </Link>
-              <Link to="/rota">
-                <li>Rota</li>
-              </Link>
-              {user && user.profile.role == "Business" && (
-                <Link to="/staff">
-                  <li>Staff</li>
-                </Link>
-              )}
+              {user &&
+                (user.employee.length > 0 ||
+                  user.profile.role == "Business") && (
+                  <Fragment>
+                    <Link to="/">
+                      <li>Home</li>
+                    </Link>
+                    <Link to="/rota">
+                      <li>Rota</li>
+                    </Link>
+                    {user && user.profile.role == "Business" && (
+                      <Link to="/staff">
+                        <li>Staff</li>
+                      </Link>
+                    )}
+                    <UpdateDepartment />
+                  </Fragment>
+                )}
             </div>
             <div className="nav__lisection">
               {isAuthenticated ? authLinks : guestLinks}

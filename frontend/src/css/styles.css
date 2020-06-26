@@ -137,37 +137,6 @@
   .btn-2:hover {
     transform: scale(1.05); }
 
-@media only screen and (max-width: 1000px) {
-  .login__box {
-    width: 90%;
-    height: auto;
-    padding: 30px 0;
-    flex-direction: column; }
-  .login__right {
-    display: none; }
-  .login__left {
-    padding: 40px 0;
-    width: 100%; }
-    .login__left form {
-      width: 80%; }
-  .enterid__box {
-    width: 90%;
-    height: auto;
-    padding: 30px 0;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; }
-  .enterid form {
-    width: 80%; }
-  .enterid .btn-2 {
-    margin: 0 auto;
-    margin-top: 30px; }
-  .enterid h1 {
-    font-size: 18px;
-    width: 80%; } }
-
 .shiftModal__container {
   position: fixed;
   left: 50%;
@@ -223,12 +192,6 @@
     display: flex;
     align-items: center; }
 
-@media only screen and (max-width: 600px) {
-  .shiftModal__container {
-    width: 90%; }
-  .staffForm {
-    width: 90%; } }
-
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,300,400,700&display=swap");
 * {
   box-sizing: border-box;
@@ -242,7 +205,7 @@ body {
 
 .btn-1 {
   border: none;
-  background-color: #3e3e3e;
+  background-color: #202020;
   color: white;
   padding: 5px;
   border-radius: 5px;
@@ -316,9 +279,29 @@ body {
   .delete_icon i:hover {
     color: #e63434; }
 
-@media only screen and (max-width: 1000px) {
-  .modal__container {
-    width: 80%; } }
+.container {
+  width: calc(100vw - 40px);
+  margin: 0 auto; }
+
+.container-left {
+  width: 15%; }
+
+.container-right {
+  width: 85%;
+  display: flex; }
+
+.item-block {
+  flex: 1;
+  margin: 0 2px;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  justify-content: center;
+  align-self: flex-start; }
+  .item-block:first-child {
+    margin: 0 2px 0 4px; }
+  .item-block:last-child {
+    margin: 0 0 0 2px; }
 
 nav {
   background-color: #222735;
@@ -380,39 +363,6 @@ a {
   display: none;
   z-index: 10; }
 
-@media only screen and (max-width: 1000px) {
-  nav ul .nav__lisection {
-    display: none; }
-  .hamburger {
-    display: block;
-    position: absolute;
-    right: 0;
-    font-size: 32px;
-    cursor: pointer;
-    transition: 0.2s ease all; }
-    .hamburger:hover {
-      color: #f39bda; }
-    .hamburger__dropdown {
-      display: none;
-      background-color: #282e3d;
-      position: absolute;
-      right: 0;
-      top: 80px;
-      left: 0; }
-      .hamburger__dropdown.active {
-        display: block; }
-      .hamburger__dropdown ul {
-        display: flex;
-        flex-direction: column;
-        list-style: none;
-        align-items: flex-end;
-        margin-right: 30px;
-        color: white; }
-        .hamburger__dropdown ul li {
-          padding: 15px 0; }
-      .hamburger__dropdown .nav__welcome {
-        margin: 0; } }
-
 .shiftDetail {
   width: 85%;
   margin: 0 auto;
@@ -460,18 +410,11 @@ a {
     .shiftDetail .btn-1.active {
       background-color: #dfa75e; }
 
-@media only screen and (max-width: 1000px) {
-  .shiftDetail__shift {
-    height: 130px;
-    width: 200px; } }
-
 * {
   margin: 0; }
 
 .dates {
-  background-color: #202020;
-  color: white;
-  padding: 20px 0;
+  height: 100px;
   position: relative; }
   .dates.fixed {
     position: sticky;
@@ -479,45 +422,65 @@ a {
     left: 0;
     right: 0;
     z-index: 5;
-    opacity: 0.9; }
+    opacity: 0.7; }
+    .dates.fixed .btn-1 {
+      display: none; }
+  .dates .container-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end; }
+  .dates .btn-1 {
+    max-width: 200px;
+    width: 90%;
+    padding: 10px 0;
+    background-color: #202020;
+    font-size: 16px; }
+  .dates .fa-user-plus {
+    margin-right: 10px; }
   .dates__picker {
     display: flex;
-    justify-content: center; }
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px auto;
+    height: 40px; }
   .dates__pickerWrapper {
     display: flex;
-    width: auto;
-    text-align: center;
-    justify-content: space-between;
-    width: 40%; }
+    text-align: center; }
+    .dates__pickerWrapper p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      cursor: pointer;
+      border: 1px solid #bebebe;
+      padding: 0 10px; }
+      .dates__pickerWrapper p:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px; }
+      .dates__pickerWrapper p:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px; }
+      .dates__pickerWrapper p:hover i {
+        color: #ec70c9; }
     .dates__pickerWrapper i {
       cursor: pointer;
       transition: 0.2s all ease;
-      font-size: 40px;
-      align-self: center; }
-      .dates__pickerWrapper i:hover {
-        color: #ffb85c; }
+      font-size: 20px; }
   .dates__pickerDate {
-    width: 40%;
-    background-color: #444444;
-    padding: 5px 0;
-    border-radius: 10px;
-    align-self: center;
-    font-size: 20px; }
+    font-size: 16px;
+    color: #ec70c9;
+    background-color: white;
+    font-weight: normal;
+    width: 200px;
+    padding: 2px 0;
+    border-top: 1px solid #bebebe;
+    border-bottom: 1px solid #bebebe; }
   .dates__container {
-    display: flex;
-    margin-top: 20px; }
-  .dates__namesection {
-    width: 15%; }
-  .dates__wrapper {
-    display: flex;
-    justify-content: space-around;
-    width: 85%;
-    margin: 2px;
-    padding: 0 20px;
-    margin-left: 10px; }
+    display: flex; }
   .dates__date {
     text-align: center;
-    width: 100px; }
+    background-color: #202020;
+    color: white; }
     .dates__date h1 {
       font-size: 14px; }
     .dates__date .btn-1 {
@@ -530,18 +493,13 @@ a {
     .dates__sort:hover {
       color: #ee6de7; }
 
-.employee__container {
-  width: 15%; }
-
 .employee__wrapper {
   background-color: #dedede;
-  width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   padding: 0 20px;
   height: 100px;
-  margin-top: 2px;
   justify-content: center;
   position: relative; }
   .employee__wrapper.active {
@@ -556,14 +514,6 @@ a {
   .employee__copied.copied {
     opacity: 1; }
 
-.shiftList .rota__container:nth-child(even) .employee__wrapper {
-  background-color: #d1d1d1; }
-
-.shiftList .rota__container:nth-child(even) .shift__shift-noshift {
-  background-color: #d1d1d1; }
-  .shiftList .rota__container:nth-child(even) .shift__shift-noshift.filtered {
-    background-color: #8b8b8b; }
-
 .employee__name {
   font-size: 16px; }
 
@@ -577,32 +527,27 @@ a {
 .employee__surname {
   font-weight: bold; }
 
+.shiftList {
+  margin-top: 8px; }
+  .shiftList .rota__container:nth-child(even) .employee__wrapper {
+    background-color: #d1d1d1; }
+  .shiftList .rota__container:nth-child(even) .shift__shift-noshift {
+    background-color: #d1d1d1; }
+    .shiftList .rota__container:nth-child(even) .shift__shift-noshift.filtered {
+      background-color: #8b8b8b; }
+
 .rota__container {
   display: flex;
   align-items: flex-start;
-  margin: 0 auto;
-  padding: 0 20px; }
+  margin: 4px 0; }
 
-.shift__container {
-  display: flex;
-  width: 85%;
-  margin-left: 10px; }
-
-.shift__shift {
+.shift__shift, .shift__shift-noshift {
   background-color: #ee6de7;
   border-radius: 10px;
-  margin: 2px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  justify-content: center;
-  align-self: flex-start;
   overflow-x: auto;
   position: relative;
-  padding: 5px 0;
   overflow: auto; }
-  .shift__shift.filtered {
+  .shift__shift.filtered, .filtered.shift__shift-noshift {
     background-color: #7bc858; }
 
 .shift__wrapper {
@@ -633,13 +578,6 @@ a {
   top: 10px;
   right: 15px;
   cursor: pointer; }
-
-.addStaffBtn {
-  width: 15%;
-  padding: 10px 0; }
-  .addStaffBtn__container {
-    padding: 0 20px;
-    margin: 10px 0; }
 
 .shift__shift-noshift {
   background: #e0e0e0; }
@@ -677,22 +615,6 @@ a {
   100% {
     transform: rotate(360deg); } }
 
-@media only screen and (max-width: 1000px) {
-  .employee__container {
-    width: 35%; }
-  .shift__container {
-    width: 60%; }
-  .dates__wrapper {
-    width: 60%; }
-  .dates__namesection {
-    width: 35%; }
-  .dates__pickerWrapper {
-    width: 80%; }
-  .shift__shift:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
-    display: none; }
-  .dates__wrapper .dates__date:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
-    display: none; } }
-
 .userShift__container {
   margin-top: 30px;
   display: grid;
@@ -724,52 +646,6 @@ a {
     width: 200px;
     padding: 10px 10px; }
 
-@media only screen and (max-width: 600px) {
-  .shift__container {
-    width: 45%; }
-  .dates {
-    position: fixed;
-    right: 0;
-    width: 100%;
-    bottom: 0;
-    background-color: rgba(32, 32, 32, 0.7); }
-    .dates__wrapper {
-      width: 100%;
-      padding-top: 5px; }
-    .dates__namesection {
-      display: none; }
-    .dates__pickerWrapper {
-      width: 90%; }
-    .dates__pickerDate {
-      font-size: 16px; }
-    .dates__date p {
-      display: none; }
-  .employee__container {
-    width: 50%; }
-  .employee__name {
-    font-size: 14px; }
-  .employee__wrapper {
-    min-height: 80px; }
-  .shift__shift p {
-    font-size: 16px; }
-  .shift__shift {
-    min-height: 80px;
-    max-height: 160px; }
-  .shift__shift:not(:first-child) {
-    display: none; }
-  .dates__wrapper .dates__date:not(:first-child) {
-    display: none; }
-  .userShift__container {
-    display: flex;
-    flex-direction: column; }
-  .userShift__wrapper {
-    width: 100%;
-    border-top: 2px #e4e4e4 solid;
-    padding: 15px 0; }
-  .yourRota {
-    width: 100%;
-    text-align: center; } }
-
 .staff {
   width: 85%;
   margin: 0 auto;
@@ -799,14 +675,13 @@ a {
       background-color: #dfa75e; }
   .staff__employees {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     background-color: #e7e7e7;
     padding: 50px 0; }
   .staff__employeeContainer {
     background-color: #fbfbfb;
-    width: 250px;
-    margin-right: 10px;
+    width: calc(20% - 20px);
+    margin: 5px 10px;
     padding: 10px 20px; }
   .staff__employee {
     transition: 0.2s ease all;
@@ -814,7 +689,7 @@ a {
     justify-content: space-between;
     align-items: center; }
   .staff__positionContainer {
-    background-color: #424242;
+    background-color: #202020;
     color: white;
     padding: 20px 0;
     display: flex;

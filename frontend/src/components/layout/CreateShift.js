@@ -15,7 +15,7 @@ const CreateShift = (props) => {
 
   return (
     open && (
-      <div onClick={(e) => console.log(e)} className="modal">
+      <div className="modal">
         <div className="shiftModal__container">
           {type == "shift" ? (
             <AddShift

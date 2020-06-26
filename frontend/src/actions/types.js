@@ -23,3 +23,4 @@ export const GET_ERRORS = "GET_ERRORS";
 export const RESET_ERRORS = "RESET_ERRORS";
 export const DELETE_SHIFT = "DELETE_SHIFT";
 export const DELETE_POSITION = "DELETE_POSITION";
+export const SET_DEPARTMENT = "SET_DEPARTMENT";

@@ -9,14 +9,17 @@ import django_filters
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db.models import F, Case, When
 # Booking Viewset
 
 
 class ShiftFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
+    department = django_filters.NumberFilter(distinct=True)
     class Meta:
         model = Shift
-        fields = ['date', 'employee']
+        fields = ['date', 'employee', 'department']
+        
 
 class ShiftViewSet(viewsets.ModelViewSet):
     
@@ -37,6 +40,12 @@ class ShiftViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date', 'start_time')
 
 
+class EmployeeFilter(django_filters.FilterSet):
+    position__department = django_filters.NumberFilter(distinct=True)
+    class Meta:
+        model = Employee
+        fields = ['position__department']
+
 class EmployeeViewSet(viewsets.ModelViewSet):
     
     permission_classes = [
@@ -54,7 +63,16 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
     filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = EmployeeFilter
     ordering_fields = ('name',)
+
+class PositionFilter(django_filters.FilterSet):
+    department = django_filters.NumberFilter()
+    class Meta:
+        model = Position
+        fields = ['department']
+
+        
 
 class PositionViewSet(viewsets.ModelViewSet):
     permission_classes = [
@@ -67,7 +85,21 @@ class PositionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    
+    def destroy(self, request, *args, **kwargs):
+        employees = Employee.objects.filter(position=self.get_object())
+        for i in employees:
+            if len(i.position.all()) <= 1:
+                i.delete()
+            else:
+                shifts = Shift.objects.filter(employee=i)
+                for j in shifts:
+                    if j.department == self.get_object().department:
+                        j.delete()
+        return super(PositionViewSet, self).destroy(request, *args, **kwargs)
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = PositionFilter
+
     queryset = Position.objects.all()
     
 class DepartmentViewSet(viewsets.ModelViewSet):
