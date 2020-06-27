@@ -108,24 +108,25 @@ body {
   }
 }
 
-// @media only screen and (max-width: 1000px) {
-//   .modal__container {
-//     width: 80%;
-//   }
-// }
-
 .container {
   width: calc(100vw - 40px);
   margin: 0 auto;
 }
 
 .container-left {
-  width: 15%;
+  width: 20%;
+  min-width: 150px;
 }
 
 .container-right {
-  width: 85%;
+  width: 80%;
   display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+  .container-left {
+    min-width: 50%;
+  }
 }
 
 .item-block {

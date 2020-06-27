@@ -310,76 +310,78 @@
   }
 }
 
-// @media only screen and (max-width: 600px) {
-//   .shift__container {
-//     width: 45%;
-//   }
+@media only screen and (max-width: 600px) {
+  .dates {
+    &__pickerWrapper {
+      width: 100%;
+    }
+    &__pickerDate {
+      width: 100%;
+    }
+  }
+  // .shift__container {
+  //   width: 45%;
+  // }
 
-//   .dates {
-//     // position: fixed;
-//     // right: 0;
-//     // width: 100%;
-//     // bottom: 0;
-//     // background-color: rgba(32, 32, 32, 0.7);
-//     &__wrapper {
-//       width: 100%;
-//       padding-top: 5px;
-//     }
-//     .container-left {
-//       display: none;
-//     }
-//     &__pickerWrapper {
-//       width: 90%;
-//     }
-//     &__pickerDate {
-//       font-size: 16px;
-//     }
-//     &__date {
-//       p {
-//         display: none;
-//       }
-//     }
-//   }
+  // .dates {
+  //   // position: fixed;
+  //   // right: 0;
+  //   // width: 100%;
+  //   // bottom: 0;
+  //   // background-color: rgba(32, 32, 32, 0.7);
+  //   &__wrapper {
+  //     width: 100%;
+  //     padding-top: 5px;
+  //   }
+  //   .container-left {
+  //     display: none;
+  //   }
+  //   &__pickerWrapper {
+  //     width: 90%;
+  //   }
+  //   &__pickerDate {
+  //     font-size: 16px;
+  //   }
+  //   &__date {
+  //     p {
+  //       display: none;
+  //     }
+  //   }
+  // }
 
-//   .employee {
-//     &__container {
-//       width: 50%;
-//     }
-//     &__name {
-//       font-size: 14px;
-//     }
-//     &__wrapper {
-//       min-height: 80px;
-//     }
-//   }
-//   .shift__shift p {
-//     font-size: 16px;
-//   }
-//   .shift__shift {
-//     min-height: 80px;
-//     max-height: 160px;
-//   }
-//   .shift__shift:not(:first-child) {
-//     display: none;
-//   }
-//   .container-right {
-//     .dates__date:not(:first-child) {
-//       display: none;
-//     }
-//   }
-//   .userShift {
-//     &__container {
-//       display: flex;
-//       flex-direction: column;
-//     }
-//     &__wrapper {
-//       width: 100%;
-//       border-top: 2px #e4e4e4 solid;
-//       padding: 15px 0;
-//     }
-//   }
-//   .yourRota {
-//     width: 100%;
-//     text-align: center;
-//   }
-// }
+  .employee {
+    &__name {
+      font-size: 14px;
+    }
+  }
+  // .shift__shift p {
+  //   font-size: 16px;
+  // }
+  // .shift__shift {
+  //   min-height: 80px;
+  //   max-height: 160px;
+  // }
+  // .shift__shift:not(:first-child) {
+  //   display: none;
+  // }
+  // .container-right {
+  //   .dates__date:not(:first-child) {
+  //     display: none;
+  //   }
+  // }
+  // .userShift {
+  //   &__container {
+  //     display: flex;
+  //     flex-direction: column;
+  //   }
+  //   &__wrapper {
+  //     width: 100%;
+  //     border-top: 2px #e4e4e4 solid;
+  //     padding: 15px 0;
+  //   }
+  // }
+  // .yourRota {
+  //   width: 100%;
+  //   text-align: center;
+  // }
+}

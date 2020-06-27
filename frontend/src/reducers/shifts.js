@@ -13,7 +13,16 @@ const todayDate = format(
   startOfWeek(new Date(), { weekStartsOn: 1 }),
   "YYY-MM-dd"
 );
-var weekFromDate = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), 6);
+
+let width = window.innerWidth;
+let dateRange = width > 1000 ? 6 : width > 600 ? 2 : 0;
+
+var weekFromDate = addDays(
+  startOfWeek(new Date(), { weekStartsOn: 1 }),
+  dateRange
+);
+
+console.log(dateRange);
 weekFromDate = format(weekFromDate, "YYY-MM-dd");
 
 const initialState = {

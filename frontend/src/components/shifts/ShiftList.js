@@ -8,6 +8,7 @@ import {
   eachDayOfInterval,
   parse,
   differenceInHours,
+  addDays,
 } from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
@@ -23,6 +24,7 @@ const ShiftList = () => {
   const [uuid, setUUID] = useState("");
   const [employeesList, setEmployeesList] = useState([]);
   const [filterDate, setFilterDate] = useState("");
+  const [currentDevice, setCurrentDevice] = useState("");
 
   let user = useSelector((state) => state.auth.user);
   let employees = useSelector((state) => state.employees.employees);
@@ -33,11 +35,31 @@ const ShiftList = () => {
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
-
+  let width = useSelector((state) => state.responsive.width);
+  let parsedDate = parseISO(date, "dd-MM-yyyy");
   useEffect(() => {
     dispatch(getEmployees());
     shifts_list = dispatch(getShifts(date, enddate));
   }, []);
+
+  useEffect(() => {
+    if (width > 1000) {
+      if (currentDevice != "Desktop") {
+        dispatch(getShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd")));
+        setCurrentDevice("Desktop");
+      }
+    } else if (width > 600) {
+      if (currentDevice != "Tablet") {
+        dispatch(getShifts(date, format(addDays(parsedDate, 2), "yyyy-MM-dd")));
+        setCurrentDevice("Tablet");
+      }
+    } else {
+      if (currentDevice != "Mobile") {
+        dispatch(getShifts(date, format(addDays(parsedDate, 0), "yyyy-MM-dd")));
+        setCurrentDevice("Mobile");
+      }
+    }
+  }, [width]);
 
   useEffect(() => {
     dispatch(getEmployees());
