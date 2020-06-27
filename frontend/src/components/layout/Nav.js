@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
-import UpdateDepartment from "../shifts/UpdateDepartment";
 
 const Nav = () => {
   let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -76,7 +75,6 @@ const Nav = () => {
                         <li>Staff</li>
                       </Link>
                     )}
-                    <UpdateDepartment />
                   </Fragment>
                 )}
             </div>

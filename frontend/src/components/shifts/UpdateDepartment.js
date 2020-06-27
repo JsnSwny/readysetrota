@@ -38,6 +38,7 @@ const UpdateDepartment = (props) => {
       onChange={(e) => {
         setDep(e.target.value);
       }}
+      className="select"
     >
       <option value="" selected disabled>
         Select Department

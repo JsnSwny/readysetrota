@@ -36,11 +36,11 @@
     justify-content: flex-end;
     align-items: center;
     margin: 20px auto;
-    height: 40px;
   }
   &__pickerWrapper {
     display: flex;
     text-align: center;
+    height: 35px;
 
     p {
       display: flex;
@@ -75,10 +75,14 @@
     color: #ec70c9;
     background-color: white;
     font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 200px;
-    padding: 2px 0;
+    height: 100%;
     border-top: 1px solid rgb(190, 190, 190);
     border-bottom: 1px solid rgb(190, 190, 190);
+    align-self: center;
   }
   &__container {
     display: flex;
@@ -312,6 +316,9 @@
 
 @media only screen and (max-width: 600px) {
   .dates {
+    &__picker {
+      flex-direction: column;
+    }
     &__pickerWrapper {
       width: 100%;
     }

@@ -11,6 +11,7 @@ import {
   subMonths,
   differenceInDays,
 } from "date-fns";
+import UpdateDepartment from "../shifts/UpdateDepartment";
 
 const UpdateDate = (props) => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const UpdateDate = (props) => {
 
   return (
     <div className="dates__picker container">
+      <UpdateDepartment />
       <div className="dates__pickerWrapper">
         <p
           onClick={() => {

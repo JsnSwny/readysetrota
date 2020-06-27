@@ -291,9 +291,24 @@ body {
   width: 80%;
   display: flex; }
 
+.wrapper {
+  display: flex; }
+
+.select {
+  height: 35px;
+  border-radius: 10px;
+  margin-right: 10px;
+  border: 1px solid #bebebe;
+  padding: 0 20px; }
+  .select:focus {
+    outline: none; }
+
 @media only screen and (max-width: 600px) {
   .container-left {
-    min-width: 50%; } }
+    min-width: 50%; }
+  .select {
+    margin-right: 0;
+    margin-bottom: 10px; } }
 
 .item-block {
   flex: 1;
@@ -479,11 +494,11 @@ a {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 20px auto;
-    height: 40px; }
+    margin: 20px auto; }
   .dates__pickerWrapper {
     display: flex;
-    text-align: center; }
+    text-align: center;
+    height: 35px; }
     .dates__pickerWrapper p {
       display: flex;
       justify-content: center;
@@ -509,10 +524,14 @@ a {
     color: #ec70c9;
     background-color: white;
     font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 200px;
-    padding: 2px 0;
+    height: 100%;
     border-top: 1px solid #bebebe;
-    border-bottom: 1px solid #bebebe; }
+    border-bottom: 1px solid #bebebe;
+    align-self: center; }
   .dates__container {
     display: flex; }
   .dates__date {
@@ -685,6 +704,8 @@ a {
     padding: 10px 10px; }
 
 @media only screen and (max-width: 600px) {
+  .dates__picker {
+    flex-direction: column; }
   .dates__pickerWrapper {
     width: 100%; }
   .dates__pickerDate {

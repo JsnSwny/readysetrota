@@ -123,9 +123,28 @@ body {
   display: flex;
 }
 
+.wrapper {
+  display: flex;
+}
+
+.select {
+  height: 35px;
+  border-radius: 10px;
+  margin-right: 10px;
+  border: 1px solid rgb(190, 190, 190);
+  padding: 0 20px;
+  &:focus {
+    outline: none;
+  }
+}
+
 @media only screen and (max-width: 600px) {
   .container-left {
     min-width: 50%;
+  }
+  .select {
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 }
 
