@@ -192,6 +192,12 @@
     display: flex;
     align-items: center; }
 
+@media only screen and (max-width: 600px) {
+  .shiftModal__container {
+    width: 90%; }
+  .staffForm {
+    width: 90%; } }
+
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,300,400,700&display=swap");
 * {
   box-sizing: border-box;
@@ -299,11 +305,16 @@ body {
   border-radius: 10px;
   margin-right: 10px;
   border: 1px solid #bebebe;
-  padding: 0 20px; }
+  width: 300px;
+  padding: 0 20px;
+  font-size: 16px;
+  color: #ec70c9; }
   .select:focus {
     outline: none; }
 
 @media only screen and (max-width: 600px) {
+  .container {
+    width: calc(100vw - 20px); }
   .container-left {
     min-width: 50%; }
   .select {
@@ -710,8 +721,20 @@ a {
     width: 100%; }
   .dates__pickerDate {
     width: 100%; }
+  .dates .btn-1 {
+    font-size: 14px; }
+  .dates__date {
+    font-size: 14px; }
+  .dates .fa-user-plus {
+    font-size: 14px; }
+  .dates__sort {
+    font-size: 18px; }
   .employee__name {
-    font-size: 14px; } }
+    font-size: 14px; }
+  .employee__wrapper {
+    padding: 0 8px; }
+  .employee__copied {
+    display: none; } }
 
 .staff {
   width: 85%;

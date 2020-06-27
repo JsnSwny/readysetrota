@@ -105,6 +105,13 @@ const ShiftList = () => {
   }
 
   const filterEmployees = (date) => {
+    console.log(typeof date);
+    console.log(typeof filterDate);
+    if (filterDate == date) {
+      setFilterDate("");
+      setEmployeesList(employees);
+      return true;
+    }
     let employeesOnDay = shifts_list.filter((obj) => {
       return obj.date == date;
     });

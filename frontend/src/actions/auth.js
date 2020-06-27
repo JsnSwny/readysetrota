@@ -79,9 +79,7 @@ export const logout = () => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch((err) => {});
 };
 
 // REGISTER USER
