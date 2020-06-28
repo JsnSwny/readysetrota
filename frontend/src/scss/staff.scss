@@ -1,5 +1,5 @@
 .staff {
-  width: 85%;
+  width: 90%;
   margin: 0 auto;
   margin-top: 30px;
   &__title {
@@ -68,5 +68,20 @@
     border-radius: 5px;
     padding: 5px 15px;
     cursor: pointer;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .staff {
+    &__employeeContainer {
+      width: calc(33% - 20px);
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .staff {
+    &__employeeContainer {
+      width: 100%;
+    }
   }
 }
