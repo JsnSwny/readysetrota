@@ -223,7 +223,7 @@ const ShiftList = () => {
                     }`}
                   >
                     {user.profile.role == "Business" && (
-                      <span
+                      <p
                         onClick={() => {
                           setOpen(true);
                           setType("shift");
@@ -231,11 +231,10 @@ const ShiftList = () => {
                           setEmployeeName(employee.name);
                           setShiftDate(format(result, "YYY-MM-dd"));
                         }}
-                        style={{ color: "white" }}
-                        className="shift__add"
+                        className="shift__add--white"
                       >
                         +
-                      </span>
+                      </p>
                     )}
                     {getEmployeeShift(
                       employee.id,

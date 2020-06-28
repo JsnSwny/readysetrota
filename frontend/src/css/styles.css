@@ -305,6 +305,7 @@ body {
   border-radius: 10px;
   margin-right: 10px;
   border: 1px solid #bebebe;
+  background-color: white;
   width: 300px;
   padding: 0 20px;
   font-size: 16px;
@@ -312,27 +313,28 @@ body {
   .select:focus {
     outline: none; }
 
-@media only screen and (max-width: 600px) {
-  .container {
-    width: calc(100vw - 20px); }
-  .container-left {
-    min-width: 50%; }
-  .select {
-    margin-right: 0;
-    margin-bottom: 10px; } }
-
 .item-block {
   flex: 1;
   margin: 0 2px;
   display: flex;
   flex-direction: column;
   height: 100px;
-  justify-content: center;
   align-self: flex-start; }
   .item-block:first-child {
     margin: 0 2px 0 4px; }
   .item-block:last-child {
     margin: 0 0 0 2px; }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: calc(100vw - 10px); }
+  .container-left {
+    min-width: 50%; }
+  .select {
+    margin-right: 0;
+    margin-bottom: 10px; }
+  .item-block:first-child {
+    margin: 0 0 0 5px; } }
 
 nav {
   background-color: #222735;
@@ -548,6 +550,7 @@ a {
   .dates__date {
     text-align: center;
     background-color: #202020;
+    justify-content: center;
     color: white; }
     .dates__date h1 {
       font-size: 14px; }
@@ -614,15 +617,15 @@ a {
   border-radius: 10px;
   overflow-x: auto;
   position: relative;
-  overflow: auto; }
+  overflow: auto;
+  padding: 5px 15px; }
   .shift__shift.filtered, .filtered.shift__shift-noshift {
     background-color: #7bc858; }
 
 .shift__wrapper {
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-  color: white;
-  margin-bottom: 5px; }
+  color: white; }
 
 .shift__time {
   font-size: 16px; }
@@ -630,9 +633,8 @@ a {
 .shift__info {
   font-weight: normal;
   font-size: 14px;
-  color: white;
-  word-wrap: break-word;
-  margin-top: -5px; }
+  color: #f3f3f3;
+  word-wrap: break-word; }
   .shift__info i {
     margin-right: 5px; }
 
@@ -641,11 +643,15 @@ a {
   .shift__shift-noshift.filtered {
     background: #b3b3b3; }
 
-.shift__add {
+.shift__add, .shift__add--white {
   position: absolute;
   top: 10px;
-  right: 15px;
+  left: 15px;
   cursor: pointer; }
+  .shift__add--white {
+    position: static;
+    display: block;
+    color: white; }
 
 .shift__shift-noshift {
   background: #e0e0e0; }
@@ -682,6 +688,16 @@ a {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+
+@media only screen and (max-width: 1000px) {
+  .employee__name {
+    font-size: 14px; }
+  .employee__wrapper {
+    padding: 0 10px; }
+  .employee__copied {
+    display: none; }
+  .shift__time {
+    font-size: 14px; } }
 
 .userShift__container {
   margin-top: 30px;
@@ -722,19 +738,14 @@ a {
   .dates__pickerDate {
     width: 100%; }
   .dates .btn-1 {
-    font-size: 14px; }
+    font-size: 14px;
+    width: 100%; }
   .dates__date {
     font-size: 14px; }
   .dates .fa-user-plus {
     font-size: 14px; }
   .dates__sort {
-    font-size: 18px; }
-  .employee__name {
-    font-size: 14px; }
-  .employee__wrapper {
-    padding: 0 8px; }
-  .employee__copied {
-    display: none; } }
+    font-size: 18px; } }
 
 .staff {
   width: 85%;

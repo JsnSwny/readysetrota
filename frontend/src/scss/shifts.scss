@@ -90,6 +90,7 @@
   &__date {
     text-align: center;
     background-color: #202020;
+    justify-content: center;
     color: white;
     h1 {
       font-size: 14px;
@@ -176,15 +177,15 @@
     overflow-x: auto;
     position: relative;
     overflow: auto;
+    padding: 5px 15px;
     &.filtered {
       background-color: #7bc858;
     }
   }
   &__wrapper {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     color: white;
-    margin-bottom: 5px;
   }
   &__time {
     font-size: 16px;
@@ -192,9 +193,8 @@
   &__info {
     font-weight: normal;
     font-size: 14px;
-    color: rgb(255, 255, 255);
+    color: rgb(243, 243, 243);
     word-wrap: break-word;
-    margin-top: -5px;
     i {
       margin-right: 5px;
     }
@@ -209,8 +209,14 @@
   &__add {
     position: absolute;
     top: 10px;
-    right: 15px;
+    left: 15px;
     cursor: pointer;
+    &--white {
+      @extend .shift__add;
+      position: static;
+      display: block;
+      color: white;
+    }
   }
 }
 
@@ -258,25 +264,24 @@
   }
 }
 
-// @media only screen and (max-width: 1000px) {
-//   .employee__container {
-//     width: 35%;
-//   }
-//   .shift__container {
-//     width: 60%;
-//   }
-//   .dates__wrapper {
-//     width: 60%;
-//   }
-//   .shift__shift:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
-//     display: none;
-//   }
-//   .container-right {
-//     .dates__date:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
-//       display: none;
-//     }
-//   }
-// }
+@media only screen and (max-width: 1000px) {
+  .employee {
+    &__name {
+      font-size: 14px;
+    }
+    &__wrapper {
+      padding: 0 10px;
+    }
+    &__copied {
+      display: none;
+    }
+  }
+  .shift {
+    &__time {
+      font-size: 14px;
+    }
+  }
+}
 
 .userShift {
   &__container {
@@ -329,6 +334,7 @@
   .dates {
     .btn-1 {
       font-size: 14px;
+      width: 100%;
     }
     &__date {
       font-size: 14px;
@@ -369,18 +375,6 @@
   //     }
   //   }
   // }
-
-  .employee {
-    &__name {
-      font-size: 14px;
-    }
-    &__wrapper {
-      padding: 0 8px;
-    }
-    &__copied {
-      display: none;
-    }
-  }
   // .shift__shift p {
   //   font-size: 16px;
   // }
