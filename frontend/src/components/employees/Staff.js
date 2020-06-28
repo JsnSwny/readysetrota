@@ -9,6 +9,7 @@ import {
 import AddStaff from "./AddStaff";
 import Confirm from "../layout/Confirm";
 import CreateShift from "../layout/CreateShift";
+import UpdateDepartment from "../shifts/UpdateDepartment";
 
 const Staff = () => {
   const [open, setOpen] = useState(false);
@@ -66,6 +67,10 @@ const Staff = () => {
 
   return (
     <Fragment>
+      <div className="dates__picker container">
+        <UpdateDepartment />
+      </div>
+
       <CreateShift
         open={openStaff}
         type={type}
