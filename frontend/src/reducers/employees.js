@@ -19,7 +19,9 @@ const initialState = {
   employees: [],
   positions: [],
   departments: [],
-  current_department: 0,
+  current_department: localStorage.getItem("current_department")
+    ? localStorage.getItem("current_department")
+    : 0,
 };
 
 export default function (state = initialState, action) {
@@ -40,6 +42,7 @@ export default function (state = initialState, action) {
         departments: action.payload,
       };
     case SET_DEPARTMENT:
+      localStorage.setItem("current_department", action.payload);
       return {
         ...state,
         current_department: action.payload,
