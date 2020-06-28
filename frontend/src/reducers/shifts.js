@@ -6,6 +6,7 @@ import {
   GET_SHIFTS_BY_ID,
   SHIFTS_LOADING,
   DELETE_SHIFT,
+  GET_POPULAR_TIMES,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -31,6 +32,7 @@ const initialState = {
   end_date: weekFromDate,
   daily_shifts: [],
   user_shifts: [],
+  popular_times: [],
   isLoading: false,
 };
 
@@ -82,6 +84,11 @@ export default function (state = initialState, action) {
         ...state,
         shifts: [],
         daily_shifts: [],
+      };
+    case GET_POPULAR_TIMES:
+      return {
+        ...state,
+        popular_times: action.payload,
       };
     default:
       return state;

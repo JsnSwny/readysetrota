@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getShifts } from "../../actions/shifts";
+import { getShifts, getPopularTimes } from "../../actions/shifts";
 import { getEmployees } from "../../actions/employees";
 import {
   format,
@@ -29,6 +29,7 @@ const ShiftList = () => {
   let user = useSelector((state) => state.auth.user);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
+
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
@@ -63,6 +64,7 @@ const ShiftList = () => {
 
   useEffect(() => {
     dispatch(getEmployees());
+    dispatch(getPopularTimes());
     shifts_list = dispatch(getShifts(date, enddate));
   }, [currentDepartment]);
 

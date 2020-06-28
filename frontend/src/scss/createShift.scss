@@ -65,6 +65,25 @@
     display: flex;
     align-items: center;
   }
+  &__popular-title {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  &__popular-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  &__popular {
+    background-color: #ee6de7;
+    font-size: 14px;
+    width: 100px;
+    margin: 2px;
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+  }
 }
 
 @media only screen and (max-width: 600px) {

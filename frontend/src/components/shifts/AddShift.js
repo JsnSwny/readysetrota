@@ -17,6 +17,8 @@ const AddShift = (props) => {
 
   const dispatch = useDispatch();
 
+  let popular_times = useSelector((state) => state.shifts.popular_times);
+
   const onSubmit = (e) => {
     e.preventDefault();
     const shift = {
@@ -106,6 +108,23 @@ const AddShift = (props) => {
             </select>
             <p className="error">{errors.end_time}</p>
           </div>
+        </div>
+        <small class="staffForm__popular-title">
+          <i class="fas fa-star"></i>&nbsp;Most Used Times&nbsp;
+          <i class="fas fa-star"></i>
+        </small>
+        <div className="staffForm__popular-container">
+          {popular_times.map((item) => (
+            <p
+              className="staffForm__popular"
+              onClick={() => {
+                setStartTime(item.start_time);
+                setEndTime(item.end_time);
+              }}
+            >
+              {item.start_time.substr(0, 5)} - {item.end_time}
+            </p>
+          ))}
         </div>
 
         <div className="staffForm__control">

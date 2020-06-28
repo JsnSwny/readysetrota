@@ -9,6 +9,7 @@ import {
   GET_SHIFTS_BY_ID,
   SHIFTS_LOADING,
   DELETE_SHIFT,
+  GET_POPULAR_TIMES,
 } from "./types";
 import { tokenConfig } from "./auth";
 
@@ -97,4 +98,14 @@ export const deleteShift = (id) => (dispatch, getState) => {
       });
     })
     .catch((error) => {});
+};
+
+// Get Popular Times
+export const getPopularTimes = () => (dispatch, getState) => {
+  axios.get(`/api-view/getpopulartimes`, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_POPULAR_TIMES,
+      payload: res.data,
+    });
+  });
 };
