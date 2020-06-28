@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee
+from rota_app.models import UserProfile, Employee, Department
 from django.contrib.auth import authenticate
 import json
 
@@ -52,6 +52,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     
             profile = UserProfile(user=user, role=validated_data['role'])
             profile.save() 
+            if validated_data['role'] == "Business":
+                department = Department(owner=user, name="Department 1")
+                department.save()
             return user
 
 # Login Serializers

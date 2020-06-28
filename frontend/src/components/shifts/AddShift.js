@@ -109,10 +109,10 @@ const AddShift = (props) => {
             <p className="error">{errors.end_time}</p>
           </div>
         </div>
-        <small class="staffForm__popular-title">
-          <i class="fas fa-star"></i>&nbsp;Most Used Times&nbsp;
-          <i class="fas fa-star"></i>
-        </small>
+        {popular_times.length > 0 && (
+          <small class="staffForm__popular-title">Most Used Times</small>
+        )}
+
         <div className="staffForm__popular-container">
           {popular_times.map((item) => (
             <p

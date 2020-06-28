@@ -22,8 +22,9 @@ const UpdateDepartment = (props) => {
       return item.department;
     });
   }
-
-  // console.log(departments);
+  let currentDepartment = useSelector(
+    (state) => state.employees.current_department
+  );
 
   useEffect(() => {
     dispatch(getDepartments());
@@ -39,6 +40,7 @@ const UpdateDepartment = (props) => {
         setDep(e.target.value);
       }}
       className="select"
+      value={currentDepartment == 0 ? "" : currentDepartment}
     >
       <option value="" selected disabled>
         Select Department

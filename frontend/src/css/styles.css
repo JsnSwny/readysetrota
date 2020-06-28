@@ -338,11 +338,13 @@ body {
 
 .container-left {
   width: 20%;
-  min-width: 150px; }
+  min-width: 150px;
+  max-width: 300px; }
 
 .container-right {
   width: 80%;
-  display: flex; }
+  display: flex;
+  flex: 1; }
 
 .wrapper {
   display: flex; }
