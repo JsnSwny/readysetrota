@@ -8,6 +8,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  RESET_DEPARTMENT,
 } from "./types";
 
 import { getErrors } from "./errors";
@@ -60,6 +61,9 @@ export const login = (username, password) => (dispatch) => {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
+      });
+      dispatch({
+        type: RESET_DEPARTMENT,
       });
     })
     .catch((err) => {

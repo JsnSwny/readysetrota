@@ -109,7 +109,8 @@ const Staff = () => {
 
       <section className="staff">
         <h1 className="staff__title">
-          {currentDepartment != 0 &&
+          {departments.length > 0 &&
+            currentDepartment != 0 &&
             departments.filter((item) => item.id == currentDepartment)[0]
               .name}{" "}
           Staff

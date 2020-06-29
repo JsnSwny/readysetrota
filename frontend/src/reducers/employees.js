@@ -8,6 +8,7 @@ import {
   ADD_DEPARTMENT,
   DELETE_POSITION,
   SET_DEPARTMENT,
+  RESET_DEPARTMENT,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -40,6 +41,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: action.payload,
+      };
+    case RESET_DEPARTMENT:
+      localStorage.setItem("current_department", 0);
+      return {
+        ...state,
+        current_department: 0,
       };
     case SET_DEPARTMENT:
       localStorage.setItem("current_department", action.payload);
