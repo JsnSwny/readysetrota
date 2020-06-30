@@ -19,6 +19,7 @@ const ShiftList = () => {
   const [open, setOpen] = useState(false);
   const [employeeID, setEmployeeID] = useState("");
   const [employeeName, setEmployeeName] = useState("");
+  const [shift, setShift] = useState(false);
   const [shiftDate, setShiftDate] = useState("");
   const [type, setType] = useState(false);
   const [uuid, setUUID] = useState("");
@@ -33,6 +34,7 @@ const ShiftList = () => {
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
+
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
@@ -155,6 +157,7 @@ const ShiftList = () => {
         employeeID={employeeID}
         employeeName={employeeName}
         date={shiftDate}
+        shift={shift}
       />
       <Dates filterEmployees={filterEmployees} dates={result} />
       {isLoading && (
@@ -232,6 +235,7 @@ const ShiftList = () => {
                           setEmployeeID(employee.id);
                           setEmployeeName(employee.name);
                           setShiftDate(format(result, "YYY-MM-dd"));
+                          setShift(false);
                         }}
                         className="shift__add--white"
                       >
@@ -242,7 +246,16 @@ const ShiftList = () => {
                       employee.id,
                       format(result, "YYY-MM-dd")
                     ).map((shift) => (
-                      <div className="shift__wrapper">
+                      <div
+                        onClick={() => {
+                          setOpen(true);
+                          setEmployeeID(employee.id);
+                          setType("shift");
+                          setEmployeeName(employee.name);
+                          setShift(shift);
+                        }}
+                        className="shift__wrapper"
+                      >
                         <p className="shift__time">
                           {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
                         </p>
@@ -272,6 +285,7 @@ const ShiftList = () => {
                           setEmployeeID(employee.id);
                           setEmployeeName(employee.name);
                           setShiftDate(format(result, "YYY-MM-dd"));
+                          setShift(false);
                         }}
                         className="shift__add"
                       >

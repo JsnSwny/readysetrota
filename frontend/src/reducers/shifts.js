@@ -7,6 +7,7 @@ import {
   SHIFTS_LOADING,
   DELETE_SHIFT,
   GET_POPULAR_TIMES,
+  UPDATE_SHIFT,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -70,6 +71,13 @@ export default function (state = initialState, action) {
         ),
 
         daily_shifts: [...state.daily_shifts, action.payload],
+      };
+    case UPDATE_SHIFT:
+      return {
+        ...state,
+        shifts: state.shifts.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
       };
     case DELETE_SHIFT:
       return {

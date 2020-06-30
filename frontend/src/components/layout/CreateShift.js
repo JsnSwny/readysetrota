@@ -11,6 +11,7 @@ const CreateShift = (props) => {
     date,
     type,
     staffPosition,
+    shift,
   } = props;
 
   return (
@@ -23,6 +24,7 @@ const CreateShift = (props) => {
               employeeID={employeeID}
               date={date}
               onClose={onClose}
+              shift={shift}
             />
           ) : (
             <AddStaff

@@ -186,6 +186,14 @@
     width: 100%;
     margin: 0 auto;
     color: white;
+    cursor: pointer;
+    transition: 0.2s color ease-in-out;
+    &:hover {
+      color: rgb(23, 26, 70);
+      .shift__info {
+        color: rgb(23, 26, 70);
+      }
+    }
   }
   &__time {
     font-size: 16px;
@@ -195,6 +203,7 @@
     font-size: 14px;
     color: rgb(243, 243, 243);
     word-wrap: break-word;
+    transition: 0.2s ease-in-out color;
     i {
       margin-right: 5px;
     }

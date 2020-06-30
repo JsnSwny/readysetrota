@@ -674,7 +674,13 @@ a {
 .shift__wrapper {
   width: 100%;
   margin: 0 auto;
-  color: white; }
+  color: white;
+  cursor: pointer;
+  transition: 0.2s color ease-in-out; }
+  .shift__wrapper:hover {
+    color: #171a46; }
+    .shift__wrapper:hover .shift__info {
+      color: #171a46; }
 
 .shift__time {
   font-size: 16px; }
@@ -683,7 +689,8 @@ a {
   font-weight: normal;
   font-size: 14px;
   color: #f3f3f3;
-  word-wrap: break-word; }
+  word-wrap: break-word;
+  transition: 0.2s ease-in-out color; }
   .shift__info i {
     margin-right: 5px; }
 

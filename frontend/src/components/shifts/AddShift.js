@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "../../actions/employees";
-import { addShift } from "../../actions/shifts";
+import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 
 const AddShift = (props) => {
-  const { date, employeeID, employeeName, onClose } = props;
+  const { date, employeeID, employeeName, onClose, shift } = props;
 
   let errors = useSelector((state) => state.errors.msg);
   let current_department = useSelector(
@@ -19,23 +19,37 @@ const AddShift = (props) => {
 
   let popular_times = useSelector((state) => state.shifts.popular_times);
 
+  useEffect(() => {
+    if (shift) {
+      setStartTime(shift.start_time);
+      setEndTime(shift.end_time);
+      setInfo(shift.info);
+    }
+  }, [shift]);
+
   const onSubmit = (e) => {
     e.preventDefault();
-    const shift = {
+    const shiftObj = {
       employee_id: employeeID,
       start_time: startTime,
       end_time: endTime,
       info,
-      date: date,
+      date: shift ? shift.date : date,
       department_id: current_department,
     };
-    dispatch(addShift(shift));
+    shift
+      ? dispatch(updateShift(shift.id, shiftObj))
+      : dispatch(addShift(shiftObj));
     if (startTime && endTime) {
       setStartTime("");
       setEndTime("");
       setInfo("");
       onClose();
     }
+  };
+
+  const deleteShiftByID = (id) => {
+    dispatch(deleteShift(id));
   };
 
   let minutes = ["00", "15", "30", "45"];
@@ -141,15 +155,15 @@ const AddShift = (props) => {
         <div className="staffForm__buttons">
           <button
             onClick={() => {
-              onClose();
+              shift ? deleteShiftByID(shift.id) : onClose();
             }}
             className="btn-1"
             style={{ backgroundColor: "#d05b5b" }}
           >
-            Cancel
+            {shift ? "Delete" : "Cancel"}
           </button>
           <button type="submit" className="btn-1">
-            Create
+            {shift ? "Update" : "Create"}
           </button>
         </div>
       </form>

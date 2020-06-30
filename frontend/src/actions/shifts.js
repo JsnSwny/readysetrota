@@ -10,6 +10,7 @@ import {
   SHIFTS_LOADING,
   DELETE_SHIFT,
   GET_POPULAR_TIMES,
+  UPDATE_SHIFT,
 } from "./types";
 import { tokenConfig } from "./auth";
 
@@ -77,6 +78,22 @@ export const addShift = (shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: ADD_SHIFT,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
+    .catch((err) => {
+      dispatch(getErrors(err.response.data, err.response.status));
+    });
+};
+
+export const updateShift = (id, shift) => (dispatch, getState) => {
+  axios
+    .put(`/api/shifts/${id}/`, shift, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_SHIFT,
         payload: res.data,
       });
       dispatch(resetErrors());
