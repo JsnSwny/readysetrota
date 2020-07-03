@@ -2,10 +2,15 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ShiftList from "../shifts/ShiftList";
+import NoDepartment from "./NoDepartment";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   let auth = useSelector((state) => state.auth);
   const { path } = rest;
+  let currentDepartment = useSelector(
+    (state) => state.employees.current_department
+  );
+  console.log(currentDepartment);
   return (
     <Route
       {...rest}
@@ -22,7 +27,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             />
           );
         } else {
-          return <Component {...props} />;
+          return currentDepartment != 0 ? (
+            <Component {...props} />
+          ) : (
+            <NoDepartment />
+          );
         }
       }}
     />

@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 nav {
   background-color: #222735;
   color: white;
@@ -6,8 +8,25 @@ nav {
   justify-content: center;
   align-items: center;
   position: relative;
-  text-transform: uppercase;
   z-index: 10;
+}
+
+.nav {
+  &__title {
+    font-size: 28px;
+    font-weight: 600;
+    a {
+      span:nth-child(1) {
+        color: $pink;
+      }
+      span:nth-child(2) {
+        color: $white;
+      }
+      span:nth-child(3) {
+        color: $pink;
+      }
+    }
+  }
 }
 
 nav h1 {

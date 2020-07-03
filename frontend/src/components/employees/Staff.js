@@ -67,7 +67,7 @@ const Staff = () => {
 
   return (
     <Fragment>
-      <div className="dates__picker container">
+      <div className="dates__picker container-2">
         <UpdateDepartment />
       </div>
 
@@ -107,7 +107,7 @@ const Staff = () => {
         }}
       />
 
-      <section className="staff">
+      <section className="staff container-2">
         <h1 className="staff__title">
           {departments.length > 0 &&
             currentDepartment != 0 &&

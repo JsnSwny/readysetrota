@@ -1,8 +1,11 @@
+@import "variables.scss";
+
 .login {
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #f9f9f9;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   position: relative;
   &::after {
     content: "";
@@ -14,48 +17,30 @@
     left: 0;
     width: 100%;
     height: 90%;
-    background-image: linear-gradient(-90deg, #ec70c9, #f3a5a5);
+    background-image: linear-gradient(-90deg, $pink, $pink2);
     transform: skewY(-20deg);
     transform-origin: top left;
   }
 }
 
 .login__box {
-  width: 80%;
-  margin: 40px 0;
-  height: 100%;
-  position: absolute;
+  max-width: 450px;
+  width: 100%;
+  padding: 60px 0;
   background-color: white;
   box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
   display: flex;
   z-index: 1;
 }
 
-.login__right {
-  width: 50%;
-  background-image: linear-gradient(
-      to left,
-      rgba(0, 0, 0, 0.52),
-      rgba(255, 255, 255, 0.73)
-    ),
-    url("/static/media/typing.jpeg");
-  background-size: cover;
-  background-position: center center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 84px;
-  color: white;
-}
-
 .login__left {
-  width: 50%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   form {
-    width: 60%;
+    width: 80%;
   }
   .form-group {
     margin-bottom: 30px;
@@ -143,17 +128,25 @@
   height: 50px;
   margin-top: 10px;
   padding: 0 20px;
+  border: 1px rgb(185, 185, 185) solid;
+  &:focus {
+    border: 1px $pink solid;
+    outline: none;
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .btn-2 {
   display: block;
   border: none;
-  background: linear-gradient(90deg, #f3a5a5, #ec70c9);
+  background: linear-gradient(90deg, $pink2, $pink);
   color: white;
   width: 150px;
   border-radius: 25px;
   height: 50px;
-  font-size: 20px;
+  font-size: 18px;
   margin: 0 auto;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;

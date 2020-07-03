@@ -17,9 +17,12 @@
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
     "file-loader": "^6.0.0",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "redux": "^4.0.5",
+    "sass": "^1.26.9",
+    "sass-loader": "^9.0.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"

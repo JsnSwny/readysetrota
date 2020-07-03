@@ -60,9 +60,11 @@ const Login = (props) => {
               <p className="login__leftExtra">
                 Don't have an account? <Link to="/register">Register</Link>
               </p>
+              <p className="login__leftExtra">
+                <a href="/reset_password">Forgot Password? </a>
+              </p>
             </form>
           </div>
-          <div className="login__right login__part">Login</div>
         </div>
       </div>
     );

@@ -52,12 +52,13 @@ const Nav = () => {
     <Fragment>
       <nav>
         <div>
-          <h1>
+          <p className="nav__title">
             <Link to="/">
-              <span style={{ color: "#EC70C9", cursor: "pointer" }}>Rota</span>
-              App
+              <span>Ready</span>
+              <span>Set</span>
+              <span>Rota</span>
             </Link>
-          </h1>
+          </p>
           <ul>
             <div className="nav__lisection">
               {user &&

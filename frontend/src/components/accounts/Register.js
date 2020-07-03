@@ -99,7 +99,6 @@ const Register = () => {
               </p>
             </form>
           </div>
-          <div className="login__right login__part">Register</div>
         </div>
       </div>
     );

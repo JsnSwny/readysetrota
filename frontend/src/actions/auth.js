@@ -74,6 +74,31 @@ export const login = (username, password) => (dispatch) => {
     });
 };
 
+export const changePassword = (old_password, new_password) => (
+  dispatch,
+  getState
+) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify({
+    old_password,
+    new_password,
+  });
+  axios
+    .put("/api/auth/changepassword", body, tokenConfig(getState))
+    .then((res) => {
+      res.data;
+      dispatch(logout());
+    })
+    .catch((err) => {
+      console.log(err.response);
+      dispatch(getErrors(err.response.data, err.response.status));
+    });
+};
+
 export const logout = () => (dispatch, getState) => {
   axios
     .post("/api/auth/logout/", null, tokenConfig(getState))

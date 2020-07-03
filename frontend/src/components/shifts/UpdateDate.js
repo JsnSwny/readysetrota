@@ -12,6 +12,7 @@ import {
   differenceInDays,
 } from "date-fns";
 import UpdateDepartment from "../shifts/UpdateDepartment";
+import EmailStaff from "./EmailStaff";
 
 const UpdateDate = (props) => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const UpdateDate = (props) => {
 
   return (
     <div className="dates__picker container">
+      {/* <EmailStaff /> */}
       <UpdateDepartment />
       <div className="dates__pickerWrapper">
         <p
