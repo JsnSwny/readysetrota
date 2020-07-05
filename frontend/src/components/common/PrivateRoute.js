@@ -10,7 +10,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
-  console.log(currentDepartment);
   return (
     <Route
       {...rest}

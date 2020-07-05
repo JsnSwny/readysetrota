@@ -24,7 +24,6 @@ const Dates = (dates) => {
   return (
     <Fragment>
       <UpdateDate />
-
       <CreateShift
         open={open}
         type="Staff"
@@ -35,8 +34,6 @@ const Dates = (dates) => {
           setOpen(false);
         }}
       />
-
-      {/* <UpdateDate daterange="7" /> */}
       <section
         className={`dates container ${scrollPosition >= 260 ? " fixed" : ""}`}
       >

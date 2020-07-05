@@ -40,6 +40,7 @@ class Shift(models.Model):
     info = models.TextField(blank=True)
 
     department = models.ForeignKey(Department, related_name="shift_department", on_delete=models.CASCADE, null=True, blank=True)
+    published = models.BooleanField(default=False)
     owner = models.ForeignKey(User, related_name="shifts", on_delete=models.CASCADE)
 
 class UserProfile(models.Model):

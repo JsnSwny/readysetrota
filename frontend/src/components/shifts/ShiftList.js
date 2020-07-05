@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
 import { getEmployees } from "../../actions/employees";
@@ -40,12 +40,8 @@ const ShiftList = () => {
   );
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
-  useEffect(() => {
-    dispatch(getEmployees());
-    shifts_list = dispatch(getShifts(date, enddate));
-  }, []);
 
-  useEffect(() => {
+  const widthUpdate = () => {
     if (width > 1000) {
       if (currentDevice != "Desktop") {
         dispatch(getShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd")));
@@ -62,12 +58,26 @@ const ShiftList = () => {
         setCurrentDevice("Mobile");
       }
     }
+  };
+
+  const firstUpdateWidth = useRef(true);
+  useEffect(() => {
+    if (firstUpdateWidth.current) {
+      firstUpdateWidth.current = false;
+      return;
+    }
+    widthUpdate();
   }, [width]);
 
+  const firstUpdateDepartment = useRef(true);
   useEffect(() => {
     dispatch(getEmployees());
     dispatch(getPopularTimes());
-    shifts_list = dispatch(getShifts(date, enddate));
+    if (firstUpdateDepartment.current) {
+      widthUpdate();
+      return;
+    }
+    dispatch(getShifts(date, enddate));
   }, [currentDepartment]);
 
   useEffect(() => {
@@ -109,8 +119,6 @@ const ShiftList = () => {
   }
 
   const filterEmployees = (date) => {
-    console.log(typeof date);
-    console.log(typeof filterDate);
     if (filterDate == date) {
       setFilterDate("");
       setEmployeesList(employees);
@@ -225,6 +233,13 @@ const ShiftList = () => {
                       filterDate == format(result, "YYY-MM-dd")
                         ? "filtered"
                         : ""
+                    } ${
+                      getEmployeeShift(
+                        employee.id,
+                        format(result, "YYY-MM-dd")
+                      ).some((item) => item.published == false)
+                        ? "unpublished"
+                        : ""
                     }`}
                   >
                     {user.profile.role == "Business" && (
@@ -246,26 +261,42 @@ const ShiftList = () => {
                       employee.id,
                       format(result, "YYY-MM-dd")
                     ).map((shift) => (
-                      <div
-                        onClick={() => {
-                          setOpen(true);
-                          setEmployeeID(employee.id);
-                          setType("shift");
-                          setEmployeeName(employee.name);
-                          setShift(shift);
-                        }}
-                        className="shift__wrapper"
-                      >
-                        <p className="shift__time">
-                          {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
-                        </p>
-                        {shift.info && (
-                          <p className="shift__info">
-                            <i class="fas fa-info-circle"></i>
-                            {shift.info}
-                          </p>
+                      <Fragment>
+                        {user.profile.role != "Business" &&
+                        shift.published == false ? (
+                          ""
+                        ) : (
+                          <div
+                            onClick={() => {
+                              setOpen(true);
+                              setEmployeeID(employee.id);
+                              setType("shift");
+                              setEmployeeName(employee.name);
+                              setShift(shift);
+                            }}
+                            className="shift__wrapper"
+                          >
+                            <p className="shift__time">
+                              {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
+                              {user.profile.role == "Business" ? (
+                                shift.published ? (
+                                  <i class="fas fa-check"></i>
+                                ) : (
+                                  <i class="fas fa-times"></i>
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </p>
+                            {shift.info && (
+                              <p className="shift__info">
+                                <i class="fas fa-info-circle"></i>
+                                {shift.info}
+                              </p>
+                            )}
+                          </div>
                         )}
-                      </div>
+                      </Fragment>
                     ))}
                   </div>
                 ) : (

@@ -181,6 +181,9 @@
     &.filtered {
       background-color: #7bc858;
     }
+    &.unpublished {
+      background-color: rgb(194, 66, 66);
+    }
   }
   &__wrapper {
     width: 100%;
@@ -193,6 +196,9 @@
       .shift__info {
         color: rgb(23, 26, 70);
       }
+    }
+    &.hide {
+      display: none;
     }
   }
   &__time {

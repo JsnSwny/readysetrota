@@ -1,11 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import {
-  getEmployees,
-  getPositions,
-  deleteEmployee,
-} from "../../actions/employees";
-import { checkUUID } from "../../actions/employees";
+import React from "react";
 import UpdateDepartment from "../shifts/UpdateDepartment";
 
 const NoDepartment = () => {

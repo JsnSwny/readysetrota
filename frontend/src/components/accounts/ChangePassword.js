@@ -18,9 +18,7 @@ const ChangePassword = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (newPassword == newPassword2) {
-      dispatch(changePassword(password, newPassword)).then((res) => {
-        console.log(res);
-      });
+      dispatch(changePassword(password, newPassword));
     } else {
       setPasswordMatch("Passwords do not match.");
     }

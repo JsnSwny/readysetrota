@@ -1,16 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import { getShifts } from "../../actions/shifts";
-import {
-  format,
-  parseISO,
-  addDays,
-  subDays,
-  addMonths,
-  subMonths,
-  differenceInDays,
-} from "date-fns";
 import { getDepartments, setDepartment } from "../../actions/employees";
 
 const UpdateDepartment = (props) => {

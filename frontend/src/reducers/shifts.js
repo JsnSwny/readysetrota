@@ -8,6 +8,7 @@ import {
   DELETE_SHIFT,
   GET_POPULAR_TIMES,
   UPDATE_SHIFT,
+  PUBLISHED_SHIFTS,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -24,7 +25,6 @@ var weekFromDate = addDays(
   dateRange
 );
 
-console.log(dateRange);
 weekFromDate = format(weekFromDate, "YYY-MM-dd");
 
 const initialState = {
@@ -97,6 +97,23 @@ export default function (state = initialState, action) {
       return {
         ...state,
         popular_times: action.payload,
+      };
+    case PUBLISHED_SHIFTS:
+      return {
+        ...state,
+        isLoading: false,
+        shifts: state.shifts.map((item) => {
+          if (action.payload.includes(item.id)) {
+            return {
+              ...item,
+              published: true,
+            };
+          } else {
+            return {
+              ...item,
+            };
+          }
+        }),
       };
     default:
       return state;

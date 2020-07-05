@@ -11,6 +11,7 @@ import {
   DELETE_SHIFT,
   GET_POPULAR_TIMES,
   UPDATE_SHIFT,
+  PUBLISHED_SHIFTS,
 } from "./types";
 import { tokenConfig } from "./auth";
 
@@ -122,6 +123,19 @@ export const getPopularTimes = () => (dispatch, getState) => {
   axios.get(`/api-view/getpopulartimes`, tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_POPULAR_TIMES,
+      payload: res.data,
+    });
+  });
+};
+
+// Get Popular Times
+export const publish = () => (dispatch, getState) => {
+  dispatch({
+    type: SHIFTS_LOADING,
+  });
+  axios.get(`/api-view/publish`, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: PUBLISHED_SHIFTS,
       payload: res.data,
     });
   });

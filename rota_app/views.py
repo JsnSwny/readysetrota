@@ -4,6 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Employee, Shift
 from django.db.models import Count
+from .serializers import ShiftSerializer
+from operator import attrgetter
+from itertools import groupby
+from datetime import datetime
+from django.core.mail import send_mail, send_mass_mail
+    
 
 # Create your views here.
 class CheckUUID(APIView):
@@ -20,3 +26,29 @@ class GetPopularTimes(APIView):
         shifts = Shift.objects.filter(owner=self.request.user)
         most_common = shifts.values("start_time", "end_time", "owner").annotate(count=Count('start_time')).order_by("-count")[:10]
         return Response(most_common)
+
+class Publish(APIView):
+    def get(self, request):
+        
+        shifts = Shift.objects.filter(owner=self.request.user, published=False)
+        shifts_sorted = sorted(shifts, key = attrgetter("employee.id"))
+        shifts_unique = [list(grp) for k, grp in groupby(shifts_sorted, attrgetter("employee.id"))]
+        mail = []
+        for i in shifts:
+            i.published = True
+            i.save()
+        for idx, val in enumerate(shifts_unique):
+            employee = shifts_unique[idx][0].employee
+            body = "Your rota has been updated\n\n"
+            for shift in sorted(shifts_unique[idx], key = attrgetter("date")):
+                body += f'{shift.date.strftime("%d %B %Y")}\n{str(shift.start_time)[0:5]} - {shift.end_time}\n\n'
+            body += "\n\nView your rota at https://rotaready.herokuapp.com"
+            if employee.user:
+                mail_item = ("Rota Updated", body, "macroberthallsystem@gmail.com", [employee.user.email])
+                mail.append(mail_item)
+                
+        send_mass_mail(tuple(mail))
+
+        ids = (o.id for o in shifts)
+        
+        return Response(ids)

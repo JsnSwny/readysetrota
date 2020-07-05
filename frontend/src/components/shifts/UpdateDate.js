@@ -1,16 +1,7 @@
-import React, { Component, Fragment, useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import { getShifts } from "../../actions/shifts";
-import {
-  format,
-  parseISO,
-  addDays,
-  subDays,
-  addMonths,
-  subMonths,
-  differenceInDays,
-} from "date-fns";
+import { format, parseISO, addDays } from "date-fns";
 import UpdateDepartment from "../shifts/UpdateDepartment";
 import EmailStaff from "./EmailStaff";
 
@@ -28,7 +19,7 @@ const UpdateDate = (props) => {
 
   return (
     <div className="dates__picker container">
-      {/* <EmailStaff /> */}
+      <EmailStaff />
       <UpdateDepartment />
       <div className="dates__pickerWrapper">
         <p

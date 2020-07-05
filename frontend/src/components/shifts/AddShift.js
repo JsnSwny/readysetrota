@@ -27,6 +27,14 @@ const AddShift = (props) => {
     }
   }, [shift]);
 
+  const compareShift = (shift1, shift2) => {
+    return (
+      shift1.start_time == shift2.start_time &&
+      shift1.end_time == shift2.end_time &&
+      shift1.info == shift2.info
+    );
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
@@ -36,9 +44,12 @@ const AddShift = (props) => {
       info,
       date: shift ? shift.date : date,
       department_id: current_department,
+      published: false,
     };
     shift
-      ? dispatch(updateShift(shift.id, shiftObj))
+      ? compareShift(shift, shiftObj)
+        ? ""
+        : dispatch(updateShift(shift.id, shiftObj))
       : dispatch(addShift(shiftObj));
     if (startTime && endTime) {
       setStartTime("");

@@ -152,6 +152,5 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
       //   type: GET_DEPARTMENTS,
       //   payload: res.data,
       // });
-    })
-    .catch((err) => console.log(err.response));
+    });
 };

@@ -363,7 +363,7 @@ body {
   .btn-3.email {
     cursor: pointer;
     width: 200px; }
-  .btn-3 .fa-envelope {
+  .btn-3 .fa-check {
     margin-right: 10px; }
 
 .nodepartment {
@@ -694,6 +694,8 @@ a {
   padding: 5px 15px; }
   .shift__shift.filtered, .filtered.shift__shift-noshift {
     background-color: #7bc858; }
+  .shift__shift.unpublished, .unpublished.shift__shift-noshift {
+    background-color: #c24242; }
 
 .shift__wrapper {
   width: 100%;
@@ -705,6 +707,8 @@ a {
     color: #171a46; }
     .shift__wrapper:hover .shift__info {
       color: #171a46; }
+  .shift__wrapper.hide {
+    display: none; }
 
 .shift__time {
   font-size: 16px; }

@@ -59,11 +59,11 @@ export const login = (username, password) => (dispatch) => {
     .post("/api/auth/login", body, config)
     .then((res) => {
       dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data,
+        type: RESET_DEPARTMENT,
       });
       dispatch({
-        type: RESET_DEPARTMENT,
+        type: LOGIN_SUCCESS,
+        payload: res.data,
       });
     })
     .catch((err) => {
@@ -94,7 +94,6 @@ export const changePassword = (old_password, new_password) => (
       dispatch(logout());
     })
     .catch((err) => {
-      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
