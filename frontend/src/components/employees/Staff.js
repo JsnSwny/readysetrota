@@ -67,7 +67,16 @@ const Staff = () => {
 
   return (
     <Fragment>
-      <div className="dates__picker container-2">
+      <div className="button-layout container-2">
+        <button
+          onClick={() => {
+            setOpenStaff(true);
+            setType("Position");
+          }}
+          className="btn-3 button"
+        >
+          <i class="fas fa-users"></i> Create Position
+        </button>
         <UpdateDepartment />
       </div>
 
@@ -115,15 +124,7 @@ const Staff = () => {
               .name}{" "}
           Staff
         </h1>
-        <p
-          onClick={() => {
-            setOpenStaff(true);
-            setType("Position");
-          }}
-          className="btn-1"
-        >
-          + Create Position
-        </p>
+
         {addButtonToggle != false && <AddStaff form={addButtonToggle} />}
         <div className="staff__container">
           {positions.map((position) => (

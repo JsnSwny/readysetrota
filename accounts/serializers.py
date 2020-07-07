@@ -4,7 +4,7 @@ from rota_app.models import UserProfile, Employee, Department
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
-
+from django.contrib.auth.models import Group
 import json
 
 
@@ -23,21 +23,37 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('name')
 
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('__all__')
+
         # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
+    all_permissions = serializers.SerializerMethodField()
+
+    def get_all_permissions(self, obj):
+        permissions = []
+        for i in obj.groups.all():
+            for perm in i.permissions.all():
+                permissions.append(perm.codename)
+        for i in obj.user_permissions.all():
+            permissions.append(i.codename)
+        return list(dict.fromkeys(permissions))
+         
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'user_permissions', 'profile', 'employee')
+        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined')
         depth = 3
 
 
 # Register Serializers
 class RegisterSerializer(serializers.ModelSerializer):
     role = serializers.CharField(write_only=True)
-
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     
+
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'password2', 'role')
@@ -62,11 +78,11 @@ class RegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'username': 'A user with that username already exists.'})
             
             user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
-
-    
             profile = UserProfile(user=user, role=validated_data['role'])
             profile.save() 
             if validated_data['role'] == "Business":
+                my_group = Group.objects.get(name='Business') 
+                my_group.user_set.add(user)        
                 department = Department(owner=user, name="Department 1")
                 department.save()
             return user

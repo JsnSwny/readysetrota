@@ -13,7 +13,7 @@ const UpdateDepartment = (props) => {
       onClick={() => {
         dispatch(publish());
       }}
-      className="btn-3 email"
+      className="btn-3 button"
     >
       <i class="fas fa-check"></i>Publish
     </button>

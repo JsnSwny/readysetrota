@@ -1,7 +1,6 @@
 import {
   GET_ALL_SHIFTS,
   ADD_SHIFT,
-  GET_DAILY_SHIFTS,
   LOGOUT_SUCCESS,
   GET_SHIFTS_BY_ID,
   SHIFTS_LOADING,
@@ -31,7 +30,6 @@ const initialState = {
   shifts: [],
   date: todayDate,
   end_date: weekFromDate,
-  daily_shifts: [],
   user_shifts: [],
   popular_times: [],
   isLoading: false,
@@ -53,11 +51,6 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
 
-    case GET_DAILY_SHIFTS:
-      return {
-        ...state,
-        daily_shifts: action.payload,
-      };
     case GET_SHIFTS_BY_ID:
       return {
         ...state,
@@ -69,8 +62,6 @@ export default function (state = initialState, action) {
         shifts: [...state.shifts, action.payload].sort((a, b) =>
           a.start_time.localeCompare(b.start_time)
         ),
-
-        daily_shifts: [...state.daily_shifts, action.payload],
       };
     case UPDATE_SHIFT:
       return {
@@ -83,15 +74,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         shifts: state.shifts.filter((shift) => shift.id !== action.payload),
-        daily_shifts: state.daily_shifts.filter(
-          (shift) => shift.id !== action.payload
-        ),
       };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         shifts: [],
-        daily_shifts: [],
       };
     case GET_POPULAR_TIMES:
       return {

@@ -50,7 +50,7 @@ const Nav = () => {
 
   return (
     <Fragment>
-      <nav>
+      <nav className="nav">
         <div>
           <p className="nav__title">
             <Link to="/">

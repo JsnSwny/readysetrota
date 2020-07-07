@@ -14,12 +14,14 @@ const UpdateDate = (props) => {
     let newDate = format(addDays(parseISO(date), add), "YYY-MM-dd");
     return newDate;
   };
+  let user = useSelector((state) => state.auth.user);
 
   let dateRange = width > 1000 ? 6 : width > 600 ? 2 : 0;
+  let permissions = user.all_permissions;
 
   return (
-    <div className="dates__picker container">
-      <EmailStaff />
+    <div className="button-layout container">
+      {permissions.includes("can_publish_shifts") && <EmailStaff />}
       <UpdateDepartment />
       <div className="dates__pickerWrapper">
         <p

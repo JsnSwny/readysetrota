@@ -28,6 +28,7 @@ const ShiftList = () => {
   const [currentDevice, setCurrentDevice] = useState("");
 
   let user = useSelector((state) => state.auth.user);
+  let permissions = user.all_permissions;
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
 
@@ -106,7 +107,11 @@ const ShiftList = () => {
 
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
-      return obj.employee.id === employee && obj.date === date;
+      return obj.employee.id === employee && obj.date === date
+        ? permissions.includes("can_view_unpublished_shifts")
+          ? !obj.published || obj.published
+          : obj.published
+        : "";
     });
 
   function copyToClipboard(text) {
@@ -193,13 +198,18 @@ const ShiftList = () => {
                       )
                   )}
                 </p>
-                <p className="employee__name">
-                  {employee.name.split(" ")[0]}
-                  <span className="employee__surname">
-                    {" "}
-                    {employee.name.split(" ")[1]}
-                  </span>
-                  {user.profile.role == "Business" && !employee.user && (
+                <div className="employee__name-container">
+                  <a
+                    href={`/profile/${employee.id}`}
+                    className="employee__name"
+                  >
+                    {employee.name.split(" ")[0]}
+                    <span className="employee__surname">
+                      {" "}
+                      {employee.name.split(" ")[1]}
+                    </span>
+                  </a>
+                  {permissions.includes("can_view_uuid") && !employee.user && (
                     <Fragment>
                       <i
                         style={{ marginLeft: "10px", cursor: "pointer" }}
@@ -218,7 +228,7 @@ const ShiftList = () => {
                       </span>
                     </Fragment>
                   )}
-                </p>
+                </div>
                 <p className="employee__hours">
                   {getAllShifts(employee.id)} Hours
                 </p>
@@ -242,7 +252,7 @@ const ShiftList = () => {
                         : ""
                     }`}
                   >
-                    {user.profile.role == "Business" && (
+                    {permissions.includes("can_create_shift") && (
                       <p
                         onClick={() => {
                           setOpen(true);
@@ -262,23 +272,31 @@ const ShiftList = () => {
                       format(result, "YYY-MM-dd")
                     ).map((shift) => (
                       <Fragment>
-                        {user.profile.role != "Business" &&
+                        {!permissions.includes("can_view_unpublished_shifts") &&
                         shift.published == false ? (
                           ""
                         ) : (
                           <div
                             onClick={() => {
-                              setOpen(true);
-                              setEmployeeID(employee.id);
-                              setType("shift");
-                              setEmployeeName(employee.name);
-                              setShift(shift);
+                              if (permissions.includes("can_create_shift")) {
+                                setOpen(true);
+                                setEmployeeID(employee.id);
+                                setType("shift");
+                                setEmployeeName(employee.name);
+                                setShift(shift);
+                              }
                             }}
-                            className="shift__wrapper"
+                            className={`shift__wrapper ${
+                              permissions.includes("can_create_shift")
+                                ? "edit"
+                                : ""
+                            }`}
                           >
                             <p className="shift__time">
                               {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
-                              {user.profile.role == "Business" ? (
+                              {permissions.includes(
+                                "can_view_unpublished_shifts"
+                              ) ? (
                                 shift.published ? (
                                   <i class="fas fa-check"></i>
                                 ) : (
@@ -308,7 +326,7 @@ const ShiftList = () => {
                         : ""
                     }`}
                   >
-                    {user.profile.role == "Business" && (
+                    {permissions.includes("can_create_shift") && (
                       <span
                         onClick={() => {
                           setOpen(true);

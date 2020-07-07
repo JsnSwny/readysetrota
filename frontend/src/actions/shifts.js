@@ -5,7 +5,6 @@ axios.defaults.xsrfCookieName = "csrftoken";
 import {
   GET_ALL_SHIFTS,
   ADD_SHIFT,
-  GET_DAILY_SHIFTS,
   GET_SHIFTS_BY_ID,
   SHIFTS_LOADING,
   DELETE_SHIFT,
@@ -14,7 +13,7 @@ import {
   PUBLISHED_SHIFTS,
 } from "./types";
 import { tokenConfig } from "./auth";
-
+import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
 // Get Bookings
@@ -41,32 +40,18 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
 };
 
 // Get Bookings
-export const getShiftsByID = (startdate, enddate, id) => (
-  dispatch,
-  getState
-) => {
+export const getShiftsByID = (id) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shifts/?date_after=${startdate}&date_before=${enddate}&employee=${id}&ordering=date,start_time`,
+      `/api/shifts/?date_after=${format(
+        new Date(),
+        "YYY-MM-dd"
+      )}&employee=${id}&ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {
       dispatch({
         type: GET_SHIFTS_BY_ID,
-        payload: res.data,
-      });
-    });
-};
-
-export const getDailyShifts = (date) => (dispatch, getState) => {
-  axios
-    .get(
-      `/api/shifts/?date_after=${date}&date_before=${date}&ordering=date,start_time`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: GET_DAILY_SHIFTS,
         payload: res.data,
       });
     });

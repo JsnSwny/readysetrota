@@ -1,8 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;700&display=swap");
 
-$red: rgb(211, 63, 63);
-$orange: rgb(221, 150, 69);
-$green: rgb(100, 206, 68);
+@import "variables.scss";
 
 * {
   box-sizing: border-box;
@@ -131,6 +129,7 @@ body {
 
 .container-2 {
   width: 80%;
+  margin: 0 auto;
 }
 
 .wrapper {
@@ -150,11 +149,11 @@ body {
   &:focus {
     outline: none;
   }
-  &.email {
+  &.button {
     cursor: pointer;
     width: 200px;
   }
-  .fa-check {
+  .fas {
     margin-right: 10px;
   }
 }
@@ -189,7 +188,17 @@ body {
   }
 }
 
+.button-layout {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 20px auto;
+}
+
 @media only screen and (max-width: 600px) {
+  .button-layout {
+    flex-direction: column;
+  }
   .container {
     width: calc(100vw - 10px);
   }
@@ -203,5 +212,11 @@ body {
     &:first-child {
       margin: 0 0 0 5px;
     }
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .container-2 {
+    width: 90%;
   }
 }

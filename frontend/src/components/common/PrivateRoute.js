@@ -3,9 +3,15 @@ import { Route, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ShiftList from "../shifts/ShiftList";
 import NoDepartment from "./NoDepartment";
+import EnterID from "./EnterID";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   let auth = useSelector((state) => state.auth);
+  let groups = [];
+  if (auth.user) {
+    groups = auth.user.groups;
+  }
+
   const { path } = rest;
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
@@ -26,11 +32,16 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             />
           );
         } else {
-          return currentDepartment != 0 ? (
-            <Component {...props} />
-          ) : (
-            <NoDepartment />
-          );
+          if (
+            !auth.user.employee.length > 0 &&
+            !groups.some((item) => item.name == "Business")
+          ) {
+            return <EnterID />;
+          } else if (currentDepartment != 0) {
+            return <Component {...props} />;
+          } else {
+            return <NoDepartment />;
+          }
         }
       }}
     />

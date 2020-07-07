@@ -1,4 +1,4 @@
-import React, { useEffect, useSelector } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -9,7 +9,6 @@ import store from "../store";
 import Shifts from "./shifts/Shifts";
 import "../css/styles.css";
 import Staff from "./employees/Staff";
-import ShiftDetail from "./shifts/ShiftDetail";
 
 import Register from "./accounts/Register";
 import Login from "./accounts/Login";
@@ -21,6 +20,7 @@ import Home from "./common/Home";
 import { setWidth } from "../actions/responsive";
 
 import ChangePassword from "./accounts/ChangePassword";
+import Profile from "./shifts/Profile";
 
 const App = () => {
   useEffect(() => {
@@ -40,8 +40,8 @@ const App = () => {
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <PrivateRoute path="/staff" component={Staff} />
-            <PrivateRoute path="/shift/:date" component={ShiftDetail} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
+            <PrivateRoute path="/profile/:id" component={Profile} />
           </Switch>
         </div>
       </Router>

@@ -6,13 +6,11 @@ import {
   deleteEmployee,
 } from "../../actions/employees";
 import Confirm from "../layout/Confirm";
-import YourRota from "../shifts/YourRota";
+import Profile from "../shifts/Profile";
 import ShiftList from "../shifts/ShiftList";
 import EnterID from "./EnterID";
 
 const Home = () => {
-  const [addButtonToggle, setAddButtonToggle] = useState(false);
-
   let user = useSelector((state) => state.auth.user);
 
   return (
@@ -20,7 +18,7 @@ const Home = () => {
       {user.profile.role == "Business" ? (
         <ShiftList />
       ) : user.employee.length > 0 ? (
-        <YourRota />
+        <Profile />
       ) : (
         <EnterID />
       )}

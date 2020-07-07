@@ -1,6 +1,4 @@
-* {
-  margin: 0;
-}
+@import "variables.scss";
 
 .dates {
   height: 100px;
@@ -30,12 +28,6 @@
   }
   .fa-user-plus {
     margin-right: 10px;
-  }
-  &__picker {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin: 20px auto;
   }
   &__pickerWrapper {
     display: flex;
@@ -136,6 +128,10 @@
   }
   &__name {
     font-size: 16px;
+    transition: 0.2s ease-in-out color;
+    &:hover {
+      color: #ad408e;
+    }
   }
   &__position {
     font-size: 12px;
@@ -191,14 +187,17 @@
     color: white;
     cursor: pointer;
     transition: 0.2s color ease-in-out;
-    &:hover {
-      color: rgb(23, 26, 70);
-      .shift__info {
-        color: rgb(23, 26, 70);
-      }
-    }
+
     &.hide {
       display: none;
+    }
+    &.edit {
+      &:hover {
+        color: rgb(23, 26, 70);
+        .shift__info {
+          color: rgb(23, 26, 70);
+        }
+      }
     }
   }
   &__time {
@@ -298,47 +297,8 @@
   }
 }
 
-.userShift {
-  &__container {
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, max-content));
-    grid-gap: 10px;
-    justify-content: center;
-  }
-  &__wrapper {
-    background-color: #ececec;
-    padding: 30px 0;
-    width: 320px;
-    text-align: center;
-  }
-  &__noshift {
-    background-color: #f2f2f2;
-    color: #cbcbcb;
-  }
-  &__time {
-    font-weight: bold;
-  }
-}
-
-.yourRota {
-  width: 85%;
-  margin: 0 auto;
-  margin-top: 30px;
-  &__select {
-    border: none;
-    background-color: #e9e9e9;
-    margin-top: 30px;
-    width: 200px;
-    padding: 10px 10px;
-  }
-}
-
 @media only screen and (max-width: 600px) {
   .dates {
-    &__picker {
-      flex-direction: column;
-    }
     &__pickerWrapper {
       width: 100%;
     }
@@ -404,20 +364,5 @@
   //   .dates__date:not(:first-child) {
   //     display: none;
   //   }
-  // }
-  // .userShift {
-  //   &__container {
-  //     display: flex;
-  //     flex-direction: column;
-  //   }
-  //   &__wrapper {
-  //     width: 100%;
-  //     border-top: 2px #e4e4e4 solid;
-  //     padding: 15px 0;
-  //   }
-  // }
-  // .yourRota {
-  //   width: 100%;
-  //   text-align: center;
   // }
 }

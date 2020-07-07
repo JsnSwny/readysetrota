@@ -1,6 +1,6 @@
 @import "variables.scss";
 
-nav {
+.nav {
   background-color: #222735;
   color: white;
   height: 80px;
@@ -9,9 +9,6 @@ nav {
   align-items: center;
   position: relative;
   z-index: 10;
-}
-
-.nav {
   &__title {
     font-size: 28px;
     font-weight: 600;
@@ -27,37 +24,34 @@ nav {
       }
     }
   }
-}
-
-nav h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0;
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  position: absolute;
-  left: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  text-decoration: none;
-  align-items: center;
-  width: 90%;
-}
-
-nav li {
-  margin: 0 40px;
-  font-size: 18px;
-  transition: 0.2s ease all;
-  cursor: pointer;
-  &:hover {
-    color: #f39bda;
-  }
-  &.nav__logout {
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
     margin: 0;
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+    align-items: center;
+    width: 90%;
+  }
+  li {
+    margin: 0 40px;
+    font-size: 18px;
+    transition: 0.2s ease all;
+    cursor: pointer;
+    &:hover {
+      color: #f39bda;
+    }
+    &.nav__logout {
+      margin: 0;
+    }
   }
 }
 
@@ -90,7 +84,7 @@ a {
 }
 
 @media only screen and (max-width: 1000px) {
-  nav ul .nav__lisection {
+  .nav ul .nav__lisection {
     display: none;
   }
   .hamburger {
