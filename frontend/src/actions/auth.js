@@ -128,6 +128,9 @@ export const register = ({ username, password, password2, email, role }) => (
     .post("/api/auth/register", body, config)
     .then((res) => {
       dispatch({
+        type: RESET_DEPARTMENT,
+      });
+      dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
       });
