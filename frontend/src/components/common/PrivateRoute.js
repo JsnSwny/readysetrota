@@ -12,7 +12,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     groups = auth.user.groups;
   }
 
-  const { path } = rest;
+  const { path, computedMatch } = rest;
+  let url = computedMatch.url;
+
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
@@ -27,7 +29,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             <Redirect
               to={{
                 pathname: "/login",
-                state: { path },
+                state: { url },
               }}
             />
           );

@@ -6,19 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { location } = props;
+  const { location, history } = props;
   let errors = useSelector((state) => state.errors.msg);
   let path = "/";
   if (location.state) {
-    path = location.state.path;
+    path = location.state;
   }
+
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password));
   };
   if (useSelector((state) => state.auth.isAuthenticated)) {
-    return <Redirect to={path} />;
+    return <Redirect to={path.url} />;
   } else {
     return (
       <div className="login">

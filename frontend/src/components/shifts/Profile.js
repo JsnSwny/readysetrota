@@ -6,8 +6,9 @@ import { useParams } from "react-router-dom";
 import { format, parse, parseISO } from "date-fns";
 import Pagination from "./Pagination";
 
-const Profile = () => {
+const Profile = (props) => {
   const dispatch = useDispatch();
+  const { history } = props;
   let user = useSelector((state) => state.auth.user);
   let permissions = user.all_permissions;
   let { id } = useParams();
@@ -24,7 +25,6 @@ const Profile = () => {
   // if (employees.some((item) => item.id != id)) {
   //   return false;
   // }
-
   const [currentPage, setCurrentPage] = useState(1);
   const [shiftsPerPage, setShiftsPerPage] = useState(5);
 

@@ -318,6 +318,7 @@
     .dashboard .table.dashboard__table-heading {
       display: none; }
   .dashboard__block {
+    min-height: 0;
     padding: 30px 20px; }
     .dashboard__block-title {
       text-align: center;
