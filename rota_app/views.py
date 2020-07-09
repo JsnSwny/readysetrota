@@ -9,7 +9,8 @@ from operator import attrgetter
 from itertools import groupby
 from datetime import datetime
 from django.core.mail import send_mail, send_mass_mail
-    
+from django_xhtml2pdf.utils import generate_pdf
+from django.http import HttpResponse
 
 # Create your views here.
 class CheckUUID(APIView):
@@ -52,3 +53,14 @@ class Publish(APIView):
         ids = (o.id for o in shifts)
         
         return Response(ids)
+    
+class ExportShifts(APIView):
+    def get(self, request):
+        id = request.query_params.get('id')
+
+        employee = Employee.objects.filter(id=id)[0]
+
+        shifts = Shift.objects.filter(employee__id=id, published=True).order_by('date')
+        resp = HttpResponse(content_type='application/pdf')
+        result = generate_pdf('shifts.html', file_object=resp, context = {'shifts': shifts, 'employee': employee}, )
+        return result

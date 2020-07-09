@@ -5,6 +5,7 @@ import { getEmployees } from "../../actions/employees";
 import { useParams } from "react-router-dom";
 import { format, parse, parseISO } from "date-fns";
 import Pagination from "./Pagination";
+import { Link, Redirect } from "react-router-dom";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
@@ -55,7 +56,17 @@ const Profile = (props) => {
         )}
 
         <div className="dashboard__block">
-          <p className="dashboard__block-title">Upcoming Shifts</p>
+          <div className="dashboard__block-title-container">
+            <p className="dashboard__block-title">Upcoming Shifts</p>
+            <a
+              className="btn-4"
+              target="_blank"
+              href={`/export?id=${employee.id}`}
+            >
+              Export Shifts as PDF
+            </a>
+          </div>
+
           <div className="dashboard__block-container">
             <div className="dashboard__table-heading table">
               <p className="short">Date</p>

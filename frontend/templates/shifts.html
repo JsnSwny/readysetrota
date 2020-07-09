@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>Rota - {{ employee.name }}</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ employee.name }}'s Rota</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Info</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shift in shifts %}
+        <tr>
+          <td>{{ shift.date|date:"l jS F" }}</td>
+          <td>{{ shift.start_time|time:"H:i" }}</td>
+          <td>{{ shift.end_time }}</td>
+          {% if shift.info %}
+          <td>{{ shift.info }}</td>
+          {% else %}
+          <td>N/A</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
