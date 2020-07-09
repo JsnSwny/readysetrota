@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts
+from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts, ExportAllShifts
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('api-view/getpopulartimes', GetPopularTimes.as_view(), name='getpopulartimes'),
     path('api-view/publish', Publish.as_view(), name='publish'),
     path('export', ExportShifts.as_view(), name='export'),
+    path('exportall', ExportAllShifts.as_view(), name='exportall'),
     path('api/', include('rota_app.urls')),
     
     

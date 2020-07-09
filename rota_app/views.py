@@ -11,6 +11,7 @@ from datetime import datetime
 from django.core.mail import send_mail, send_mass_mail
 from django_xhtml2pdf.utils import generate_pdf
 from django.http import HttpResponse
+from django import template
 
 # Create your views here.
 class CheckUUID(APIView):
@@ -45,7 +46,7 @@ class Publish(APIView):
                 body += f'{shift.date.strftime("%d %B %Y")}\n{str(shift.start_time)[0:5]} - {shift.end_time}\n\n'
             body += "\n\nView your rota at https://rotaready.herokuapp.com"
             if employee.user:
-                mail_item = ("Rota Updated", body, "macroberthallsystem@gmail.com", [employee.user.email])
+                mail_item = ("Rota Updated", body, "readysetrota@gmail.com", [employee.user.email])
                 mail.append(mail_item)
                 
         send_mass_mail(tuple(mail))
@@ -57,10 +58,27 @@ class Publish(APIView):
 class ExportShifts(APIView):
     def get(self, request):
         id = request.query_params.get('id')
-
         employee = Employee.objects.filter(id=id)[0]
-
         shifts = Shift.objects.filter(employee__id=id, published=True, date__gte=datetime.now()).order_by('date')
         resp = HttpResponse(content_type='application/pdf')
+        resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('shifts.html', file_object=resp, context = {'shifts': shifts, 'employee': employee}, )
         return result
+
+class ExportAllShifts(APIView):
+    def get(self, request):
+        shifts = Shift.objects.filter(published=True, date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get('end_date')).order_by('date')
+        
+        all_shifts = {}
+
+        for i in shifts:
+            all_shifts[i.date] = {}
+
+        for i in all_shifts:
+            all_shifts[i] = Shift.objects.filter(date=i, published=True).order_by('start_time')
+
+        resp = HttpResponse(content_type='application/pdf')
+        resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
+        result = generate_pdf('allshifts.html', file_object=resp, context = {'shifts': shifts, 'all_shifts': all_shifts}, )
+        return result
+
