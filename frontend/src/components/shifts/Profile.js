@@ -42,7 +42,7 @@ const Profile = (props) => {
         <h1 className="title">
           {user_set && user.id == employee.user.id
             ? "Your "
-            : employee.name + "'s "}
+            : employee.first_name + " " + employee.last_name + "'s "}
           Profile
         </h1>
         {employee.position.map((item) => (

@@ -31,7 +31,7 @@ const Login = (props) => {
                 <input
                   type="email"
                   className="form-control input-1"
-                  name="username"
+                  name="email"
                   onChange={(e) => {
                     setUsername(e.target.value);
                   }}

@@ -203,10 +203,10 @@ const ShiftList = () => {
                     href={`/profile/${employee.id}`}
                     className="employee__name"
                   >
-                    {employee.name.split(" ")[0]}
+                    {employee.first_name}
                     <span className="employee__surname">
                       {" "}
-                      {employee.name.split(" ")[1]}
+                      {employee.last_name}
                     </span>
                   </a>
                   {permissions.includes("can_view_uuid") && !employee.user && (
@@ -258,7 +258,9 @@ const ShiftList = () => {
                           setOpen(true);
                           setType("shift");
                           setEmployeeID(employee.id);
-                          setEmployeeName(employee.name);
+                          setEmployeeName(
+                            employee.first_name + " " + employee.last_name
+                          );
                           setShiftDate(format(result, "YYY-MM-dd"));
                           setShift(false);
                         }}
@@ -282,7 +284,9 @@ const ShiftList = () => {
                                 setOpen(true);
                                 setEmployeeID(employee.id);
                                 setType("shift");
-                                setEmployeeName(employee.name);
+                                setEmployeeName(
+                                  employee.first_name + " " + employee.last_name
+                                );
                                 setShift(shift);
                               }
                             }}
@@ -332,7 +336,9 @@ const ShiftList = () => {
                           setOpen(true);
                           setType("shift");
                           setEmployeeID(employee.id);
-                          setEmployeeName(employee.name);
+                          setEmployeeName(
+                            employee.first_name + " " + employee.last_name
+                          );
                           setShiftDate(format(result, "YYY-MM-dd"));
                           setShift(false);
                         }}

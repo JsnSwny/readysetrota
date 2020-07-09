@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Rota - {{ employee.name }}</title>
+    <title>Rota - {{ employee.first_name }} {{ employee.last_name }}</title>
     <style>
       * {
         box-sizing: border-box;
@@ -27,7 +27,7 @@
     </style>
   </head>
   <body>
-    <h1>{{ employee.name }}'s Rota</h1>
+    <h1>{{ employee.first_name }} {{ employee.last_name }}'s Rota</h1>
     <table>
       <thead>
         <tr>

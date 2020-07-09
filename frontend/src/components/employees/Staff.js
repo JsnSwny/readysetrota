@@ -165,13 +165,17 @@ const Staff = () => {
                         className="staff__employeeContainer"
                       >
                         <div className="staff__employee">
-                          <p>{employee.name}</p>
+                          <p>
+                            {employee.first_name + " " + employee.last_name}
+                          </p>
                           <div className="delete_icon">
                             <i
                               onClick={() => {
                                 setOpen(true);
                                 setEmployeeID(employee.id);
-                                setEmployeeName(employee.name);
+                                setEmployeeName(
+                                  employee.first_name + " " + employee.last_name
+                                );
                               }}
                               className="fas fa-trash"
                             ></i>

@@ -62,6 +62,8 @@ const AddStaff = (props) => {
   };
 
   const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
 
   const onSubmit = (e) => {
@@ -69,6 +71,8 @@ const AddStaff = (props) => {
     if (form == "Staff") {
       const employee = {
         name,
+        first_name: firstName,
+        last_name: lastName,
         position_id: position,
       };
 
@@ -92,10 +96,70 @@ const AddStaff = (props) => {
     }
   };
   return (
-    <Fragment>
-      <div className="staffForm">
-        <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create {form}</h1>
-        <form onSubmit={onSubmit} className="staffForm__form">
+    <div className="staffForm">
+      <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create {form}</h1>
+      <form onSubmit={onSubmit} className="staffForm__form">
+        {form === "Staff" ? (
+          <Fragment>
+            <div className="staffForm__control">
+              <label className="staffForm__label">First Name:</label>
+              <input
+                className="staffForm__input"
+                type="text"
+                name="first_name "
+                onChange={(e) => setFirstName(e.target.value)}
+                value={firstName}
+              ></input>
+              <p className="error">{errors.name}</p>
+            </div>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Last Name:</label>
+              <input
+                className="staffForm__input"
+                type="text"
+                name="last_name "
+                onChange={(e) => setLastName(e.target.value)}
+                value={lastName}
+              ></input>
+              <p className="error">{errors.name}</p>
+            </div>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Position:</label>
+              <select
+                className="staffForm__input"
+                onChange={(e) => {
+                  return checkDepartment(
+                    [...e.target.options]
+                      .filter((o) => o.selected)
+                      .map((o) => o.value)
+                  )
+                    ? setPosition(
+                        [...e.target.options]
+                          .filter((o) => o.selected)
+                          .map((o) => o.value)
+                      )
+                    : false;
+                }}
+                name="position"
+                value={position}
+                multiple
+              >
+                {positions.map((item) =>
+                  getDepartment(item.id) ? (
+                    <option disabled key={item.id} value={item.id}>
+                      {item.name} ({item.department.name})
+                    </option>
+                  ) : (
+                    <option key={item.id} value={item.id}>
+                      {item.name} ({item.department.name})
+                    </option>
+                  )
+                )}
+              </select>
+              <p className="error">{errors.position_id}</p>
+            </div>
+          </Fragment>
+        ) : (
           <div className="staffForm__control">
             <label className="staffForm__label">Name:</label>
             <input
@@ -107,62 +171,24 @@ const AddStaff = (props) => {
             ></input>
             <p className="error">{errors.name}</p>
           </div>
-          {form === "Staff" && (
-            <Fragment>
-              <div className="staffForm__control">
-                <label className="staffForm__label">Position:</label>
-                <select
-                  className="staffForm__input"
-                  onChange={(e) => {
-                    return checkDepartment(
-                      [...e.target.options]
-                        .filter((o) => o.selected)
-                        .map((o) => o.value)
-                    )
-                      ? setPosition(
-                          [...e.target.options]
-                            .filter((o) => o.selected)
-                            .map((o) => o.value)
-                        )
-                      : false;
-                  }}
-                  name="position"
-                  value={position}
-                  multiple
-                >
-                  {positions.map((item) =>
-                    getDepartment(item.id) ? (
-                      <option disabled key={item.id} value={item.id}>
-                        {item.name} ({item.department.name})
-                      </option>
-                    ) : (
-                      <option key={item.id} value={item.id}>
-                        {item.name} ({item.department.name})
-                      </option>
-                    )
-                  )}
-                </select>
-                <p className="error">{errors.position_id}</p>
-              </div>
-            </Fragment>
-          )}
-          <div className="staffForm__buttons">
-            <button
-              onClick={() => {
-                onClose();
-              }}
-              className="btn-1"
-              style={{ backgroundColor: "#d05b5b" }}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn-1">
-              Create
-            </button>
-          </div>
-        </form>
-      </div>
-    </Fragment>
+        )}
+
+        <div className="staffForm__buttons">
+          <button
+            onClick={() => {
+              onClose();
+            }}
+            className="btn-1"
+            style={{ backgroundColor: "#d05b5b" }}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn-1">
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

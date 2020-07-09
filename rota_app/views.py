@@ -21,7 +21,7 @@ class CheckUUID(APIView):
             user = User.objects.filter(id=request.query_params.get('userid')).first()
             employee.user = user
             employee.save()
-            return Response({"uuid": employee.name})
+            return Response({"uuid": employee.first_name})
 
 class GetPopularTimes(APIView):
     def get(self, request):

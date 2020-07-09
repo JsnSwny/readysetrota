@@ -21,6 +21,8 @@ class Position(models.Model):
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
     position = models.ManyToManyField(Position, related_name="position", blank=True)
     def __str__(self):
         return self.name

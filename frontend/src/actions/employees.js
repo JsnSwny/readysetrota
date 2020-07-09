@@ -140,17 +140,10 @@ export const getDepartments = () => (dispatch, getState) => {
 
 // Get Department
 export const checkUUID = (uuid, userid) => (dispatch, getState) => {
-  axios
-    .get("/api-view/checkuuid", {
-      params: {
-        uuid,
-        userid,
-      },
-    })
-    .then((res) => {
-      // dispatch({
-      //   type: GET_DEPARTMENTS,
-      //   payload: res.data,
-      // });
-    });
+  axios.get("/api-view/checkuuid", {
+    params: {
+      uuid,
+      userid,
+    },
+  });
 };

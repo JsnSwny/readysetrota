@@ -49,7 +49,9 @@
       <tbody>
         <tr>
           <td>&nbsp;</td>
-          <td>{{ shift.employee.name }}</td>
+          <td>
+            {{ shift.employee.first_name }} {{ shift.employee.last_name }}
+          </td>
           <td>{{ shift.start_time|time:"H:i" }}</td>
           <td>{{ shift.end_time }}</td>
         </tr>
