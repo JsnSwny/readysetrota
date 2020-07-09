@@ -60,7 +60,7 @@ class ExportShifts(APIView):
 
         employee = Employee.objects.filter(id=id)[0]
 
-        shifts = Shift.objects.filter(employee__id=id, published=True).order_by('date')
+        shifts = Shift.objects.filter(employee__id=id, published=True, date__gte=datetime.now()).order_by('date')
         resp = HttpResponse(content_type='application/pdf')
         result = generate_pdf('shifts.html', file_object=resp, context = {'shifts': shifts, 'employee': employee}, )
         return result
