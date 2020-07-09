@@ -64,7 +64,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = EmployeeFilter
-    ordering_fields = ('name',)
+    ordering_fields = ('first_name',)
 
 class PositionFilter(django_filters.FilterSet):
     department = django_filters.NumberFilter()
