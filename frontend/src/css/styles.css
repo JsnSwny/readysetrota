@@ -377,7 +377,7 @@ body {
 
 .title {
   font-size: 36px;
-  line-height: 40px; }
+  line-height: 30px; }
 
 .subtitle {
   font-size: 24px; }
@@ -465,7 +465,6 @@ body {
   margin-right: 10px;
   border: 1px solid #bebebe;
   background-color: white;
-  width: 300px;
   padding: 0 20px;
   font-size: 16px;
   color: #ec70c9; }
@@ -508,14 +507,10 @@ body {
   margin: 20px auto; }
 
 @media only screen and (max-width: 600px) {
-  .button-layout {
-    flex-direction: column; }
   .container {
     width: calc(100vw - 10px); }
   .container-left {
     min-width: 50%; }
-  .btn-3 {
-    margin-right: 0; }
   .item-block:first-child {
     margin: 0 0 0 5px; } }
 
@@ -524,6 +519,22 @@ body {
     width: 90%; }
   .btn-4 {
     margin-left: 0; } }
+
+@media only screen and (max-width: 1000px) {
+  .button-layout {
+    flex-direction: column; }
+    .button-layout a {
+      display: flex;
+      justify-content: center;
+      width: 100%; }
+  .btn-3 {
+    margin-right: 0;
+    margin: 5px 0;
+    width: 80%;
+    max-width: 400px; }
+    .btn-3.button {
+      width: 80%;
+      max-width: 400px; } }
 
 .nav {
   background-color: #222735;
@@ -872,13 +883,17 @@ a {
   .employee__copied {
     display: none; }
   .shift__time {
-    font-size: 14px; } }
+    font-size: 14px; }
+  .dates__pickerWrapper {
+    width: 80%;
+    max-width: 400px;
+    margin-top: 5px; }
+  .dates__pickerDate {
+    width: 80%;
+    max-width: 400px;
+    flex: 1; } }
 
 @media only screen and (max-width: 600px) {
-  .dates__pickerWrapper {
-    width: 100%; }
-  .dates__pickerDate {
-    width: 100%; }
   .dates .btn-1 {
     font-size: 14px;
     width: 100%; }

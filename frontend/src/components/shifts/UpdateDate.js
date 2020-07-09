@@ -21,8 +21,17 @@ const UpdateDate = (props) => {
 
   return (
     <div className="button-layout container">
-      {permissions.includes("can_publish_shifts") && <EmailStaff />}
       <UpdateDepartment />
+      <a
+        href={`/exportall?start_date=${date}&end_date=${format(
+          addDays(parseISO(date), 6),
+          "YYY-MM-dd"
+        )}`}
+      >
+        <button className="btn-3 button">Export Shifts</button>
+      </a>
+      {permissions.includes("can_publish_shifts") && <EmailStaff />}
+
       <div className="dates__pickerWrapper">
         <p
           onClick={() => {
