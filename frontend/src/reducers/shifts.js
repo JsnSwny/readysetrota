@@ -17,7 +17,7 @@ const todayDate = format(
 );
 
 let width = window.innerWidth;
-let dateRange = width > 1000 ? 6 : width > 600 ? 2 : 0;
+let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
 
 var weekFromDate = addDays(
   startOfWeek(new Date(), { weekStartsOn: 1 }),

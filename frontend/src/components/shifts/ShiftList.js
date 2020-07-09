@@ -43,7 +43,7 @@ const ShiftList = () => {
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
   const widthUpdate = () => {
-    if (width > 1000) {
+    if (width > 1200) {
       if (currentDevice != "Desktop") {
         dispatch(getShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd")));
         setCurrentDevice("Desktop");

@@ -16,7 +16,7 @@ const UpdateDate = (props) => {
   };
   let user = useSelector((state) => state.auth.user);
 
-  let dateRange = width > 1000 ? 6 : width > 600 ? 2 : 0;
+  let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
   let permissions = user.all_permissions;
   return (
     <div className="button-layout container">
