@@ -21,7 +21,7 @@ export const getEmployees = () => (dispatch, getState) => {
     .get(
       `/api/employees/?position__department=${
         getState().employees.current_department
-      }&ordering=name`,
+      }&ordering=first_name`,
       tokenConfig(getState)
     )
     .then((res) => {

@@ -70,15 +70,15 @@ const AddStaff = (props) => {
     e.preventDefault();
     if (form == "Staff") {
       const employee = {
-        name,
         first_name: firstName,
         last_name: lastName,
         position_id: position,
       };
 
-      if (name.length > 0 && position.length > 0) {
+      if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         dispatch(addEmployee(employee));
-        setName("");
+        setFirstName("");
+        setLastName("");
         setPosition("");
         onClose();
       }
