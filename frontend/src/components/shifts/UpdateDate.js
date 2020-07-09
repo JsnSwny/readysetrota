@@ -18,7 +18,6 @@ const UpdateDate = (props) => {
 
   let dateRange = width > 1000 ? 6 : width > 600 ? 2 : 0;
   let permissions = user.all_permissions;
-
   return (
     <div className="button-layout container">
       <UpdateDepartment />
@@ -26,12 +25,15 @@ const UpdateDate = (props) => {
         href={`/exportall?start_date=${date}&end_date=${format(
           addDays(parseISO(date), 6),
           "YYY-MM-dd"
-        )}`}
+        )}&id=${
+          user.groups.some((item) => item.name == "Business")
+            ? user.id
+            : user.employee[0].owner.id
+        }`}
       >
         <button className="btn-3 button">Export Shifts</button>
       </a>
       {permissions.includes("can_publish_shifts") && <EmailStaff />}
-
       <div className="dates__pickerWrapper">
         <p
           onClick={() => {
