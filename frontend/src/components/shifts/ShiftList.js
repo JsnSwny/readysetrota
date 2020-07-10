@@ -87,7 +87,7 @@ const ShiftList = () => {
 
   useEffect(() => {
     if (filterDate) {
-      filterEmployees(filterDate);
+      filterEmployees(filterDate, true);
     }
   }, [shifts_list]);
 
@@ -123,8 +123,8 @@ const ShiftList = () => {
     document.body.removeChild(dummy);
   }
 
-  const filterEmployees = (date) => {
-    if (filterDate == date) {
+  const filterEmployees = (date, update = false) => {
+    if (filterDate == date && update == false) {
       setFilterDate("");
       setEmployeesList(employees);
       return true;
