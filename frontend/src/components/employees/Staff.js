@@ -185,7 +185,9 @@ const Staff = () => {
                     </Fragment>
                   ))
                 ) : (
-                  <div>No Employees Found</div>
+                  <h3 style={{ textAlign: "center", width: "100%" }}>
+                    No Employees Found
+                  </h3>
                 )}
               </div>
             </Fragment>
