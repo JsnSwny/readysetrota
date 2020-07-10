@@ -3,25 +3,18 @@
 .nav {
   background-color: #222735;
   color: white;
-  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   z-index: 10;
+  height: 80px;
   &__title {
-    font-size: 28px;
-    font-weight: 600;
-    a {
-      span:nth-child(1) {
-        color: $pink;
-      }
-      span:nth-child(2) {
-        color: $white;
-      }
-      span:nth-child(3) {
-        color: $pink;
-      }
+    width: 140px;
+    &-link {
+      display: flex;
+      justify-self: center;
+      align-items: center;
     }
   }
   h1 {

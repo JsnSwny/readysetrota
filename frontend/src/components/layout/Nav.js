@@ -51,47 +51,40 @@ const Nav = () => {
   return (
     <Fragment>
       <nav className="nav">
-        <div>
-          <p className="nav__title">
-            <Link to="/">
-              <span>Ready</span>
-              <span>Set</span>
-              <span>Rota</span>
-            </Link>
-          </p>
-          <ul>
-            <div className="nav__lisection">
-              {user &&
-                (user.employee.length > 0 ||
-                  user.profile.role == "Business") && (
-                  <Fragment>
-                    <Link to="/">
-                      <li>Home</li>
+        <Link className="nav__title-link" to="/">
+          <img className="nav__title" src="/static/media/logo-01.svg"></img>
+        </Link>
+        <ul>
+          <div className="nav__lisection">
+            {user &&
+              (user.employee.length > 0 || user.profile.role == "Business") && (
+                <Fragment>
+                  <Link to="/">
+                    <li>Home</li>
+                  </Link>
+                  <Link to="/rota">
+                    <li>Rota</li>
+                  </Link>
+                  {user && user.profile.role == "Business" && (
+                    <Link to="/staff">
+                      <li>Staff</li>
                     </Link>
-                    <Link to="/rota">
-                      <li>Rota</li>
-                    </Link>
-                    {user && user.profile.role == "Business" && (
-                      <Link to="/staff">
-                        <li>Staff</li>
-                      </Link>
-                    )}
-                  </Fragment>
-                )}
-            </div>
-            <div className="nav__lisection">
-              {isAuthenticated ? authLinks : guestLinks}
-            </div>
-            <div
-              onClick={() => {
-                setBurger(!burger);
-              }}
-              className="hamburger"
-            >
-              <i class="fas fa-bars"></i>
-            </div>
-          </ul>
-        </div>
+                  )}
+                </Fragment>
+              )}
+          </div>
+          <div className="nav__lisection">
+            {isAuthenticated ? authLinks : guestLinks}
+          </div>
+          <div
+            onClick={() => {
+              setBurger(!burger);
+            }}
+            className="hamburger"
+          >
+            <i class="fas fa-bars"></i>
+          </div>
+        </ul>
       </nav>
       <div className={`hamburger__dropdown ${burger ? " active" : ""}`}>
         <ul>
