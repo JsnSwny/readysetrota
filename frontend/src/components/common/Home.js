@@ -15,7 +15,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      {user.profile.role == "Business" ? (
+      {user.groups.some((item) => item.name == "Business") ? (
         <ShiftList />
       ) : user.employee.length > 0 ? (
         <Profile />
