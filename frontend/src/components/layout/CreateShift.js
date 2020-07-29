@@ -28,7 +28,7 @@ const CreateShift = (props) => {
               onClose={onClose}
               shift={shift}
             />
-          ) : type == "staff" ? (
+          ) : type == "staff" || type == "Position" || type == "Department" ? (
             <AddStaff
               onClose={onClose}
               form={type}

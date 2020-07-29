@@ -306,7 +306,7 @@ const ShiftList = () => {
                             <p className="shift__time">
                               {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
                             </p>
-                            {/* <span>
+                            <span>
                               {permissions.includes(
                                 "can_view_unpublished_shifts"
                               ) ? (
@@ -322,15 +322,15 @@ const ShiftList = () => {
                                 shift.employee.user.id != user.id && (
                                   <i
                                     onClick={() => {
-                                      setOpen(true);
-                                      setType("shiftswap");
-                                      setShiftSwap(shift);
+                                      // setOpen(true);
+                                      // setType("shiftswap");
+                                      // setShiftSwap(shift);
                                     }}
                                     class="fas fa-exchange-alt"
                                   ></i>
                                 )
                               )}
-                            </span> */}
+                            </span>
                             <span>
                               {permissions.includes(
                                 "can_view_unpublished_shifts"

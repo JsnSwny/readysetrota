@@ -18,7 +18,7 @@ const AddStaff = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (form == "Staff") {
+    if (form == "staff") {
       positions = dispatch(getPositions());
       staffPosition && setPosition(staffPosition.toString());
     }
