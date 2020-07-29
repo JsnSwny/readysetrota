@@ -36,10 +36,21 @@ class Shift(models.Model):
     department = models.ForeignKey(Department, related_name="shift_department", on_delete=models.CASCADE, null=True, blank=True)
     published = models.BooleanField(default=False)
     owner = models.ForeignKey(User, related_name="shifts", on_delete=models.CASCADE)
+    seen = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
+    
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'
+
+class ShiftSwap(models.Model):
+    swap_from = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="swap_from")
+    swap_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="swap_to")
+    shift_from = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="shift_from")
+    shift_to = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="shift_to")
+    employee_approved = models.BooleanField(null=True)
+    admin_approved = models.BooleanField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")

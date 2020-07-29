@@ -26,7 +26,7 @@ const Dates = (dates) => {
       <UpdateDate />
       <CreateShift
         open={open}
-        type="Staff"
+        type="staff"
         onConfirm={() => {
           setOpen(false);
         }}

@@ -8,6 +8,7 @@ import {
   GET_POPULAR_TIMES,
   UPDATE_SHIFT,
   PUBLISHED_SHIFTS,
+  GET_SWAP_REQUESTS,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -32,6 +33,7 @@ const initialState = {
   end_date: weekFromDate,
   user_shifts: [],
   popular_times: [],
+  swap_requests: [],
   isLoading: false,
 };
 
@@ -101,6 +103,12 @@ export default function (state = initialState, action) {
             };
           }
         }),
+      };
+    case GET_SWAP_REQUESTS:
+      console.log(action.payload);
+      return {
+        ...state,
+        swap_requests: action.payload,
       };
     default:
       return state;

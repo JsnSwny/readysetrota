@@ -1,6 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getShiftsByID } from "../../actions/shifts";
+import {
+  getShiftsByID,
+  getSwapRequests,
+  updateShiftSwap,
+  updateShift,
+} from "../../actions/shifts";
 import { getEmployees } from "../../actions/employees";
 import { useParams } from "react-router-dom";
 import { format, parse, parseISO } from "date-fns";
@@ -12,6 +17,7 @@ const Profile = (props) => {
   const { history } = props;
   let user = useSelector((state) => state.auth.user);
   let permissions = user.all_permissions;
+  let swap_requests = useSelector((state) => state.shifts.swap_requests);
   let { id } = useParams();
   if (!id) {
     id = user.employee[0].id;
@@ -21,6 +27,7 @@ const Profile = (props) => {
   useEffect(() => {
     dispatch(getShiftsByID(id));
     dispatch(getEmployees());
+    dispatch(getSwapRequests(id));
   }, []);
   let employees = useSelector((state) => state.employees.employees);
   // if (employees.some((item) => item.id != id)) {
@@ -111,6 +118,132 @@ const Profile = (props) => {
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
           />
+        </div>
+        <div className="dashboard__block--half">
+          <div className="dashboard__block-title-container">
+            <p className="dashboard__block-title">Shift Swap Requests</p>
+          </div>
+          <div className="dashboard__block-container">
+            {swap_requests.map((request) => (
+              <div className="dashboard__request-container">
+                <div className="dashboard__request-wrapper">
+                  <div
+                    className={`dashboard__request ${
+                      request.swap_from.employee[0].user.id == user.id
+                        ? "bold"
+                        : ""
+                    }`}
+                  >
+                    <p>
+                      {request.swap_from.employee[0].user.id == user.id
+                        ? "You"
+                        : request.swap_from.employee[0].first_name +
+                          " " +
+                          request.swap_from.employee[0].last_name}
+                    </p>
+                    <p>
+                      {format(parseISO(request.shift_from.date), "MMMM dd YYY")}{" "}
+                      {request.shift_from.start_time.substr(0, 5)} -{" "}
+                      {request.shift_from.end_time}
+                    </p>
+                  </div>
+
+                  <i class="fas fa-exchange-alt"></i>
+                  <div
+                    className={`dashboard__request ${
+                      request.swap_to.employee[0].user.id == user.id
+                        ? "bold"
+                        : ""
+                    }`}
+                  >
+                    <p>
+                      {request.swap_to.employee[0].user.id == user.id
+                        ? "You"
+                        : request.swap_to.employee[0].first_name +
+                          " " +
+                          request.swap_to.employee[0].last_name}
+                    </p>
+                    <p>
+                      {format(parseISO(request.shift_to.date), "MMMM dd YYY")}{" "}
+                      {request.shift_to.start_time.substr(0, 5)} -{" "}
+                      {request.shift_to.end_time}
+                    </p>
+                  </div>
+                </div>
+
+                {!user.groups.some((item) => item.name == "Business") ? (
+                  !request.employee_approved ? (
+                    request.swap_from.employee[0].user.id != user.id ? (
+                      <button
+                        className="btn-4"
+                        onClick={() => {
+                          dispatch(
+                            updateShiftSwap(request.id, {
+                              employee_approved: true,
+                            })
+                          );
+                        }}
+                      >
+                        Accept
+                      </button>
+                    ) : (
+                      <p className="error">
+                        Your request hasn't been accepted yet
+                      </p>
+                    )
+                  ) : request.admin_approved ? (
+                    <p className="success">This request has been approved.</p>
+                  ) : (
+                    <p className="error">
+                      This request has not been approved by an admin yet.
+                    </p>
+                  )
+                ) : !request.admin_approved ? (
+                  request.employee_approved ? (
+                    <button
+                      className="btn-4"
+                      onClick={() => {
+                        dispatch(
+                          updateShiftSwap(request.id, {
+                            admin_approved: true,
+                          })
+                        );
+
+                        request.shift_from["employee"] =
+                          request.swap_to.employee[0];
+                        request.shift_to["employee"] =
+                          request.swap_from.employee[0];
+
+                        request.shift_from.department_id =
+                          request.shift_from.department;
+                        request.shift_to.department_id =
+                          request.shift_to.department;
+                        request.shift_from.employee_id =
+                          request.swap_to.employee[0].id;
+                        request.shift_to.employee_id =
+                          request.swap_from.employee[0].id;
+
+                        dispatch(
+                          updateShift(request.shift_from.id, request.shift_from)
+                        );
+                        dispatch(
+                          updateShift(request.shift_to.id, request.shift_to)
+                        );
+                      }}
+                    >
+                      Approve
+                    </button>
+                  ) : (
+                    <p className="error">
+                      This request has not been accepted by the employee
+                    </p>
+                  )
+                ) : (
+                  <p className="error">This request was approved</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );

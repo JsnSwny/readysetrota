@@ -1,10 +1,6 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department
-
-
-
-
-    
+from .models import Shift, Employee, Position, Department, ShiftSwap
+from accounts.serializers import UserSerializer
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,5 +43,15 @@ class ShiftSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Shift
+        fields = '__all__'
+        depth = 2
+
+class ShiftSwapSerializer(serializers.ModelSerializer):
+    employee_approved = serializers.BooleanField(required=False)
+    admin_approved = serializers.BooleanField(required=False)
+    swap_from = UserSerializer(required=False)
+    swap_to = UserSerializer(required=False)
+    class Meta:
+        model = ShiftSwap
         fields = '__all__'
         depth = 1

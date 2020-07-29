@@ -11,6 +11,8 @@ import {
   GET_POPULAR_TIMES,
   UPDATE_SHIFT,
   PUBLISHED_SHIFTS,
+  SWAP_SHIFTS,
+  GET_SWAP_REQUESTS,
 } from "./types";
 import { tokenConfig } from "./auth";
 import { format } from "date-fns";
@@ -87,6 +89,7 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     })
 
     .catch((err) => {
+      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
@@ -126,4 +129,45 @@ export const publish = () => (dispatch, getState) => {
       payload: res.data,
     });
   });
+};
+
+// Swap Shifts
+export const swapShifts = (swap) => (dispatch, getState) => {
+  dispatch({
+    type: SWAP_SHIFTS,
+  });
+  axios
+    .post(`/api/shiftswap/`, swap)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
+// Swap Shifts
+export const getSwapRequests = (id) => (dispatch, getState) => {
+  axios
+    .get(`/api/shiftswap/?q=${id}`)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_SWAP_REQUESTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
+export const updateShiftSwap = (id, newShiftSwap) => (dispatch, getState) => {
+  axios
+    .put(`/api/shiftswap/${id}/`, newShiftSwap)
+    .then((res) => {})
+
+    .catch((err) => {
+      console.log(err.response);
+    });
 };

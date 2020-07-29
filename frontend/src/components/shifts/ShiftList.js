@@ -27,6 +27,7 @@ const ShiftList = () => {
   const [employeesList, setEmployeesList] = useState([]);
   const [filterDate, setFilterDate] = useState("");
   const [currentDevice, setCurrentDevice] = useState("");
+  const [shiftSwap, setShiftSwap] = useState({});
 
   let user = useSelector((state) => state.auth.user);
   let permissions = user.all_permissions;
@@ -176,6 +177,7 @@ const ShiftList = () => {
         employeeName={employeeName}
         date={shiftDate}
         shift={shift}
+        shiftSwap={shiftSwap}
       />
       <Dates filterEmployees={filterEmployees} dates={result} />
       {isLoading && (
@@ -303,6 +305,8 @@ const ShiftList = () => {
                           >
                             <p className="shift__time">
                               {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
+                            </p>
+                            {/* <span>
                               {permissions.includes(
                                 "can_view_unpublished_shifts"
                               ) ? (
@@ -312,9 +316,35 @@ const ShiftList = () => {
                                   <i class="fas fa-times"></i>
                                 )
                               ) : (
-                                ""
+                                shift.employee.user &&
+                                parseISO(shift.date, new Date()) >=
+                                  addDays(new Date(), -1) &&
+                                shift.employee.user.id != user.id && (
+                                  <i
+                                    onClick={() => {
+                                      setOpen(true);
+                                      setType("shiftswap");
+                                      setShiftSwap(shift);
+                                    }}
+                                    class="fas fa-exchange-alt"
+                                  ></i>
+                                )
                               )}
-                            </p>
+                            </span> */}
+                            <span>
+                              {permissions.includes(
+                                "can_view_unpublished_shifts"
+                              ) &&
+                                (shift.published ? (
+                                  shift.seen ? (
+                                    <i class="far fa-eye"></i>
+                                  ) : (
+                                    <i class="far fa-eye-slash"></i>
+                                  )
+                                ) : (
+                                  ""
+                                ))}
+                            </span>
                             {shift.info && (
                               <p className="shift__info">
                                 <i class="fas fa-info-circle"></i>

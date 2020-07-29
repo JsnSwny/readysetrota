@@ -258,7 +258,7 @@
   .dashboard .table .long {
     width: 28%; }
 
-.dashboard__block {
+.dashboard__block, .dashboard__block--half {
   margin-top: 40px;
   background-color: white;
   -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
@@ -276,6 +276,9 @@
       align-items: center; }
   .dashboard__block-container {
     margin-bottom: 50px; }
+  .dashboard__block--half {
+    width: 50%;
+    min-height: 0; }
 
 .dashboard__table-heading {
   background-color: #ad408e;
@@ -289,6 +292,28 @@
   padding: 7px 30px; }
   .dashboard__table-row.unpublished {
     background-color: #c24242; }
+
+.dashboard__request {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px; }
+  .dashboard__request.bold {
+    font-weight: bold; }
+  .dashboard__request-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+  .dashboard__request-container {
+    border-bottom: 1px solid #353535;
+    padding: 30px 0; }
+    .dashboard__request-container .error,
+    .dashboard__request-container .success {
+      margin-top: 10px; }
+    .dashboard__request-container .btn-4 {
+      margin-left: 0;
+      padding: 7px 35px; }
+  .dashboard__request-name--you {
+    font-weight: bold; }
 
 .dashboard__contact {
   color: #a3a3a3; }
@@ -320,7 +345,7 @@
       width: auto; }
     .dashboard .table.dashboard__table-heading {
       display: none; }
-  .dashboard__block {
+  .dashboard__block, .dashboard__block--half {
     min-height: 0;
     padding: 30px 20px; }
     .dashboard__block-title-container {
@@ -332,6 +357,10 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center; }
+    .dashboard__block--half {
+      width: 100%; }
+      .dashboard__block--half .dashboard__block-container {
+        display: block; }
   .dashboard__table-row {
     margin-top: 0;
     margin: 5px; }
@@ -373,7 +402,8 @@ body {
   margin-left: 20px;
   font-size: 16px;
   padding: 5px 25px;
-  border-radius: 10px; }
+  border-radius: 10px;
+  cursor: pointer; }
 
 .title {
   font-size: 36px;
@@ -381,6 +411,11 @@ body {
 
 .subtitle {
   font-size: 24px; }
+
+button {
+  border: none; }
+  button:focus {
+    outline: none; }
 
 .modal {
   position: fixed;
@@ -429,6 +464,10 @@ body {
 .error {
   font-size: 12px;
   color: red; }
+
+.success {
+  font-size: 12px;
+  color: green; }
 
 .delete_icon i {
   color: black;
@@ -800,17 +839,25 @@ a {
   width: 100%;
   margin: 0 auto;
   color: white;
-  cursor: pointer;
-  transition: 0.2s color ease-in-out; }
+  transition: 0.2s color ease-in-out;
+  display: flex; }
   .shift__wrapper.hide {
     display: none; }
-  .shift__wrapper.edit:hover {
-    color: #171a46; }
-    .shift__wrapper.edit:hover .shift__info {
+  .shift__wrapper.edit .shift__time {
+    cursor: pointer; }
+    .shift__wrapper.edit .shift__time:hover {
       color: #171a46; }
+      .shift__wrapper.edit .shift__time:hover .shift__info {
+        color: #171a46; }
+  .shift__wrapper .fa-exchange-alt {
+    cursor: pointer; }
+  .shift__wrapper .fa-eye,
+  .shift__wrapper .fa-eye-slash {
+    margin-left: 10px; }
 
 .shift__time {
-  font-size: 16px; }
+  font-size: 16px;
+  margin-right: 10px; }
 
 .shift__info {
   font-weight: normal;

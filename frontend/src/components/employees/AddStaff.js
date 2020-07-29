@@ -68,7 +68,7 @@ const AddStaff = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (form == "Staff") {
+    if (form == "staff") {
       const employee = {
         first_name: firstName,
         last_name: lastName,
@@ -99,7 +99,7 @@ const AddStaff = (props) => {
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create {form}</h1>
       <form onSubmit={onSubmit} className="staffForm__form">
-        {form === "Staff" ? (
+        {form === "staff" ? (
           <Fragment>
             <div className="staffForm__control">
               <label className="staffForm__label">First Name:</label>

@@ -16,7 +16,7 @@ const Login = (props) => {
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(username, password));
+    dispatch(login(username.toLowerCase(), password));
   };
   if (useSelector((state) => state.auth.isAuthenticated)) {
     return <Redirect to={path.url} />;

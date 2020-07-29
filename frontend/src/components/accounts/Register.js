@@ -13,7 +13,13 @@ const Register = () => {
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    const newUser = { username: email, password, password2, email, role };
+    const newUser = {
+      username: email.toLowerCase(),
+      password,
+      password2,
+      email,
+      role,
+    };
     dispatch(register(newUser));
   };
   if (useSelector((state) => state.auth.isAuthenticated)) {
