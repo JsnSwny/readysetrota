@@ -8,6 +8,8 @@ import {
   addPosition,
 } from "../../actions/employees";
 import { contextType } from "react-modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddStaff = (props) => {
   const { onClose, form, staffPosition } = props;
@@ -81,6 +83,9 @@ const AddStaff = (props) => {
         setLastName("");
         setPosition("");
         onClose();
+        toast.success("Staff added!", {
+          position: "bottom-center",
+        });
       }
     } else if (form == "Department") {
       dispatch(addDepartment({ name }));

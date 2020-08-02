@@ -13,6 +13,8 @@ import {
 } from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
@@ -164,6 +166,7 @@ const ShiftList = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <CreateShift
         open={open}
         type={type}
@@ -221,18 +224,19 @@ const ShiftList = () => {
                       <i
                         style={{ marginLeft: "10px", cursor: "pointer" }}
                         onClick={(e) => {
+                          toast.info(
+                            <div>
+                              {employee.first_name + " " + employee.last_name}
+                              <br /> UUID copied! <br /> <br />{" "}
+                              <small>{employee.uuid}</small>
+                            </div>,
+                            { position: "bottom-center" }
+                          );
                           copyToClipboard(employee.uuid);
                           setUUID(employee.uuid);
                         }}
                         class="fas fa-clipboard"
                       ></i>
-                      <span
-                        className={`employee__copied ${
-                          uuid == employee.uuid ? " copied" : ""
-                        }`}
-                      >
-                        UUID Copied!
-                      </span>
                     </Fragment>
                   )}
                 </div>

@@ -2,9 +2,13 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "../../actions/employees";
 import { addShift, deleteShift, updateShift } from "../../actions/shifts";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddShift = (props) => {
   const { date, employeeID, employeeName, onClose, shift } = props;
+
+  let updating = shift ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
   let current_department = useSelector(
@@ -56,6 +60,13 @@ const AddShift = (props) => {
       setEndTime("");
       setInfo("");
       onClose();
+      updating
+        ? toast.success("Shift updated!", {
+            position: "bottom-center",
+          })
+        : toast.success("Shift added!", {
+            position: "bottom-center",
+          });
     }
   };
 
