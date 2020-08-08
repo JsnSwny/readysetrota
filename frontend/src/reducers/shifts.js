@@ -105,7 +105,6 @@ export default function (state = initialState, action) {
         }),
       };
     case GET_SWAP_REQUESTS:
-      console.log(action.payload);
       return {
         ...state,
         swap_requests: action.payload,

@@ -2,8 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "../../actions/employees";
 import { addShift, deleteShift, updateShift } from "../../actions/shifts";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const AddShift = (props) => {
   const { date, employeeID, employeeName, onClose, shift } = props;

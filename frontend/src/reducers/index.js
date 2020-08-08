@@ -5,4 +5,21 @@ import auth from "./auth";
 import responsive from "./responsive";
 import errors from "./errors";
 
-export default combineReducers({ shifts, employees, auth, responsive, errors });
+const appReducer = combineReducers({
+  shifts,
+  employees,
+  auth,
+  responsive,
+  errors,
+});
+
+const rootReducer = (state, action) => {
+  if (action.type === "USER_LOGOUT") {
+    state = undefined;
+  }
+
+  return appReducer(state, action);
+};
+
+export default (state, action) =>
+  rootReducer(action.type === "LOGOUT_SUCCESS" ? undefined : state, action);

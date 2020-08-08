@@ -10,14 +10,16 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   let groups = [];
   if (auth.user) {
     groups = auth.user.groups;
+    groups = groups.map((item) => item.name);
   }
 
-  const { path, computedMatch } = rest;
+  const { path, computedMatch, pass, user_only_pass } = rest;
   let url = computedMatch.url;
 
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
+
   return (
     <Route
       {...rest}
@@ -35,11 +37,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
           );
         } else {
           if (
-            !auth.user.employee.length > 0 &&
-            !groups.some((item) => item.name == "Business")
+            currentDepartment != 0 ||
+            pass == true ||
+            (user_only_pass == true && !groups.includes("Business"))
           ) {
-            return <EnterID />;
-          } else if (currentDepartment != 0) {
             return <Component {...props} />;
           } else {
             return <NoDepartment />;

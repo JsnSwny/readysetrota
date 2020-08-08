@@ -56,22 +56,26 @@ const Nav = () => {
         </Link>
         <ul>
           <div className="nav__lisection">
-            {user &&
-              (user.employee.length > 0 || user.profile.role == "Business") && (
-                <Fragment>
-                  <Link to="/">
-                    <li>Home</li>
+            {user && (
+              <Fragment>
+                <Link to="/">
+                  <li>Home</li>
+                </Link>
+                <Link to="/rota">
+                  <li>Rota</li>
+                </Link>
+                {user && user.profile.role != "Business" && (
+                  <Link to="/join">
+                    <li>Join</li>
                   </Link>
-                  <Link to="/rota">
-                    <li>Rota</li>
+                )}
+                {user && user.profile.role == "Business" && (
+                  <Link to="/staff">
+                    <li>Staff</li>
                   </Link>
-                  {user && user.profile.role == "Business" && (
-                    <Link to="/staff">
-                      <li>Staff</li>
-                    </Link>
-                  )}
-                </Fragment>
-              )}
+                )}
+              </Fragment>
+            )}
           </div>
           <div className="nav__lisection">
             {isAuthenticated ? authLinks : guestLinks}

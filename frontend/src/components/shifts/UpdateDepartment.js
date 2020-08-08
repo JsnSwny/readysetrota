@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getDepartments, setDepartment } from "../../actions/employees";
+import {
+  getDepartments,
+  setDepartment,
+  getEmployees,
+} from "../../actions/employees";
+import { getShifts } from "../../actions/shifts";
 
-const UpdateDepartment = (props) => {
+const UpdateDepartment = () => {
   const dispatch = useDispatch();
   let departments = useSelector((state) => state.employees.departments);
   let user = useSelector((state) => state.auth.user);
-  if (user && user.profile.role == "User") {
-    departments = user.employee[0].position.map((item) => {
-      return item.department;
-    });
-  }
+
+  let date = useSelector((state) => state.shifts.date);
+
+  let enddate = useSelector((state) => state.shifts.end_date);
+
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
@@ -21,7 +26,13 @@ const UpdateDepartment = (props) => {
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
+    dispatch(getShifts(date, enddate));
+    dispatch(getEmployees());
   };
+
+  if (currentDepartment == 0 && departments.length == 1) {
+    setDep(departments[0].id);
+  }
 
   return (
     <select
@@ -34,9 +45,9 @@ const UpdateDepartment = (props) => {
       <option value="" selected disabled>
         Select Department
       </option>
-      {departments.map((obj) => (
-        <option value={obj.id}>{obj.name}</option>
-      ))}
+      {departments.map((obj) => {
+        return <option value={obj.id}>{obj.name}</option>;
+      })}
     </select>
   );
 };

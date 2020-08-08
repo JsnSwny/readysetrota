@@ -100,6 +100,8 @@
   .enterid h1 {
     width: 60%;
     margin-bottom: 30px; }
+  .enterid .error {
+    margin-top: 20px; }
 
 .input-1 {
   display: block;
@@ -771,6 +773,23 @@ a {
     transition: 0.2s ease all; }
     .dates__sort:hover {
       color: #ee6de7; }
+  .dates__mobile {
+    position: fixed;
+    top: 0;
+    left: 10px;
+    right: 10px;
+    bottom: 40px;
+    display: none;
+    align-items: flex-end;
+    justify-content: space-between;
+    z-index: 10;
+    pointer-events: none; }
+    .dates__mobile i {
+      cursor: pointer;
+      font-size: 48px;
+      z-index: 10;
+      pointer-events: auto;
+      opacity: 0.5; }
 
 .employee__wrapper {
   background-color: #dedede;
@@ -931,11 +950,14 @@ a {
   .dates__pickerWrapper {
     width: 80%;
     max-width: 400px;
-    margin-top: 5px; }
+    margin-top: 5px;
+    display: none; }
   .dates__pickerDate {
     width: 80%;
     max-width: 400px;
-    flex: 1; } }
+    flex: 1; }
+  .dates__mobile {
+    display: flex; } }
 
 @media only screen and (max-width: 600px) {
   .dates .btn-1 {

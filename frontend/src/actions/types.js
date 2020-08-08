@@ -29,3 +29,5 @@ export const UPDATE_SHIFT = "UPDATE_SHIFT";
 export const PUBLISHED_SHIFTS = "PUBLISHED_SHIFTS";
 export const SWAP_SHIFTS = "SWAP_SHIFTS";
 export const GET_SWAP_REQUESTS = "GET_SWAP_REQUESTS";
+export const UUID_SUCCESS = "UUID_SUCCESS";
+export const UUID_RESET = "UUID_RESET";

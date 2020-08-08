@@ -59,9 +59,6 @@ export const login = (username, password) => (dispatch) => {
     .post("/api/auth/login", body, config)
     .then((res) => {
       dispatch({
-        type: RESET_DEPARTMENT,
-      });
-      dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
       });
@@ -127,9 +124,6 @@ export const register = ({ username, password, password2, email, role }) => (
   axios
     .post("/api/auth/register", body, config)
     .then((res) => {
-      dispatch({
-        type: RESET_DEPARTMENT,
-      });
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,

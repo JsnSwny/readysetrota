@@ -44,6 +44,7 @@
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
+    "react-share": "^4.2.1",
     "react-time-picker": "^4.0.1",
     "react-toastify": "^6.0.8",
     "redux-devtools-extension": "^2.13.8",

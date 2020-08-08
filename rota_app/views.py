@@ -15,13 +15,22 @@ from django import template
 
 # Create your views here.
 class CheckUUID(APIView):
-    def get(self, request):
-        employee = Employee.objects.filter(uuid=request.query_params.get('uuid')).first()
+    def get(self, request, *args, **kwargs):
+        try:
+            employee = Employee.objects.filter(uuid=request.query_params.get('uuid')).first()
+        except Exception as ex:
+            return Response({'error': ex})
         if employee:
+            if employee.user:
+                return Response({'error': ["A user is already associated with this employee."]})
             user = User.objects.filter(id=request.query_params.get('userid')).first()
             employee.user = user
             employee.save()
-            return Response({"uuid": employee.first_name})
+            return Response({"department_id": employee.position.all().first().department.id})
+        else:
+            return Response(
+                {"error": ["UUID does not match any employees."]}, 
+            )
 
 class GetPopularTimes(APIView):
     def get(self, request):

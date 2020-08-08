@@ -10,9 +10,12 @@ import {
   ADD_DEPARTMENT,
   DELETE_POSITION,
   SET_DEPARTMENT,
+  UUID_SUCCESS,
+  UUID_RESET,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
+import { loadUser } from "./auth";
 
 import { tokenConfig } from "./auth";
 
@@ -29,7 +32,8 @@ export const getEmployees = () => (dispatch, getState) => {
         type: GET_EMPLOYEES,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err.response));
 };
 
 export const setDepartment = (id) => (dispatch) => {
@@ -140,10 +144,36 @@ export const getDepartments = () => (dispatch, getState) => {
 
 // Get Department
 export const checkUUID = (uuid, userid) => (dispatch, getState) => {
-  axios.get("/api-view/checkuuid", {
-    params: {
-      uuid,
-      userid,
-    },
+  axios
+    .get("/api-view/checkuuid", {
+      params: {
+        uuid,
+        userid,
+      },
+    })
+    .then((res) => {
+      if (res.data.error) {
+        dispatch(getErrors({ uuid: res.data.error[0] }));
+      } else {
+        dispatch({
+          type: UUID_SUCCESS,
+          payload: res.data.department_id,
+        });
+        dispatch(loadUser());
+        axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
+          dispatch({
+            type: GET_DEPARTMENTS,
+            payload: res.data,
+          });
+        });
+      }
+    })
+    .catch();
+};
+
+// Get Department
+export const uuidReset = () => (dispatch, getState) => {
+  dispatch({
+    type: UUID_RESET,
   });
 };

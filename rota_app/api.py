@@ -18,7 +18,7 @@ class ShiftFilter(django_filters.FilterSet):
     department = django_filters.NumberFilter(distinct=True)
     class Meta:
         model = Shift
-        fields = ['date', 'employee', 'department']
+        fields = ['date', 'employee', 'department', 'employee__user__id']
         
 
 class ShiftViewSet(viewsets.ModelViewSet):
@@ -27,15 +27,18 @@ class ShiftViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = ShiftSerializer
-    def get_queryset(self):
-        if self.request.user.profile.role != "Business":
-            shifts = self.request.user.employee.first().owner.shifts.filter(employee__id=self.request.user.employee.first().id)
-            for i in shifts:
-                i.seen = True
-                i.save()
-            return self.request.user.employee.first().owner.shifts.all()
-        else:
-            return self.request.user.shifts.all()
+    # def get_queryset(self):
+    #     if self.request.user.profile.role != "Business":
+    #         shifts = self.request.user.employee.first().owner.shifts.filter(employee__id=self.request.user.employee.first().id)
+    #         for i in shifts:
+    #             i.seen = True
+    #             i.save()
+    #         return self.request.user.employee.first().owner.shifts.all()
+    #     else:
+    #         return self.request.user.shifts.all()
+
+    queryset = Shift.objects.all()
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
@@ -57,12 +60,13 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = EmployeeSerializer
     
-    def get_queryset(self):
-        if self.request.user.profile.role != "Business":
-            return self.request.user.employee.first().owner.employees.all()
-        else:
-            return self.request.user.employees.all()
+    # def get_queryset(self):
+    #     if self.request.user.profile.role != "Business":
+    #         return self.request.user.employee.first().owner.employees.all()
+    #     else:
+    #         return self.request.user.employees.all()
         
+    queryset = Employee.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -111,11 +115,14 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = DepartmentSerializer
     def get_queryset(self):
-        return self.request.user.departments.all()
+        if self.request.user.profile.role != "Business":
+            return Department.objects.filter(pos_department__position__user=self.request.user).distinct()
+        else:
+            return self.request.user.departments.all()
+            
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-    queryset = Department.objects.all()
 
 
 class ShiftSwapFilter(django_filters.FilterSet):
@@ -140,7 +147,6 @@ class ShiftSwapViewSet(viewsets.ModelViewSet):
     filter_class = ShiftSwapFilter
     
     def perform_create(self, serializer):
-        print("creating")
         shift_from = Shift.objects.filter(id=self.request.data['shift_from']).first()
         shift_to = Shift.objects.filter(id=self.request.data['shift_to']).first()
         

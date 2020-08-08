@@ -9,6 +9,8 @@ import {
   DELETE_POSITION,
   SET_DEPARTMENT,
   RESET_DEPARTMENT,
+  UUID_SUCCESS,
+  UUID_RESET,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -20,9 +22,11 @@ const initialState = {
   employees: [],
   positions: [],
   departments: [],
-  current_department: localStorage.getItem("current_department")
-    ? localStorage.getItem("current_department")
-    : 0,
+  current_department: 0,
+  // current_department: localStorage.getItem("current_department")
+  //   ? localStorage.getItem("current_department")
+  //   : 0,
+  uuid_success: false,
 };
 
 export default function (state = initialState, action) {
@@ -43,13 +47,13 @@ export default function (state = initialState, action) {
         departments: action.payload,
       };
     case RESET_DEPARTMENT:
-      localStorage.setItem("current_department", 0);
+      // localStorage.setItem("current_department", 0);
       return {
         ...state,
         current_department: 0,
       };
     case SET_DEPARTMENT:
-      localStorage.setItem("current_department", action.payload);
+      // localStorage.setItem("current_department", action.payload);
       return {
         ...state,
         current_department: action.payload,
@@ -93,6 +97,18 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: [...state.departments, action.payload],
+      };
+    case UUID_RESET:
+      return {
+        ...state,
+        uuid_success: false,
+      };
+    case UUID_SUCCESS:
+      // localStorage.setItem("current_department", action.payload);
+      return {
+        ...state,
+        uuid_success: true,
+        current_department: action.payload,
       };
     default:
       return state;

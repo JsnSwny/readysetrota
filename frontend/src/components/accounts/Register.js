@@ -22,6 +22,7 @@ const Register = () => {
     };
     dispatch(register(newUser));
   };
+
   if (useSelector((state) => state.auth.isAuthenticated)) {
     return <Redirect to="/" />;
   } else {

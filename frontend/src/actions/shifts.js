@@ -42,13 +42,12 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
 };
 
 // Get Bookings
-export const getShiftsByID = (id) => (dispatch, getState) => {
+export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shifts/?date_after=${format(
-        new Date(),
-        "YYY-MM-dd"
-      )}&employee=${id}&ordering=date,start_time`,
+      `/api/shifts/?date_after=${format(new Date(), "YYY-MM-dd")}${
+        user ? "&employee__user__id=" + id : "&employee=" + id
+      }&ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -89,7 +88,6 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     })
 
     .catch((err) => {
-      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
@@ -138,12 +136,8 @@ export const swapShifts = (swap) => (dispatch, getState) => {
   });
   axios
     .post(`/api/shiftswap/`, swap)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .then((res) => {})
+    .catch((err) => {});
 };
 
 // Swap Shifts
@@ -151,15 +145,12 @@ export const getSwapRequests = (id) => (dispatch, getState) => {
   axios
     .get(`/api/shiftswap/?q=${id}`)
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_SWAP_REQUESTS,
         payload: res.data,
       });
     })
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch((err) => {});
 };
 
 export const updateShiftSwap = (id, newShiftSwap) => (dispatch, getState) => {
@@ -167,7 +158,5 @@ export const updateShiftSwap = (id, newShiftSwap) => (dispatch, getState) => {
     .put(`/api/shiftswap/${id}/`, newShiftSwap)
     .then((res) => {})
 
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch((err) => {});
 };

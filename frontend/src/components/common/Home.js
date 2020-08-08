@@ -12,15 +12,12 @@ import EnterID from "./EnterID";
 
 const Home = () => {
   let user = useSelector((state) => state.auth.user);
-
   return (
     <Fragment>
       {user.groups.some((item) => item.name == "Business") ? (
         <ShiftList />
-      ) : user.employee.length > 0 ? (
-        <Profile />
       ) : (
-        <EnterID />
+        <Profile />
       )}
     </Fragment>
   );

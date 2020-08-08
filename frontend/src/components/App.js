@@ -21,6 +21,10 @@ import { setWidth } from "../actions/responsive";
 
 import ChangePassword from "./accounts/ChangePassword";
 import Profile from "./shifts/Profile";
+import EnterID from "./common/EnterID";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   useEffect(() => {
@@ -34,14 +38,21 @@ const App = () => {
       <Router>
         <div className="App">
           <Nav />
+          <ToastContainer />
           <Switch>
-            <PrivateRoute path="/" exact component={Home} />
+            <PrivateRoute
+              path="/"
+              exact
+              component={Home}
+              user_only_pass={true}
+            />
             <PrivateRoute path="/rota" exact component={Shifts} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <PrivateRoute path="/staff" component={Staff} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={Profile} />
+            <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
           </Switch>
         </div>
       </Router>

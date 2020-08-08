@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getEmployees } from "../../actions/employees";
+import { getEmployees, uuidReset } from "../../actions/employees";
 import {
   format,
   parseISO,
@@ -13,8 +13,21 @@ import {
 } from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
+// import {
+//   EmailShareButton,
+//   FacebookShareButton,
+//   WhatsappShareButton,
+//   FacebookMessengerShareButton,
+// } from "react-share";
+
+// import {
+//   EmailIcon,
+//   FacebookIcon,
+//   FacebookMessengerIcon,
+//   WhatsappIcon,
+// } from "react-share";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
@@ -39,12 +52,29 @@ const ShiftList = () => {
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
+  let uuid_success = useSelector((state) => state.employees.uuid_success);
 
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
+
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
+
+  const updateShifts = () => {
+    dispatch(getShifts(date, enddate));
+  };
+
+  if (uuid_success) {
+    toast.success("UUID accepted!", {
+      position: "bottom-center",
+    });
+    dispatch(uuidReset());
+  }
+
+  let current_employee = user.employee.filter((employee) =>
+    employee.position.some((item) => item.department.id == currentDepartment)
+  )[0];
 
   const widthUpdate = () => {
     if (width > 1200) {
@@ -82,11 +112,11 @@ const ShiftList = () => {
       widthUpdate();
       return;
     }
-    dispatch(getShifts(date, enddate));
+    updateShifts();
   }, [currentDepartment]);
 
   useEffect(() => {
-    setEmployeesList(employees);
+    employees[0] != undefined && setEmployeesList(employees);
   }, [employees]);
 
   useEffect(() => {
@@ -95,13 +125,11 @@ const ShiftList = () => {
     }
   }, [shifts_list]);
 
-  employees = useSelector((state) => state.employees.employees);
   if (user && user.profile.role == "User") {
     employees = employees.filter(
-      (employee) => employee.id !== user.employee[0].id
+      (employee) => employee.id !== current_employee.id
     );
-    user.employee.push;
-    employees.unshift(user.employee[0]);
+    employees.unshift(current_employee);
   }
 
   var result = eachDayOfInterval({
@@ -166,7 +194,6 @@ const ShiftList = () => {
 
   return (
     <Fragment>
-      <ToastContainer />
       <CreateShift
         open={open}
         type={type}
@@ -188,211 +215,219 @@ const ShiftList = () => {
           <span className="loader"></span>
         </div>
       )}
-      <div className="shiftList container">
-        {employeesList.map((employee) => (
-          <div key={employee.id} className="rota__container">
-            <div className="container-left">
-              <div
-                className={`employee__wrapper ${
-                  user.profile.role == "User" &&
-                  user.employee[0].id == employee.id
-                    ? " active"
-                    : ""
-                }`}
-              >
-                <p className="employee__position">
-                  {employee.position.map(
-                    (item) =>
-                      item.department.id == parseInt(currentDepartment) && (
-                        <p>{item.name}</p>
-                      )
-                  )}
-                </p>
-                <div className="employee__name-container">
-                  <a
-                    href={`/profile/${employee.id}`}
-                    className="employee__name"
-                  >
-                    {employee.first_name}
-                    <span className="employee__surname">
-                      {" "}
-                      {employee.last_name}
-                    </span>
-                  </a>
-                  {permissions.includes("can_view_uuid") && !employee.user && (
-                    <Fragment>
-                      <i
-                        style={{ marginLeft: "10px", cursor: "pointer" }}
-                        onClick={(e) => {
-                          toast.info(
-                            <div>
-                              {employee.first_name + " " + employee.last_name}
-                              <br /> UUID copied! <br /> <br />{" "}
-                              <small>{employee.uuid}</small>
-                            </div>,
-                            { position: "bottom-center" }
-                          );
-                          copyToClipboard(employee.uuid);
-                          setUUID(employee.uuid);
-                        }}
-                        class="fas fa-clipboard"
-                      ></i>
-                    </Fragment>
-                  )}
+      {currentDepartment != 0 && (
+        <div className="shiftList container">
+          {employeesList.map((employee) => (
+            <div key={employee.id} className="rota__container">
+              <div className="container-left">
+                <div
+                  className={`employee__wrapper ${
+                    user.profile.role == "User" &&
+                    current_employee.id == employee.id
+                      ? " active"
+                      : ""
+                  }`}
+                >
+                  <p className="employee__position">
+                    {employee.position.map(
+                      (item) =>
+                        item.department.id == parseInt(currentDepartment) && (
+                          <p>{item.name}</p>
+                        )
+                    )}
+                  </p>
+                  <div className="employee__name-container">
+                    <a
+                      href={`/profile/${employee.id}`}
+                      className="employee__name"
+                    >
+                      {employee.first_name}
+                      <span className="employee__surname">
+                        {" "}
+                        {employee.last_name}
+                      </span>
+                    </a>
+                    {permissions.includes("can_view_uuid") && !employee.user && (
+                      <Fragment>
+                        <i
+                          style={{ marginLeft: "10px", cursor: "pointer" }}
+                          onClick={(e) => {
+                            toast.info(
+                              <div>
+                                {employee.first_name + " " + employee.last_name}
+                                <br /> UUID copied! <br /> <br />{" "}
+                                <small>{employee.uuid}</small>
+                              </div>,
+                              { position: "bottom-center" }
+                            );
+                            copyToClipboard(
+                              `www.readysetrota.com/join/${employee.uuid}/`
+                            );
+                            setUUID(employee.uuid);
+                          }}
+                          class="fas fa-clipboard"
+                        ></i>
+                      </Fragment>
+                    )}
+                  </div>
+                  <p className="employee__hours">
+                    {getAllShifts(employee.id)} Hours
+                  </p>
                 </div>
-                <p className="employee__hours">
-                  {getAllShifts(employee.id)} Hours
-                </p>
               </div>
-            </div>
-            <div className="container-right">
-              {result.map((result) =>
-                getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
-                  .length > 0 ? (
-                  <div
-                    className={`item-block shift__shift ${
-                      filterDate == format(result, "YYY-MM-dd")
-                        ? "filtered"
-                        : ""
-                    } ${
-                      getEmployeeShift(
+              <div className="container-right">
+                {result.map((result) =>
+                  getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
+                    .length > 0 ? (
+                    <div
+                      className={`item-block shift__shift ${
+                        filterDate == format(result, "YYY-MM-dd")
+                          ? "filtered"
+                          : ""
+                      } ${
+                        getEmployeeShift(
+                          employee.id,
+                          format(result, "YYY-MM-dd")
+                        ).some((item) => item.published == false)
+                          ? "unpublished"
+                          : ""
+                      }`}
+                    >
+                      {permissions.includes("can_create_shift") && (
+                        <p
+                          onClick={() => {
+                            setOpen(true);
+                            setType("shift");
+                            setEmployeeID(employee.id);
+                            setEmployeeName(
+                              employee.first_name + " " + employee.last_name
+                            );
+                            setShiftDate(format(result, "YYY-MM-dd"));
+                            setShift(false);
+                          }}
+                          className="shift__add--white"
+                        >
+                          +
+                        </p>
+                      )}
+                      {getEmployeeShift(
                         employee.id,
                         format(result, "YYY-MM-dd")
-                      ).some((item) => item.published == false)
-                        ? "unpublished"
-                        : ""
-                    }`}
-                  >
-                    {permissions.includes("can_create_shift") && (
-                      <p
-                        onClick={() => {
-                          setOpen(true);
-                          setType("shift");
-                          setEmployeeID(employee.id);
-                          setEmployeeName(
-                            employee.first_name + " " + employee.last_name
-                          );
-                          setShiftDate(format(result, "YYY-MM-dd"));
-                          setShift(false);
-                        }}
-                        className="shift__add--white"
-                      >
-                        +
-                      </p>
-                    )}
-                    {getEmployeeShift(
-                      employee.id,
-                      format(result, "YYY-MM-dd")
-                    ).map((shift) => (
-                      <Fragment>
-                        {!permissions.includes("can_view_unpublished_shifts") &&
-                        shift.published == false ? (
-                          ""
-                        ) : (
-                          <div
-                            onClick={() => {
-                              if (permissions.includes("can_create_shift")) {
-                                setOpen(true);
-                                setEmployeeID(employee.id);
-                                setType("shift");
-                                setEmployeeName(
-                                  employee.first_name + " " + employee.last_name
-                                );
-                                setShift(shift);
-                              }
-                            }}
-                            className={`shift__wrapper ${
-                              permissions.includes("can_create_shift")
-                                ? "edit"
-                                : ""
-                            }`}
-                          >
-                            <p className="shift__time">
-                              {shift.start_time.substr(0, 5)} - {shift.end_time}{" "}
-                            </p>
-                            <span>
-                              {permissions.includes(
-                                "can_view_unpublished_shifts"
-                              ) ? (
-                                shift.published ? (
-                                  <i class="fas fa-check"></i>
-                                ) : (
-                                  <i class="fas fa-times"></i>
-                                )
-                              ) : (
-                                shift.employee.user &&
-                                parseISO(shift.date, new Date()) >=
-                                  addDays(new Date(), -1) &&
-                                shift.employee.user.id != user.id && (
-                                  <i
-                                    onClick={() => {
-                                      // setOpen(true);
-                                      // setType("shiftswap");
-                                      // setShiftSwap(shift);
-                                    }}
-                                    class="fas fa-exchange-alt"
-                                  ></i>
-                                )
-                              )}
-                            </span>
-                            <span>
-                              {permissions.includes(
-                                "can_view_unpublished_shifts"
-                              ) &&
-                                (shift.published ? (
-                                  shift.seen ? (
-                                    <i class="far fa-eye"></i>
+                      ).map((shift) => (
+                        <Fragment>
+                          {!permissions.includes(
+                            "can_view_unpublished_shifts"
+                          ) && shift.published == false ? (
+                            ""
+                          ) : (
+                            <div
+                              onClick={() => {
+                                if (permissions.includes("can_create_shift")) {
+                                  setOpen(true);
+                                  setEmployeeID(employee.id);
+                                  setType("shift");
+                                  setEmployeeName(
+                                    employee.first_name +
+                                      " " +
+                                      employee.last_name
+                                  );
+                                  setShift(shift);
+                                }
+                              }}
+                              className={`shift__wrapper ${
+                                permissions.includes("can_create_shift")
+                                  ? "edit"
+                                  : ""
+                              }`}
+                            >
+                              <p className="shift__time">
+                                {shift.start_time.substr(0, 5)} -{" "}
+                                {shift.end_time}{" "}
+                              </p>
+                              <span>
+                                {permissions.includes(
+                                  "can_view_unpublished_shifts"
+                                ) ? (
+                                  shift.published ? (
+                                    <i class="fas fa-check"></i>
                                   ) : (
-                                    <i class="far fa-eye-slash"></i>
+                                    <i class="fas fa-times"></i>
                                   )
                                 ) : (
-                                  ""
-                                ))}
-                            </span>
-                            {shift.info && (
-                              <p className="shift__info">
-                                <i class="fas fa-info-circle"></i>
-                                {shift.info}
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </Fragment>
-                    ))}
-                  </div>
-                ) : (
-                  <div
-                    key={result}
-                    className={`item-block shift__shift-noshift ${
-                      filterDate == format(result, "YYY-MM-dd")
-                        ? "filtered"
-                        : ""
-                    }`}
-                  >
-                    {permissions.includes("can_create_shift") && (
-                      <span
-                        onClick={() => {
-                          setOpen(true);
-                          setType("shift");
-                          setEmployeeID(employee.id);
-                          setEmployeeName(
-                            employee.first_name + " " + employee.last_name
-                          );
-                          setShiftDate(format(result, "YYY-MM-dd"));
-                          setShift(false);
-                        }}
-                        className="shift__add"
-                      >
-                        +
-                      </span>
-                    )}
-                  </div>
-                )
-              )}
+                                  shift.employee.user &&
+                                  parseISO(shift.date, new Date()) >=
+                                    addDays(new Date(), -1) &&
+                                  shift.employee.user.id != user.id && (
+                                    <i
+                                      onClick={() => {
+                                        // setOpen(true);
+                                        // setType("shiftswap");
+                                        // setShiftSwap(shift);
+                                      }}
+                                      class="fas fa-exchange-alt"
+                                    ></i>
+                                  )
+                                )}
+                              </span>
+                              <span>
+                                {permissions.includes(
+                                  "can_view_unpublished_shifts"
+                                ) &&
+                                  (shift.published ? (
+                                    shift.seen ? (
+                                      <i class="far fa-eye"></i>
+                                    ) : (
+                                      <i class="far fa-eye-slash"></i>
+                                    )
+                                  ) : (
+                                    ""
+                                  ))}
+                              </span>
+                              {shift.info && (
+                                <p className="shift__info">
+                                  <i class="fas fa-info-circle"></i>
+                                  {shift.info}
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </Fragment>
+                      ))}
+                    </div>
+                  ) : (
+                    <div
+                      key={result}
+                      className={`item-block shift__shift-noshift ${
+                        filterDate == format(result, "YYY-MM-dd")
+                          ? "filtered"
+                          : ""
+                      }`}
+                    >
+                      {permissions.includes("can_create_shift") && (
+                        <span
+                          onClick={() => {
+                            setOpen(true);
+                            setType("shift");
+                            setEmployeeID(employee.id);
+                            setEmployeeName(
+                              employee.first_name + " " + employee.last_name
+                            );
+                            setShiftDate(format(result, "YYY-MM-dd"));
+                            setShift(false);
+                          }}
+                          className="shift__add"
+                        >
+                          +
+                        </span>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </Fragment>
   );
 };
