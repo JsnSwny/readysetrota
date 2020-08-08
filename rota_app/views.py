@@ -67,7 +67,7 @@ class Publish(APIView):
 
             body += "Your shifts for this week:\n\n"
             while first_day <= last_day:
-                body += first_day.strftime("%d %B %Y") + "\n\n"
+                body += first_day.strftime("%d %B %Y") + "\n"
                 daily_shifts = Shift.objects.filter(employee=employee, date=first_day)
                 for i in daily_shifts:
                     body += f'{str(i.start_time)[0:5]} - {i.end_time} \n'
