@@ -53,7 +53,7 @@ class Publish(APIView):
             body = "Your rota has been updated\n\n"
             for shift in sorted(shifts_unique[idx], key = attrgetter("date")):
                 body += f'{shift.date.strftime("%d %B %Y")}\n{str(shift.start_time)[0:5]} - {shift.end_time}\n\n'
-            body += "\n\nView your rota at https://rotaready.herokuapp.com"
+            body += "\n\nView your rota at www.readysetrota.com"
             if employee.user:
                 mail_item = ("Rota Updated", body, "readysetrota@gmail.com", [employee.user.email])
                 mail.append(mail_item)
