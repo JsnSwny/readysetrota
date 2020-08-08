@@ -7,7 +7,7 @@ from django.db.models import Count
 from .serializers import ShiftSerializer
 from operator import attrgetter
 from itertools import groupby
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.core.mail import send_mail, send_mass_mail
 from django_xhtml2pdf.utils import generate_pdf
 from django.http import HttpResponse
@@ -41,6 +41,11 @@ class GetPopularTimes(APIView):
 class Publish(APIView):
     def get(self, request):
         
+        first_day = datetime.today()  - timedelta(days=datetime.today().weekday() % 7)
+        last_day = first_day + timedelta(days=6)
+        delta = timedelta(days=1)
+        
+
         shifts = Shift.objects.filter(owner=self.request.user, published=False)
         shifts_sorted = sorted(shifts, key = attrgetter("employee.id"))
         shifts_unique = [list(grp) for k, grp in groupby(shifts_sorted, attrgetter("employee.id"))]
@@ -49,10 +54,27 @@ class Publish(APIView):
             i.published = True
             i.save()
         for idx, val in enumerate(shifts_unique):
+            
             employee = shifts_unique[idx][0].employee
+            
+            all_shifts = Shift.objects.filter(employee=employee, date__gte=first_day, date__lte=last_day)
+            
+            
+
             body = "Your rota has been updated\n\n"
             for shift in sorted(shifts_unique[idx], key = attrgetter("date")):
                 body += f'{shift.date.strftime("%d %B %Y")}\n{str(shift.start_time)[0:5]} - {shift.end_time}\n\n'
+
+            body += "Your shifts for this week:\n\n"
+            while first_day <= last_day:
+                body += first_day.strftime("%d %B %Y") + "\n\n"
+                daily_shifts = Shift.objects.filter(employee=employee, date=first_day)
+                for i in daily_shifts:
+                    body += f'{str(i.start_time)[0:5]} - {i.end_time} \n'
+                first_day += delta
+                body += "\n\n"
+            
+
             body += "\n\nView your rota at www.readysetrota.com"
             if employee.user:
                 mail_item = ("Rota Updated", body, "readysetrota@gmail.com", [employee.user.email])
