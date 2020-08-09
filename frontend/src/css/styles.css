@@ -336,6 +336,13 @@
   margin-right: 10px; }
 
 @media only screen and (max-width: 1200px) {
+  .dashboard__header {
+    padding: 40px 0; }
+    .dashboard__header .title {
+      font-size: 36px;
+      line-height: 35px; }
+    .dashboard__header .subtitle {
+      font-size: 18px; }
   .dashboard .table {
     min-width: 0;
     max-width: 300px;
@@ -361,11 +368,13 @@
   .dashboard__block, .dashboard__block--half {
     min-height: 0;
     padding: 30px 20px; }
-    .dashboard__block-title-container {
-      flex-direction: column;
-      margin-bottom: 30px; }
-      .dashboard__block-title-container .btn-4 {
-        margin-top: 10px; }
+    .dashboard__block-title {
+      font-size: 24px; }
+      .dashboard__block-title-container {
+        flex-direction: column;
+        margin-bottom: 30px; }
+        .dashboard__block-title-container .btn-4 {
+          margin-top: 10px; }
     .dashboard__block-container {
       display: flex;
       flex-wrap: wrap;

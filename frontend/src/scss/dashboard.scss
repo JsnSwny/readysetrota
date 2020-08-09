@@ -119,6 +119,16 @@
 
 @media only screen and (max-width: 1200px) {
   .dashboard {
+    &__header {
+      padding: 40px 0;
+      .title {
+        font-size: 36px;
+        line-height: 35px;
+      }
+      .subtitle {
+        font-size: 18px;
+      }
+    }
     .table {
       min-width: 0;
       max-width: 300px;
@@ -151,6 +161,7 @@
       min-height: 0;
       padding: 30px 20px;
       &-title {
+        font-size: 24px;
         &-container {
           flex-direction: column;
           margin-bottom: 30px;
