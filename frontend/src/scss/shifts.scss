@@ -207,6 +207,10 @@
 
     transition: 0.2s color ease-in-out;
     display: flex;
+    flex-direction: column;
+    .flex {
+      display: flex;
+    }
     &.hide {
       display: none;
     }
