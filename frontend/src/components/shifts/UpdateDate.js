@@ -9,6 +9,7 @@ const UpdateDate = () => {
   const dispatch = useDispatch();
   let width = useSelector((state) => state.responsive.width);
   let date = useSelector((state) => state.shifts.date);
+  let business = useSelector((state) => state.auth.business);
   let formatDate = (date, add) => {
     let newDate = format(addDays(parseISO(date), add), "YYY-MM-dd");
     return newDate;
@@ -28,7 +29,7 @@ const UpdateDate = () => {
       <UpdateDepartment />
       {currentDepartment != 0 && (
         <Fragment>
-          {current_employee && (
+          {(current_employee || business) && (
             <a
               href={`/exportall?start_date=${date}&end_date=${format(
                 addDays(parseISO(date), 6),
@@ -38,6 +39,7 @@ const UpdateDate = () => {
                   ? user.id
                   : current_employee.owner.id
               }`}
+              target="_blank"
             >
               <button className="btn-3 button">Export Shifts</button>
             </a>

@@ -174,6 +174,9 @@ const AddShift = (props) => {
           ></textarea>
         </div>
         <div className="staffForm__buttons">
+          <button type="submit" className="btn-1">
+            {shift ? "Update" : "Create"}
+          </button>
           <button
             onClick={() => {
               shift ? deleteShiftByID(shift.id) : onClose();
@@ -182,9 +185,6 @@ const AddShift = (props) => {
             style={{ backgroundColor: "#d05b5b" }}
           >
             {shift ? "Delete" : "Cancel"}
-          </button>
-          <button type="submit" className="btn-1">
-            {shift ? "Update" : "Create"}
           </button>
         </div>
       </form>

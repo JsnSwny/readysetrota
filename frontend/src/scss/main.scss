@@ -43,10 +43,31 @@ body {
 .title {
   font-size: 36px;
   line-height: 30px;
+  &-md {
+    @extend .title;
+    font-size: 24px;
+  }
+  &-sm {
+    @extend .title;
+    font-size: 18px;
+  }
+}
+
+.bold {
+  font-weight: bold;
 }
 
 .subtitle {
   font-size: 24px;
+  &-md {
+    @extend .subtitle;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  &-sm {
+    @extend .subtitle;
+    font-size: 16px;
+  }
 }
 
 button {

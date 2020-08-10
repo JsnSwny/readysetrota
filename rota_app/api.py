@@ -1,6 +1,6 @@
-from .models import Shift, Employee, Position, Department, ShiftSwap
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business
 from rest_framework import viewsets, permissions
-from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer
+from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -20,6 +20,17 @@ class ShiftFilter(django_filters.FilterSet):
         model = Shift
         fields = ['date', 'employee', 'department', 'employee__user__id']
         
+
+class BusinessViewSet(viewsets.ModelViewSet):
+    
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = BusinessSerializer
+
+    def get_queryset(self):
+        return Business.objects.filter(owner=self.request.user)
+
 
 class ShiftViewSet(viewsets.ModelViewSet):
     

@@ -14,6 +14,7 @@ const CreateShift = (props) => {
     staffPosition,
     shift,
     shiftSwap,
+    update,
   } = props;
 
   return (
@@ -28,11 +29,15 @@ const CreateShift = (props) => {
               onClose={onClose}
               shift={shift}
             />
-          ) : type == "staff" || type == "Position" || type == "Department" ? (
+          ) : type == "staff" ||
+            type == "Position" ||
+            type == "Department" ||
+            type == "BusinessName" ? (
             <AddStaff
               onClose={onClose}
               form={type}
               staffPosition={staffPosition}
+              update={update}
             />
           ) : (
             <ShiftSwapModal shiftSwap={shiftSwap} />

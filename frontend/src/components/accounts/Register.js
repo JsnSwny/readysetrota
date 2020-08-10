@@ -8,6 +8,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [businessName, setBusinessName] = useState("");
   const [role, setRole] = useState("");
   let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const Register = () => {
       password2,
       email,
       role,
+      businessName,
     };
     dispatch(register(newUser));
   };
@@ -56,6 +58,19 @@ const Register = () => {
                   </span>
                 </div>
                 <p className="error">{errors.role}</p>
+              </div>
+              <div className="form-group">
+                <label>Business Name</label>
+                <input
+                  type="text"
+                  className="form-control input-1"
+                  name="business_name"
+                  onChange={(e) => {
+                    setBusinessName(e.target.value);
+                  }}
+                  value={businessName}
+                />
+                <p className="error">{errors.businessName}</p>
               </div>
               <div className="form-group">
                 <label>Email</label>

@@ -7,6 +7,7 @@ import {
 } from "../../actions/employees";
 import Confirm from "../layout/Confirm";
 import Profile from "../shifts/Profile";
+import BusinessProfile from "../shifts/BusinessProfile";
 import ShiftList from "../shifts/ShiftList";
 import EnterID from "./EnterID";
 
@@ -15,7 +16,7 @@ const Home = () => {
   return (
     <Fragment>
       {user.groups.some((item) => item.name == "Business") ? (
-        <ShiftList />
+        <BusinessProfile />
       ) : (
         <Profile />
       )}

@@ -36,15 +36,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             />
           );
         } else {
-          if (
-            currentDepartment != 0 ||
-            pass == true ||
-            (user_only_pass == true && !groups.includes("Business"))
-          ) {
-            return <Component {...props} />;
-          } else {
-            return <NoDepartment />;
-          }
+          return <Component {...props} />;
         }
       }}
     />

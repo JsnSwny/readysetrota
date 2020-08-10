@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, ShiftSwap
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business
 from accounts.serializers import UserSerializer
 
+class BusinessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
+        fields = '__all__'
+        depth = 1
+
 class DepartmentSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
     class Meta:
         model = Department
         fields = '__all__'
@@ -11,6 +18,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class PositionSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True)
+    
     class Meta:
         model = Position
         fields = '__all__'

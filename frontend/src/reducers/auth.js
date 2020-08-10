@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  UPDATE_BUSINESS,
 } from "../actions/types";
 
 const initialState = {
@@ -14,10 +15,16 @@ const initialState = {
   isAuthenticated: null,
   isLoading: true,
   user: null,
+  business: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case UPDATE_BUSINESS:
+      return {
+        ...state,
+        user: { ...state.user, business: action.payload },
+      };
     case USER_LOADING:
       return {
         ...state,
@@ -29,6 +36,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
+        business: action.payload.groups.some((item) => item.name == "Business"),
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
@@ -38,6 +46,9 @@ export default function (state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        business: action.payload.user.groups.some(
+          (item) => item.name == "Business"
+        ),
       };
     case LOGOUT_SUCCESS:
     case AUTH_ERROR:

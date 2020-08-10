@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { format, parse, parseISO } from "date-fns";
 import Pagination from "./Pagination";
 import { Link, Redirect } from "react-router-dom";
+import DepartmentPicker from "./DepartmentPicker";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const Profile = (props) => {
               ))}
           </div>
         </div>
+        <DepartmentPicker />
         <div className="dashboard container-2">
           {/* {user_set && (
         <small className="dashboard__contact">
@@ -81,12 +83,12 @@ const Profile = (props) => {
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
               {/* <a
-            className="btn-4"
-            target="_blank"
-            href={`/export?id=${employee.id}`}
-          >
-            Export Shifts as PDF
-          </a> */}
+                className="btn-4"
+                target="_blank"
+                href={`/export?id=${employee.id}`}
+              >
+                Export Shifts as PDF
+              </a> */}
             </div>
 
             <div className="dashboard__block-container">
@@ -95,7 +97,7 @@ const Profile = (props) => {
                 <p className="short">Time</p>
                 <p className="long">Info</p>
                 <p className="short">Department</p>
-                <p className="short">Created</p>
+                <p className="short">Business</p>
               </div>
 
               {currentShifts.map((item) => (
@@ -128,7 +130,7 @@ const Profile = (props) => {
                       </p>
                       <p className="short extra">{item.department.name}</p>
                       <p className="short extra">
-                        {format(new Date(item.created_at), "MMMM dd YYY HH:mm")}
+                        {item.department.owner.business.name}
                       </p>
                     </div>
                   )}

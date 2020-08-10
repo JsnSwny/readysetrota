@@ -2,15 +2,20 @@ import {
   GET_EMPLOYEES,
   ADD_EMPLOYEE,
   GET_POSITIONS,
+  GET_ALL_POSITIONS,
   GET_DEPARTMENTS,
   ADD_POSITION,
   DELETE_EMPLOYEE,
   ADD_DEPARTMENT,
   DELETE_POSITION,
+  DELETE_DEPARTMENT,
   SET_DEPARTMENT,
   RESET_DEPARTMENT,
   UUID_SUCCESS,
   UUID_RESET,
+  UPDATE_DEPARTMENT,
+  UPDATE_POSITION,
+  UPDATE_EMPLOYEE,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -21,8 +26,10 @@ weekFromDate = format(weekFromDate, "YYY-MM-dd");
 const initialState = {
   employees: [],
   positions: [],
+  all_positions: [],
   departments: [],
   current_department: 0,
+
   // current_department: localStorage.getItem("current_department")
   //   ? localStorage.getItem("current_department")
   //   : 0,
@@ -40,6 +47,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         positions: action.payload,
+      };
+    case GET_ALL_POSITIONS:
+      return {
+        ...state,
+        all_positions: action.payload,
       };
     case GET_DEPARTMENTS:
       return {
@@ -74,6 +86,14 @@ export default function (state = initialState, action) {
         };
       }
 
+    case UPDATE_EMPLOYEE:
+      return {
+        ...state,
+        employees: state.employees.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
+
     case DELETE_EMPLOYEE:
       return {
         ...state,
@@ -88,15 +108,37 @@ export default function (state = initialState, action) {
           (position) => position.id !== action.payload
         ),
       };
+    case DELETE_DEPARTMENT:
+      return {
+        ...state,
+        departments: state.departments.filter(
+          (department) => department.id !== action.payload
+        ),
+      };
     case ADD_POSITION:
       return {
         ...state,
         positions: [...state.positions, action.payload],
       };
+    case UPDATE_POSITION:
+      return {
+        ...state,
+        positions: state.positions.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
     case ADD_DEPARTMENT:
       return {
         ...state,
         departments: [...state.departments, action.payload],
+      };
+
+    case UPDATE_DEPARTMENT:
+      return {
+        ...state,
+        departments: state.departments.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
       };
     case UUID_RESET:
       return {

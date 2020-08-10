@@ -4,6 +4,12 @@ from django.contrib.auth.models import AbstractUser
 import uuid
 from datetime import datetime
 
+class Business(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name="business")
+
 class Department(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):

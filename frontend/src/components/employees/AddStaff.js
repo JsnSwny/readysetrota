@@ -6,25 +6,35 @@ import {
   getDepartments,
   addDepartment,
   addPosition,
+  updateDepartment,
+  deleteDepartment,
+  updatePosition,
+  deletePosition,
+  updateEmployee,
+  deleteEmployee,
+  updateBusinessName,
 } from "../../actions/employees";
 import { contextType } from "react-modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddStaff = (props) => {
-  const { onClose, form, staffPosition } = props;
+  const { onClose, form, staffPosition, update } = props;
 
-  let positions = useSelector((state) => state.employees.positions);
+  let positions = useSelector((state) => state.employees.all_positions);
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (form == "staff") {
       positions = dispatch(getPositions());
       staffPosition && setPosition(staffPosition.toString());
     }
   }, []);
+
+  let currentDepartment = useSelector(
+    (state) => state.employees.current_department
+  );
 
   // Disable Positions in Department of already selected positions
   const getDepartment = (id) => {
@@ -68,6 +78,17 @@ const AddStaff = (props) => {
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
 
+  useEffect(() => {
+    if (update) {
+      setName(update.name);
+      if (form == "staff") {
+        setFirstName(update.first_name);
+        setLastName(update.last_name);
+        setPosition(update.position.map((item) => item.id));
+      }
+    }
+  }, [update]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (form == "staff") {
@@ -78,31 +99,71 @@ const AddStaff = (props) => {
       };
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
-        dispatch(addEmployee(employee));
+        if (update) {
+          dispatch(updateEmployee(update.id, employee));
+          toast.success("Employee updated!", {
+            position: "bottom-center",
+          });
+        } else {
+          dispatch(addEmployee(employee));
+          toast.success("Employee added!", {
+            position: "bottom-center",
+          });
+        }
+
         setFirstName("");
         setLastName("");
         setPosition("");
         onClose();
-        toast.success("Staff added!", {
+      }
+    } else if (form == "Department") {
+      if (update) {
+        dispatch(updateDepartment(update.id, { name }));
+        toast.success("Department updated!", {
+          position: "bottom-center",
+        });
+      } else {
+        dispatch(addDepartment({ name }));
+        toast.success("Department added!", {
           position: "bottom-center",
         });
       }
-    } else if (form == "Department") {
-      dispatch(addDepartment({ name }));
       setName("");
       onClose();
     } else if (form == "Position") {
-      const position_obj = {
-        name,
-      };
-      dispatch(addPosition(position_obj));
+      if (update) {
+        dispatch(
+          updatePosition(update.id, {
+            name,
+            department_id: currentDepartment,
+          })
+        );
+        toast.success("Position updated!", {
+          position: "bottom-center",
+        });
+      } else {
+        dispatch(addPosition({ name }));
+        toast.success("Position added!", {
+          position: "bottom-center",
+        });
+      }
+      setName("");
+      onClose();
+    } else if (form == "BusinessName") {
+      dispatch(updateBusinessName(update.id, { name }));
+      toast.success("Business name updated!", {
+        position: "bottom-center",
+      });
       setName("");
       onClose();
     }
   };
+
   return (
     <div className="staffForm">
-      <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create {form}</h1>
+      <h1 style={{ fontSize: "28px", textAlign: "center" }}>
+        {form != "BusinessName" ? form : "Business Name"}
+      </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
         {form === "staff" ? (
           <Fragment>
@@ -179,18 +240,31 @@ const AddStaff = (props) => {
         )}
 
         <div className="staffForm__buttons">
-          <button
-            onClick={() => {
-              onClose();
-            }}
-            className="btn-1"
-            style={{ backgroundColor: "#d05b5b" }}
-          >
-            Cancel
+          <button type="submit" value="update" className="btn-1">
+            {update ? "Update" : "Create"}
           </button>
-          <button type="submit" className="btn-1">
-            Create
-          </button>
+          {form != "BusinessName" && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (update) {
+                  if (form == "Department") {
+                    dispatch(deleteDepartment(update.id));
+                  } else if (form == "Position") {
+                    dispatch(deletePosition(update.id));
+                  } else if (form == "staff") {
+                    dispatch(deleteEmployee(update.id));
+                  }
+                }
+                onClose();
+              }}
+              value="delete"
+              className="btn-1"
+              style={{ backgroundColor: "#d05b5b" }}
+            >
+              {update ? "Delete" : "Cancel"}
+            </button>
+          )}
         </div>
       </form>
     </div>

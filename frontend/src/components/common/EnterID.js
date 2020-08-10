@@ -60,7 +60,7 @@ const EnterID = (props) => {
       </div>
     );
   } else {
-    return <Redirect to="/rota" />;
+    return <Redirect to="/" />;
   }
 };
 

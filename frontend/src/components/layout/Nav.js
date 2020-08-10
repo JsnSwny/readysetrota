@@ -69,11 +69,6 @@ const Nav = () => {
                     <li>Join</li>
                   </Link>
                 )}
-                {user && user.profile.role == "Business" && (
-                  <Link to="/staff">
-                    <li>Staff</li>
-                  </Link>
-                )}
               </Fragment>
             )}
           </div>
@@ -110,14 +105,14 @@ const Nav = () => {
               Rota
             </li>
           </Link>
-          {user && user.profile.role == "Business" && (
-            <Link to="/staff">
+          {user && user.profile.role != "Business" && (
+            <Link to="/join">
               <li
                 onClick={() => {
                   setBurger(false);
                 }}
               >
-                Staff
+                Join
               </li>
             </Link>
           )}

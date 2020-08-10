@@ -27,7 +27,6 @@ const UpdateDepartment = () => {
   const setDep = (id) => {
     dispatch(setDepartment(id));
     dispatch(getShifts(date, enddate));
-    dispatch(getEmployees());
   };
 
   if (currentDepartment == 0 && departments.length == 1) {

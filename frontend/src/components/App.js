@@ -49,7 +49,6 @@ const App = () => {
             <PrivateRoute path="/rota" exact component={Shifts} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <PrivateRoute path="/staff" component={Staff} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={Profile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department
+from rota_app.models import UserProfile, Employee, Department, Business
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
@@ -18,6 +18,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ('role',)
 
+class BusinessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
+        fields = ('id', 'name',)
+
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
@@ -31,6 +36,8 @@ class GroupSerializer(serializers.ModelSerializer):
         # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
+
+    business = BusinessSerializer()
     all_permissions = serializers.SerializerMethodField()
 
     def get_all_permissions(self, obj):
@@ -44,19 +51,20 @@ class UserSerializer(serializers.ModelSerializer):
          
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined')
+        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business')
         depth = 3
 
 
 # Register Serializers
 class RegisterSerializer(serializers.ModelSerializer):
     role = serializers.CharField(write_only=True)
+    businessName = serializers.CharField(write_only=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password2', 'role')
+        fields = ('id', 'username', 'email', 'password', 'password2', 'role', 'businessName')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -80,11 +88,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
             profile = UserProfile(user=user, role=validated_data['role'])
             profile.save() 
+
+            
+
             if validated_data['role'] == "Business":
                 my_group = Group.objects.get(name='Business') 
-                my_group.user_set.add(user)        
-                department = Department(owner=user, name="Department 1")
-                department.save()
+                my_group.user_set.add(user) 
+                business = Business(owner=user, name=validated_data['businessName'])
+                business.save()       
             return user
 
 # Login Serializers

@@ -4,20 +4,42 @@ import {
   GET_EMPLOYEES,
   ADD_EMPLOYEE,
   GET_POSITIONS,
+  GET_ALL_POSITIONS,
   GET_DEPARTMENTS,
   ADD_POSITION,
   DELETE_EMPLOYEE,
   ADD_DEPARTMENT,
   DELETE_POSITION,
+  DELETE_DEPARTMENT,
   SET_DEPARTMENT,
   UUID_SUCCESS,
   UUID_RESET,
+  UPDATE_DEPARTMENT,
+  UPDATE_POSITION,
+  UPDATE_EMPLOYEE,
+  UPDATE_BUSINESS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
 import { loadUser } from "./auth";
 
 import { tokenConfig } from "./auth";
+
+export const updateBusinessName = (id, name) => (dispatch, getState) => {
+  axios
+    .put(`/api/business/${id}/`, name, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_BUSINESS,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
 
 export const getEmployees = () => (dispatch, getState) => {
   axios
@@ -41,6 +63,7 @@ export const setDepartment = (id) => (dispatch) => {
     type: SET_DEPARTMENT,
     payload: id,
   });
+  dispatch(getEmployees());
 };
 
 // Add Employee
@@ -54,6 +77,22 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
       });
     })
     .catch((error) => {});
+};
+
+export const updateEmployee = (id, employee) => (dispatch, getState) => {
+  axios
+    .put(`/api/employees/${id}/`, employee, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_EMPLOYEE,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
 };
 
 // Add Employee
@@ -80,10 +119,17 @@ export const getPositions = (all = false) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      dispatch({
-        type: GET_POSITIONS,
-        payload: res.data,
-      });
+      if (all) {
+        dispatch({
+          type: GET_POSITIONS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: GET_ALL_POSITIONS,
+          payload: res.data,
+        });
+      }
     });
 };
 
@@ -96,6 +142,7 @@ export const deletePosition = (id) => (dispatch, getState) => {
         type: DELETE_POSITION,
         payload: id,
       });
+      dispatch(getEmployees());
     })
     .catch((error) => {});
 };
@@ -116,6 +163,24 @@ export const addPosition = (position) => (dispatch, getState) => {
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
+
+export const updatePosition = (id, position) => (dispatch, getState) => {
+  axios
+    .put(`/api/positions/${id}/`, position, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_POSITION,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+      dispatch(getEmployees());
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
 // Add Employee
 export const addDepartment = (department) => (dispatch, getState) => {
   axios
@@ -130,6 +195,37 @@ export const addDepartment = (department) => (dispatch, getState) => {
     .catch((err) => {
       dispatch(getErrors(err.response.data, err.response.status));
     });
+};
+
+export const updateDepartment = (id, department) => (dispatch, getState) => {
+  axios
+    .put(`/api/departments/${id}/`, department, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_DEPARTMENT,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
+// Delete Position
+export const deleteDepartment = (id) => (dispatch, getState) => {
+  axios
+    .delete(`/api/departments/${id}/`, tokenConfig(getState))
+    .then(() => {
+      dispatch({
+        type: DELETE_DEPARTMENT,
+        payload: id,
+      });
+      dispatch(getEmployees());
+      dispatch(getPositions(true));
+    })
+    .catch((error) => {});
 };
 
 // Get Department

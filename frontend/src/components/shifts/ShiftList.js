@@ -107,6 +107,7 @@ const ShiftList = () => {
   const firstUpdateDepartment = useRef(true);
   useEffect(() => {
     dispatch(getEmployees());
+
     dispatch(getPopularTimes());
     if (firstUpdateDepartment.current) {
       widthUpdate();
@@ -116,7 +117,15 @@ const ShiftList = () => {
   }, [currentDepartment]);
 
   useEffect(() => {
-    employees[0] != undefined && setEmployeesList(employees);
+    if (user && user.profile.role == "User") {
+      if (employees.length > 0) {
+        employees = employees.filter(
+          (employee) => employee.id !== current_employee.id
+        );
+        employees.unshift(current_employee);
+      }
+    }
+    setEmployeesList(employees);
   }, [employees]);
 
   useEffect(() => {
@@ -124,13 +133,6 @@ const ShiftList = () => {
       filterEmployees(filterDate, true);
     }
   }, [shifts_list]);
-
-  if (user && user.profile.role == "User") {
-    employees = employees.filter(
-      (employee) => employee.id !== current_employee.id
-    );
-    employees.unshift(current_employee);
-  }
 
   var result = eachDayOfInterval({
     start: parseISO(date),
