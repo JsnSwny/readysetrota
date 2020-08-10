@@ -59,19 +59,22 @@ const Register = () => {
                 </div>
                 <p className="error">{errors.role}</p>
               </div>
-              <div className="form-group">
-                <label>Business Name</label>
-                <input
-                  type="text"
-                  className="form-control input-1"
-                  name="business_name"
-                  onChange={(e) => {
-                    setBusinessName(e.target.value);
-                  }}
-                  value={businessName}
-                />
-                <p className="error">{errors.businessName}</p>
-              </div>
+              {role == "Business" && (
+                <div className="form-group">
+                  <label>Business Name</label>
+                  <input
+                    type="text"
+                    className="form-control input-1"
+                    name="business_name"
+                    onChange={(e) => {
+                      setBusinessName(e.target.value);
+                    }}
+                    value={businessName}
+                  />
+                  <p className="error">{errors.businessName}</p>
+                </div>
+              )}
+
               <div className="form-group">
                 <label>Email</label>
                 <input

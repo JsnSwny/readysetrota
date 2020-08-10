@@ -28,11 +28,10 @@ const initialState = {
   positions: [],
   all_positions: [],
   departments: [],
-  current_department: 0,
 
-  // current_department: localStorage.getItem("current_department")
-  //   ? localStorage.getItem("current_department")
-  //   : 0,
+  current_department: localStorage.getItem("current_department")
+    ? localStorage.getItem("current_department")
+    : 0,
   uuid_success: false,
 };
 
@@ -59,13 +58,13 @@ export default function (state = initialState, action) {
         departments: action.payload,
       };
     case RESET_DEPARTMENT:
-      // localStorage.setItem("current_department", 0);
+      localStorage.setItem("current_department", 0);
       return {
         ...state,
         current_department: 0,
       };
     case SET_DEPARTMENT:
-      // localStorage.setItem("current_department", action.payload);
+      localStorage.setItem("current_department", action.payload);
       return {
         ...state,
         current_department: action.payload,

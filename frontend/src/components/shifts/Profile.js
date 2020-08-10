@@ -53,6 +53,7 @@ const Profile = (props) => {
   let employee = employees.filter((item) => item.id == id)[0];
 
   // let user_set = employee.user ? true : false;
+
   if (employee || !id_param) {
     return (
       <Fragment>
@@ -70,7 +71,8 @@ const Profile = (props) => {
               ))}
           </div>
         </div>
-        <DepartmentPicker />
+        {!id_param && <DepartmentPicker />}
+
         <div className="dashboard container-2">
           {/* {user_set && (
         <small className="dashboard__contact">
