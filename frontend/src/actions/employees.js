@@ -108,7 +108,9 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       });
       dispatch(resetErrors());
     })
-    .catch((err) => {});
+    .catch((err) => {
+      console.log(err.response);
+    });
 };
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {
