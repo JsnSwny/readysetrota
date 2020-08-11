@@ -348,29 +348,31 @@ const ShiftList = () => {
                                   {shift.end_time}{" "}
                                 </p>
                                 <span>
-                                  {permissions.includes(
-                                    "can_view_unpublished_shifts"
-                                  ) ? (
-                                    shift.published ? (
-                                      <i class="fas fa-check"></i>
+                                  {
+                                    permissions.includes(
+                                      "can_view_unpublished_shifts"
+                                    ) ? (
+                                      shift.published ? (
+                                        <i class="fas fa-check"></i>
+                                      ) : (
+                                        <i class="fas fa-times"></i>
+                                      )
                                     ) : (
-                                      <i class="fas fa-times"></i>
+                                      ""
                                     )
-                                  ) : (
-                                    shift.employee.user &&
-                                    parseISO(shift.date, new Date()) >=
-                                      addDays(new Date(), -1) &&
-                                    shift.employee.user.id != user.id && (
-                                      <i
-                                        onClick={() => {
-                                          // setOpen(true);
-                                          // setType("shiftswap");
-                                          // setShiftSwap(shift);
-                                        }}
-                                        class="fas fa-exchange-alt"
-                                      ></i>
-                                    )
-                                  )}
+                                    // shift.employee.user &&
+                                    // parseISO(shift.date, new Date()) >=
+                                    //   addDays(new Date(), -1) &&
+                                    // shift.employee.user.id != user.id && (
+                                    //   <i
+                                    //     onClick={() => {
+                                    //       // setOpen(true);
+                                    //       // setType("shiftswap");
+                                    //       // setShiftSwap(shift);
+                                    //     }}
+                                    //     class="fas fa-exchange-alt"
+                                    //   ></i>
+                                  }
                                 </span>
                                 <span>
                                   {permissions.includes(
