@@ -14,6 +14,7 @@ import {
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 // import {
 //   EmailShareButton,
@@ -239,16 +240,16 @@ const ShiftList = () => {
                     )}
                   </p>
                   <div className="employee__name-container">
-                    <a
-                      href={`/profile/${employee.id}`}
-                      className="employee__name"
-                    >
-                      {employee.first_name}
-                      <span className="employee__surname">
-                        {" "}
-                        {employee.last_name}
-                      </span>
-                    </a>
+                    <Link to={`/profile/${employee.id}`}>
+                      <p className="employee__name">
+                        {employee.first_name}
+                        <span className="employee__surname">
+                          {" "}
+                          {employee.last_name}
+                        </span>
+                      </p>
+                    </Link>
+
                     {permissions.includes("can_view_uuid") && !employee.user && (
                       <Fragment>
                         <i
