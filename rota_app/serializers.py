@@ -28,7 +28,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
 
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
-
+    owner = UserSerializer()
+    user = UserSerializer()
 
     class Meta:
         model = Employee
@@ -42,6 +43,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
         depth = 1
 
 class ShiftSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
     employee = EmployeeSerializer(read_only=True)
 
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)

@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business
+from rota_app.models import UserProfile, Employee, Department, Business, Position
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import Group
 import json
+
 
 
 
@@ -23,11 +24,6 @@ class BusinessSerializer(serializers.ModelSerializer):
         model = Business
         fields = ('id', 'name',)
 
-class EmployeeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Employee
-        fields = ('name')
-
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
@@ -36,7 +32,6 @@ class GroupSerializer(serializers.ModelSerializer):
         # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
-
     business = BusinessSerializer()
     all_permissions = serializers.SerializerMethodField()
 

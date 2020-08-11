@@ -891,6 +891,9 @@ a {
   transition: 0.2s ease-in-out color; }
   .employee__name:hover {
     color: #ad408e; }
+  .employee__name-container {
+    display: flex;
+    align-items: center; }
 
 .employee__position {
   font-size: 12px;

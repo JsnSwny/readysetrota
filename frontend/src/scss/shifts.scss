@@ -151,6 +151,10 @@
     &:hover {
       color: #ad408e;
     }
+    &-container {
+      display: flex;
+      align-items: center;
+    }
   }
   &__position {
     font-size: 12px;
