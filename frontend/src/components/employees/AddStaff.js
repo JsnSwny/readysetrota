@@ -76,7 +76,7 @@ const AddStaff = (props) => {
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState([]);
 
   useEffect(() => {
     if (update) {

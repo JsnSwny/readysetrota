@@ -38,18 +38,7 @@ const Dates = (dates) => {
         className={`dates container ${scrollPosition >= 260 ? " fixed" : ""}`}
       >
         <div className="dates__container">
-          <div className="container-left">
-            {user && user.profile.role == "Business" && (
-              <button
-                onClick={() => {
-                  setOpen(true);
-                }}
-                className="btn-1"
-              >
-                <i class="fas fa-user-plus"></i>Add Staff
-              </button>
-            )}
-          </div>
+          <div className="container-left"></div>
           <div className="container-right">
             {dates.dates.map((date) => (
               <div key={date} className="item-block dates__date">

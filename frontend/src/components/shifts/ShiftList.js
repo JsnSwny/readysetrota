@@ -235,7 +235,7 @@ const ShiftList = () => {
                     {employee.position.map(
                       (item) =>
                         item.department.id == parseInt(currentDepartment) && (
-                          <p>{item.name}</p>
+                          <span key={item.id}>{item.name}</span>
                         )
                     )}
                   </p>
@@ -268,7 +268,7 @@ const ShiftList = () => {
                             );
                             setUUID(employee.uuid);
                           }}
-                          class="fas fa-clipboard"
+                          className="fas fa-clipboard"
                         ></i>
                       </Fragment>
                     )}
@@ -283,6 +283,7 @@ const ShiftList = () => {
                   getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
                     .length > 0 ? (
                     <div
+                      key={result}
                       className={`item-block shift__shift ${
                         filterDate == format(result, "YYY-MM-dd")
                           ? "filtered"
@@ -317,7 +318,7 @@ const ShiftList = () => {
                         employee.id,
                         format(result, "YYY-MM-dd")
                       ).map((shift) => (
-                        <Fragment>
+                        <Fragment key={shift.id}>
                           {!permissions.includes(
                             "can_view_unpublished_shifts"
                           ) && shift.published == false ? (
@@ -343,7 +344,7 @@ const ShiftList = () => {
                                   : ""
                               }`}
                             >
-                              <div class="flex">
+                              <div className="flex">
                                 <p className="shift__time">
                                   {shift.start_time.substr(0, 5)} -{" "}
                                   {shift.end_time}{" "}
@@ -354,9 +355,9 @@ const ShiftList = () => {
                                       "can_view_unpublished_shifts"
                                     ) ? (
                                       shift.published ? (
-                                        <i class="fas fa-check"></i>
+                                        <i className="fas fa-check"></i>
                                       ) : (
-                                        <i class="fas fa-times"></i>
+                                        <i className="fas fa-times"></i>
                                       )
                                     ) : (
                                       ""
@@ -381,9 +382,9 @@ const ShiftList = () => {
                                   ) &&
                                     (shift.published ? (
                                       shift.seen ? (
-                                        <i class="far fa-eye"></i>
+                                        <i className="far fa-eye"></i>
                                       ) : (
-                                        <i class="far fa-eye-slash"></i>
+                                        <i className="far fa-eye-slash"></i>
                                       )
                                     ) : (
                                       ""
@@ -392,7 +393,7 @@ const ShiftList = () => {
                               </div>
                               {shift.info && (
                                 <p className="shift__info">
-                                  <i class="fas fa-info-circle"></i>
+                                  <i className="fas fa-info-circle"></i>
                                   {shift.info}
                                 </p>
                               )}

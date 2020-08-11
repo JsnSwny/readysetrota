@@ -73,7 +73,7 @@ const BusinessProfile = (props) => {
                 setType("BusinessName");
                 setUpdate({ id: user.business.id, name: user.business.name });
               }}
-              class="fas fa-edit"
+              className="fas fa-edit"
             ></i>
           </div>
         </div>
@@ -91,12 +91,12 @@ const BusinessProfile = (props) => {
                     setType("Position");
                     setUpdate(false);
                   }}
-                  class="fas fa-plus-square"
+                  className="fas fa-plus-square"
                 ></i>
               </div>
               <div className="dashboard__wrapper">
                 {positions.map((item) => (
-                  <div className="dashboard__item">
+                  <div key={item.id} className="dashboard__item">
                     <p className="title-md bold">{item.name}</p>
                     <p className="subtitle-sm">
                       {
@@ -134,12 +134,12 @@ const BusinessProfile = (props) => {
                     setType("staff");
                     setUpdate(false);
                   }}
-                  class="fas fa-plus-square"
+                  className="fas fa-plus-square"
                 ></i>
               </div>
               <div className="dashboard__wrapper">
                 {employees.map((item) => (
-                  <div className="dashboard__item">
+                  <div key={item.id} className="dashboard__item">
                     <p className="title-md bold">
                       {item.first_name} <strong>{item.last_name}</strong>
                       {permissions.includes("can_view_uuid") && !item.user && (
@@ -162,7 +162,7 @@ const BusinessProfile = (props) => {
                                 `www.readysetrota.com/join/${item.uuid}/`
                               );
                             }}
-                            class="fas fa-clipboard"
+                            className="fas fa-clipboard"
                           ></i>
                         </Fragment>
                       )}
@@ -170,8 +170,9 @@ const BusinessProfile = (props) => {
                     <p className="subtitle-sm">
                       {item.position.map(
                         (position) =>
-                          position.department.id == currentDepartment &&
-                          position.name
+                          position.department.id == currentDepartment && (
+                            <span key={position.id}>{position.name}</span>
+                          )
                       )}
                     </p>
                     <button

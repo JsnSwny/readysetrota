@@ -67,7 +67,9 @@ const Profile = (props) => {
             </h1>
             {id_param &&
               employee.position.map((item) => (
-                <p className="subtitle">{item.name}</p>
+                <p key={item.id} className="subtitle">
+                  {item.name}
+                </p>
               ))}
           </div>
         </div>
@@ -103,7 +105,7 @@ const Profile = (props) => {
               </div>
 
               {currentShifts.map((item) => (
-                <Fragment>
+                <Fragment key={item.id}>
                   {!item.published &&
                   !permissions.includes("can_view_unpublished_shifts") ? (
                     ""

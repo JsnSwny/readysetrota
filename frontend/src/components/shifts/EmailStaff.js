@@ -15,7 +15,7 @@ const UpdateDepartment = (props) => {
       }}
       className="btn-3 button"
     >
-      <i class="fas fa-check"></i>Publish
+      <i className="fas fa-check"></i>Publish
     </button>
   );
 };

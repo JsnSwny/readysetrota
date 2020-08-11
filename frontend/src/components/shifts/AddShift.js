@@ -107,7 +107,7 @@ const AddShift = (props) => {
               name="starttime"
               value={startTime}
             >
-              <option value="" selected disabled>
+              <option value="" disabled>
                 Select a start time
               </option>
               {hours.map((time) => (
@@ -131,7 +131,7 @@ const AddShift = (props) => {
               name="endtime"
               value={endTime}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Select an end time
               </option>
               <option value="Finish">Finish</option>
@@ -145,7 +145,7 @@ const AddShift = (props) => {
           </div>
         </div>
         {popular_times.length > 0 && (
-          <small class="staffForm__popular-title">Most Used Times</small>
+          <small className="staffForm__popular-title">Most Used Times</small>
         )}
 
         <div className="staffForm__popular-container">

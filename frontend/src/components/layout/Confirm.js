@@ -11,7 +11,7 @@ const Confirm = (props) => {
             <p>{message}</p>
           </div>
 
-          <div class="modal__buttonsContainer">
+          <div className="modal__buttonsContainer">
             <div className="modal__buttons">
               <button
                 className="modal__buttonCancel modal__button"

@@ -86,7 +86,7 @@ const UpdateDate = () => {
                   )
                 );
               }}
-              class="fas fa-arrow-circle-left"
+              className="fas fa-arrow-circle-left"
             ></i>
             <i
               onClick={() => {
@@ -97,7 +97,7 @@ const UpdateDate = () => {
                   )
                 );
               }}
-              class="fas fa-arrow-circle-right"
+              className="fas fa-arrow-circle-right"
             ></i>
           </div>
         </Fragment>

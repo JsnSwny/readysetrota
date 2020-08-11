@@ -82,10 +82,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             
             user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
             profile = UserProfile(user=user, role=validated_data['role'])
-            profile.save() 
-
-            
-
+            profile.save()
             if validated_data['role'] == "Business":
                 my_group = Group.objects.get(name='Business') 
                 my_group.user_set.add(user) 

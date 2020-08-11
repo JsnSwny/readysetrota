@@ -81,7 +81,7 @@ const Nav = () => {
             }}
             className="hamburger"
           >
-            <i class="fas fa-bars"></i>
+            <i className="fas fa-bars"></i>
           </div>
         </ul>
       </nav>

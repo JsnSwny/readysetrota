@@ -41,11 +41,15 @@ const UpdateDepartment = () => {
       className="btn-3"
       value={currentDepartment == 0 ? "" : currentDepartment}
     >
-      <option value="" selected disabled>
+      <option value="" disabled>
         Select Department
       </option>
       {departments.map((obj) => {
-        return <option value={obj.id}>{obj.name}</option>;
+        return (
+          <option key={obj.id} value={obj.id}>
+            {obj.name}
+          </option>
+        );
       })}
     </select>
   );

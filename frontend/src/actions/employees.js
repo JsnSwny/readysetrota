@@ -36,9 +36,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch((err) => {});
 };
 
 export const getEmployees = () => (dispatch, getState) => {
@@ -50,13 +48,12 @@ export const getEmployees = () => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_EMPLOYEES,
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err.response));
+    .catch();
 };
 
 export const setDepartment = (id) => (dispatch) => {
@@ -91,9 +88,7 @@ export const updateEmployee = (id, employee) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch();
 };
 
 // Add Employee
@@ -108,9 +103,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       });
       dispatch(resetErrors());
     })
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch();
 };
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {
@@ -179,9 +172,7 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
       dispatch(getEmployees());
     })
 
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch();
 };
 
 // Add Employee
@@ -211,9 +202,7 @@ export const updateDepartment = (id, department) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {
-      console.log(err.response);
-    });
+    .catch();
 };
 
 // Delete Position

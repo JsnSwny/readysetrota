@@ -28,7 +28,7 @@ const ShiftSwapModal = (props) => {
           dispatch(swapShifts(shiftSwapObj));
         }}
       >
-        <option value="" disabled selected>
+        <option value="" disabled>
           Select a shift to swap
         </option>
         {shifts.map((shift) => (

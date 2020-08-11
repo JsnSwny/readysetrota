@@ -27,6 +27,7 @@ const Pagination = ({
       <ul className="pagination__container">
         {filteredNumbers.map((number) => (
           <li
+            key={number}
             className={`pagination__number ${
               number == currentPage ? "pagination__current" : ""
             }`}

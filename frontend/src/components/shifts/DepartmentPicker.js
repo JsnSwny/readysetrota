@@ -72,13 +72,14 @@ const BusinessProfile = (props) => {
                   setType("Department");
                   setUpdate(false);
                 }}
-                class="fas fa-plus-square"
+                className="fas fa-plus-square"
               ></i>
             )}
           </div>
           <div className="dashboard__wrapper">
             {departments.map((item) => (
               <div
+                key={item.id}
                 className={`dashboard__item ${
                   currentDepartment == item.id && "current"
                 }`}

@@ -8,7 +8,7 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const { location, history } = props;
   let errors = useSelector((state) => state.errors.msg);
-  let path = "/";
+  let path = { url: "/" };
   if (location.state) {
     path = location.state;
   }
@@ -50,6 +50,7 @@ const Login = (props) => {
                     setPassword(e.target.value);
                   }}
                   value={password}
+                  autoComplete="on"
                 />
                 <p className="error">{errors.password}</p>
                 <p className="error">{errors.non_field_errors}</p>

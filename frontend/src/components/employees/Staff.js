@@ -75,7 +75,7 @@ const Staff = () => {
           }}
           className="btn-3 button"
         >
-          <i class="fas fa-users"></i> Create Position
+          <i className="fas fa-users"></i> Create Position
         </button>
         <UpdateDepartment />
       </div>

@@ -73,7 +73,7 @@ const ChangePassword = (props) => {
                 Change Password
               </button>
             </div>
-            <p class="success">{success}</p>
+            <p className="success">{success}</p>
           </form>
         </div>
         <div className="login__right login__part"></div>
