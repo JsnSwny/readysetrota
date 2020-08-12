@@ -103,6 +103,9 @@ export const logout = () => (dispatch, getState) => {
         type: LOGOUT_SUCCESS,
         payload: res.data,
       });
+      dispatch({
+        type: RESET_DEPARTMENT,
+      });
     })
     .catch((err) => {});
 };
