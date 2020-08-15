@@ -11,6 +11,7 @@ import {
   getAvailability,
   updateAvailability,
   addAvailability,
+  deleteAvailability,
 } from "../../actions/employees";
 import { useParams } from "react-router-dom";
 import {
@@ -256,14 +257,22 @@ const Profile = (props) => {
                             );
                           } else {
                             availability.some((item) => item.date == obj.date)
-                              ? dispatch(
-                                  updateAvailability(
-                                    availability.filter(
-                                      (item) => item.date == obj.date
-                                    )[0].id,
-                                    obj
+                              ? currentSelector == "unselected"
+                                ? dispatch(
+                                    deleteAvailability(
+                                      availability.filter(
+                                        (item) => item.date == obj.date
+                                      )[0].id
+                                    )
                                   )
-                                )
+                                : dispatch(
+                                    updateAvailability(
+                                      availability.filter(
+                                        (item) => item.date == obj.date
+                                      )[0].id,
+                                      obj
+                                    )
+                                  )
                               : dispatch(addAvailability(obj));
                           }
                         }}

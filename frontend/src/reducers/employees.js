@@ -19,6 +19,7 @@ import {
   GET_AVAILABILITY,
   ADD_AVAILABILITY,
   UPDATE_AVAILABILITY,
+  DELETE_AVAILABILITY,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -56,6 +57,13 @@ export default function (state = initialState, action) {
         ...state,
         availability: state.availability.map((item) =>
           item.id === action.payload.id ? action.payload : item
+        ),
+      };
+    case DELETE_AVAILABILITY:
+      return {
+        ...state,
+        availability: state.availability.filter(
+          (available) => available.id !== action.payload
         ),
       };
     case GET_EMPLOYEES:

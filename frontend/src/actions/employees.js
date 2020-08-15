@@ -21,6 +21,7 @@ import {
   GET_AVAILABILITY,
   ADD_AVAILABILITY,
   UPDATE_AVAILABILITY,
+  DELETE_AVAILABILITY,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -309,6 +310,19 @@ export const addAvailability = (obj) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
     .catch((err) => console.log(err.response));
+};
+
+// Delete Position
+export const deleteAvailability = (id) => (dispatch, getState) => {
+  axios
+    .delete(`/api/availability/${id}/`, tokenConfig(getState))
+    .then(() => {
+      dispatch({
+        type: DELETE_AVAILABILITY,
+        payload: id,
+      });
+    })
+    .catch((error) => {});
 };
 
 export const updateAvailability = (id, obj) => (dispatch, getState) => {
