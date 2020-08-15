@@ -7,19 +7,19 @@ from datetime import datetime
 class Business(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.owner}'
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name="business")
 
 class Department(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.owner}'
     owner = models.ForeignKey(User, related_name="departments", on_delete=models.CASCADE)
 
 class Position(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.department.owner}'
     owner = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
     department = models.ForeignKey(Department, related_name="pos_department", on_delete=models.CASCADE)
 
@@ -65,6 +65,8 @@ class Availability(models.Model):
     end_time = models.CharField(max_length=20, null=True, blank=True)
     info = models.TextField(blank=True, null=True)
     employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return f'{self.date} - {self.name} - {self.employee}'
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
