@@ -58,15 +58,13 @@ class ShiftSwap(models.Model):
     admin_approved = models.BooleanField(null=True)
     created_at = models.DateTimeField(auto_now_add=True) 
 
-# class Unavailable(models.Model):
-#     date = models.DateField()
-#     start_time = models.TimeField()
-#     end_time = models.CharField(max_length=20)
-#     info = models.TextField(blank=True)
-
-    
-
-#     user = models.ForeignKey(User, related_name="unavailable", on_delete=models.CASCADE, blank=True)
+class Availability(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.CharField(max_length=20, null=True, blank=True)
+    info = models.TextField(blank=True, null=True)
+    employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE, null=True, blank=True)
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")

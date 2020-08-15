@@ -16,6 +16,9 @@ import {
   UPDATE_DEPARTMENT,
   UPDATE_POSITION,
   UPDATE_EMPLOYEE,
+  GET_AVAILABILITY,
+  ADD_AVAILABILITY,
+  UPDATE_AVAILABILITY,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -24,6 +27,7 @@ var weekFromDate = addDays(new Date(), 7);
 weekFromDate = format(weekFromDate, "YYY-MM-dd");
 
 const initialState = {
+  availability: [],
   employees: [],
   positions: [],
   all_positions: [],
@@ -37,6 +41,23 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case GET_AVAILABILITY:
+      return {
+        ...state,
+        availability: action.payload,
+      };
+    case ADD_AVAILABILITY:
+      return {
+        ...state,
+        availability: [...state.availability, action.payload],
+      };
+    case UPDATE_AVAILABILITY:
+      return {
+        ...state,
+        availability: state.availability.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
     case GET_EMPLOYEES:
       return {
         ...state,

@@ -1,6 +1,6 @@
-from .models import Shift, Employee, Position, Department, ShiftSwap, Business
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
 from rest_framework import viewsets, permissions
-from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer
+from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -38,15 +38,6 @@ class ShiftViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = ShiftSerializer
-    # def get_queryset(self):
-    #     if self.request.user.profile.role != "Business":
-    #         shifts = self.request.user.employee.first().owner.shifts.filter(employee__id=self.request.user.employee.first().id)
-    #         for i in shifts:
-    #             i.seen = True
-    #             i.save()
-    #         return self.request.user.employee.first().owner.shifts.all()
-    #     else:
-    #         return self.request.user.shifts.all()
 
     queryset = Shift.objects.all()
 
@@ -70,13 +61,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = EmployeeSerializer
-    
-    # def get_queryset(self):
-    #     if self.request.user.profile.role != "Business":
-    #         return self.request.user.employee.first().owner.employees.all()
-    #     else:
-    #         return self.request.user.employees.all()
-        
+
     queryset = Employee.objects.all()
 
     def perform_create(self, serializer):
@@ -167,5 +152,23 @@ class ShiftSwapViewSet(viewsets.ModelViewSet):
         serializer.save(swap_from=swap_from, swap_to=swap_to, shift_from=shift_from, shift_to=shift_to)
 
     queryset = ShiftSwap.objects.all()
+
+
+
+class AvailabilityFilter(django_filters.FilterSet):
+    class Meta:
+        model = Availability
+        fields = ['employee__id']
+
+class AvailabilityViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    serializer_class = AvailabilitySerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = AvailabilityFilter
+
+    queryset = Availability.objects.all()
 
 

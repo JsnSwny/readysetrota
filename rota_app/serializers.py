@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, ShiftSwap, Business
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
 from accounts.serializers import UserSerializer
 
 class BusinessSerializer(serializers.ModelSerializer):
@@ -63,5 +63,12 @@ class ShiftSwapSerializer(serializers.ModelSerializer):
     swap_to = UserSerializer(required=False)
     class Meta:
         model = ShiftSwap
+        fields = '__all__'
+        depth = 1
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
+    class Meta:
+        model = Availability
         fields = '__all__'
         depth = 1

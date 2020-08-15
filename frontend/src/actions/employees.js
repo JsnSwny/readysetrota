@@ -18,6 +18,9 @@ import {
   UPDATE_POSITION,
   UPDATE_EMPLOYEE,
   UPDATE_BUSINESS,
+  GET_AVAILABILITY,
+  ADD_AVAILABILITY,
+  UPDATE_AVAILABILITY,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -264,4 +267,43 @@ export const uuidReset = () => (dispatch, getState) => {
   dispatch({
     type: UUID_RESET,
   });
+};
+
+// Get Department
+export const getAvailability = (employee) => (dispatch, getState) => {
+  axios
+    .get(`/api/availability/?employee__id=${employee}`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_AVAILABILITY,
+        payload: res.data,
+      });
+    });
+};
+
+export const addAvailability = (obj) => (dispatch, getState) => {
+  axios
+    .post("/api/availability/", obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_AVAILABILITY,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+    .catch((err) => console.log(err.response));
+};
+
+export const updateAvailability = (id, obj) => (dispatch, getState) => {
+  axios
+    .put(`/api/availability/${id}/`, obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_AVAILABILITY,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
+    .catch();
 };
