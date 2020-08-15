@@ -101,12 +101,8 @@ const Profile = (props) => {
   const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
   const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
   // let user_set = employee.user ? true : false;
-  if (!employee) {
-    return (
-      <div className="shiftsloading">
-        <span className="loader"></span>
-      </div>
-    );
+  if (!employee && id_param) {
+    return true;
   }
 
   if (!user.business && id_param) {
