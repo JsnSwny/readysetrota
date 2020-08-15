@@ -455,6 +455,13 @@
         background-color: #c82626; }
       .dashboard__dates-colours-item.yellow {
         background-color: #e4c92e; }
+    .dashboard__dates-colours-text {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      margin-top: 5px;
+      font-size: 16px; }
 
 @media only screen and (max-width: 680px) {
   .dashboard__dates-item {
@@ -464,7 +471,11 @@
   .dashboard__dates-date p {
     width: calc((100% - 42px) / 7);
     margin: 3px;
-    font-size: 16px; } }
+    font-size: 16px; }
+  .dashboard__dates-colours {
+    max-width: 300px; }
+    .dashboard__dates-colours-text {
+      font-size: 12px; } }
 
 @media only screen and (max-width: 1200px) {
   .dashboard__header {

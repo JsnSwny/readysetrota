@@ -315,11 +315,13 @@ const Profile = (props) => {
                     currentSelector == "unavailable" ? "current" : ""
                   } `}
                 ></span>
-                {/* <span
-                  className={`dashboard__dates-colours-item yellow ${
-                    currentSelector == "unselected" && "current"
-                  } `}
-                ></span> */}
+              </div>
+              <div className="dashboard__dates-colours">
+                <span className="dashboard__dates-colours-text">Reset</span>
+                <span className="dashboard__dates-colours-text">Available</span>
+                <span className="dashboard__dates-colours-text">
+                  Unavailable
+                </span>
               </div>
             </div>
             <div className="dashboard__block--half">
