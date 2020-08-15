@@ -1,7 +1,11 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getEmployees, uuidReset } from "../../actions/employees";
+import {
+  getEmployees,
+  uuidReset,
+  getAllAvailability,
+} from "../../actions/employees";
 import {
   format,
   parseISO,
@@ -49,6 +53,7 @@ const ShiftList = () => {
   let permissions = user.all_permissions;
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
+  let availability = useSelector((state) => state.employees.availability);
 
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
@@ -62,8 +67,9 @@ const ShiftList = () => {
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
-  const updateShifts = () => {
-    dispatch(getShifts(date, enddate));
+  const updateShifts = (start_date, end_date) => {
+    dispatch(getAllAvailability(user.id, start_date, end_date));
+    dispatch(getShifts(start_date, end_date));
   };
 
   if (uuid_success) {
@@ -80,17 +86,17 @@ const ShiftList = () => {
   const widthUpdate = () => {
     if (width > 1200) {
       if (currentDevice != "Desktop") {
-        dispatch(getShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd")));
+        updateShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd"));
         setCurrentDevice("Desktop");
       }
     } else if (width > 600) {
       if (currentDevice != "Tablet") {
-        dispatch(getShifts(date, format(addDays(parsedDate, 2), "yyyy-MM-dd")));
+        updateShifts(date, format(addDays(parsedDate, 2), "yyyy-MM-dd"));
         setCurrentDevice("Tablet");
       }
     } else {
       if (currentDevice != "Mobile") {
-        dispatch(getShifts(date, format(addDays(parsedDate, 0), "yyyy-MM-dd")));
+        updateShifts(date, format(addDays(parsedDate, 0), "yyyy-MM-dd"));
         setCurrentDevice("Mobile");
       }
     }
@@ -114,7 +120,7 @@ const ShiftList = () => {
       widthUpdate();
       return;
     }
-    updateShifts();
+    updateShifts(start_date, end_date);
   }, [currentDepartment]);
 
   useEffect(() => {
@@ -195,6 +201,17 @@ const ShiftList = () => {
     return hours;
   };
 
+  const isAvailable = (employee, date) => {
+    let available = availability.filter(
+      (item) => item.employee.id == employee && item.date == date
+    )[0];
+    if (!available) {
+      return false;
+    } else {
+      return available.name;
+    }
+  };
+
   return (
     <Fragment>
       <CreateShift
@@ -212,14 +229,18 @@ const ShiftList = () => {
         shift={shift}
         shiftSwap={shiftSwap}
       />
-      <Dates filterEmployees={filterEmployees} dates={result} />
+      <Dates
+        filterEmployees={filterEmployees}
+        dates={result}
+        updateShifts={updateShifts}
+      />
       {isLoading && (
         <div className="shiftsloading">
           <span className="loader"></span>
         </div>
       )}
       {currentDepartment != 0 && (
-        <div className="shiftList container">
+        <div className={`shiftList container ${filterDate ? "filtered" : ""}`}>
           {employeesList.map((employee) => (
             <div key={employee.id} className="rota__container">
               <div className="container-left">
@@ -295,7 +316,7 @@ const ShiftList = () => {
                         ).some((item) => item.published == false)
                           ? "unpublished"
                           : ""
-                      }`}
+                      } `}
                     >
                       {permissions.includes("can_create_shift") && (
                         <p
@@ -405,14 +426,17 @@ const ShiftList = () => {
                   ) : (
                     <div
                       key={result}
-                      className={`item-block shift__shift-noshift ${
+                      className={`item-block shift__shift-noshift ${isAvailable(
+                        employee.id,
+                        format(result, "YYY-MM-dd")
+                      )} ${
                         filterDate == format(result, "YYY-MM-dd")
                           ? "filtered"
                           : ""
                       }`}
                     >
                       {permissions.includes("can_create_shift") && (
-                        <span
+                        <p
                           onClick={() => {
                             setOpen(true);
                             setType("shift");
@@ -426,8 +450,16 @@ const ShiftList = () => {
                           className="shift__add"
                         >
                           +
-                        </span>
+                        </p>
                       )}
+                      <p
+                        className={`shift__text ${isAvailable(
+                          employee.id,
+                          format(result, "YYY-MM-dd")
+                        )}`}
+                      >
+                        {isAvailable(employee.id, format(result, "YYY-MM-dd"))}
+                      </p>
                     </div>
                   )
                 )}

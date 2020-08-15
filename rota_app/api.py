@@ -156,9 +156,10 @@ class ShiftSwapViewSet(viewsets.ModelViewSet):
 
 
 class AvailabilityFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
     class Meta:
         model = Availability
-        fields = ['employee__id']
+        fields = ['employee__id', 'employee__owner__id', 'date']
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
     permission_classes = [

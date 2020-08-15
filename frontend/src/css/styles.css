@@ -1018,13 +1018,31 @@ a {
     background-color: #d1d1d1; }
   .shiftList .rota__container:nth-child(even) .shift__shift-noshift {
     background-color: #d1d1d1; }
-    .shiftList .rota__container:nth-child(even) .shift__shift-noshift.filtered {
-      background-color: #8b8b8b; }
+    .shiftList .rota__container:nth-child(even) .shift__shift-noshift.available {
+      background-color: #58ca35; }
+    .shiftList .rota__container:nth-child(even) .shift__shift-noshift.unavailable {
+      background-color: #c82626; }
 
 .rota__container {
   display: flex;
   align-items: flex-start;
   margin: 4px 0; }
+
+.shiftList.filtered .rota__container:nth-child(even) .shift__shift-noshift:not(.filtered) {
+  background-color: #8b8b8b; }
+
+.shiftList.filtered .shift__shift:not(.filtered), .shiftList.filtered .shift__shift-noshift:not(.filtered) {
+  background-color: #c352be; }
+
+.shiftList.filtered .shift__shift-noshift:not(.filtered) {
+  background: #b3b3b3; }
+
+.shift__text {
+  text-transform: capitalize;
+  font-size: 18px;
+  justify-self: center;
+  align-self: center;
+  color: white; }
 
 .shift__shift, .shift__shift-noshift {
   background-color: #ee6de7;
@@ -1033,10 +1051,12 @@ a {
   position: relative;
   overflow: auto;
   padding: 5px 15px; }
-  .shift__shift.filtered, .filtered.shift__shift-noshift {
-    background-color: #7bc858; }
   .shift__shift.unpublished, .unpublished.shift__shift-noshift {
     opacity: 0.5; }
+  .shift__shift.available, .available.shift__shift-noshift {
+    background-color: #58ca35; }
+  .shift__shift.unavailable, .unavailable.shift__shift-noshift {
+    background-color: #c82626; }
 
 .shift__wrapper {
   width: 100%;
@@ -1076,17 +1096,15 @@ a {
 
 .shift__shift-noshift {
   background: #e0e0e0; }
-  .shift__shift-noshift.filtered {
-    background: #b3b3b3; }
 
 .shift__add, .shift__add--white {
   position: absolute;
   top: 10px;
   left: 15px;
-  cursor: pointer; }
+  cursor: pointer;
+  position: static;
+  display: block; }
   .shift__add--white {
-    position: static;
-    display: block;
     color: white; }
 
 .shift__shift-noshift {

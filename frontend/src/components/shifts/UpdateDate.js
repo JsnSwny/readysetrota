@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getShifts } from "../../actions/shifts";
 import { format, parseISO, addDays } from "date-fns";
 import UpdateDepartment from "../shifts/UpdateDepartment";
 import EmailStaff from "./EmailStaff";
 
-const UpdateDate = () => {
-  const dispatch = useDispatch();
+const UpdateDate = (props) => {
+  const { updateShifts } = props;
   let width = useSelector((state) => state.responsive.width);
   let date = useSelector((state) => state.shifts.date);
   let business = useSelector((state) => state.auth.business);
@@ -49,11 +49,9 @@ const UpdateDate = () => {
           <div className="dates__pickerWrapper">
             <p
               onClick={() => {
-                dispatch(
-                  getShifts(
-                    formatDate(date, -dateRange - 1),
-                    formatDate(date, -dateRange + dateRange - 1)
-                  )
+                updateShifts(
+                  formatDate(date, -dateRange - 1),
+                  formatDate(date, -dateRange + dateRange - 1)
                 );
               }}
             >
@@ -65,11 +63,9 @@ const UpdateDate = () => {
             </h2>
             <p
               onClick={() => {
-                dispatch(
-                  getShifts(
-                    formatDate(date, dateRange + 1),
-                    formatDate(date, dateRange + dateRange + 1)
-                  )
+                updateShifts(
+                  formatDate(date, dateRange + 1),
+                  formatDate(date, dateRange + dateRange + 1)
                 );
               }}
             >
@@ -79,22 +75,18 @@ const UpdateDate = () => {
           <div className="dates__mobile">
             <i
               onClick={() => {
-                dispatch(
-                  getShifts(
-                    formatDate(date, -dateRange - 1),
-                    formatDate(date, -dateRange + dateRange - 1)
-                  )
+                updateShifts(
+                  formatDate(date, -dateRange - 1),
+                  formatDate(date, -dateRange + dateRange - 1)
                 );
               }}
               className="fas fa-arrow-circle-left"
             ></i>
             <i
               onClick={() => {
-                dispatch(
-                  getShifts(
-                    formatDate(date, dateRange + 1),
-                    formatDate(date, dateRange + dateRange + 1)
-                  )
+                updateShifts(
+                  formatDate(date, dateRange + 1),
+                  formatDate(date, dateRange + dateRange + 1)
                 );
               }}
               className="fas fa-arrow-circle-right"

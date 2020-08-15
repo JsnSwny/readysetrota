@@ -281,6 +281,23 @@ export const getAvailability = (employee) => (dispatch, getState) => {
     });
 };
 
+export const getAllAvailability = (owner_id, startdate, enddate) => (
+  dispatch,
+  getState
+) => {
+  axios
+    .get(
+      `/api/availability/?employee__owner__id=${owner_id}&date_after=${startdate}&date_before=${enddate}`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_AVAILABILITY,
+        payload: res.data,
+      });
+    });
+};
+
 export const addAvailability = (obj) => (dispatch, getState) => {
   axios
     .post("/api/availability/", obj, tokenConfig(getState))

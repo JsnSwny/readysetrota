@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import CreateShift from "../layout/CreateShift";
 
 const Dates = (dates) => {
-  const { filterEmployees } = dates;
+  const { filterEmployees, updateShifts } = dates;
   const [open, setOpen] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const handleScroll = () => {
@@ -23,7 +23,7 @@ const Dates = (dates) => {
 
   return (
     <Fragment>
-      <UpdateDate />
+      <UpdateDate updateShifts={updateShifts} />
       <CreateShift
         open={open}
         type="staff"
