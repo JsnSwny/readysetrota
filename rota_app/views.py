@@ -24,6 +24,8 @@ class CheckUUID(APIView):
             if employee.user:
                 return Response({'error': ["A user is already associated with this employee."]})
             user = User.objects.filter(id=request.query_params.get('userid')).first()
+            if len(User.objects.filter(employee__owner__id=employee.owner.id, id=request.query_params.get('userid'))) > 0:
+                return Response({'error': ["You already have an account associated with the same business."]})
             employee.user = user
             employee.save()
             return Response({"department_id": employee.position.all().first().department.id})

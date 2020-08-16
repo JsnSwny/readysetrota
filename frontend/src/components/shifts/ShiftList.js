@@ -48,6 +48,7 @@ const ShiftList = () => {
   const [filterDate, setFilterDate] = useState("");
   const [currentDevice, setCurrentDevice] = useState("");
   const [shiftSwap, setShiftSwap] = useState({});
+  const [showAvailabilities, setShowAvailabilities] = useState(false);
 
   let user = useSelector((state) => state.auth.user);
   let permissions = user.all_permissions;
@@ -233,6 +234,8 @@ const ShiftList = () => {
         filterEmployees={filterEmployees}
         dates={result}
         updateShifts={updateShifts}
+        showAvailabilities={showAvailabilities}
+        setShowAvailabilities={setShowAvailabilities}
       />
       {isLoading && (
         <div className="shiftsloading">
@@ -426,10 +429,10 @@ const ShiftList = () => {
                   ) : (
                     <div
                       key={result}
-                      className={`item-block shift__shift-noshift ${isAvailable(
-                        employee.id,
-                        format(result, "YYY-MM-dd")
-                      )} ${
+                      className={`item-block shift__shift-noshift ${
+                        showAvailabilities &&
+                        isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                      } ${
                         filterDate == format(result, "YYY-MM-dd")
                           ? "filtered"
                           : ""
@@ -452,14 +455,19 @@ const ShiftList = () => {
                           +
                         </p>
                       )}
-                      <p
-                        className={`shift__text ${isAvailable(
-                          employee.id,
-                          format(result, "YYY-MM-dd")
-                        )}`}
-                      >
-                        {isAvailable(employee.id, format(result, "YYY-MM-dd"))}
-                      </p>
+                      {showAvailabilities && (
+                        <p
+                          className={`shift__text ${isAvailable(
+                            employee.id,
+                            format(result, "YYY-MM-dd")
+                          )}`}
+                        >
+                          {isAvailable(
+                            employee.id,
+                            format(result, "YYY-MM-dd")
+                          )}
+                        </p>
+                      )}
                     </div>
                   )
                 )}

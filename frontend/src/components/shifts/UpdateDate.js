@@ -6,7 +6,7 @@ import UpdateDepartment from "../shifts/UpdateDepartment";
 import EmailStaff from "./EmailStaff";
 
 const UpdateDate = (props) => {
-  const { updateShifts } = props;
+  const { updateShifts, showAvailabilities, setShowAvailabilities } = props;
   let width = useSelector((state) => state.responsive.width);
   let date = useSelector((state) => state.shifts.date);
   let business = useSelector((state) => state.auth.business);
@@ -29,6 +29,14 @@ const UpdateDate = (props) => {
       <UpdateDepartment />
       {currentDepartment != 0 && (
         <Fragment>
+          <button
+            onClick={() => {
+              setShowAvailabilities(!showAvailabilities);
+            }}
+            className="btn-3 button"
+          >
+            Show Availabilities
+          </button>
           {(current_employee || business) && (
             <a
               href={`/exportall?start_date=${date}&end_date=${format(

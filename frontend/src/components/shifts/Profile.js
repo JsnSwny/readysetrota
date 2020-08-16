@@ -333,6 +333,7 @@ const Profile = (props) => {
                 </span>
               </div>
             </div>
+
             {/* <div className="dashboard__block--half">
               <div className="dashboard__block-title-container">
                 <p className="dashboard__block-title">Shift Swap Requests</p>
