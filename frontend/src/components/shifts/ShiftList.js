@@ -74,9 +74,7 @@ const ShiftList = () => {
   };
 
   if (uuid_success) {
-    toast.success("UUID accepted!", {
-      position: "bottom-center",
-    });
+    toast.success("UUID accepted!");
     dispatch(uuidReset());
   }
 
@@ -284,8 +282,7 @@ const ShiftList = () => {
                                 {employee.first_name + " " + employee.last_name}
                                 <br /> UUID copied! <br /> <br />{" "}
                                 <small>{employee.uuid}</small>
-                              </div>,
-                              { position: "bottom-center" }
+                              </div>
                             );
                             copyToClipboard(
                               `www.readysetrota.com/join/${employee.uuid}/`

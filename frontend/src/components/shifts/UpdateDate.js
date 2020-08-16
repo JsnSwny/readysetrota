@@ -4,12 +4,15 @@ import { getShifts } from "../../actions/shifts";
 import { format, parseISO, addDays } from "date-fns";
 import UpdateDepartment from "../shifts/UpdateDepartment";
 import EmailStaff from "./EmailStaff";
+import { toast } from "react-toastify";
 
 const UpdateDate = (props) => {
   const { updateShifts, showAvailabilities, setShowAvailabilities } = props;
   let width = useSelector((state) => state.responsive.width);
   let date = useSelector((state) => state.shifts.date);
   let business = useSelector((state) => state.auth.business);
+
+  let availability = useSelector((state) => state.employees.availability);
   let formatDate = (date, add) => {
     let newDate = format(addDays(parseISO(date), add), "YYY-MM-dd");
     return newDate;
@@ -29,14 +32,21 @@ const UpdateDate = (props) => {
       <UpdateDepartment />
       {currentDepartment != 0 && (
         <Fragment>
-          <button
-            onClick={() => {
-              setShowAvailabilities(!showAvailabilities);
-            }}
-            className="btn-3 button"
-          >
-            Show Availabilities
-          </button>
+          {
+            <button
+              onClick={() => {
+                availability.length > 0
+                  ? setShowAvailabilities(!showAvailabilities)
+                  : toast.warning("There are no availabilities to show!");
+              }}
+              className={`btn-3 button ${
+                availability.length > 0 ? "" : "disabled"
+              }`}
+            >
+              Show Availabilities
+            </button>
+          }
+
           {(current_employee || business) && (
             <a
               href={`/exportall?start_date=${date}&end_date=${format(

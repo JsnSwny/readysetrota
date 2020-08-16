@@ -101,14 +101,10 @@ const AddStaff = (props) => {
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
           dispatch(updateEmployee(update.id, employee));
-          toast.success("Employee updated!", {
-            position: "bottom-center",
-          });
+          toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));
-          toast.success("Employee added!", {
-            position: "bottom-center",
-          });
+          toast.success("Employee added!");
         }
 
         setFirstName("");
@@ -119,14 +115,10 @@ const AddStaff = (props) => {
     } else if (form == "Department") {
       if (update) {
         dispatch(updateDepartment(update.id, { name }));
-        toast.success("Department updated!", {
-          position: "bottom-center",
-        });
+        toast.success("Department updated!");
       } else {
         dispatch(addDepartment({ name }));
-        toast.success("Department added!", {
-          position: "bottom-center",
-        });
+        toast.success("Department added!");
       }
       setName("");
       onClose();
@@ -138,22 +130,16 @@ const AddStaff = (props) => {
             department_id: currentDepartment,
           })
         );
-        toast.success("Position updated!", {
-          position: "bottom-center",
-        });
+        toast.success("Position updated!");
       } else {
         dispatch(addPosition({ name }));
-        toast.success("Position added!", {
-          position: "bottom-center",
-        });
+        toast.success("Position added!");
       }
       setName("");
       onClose();
     } else if (form == "BusinessName") {
       dispatch(updateBusinessName(update.id, { name }));
-      toast.success("Business name updated!", {
-        position: "bottom-center",
-      });
+      toast.success("Business name updated!");
       setName("");
       onClose();
     }

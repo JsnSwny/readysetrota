@@ -243,17 +243,11 @@ const Profile = (props) => {
                           };
                           if (differenceInWeeks(date, new Date()) > 8) {
                             toast.warning(
-                              "Availability dates must be selected within 8 weeks from the current date!",
-                              {
-                                position: "bottom-center",
-                              }
+                              "Availability dates must be selected within 8 weeks from the current date!"
                             );
                           } else if (date < new Date()) {
                             toast.warning(
-                              "You cannot set availability for a date before the current date!",
-                              {
-                                position: "bottom-center",
-                              }
+                              "You cannot set availability for a date before the current date!"
                             );
                           } else {
                             availability.some((item) => item.date == obj.date)

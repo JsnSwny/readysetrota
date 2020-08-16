@@ -60,12 +60,8 @@ const AddShift = (props) => {
       setInfo("");
       onClose();
       updating
-        ? toast.success("Shift updated!", {
-            position: "bottom-center",
-          })
-        : toast.success("Shift added!", {
-            position: "bottom-center",
-          });
+        ? toast.success("Shift updated!")
+        : toast.success("Shift added!");
     }
   };
 

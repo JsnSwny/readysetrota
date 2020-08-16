@@ -38,7 +38,7 @@ const App = () => {
       <Router>
         <div className="App">
           <Nav />
-          <ToastContainer />
+          <ToastContainer position="bottom-center" />
           <Switch>
             <PrivateRoute
               path="/"

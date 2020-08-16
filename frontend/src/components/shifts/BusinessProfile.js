@@ -155,8 +155,7 @@ const BusinessProfile = (props) => {
                                   {item.first_name + " " + item.last_name}
                                   <br /> UUID copied! <br /> <br />{" "}
                                   <small>{item.uuid}</small>
-                                </div>,
-                                { position: "bottom-center" }
+                                </div>
                               );
                               copyToClipboard(
                                 `www.readysetrota.com/join/${item.uuid}/`

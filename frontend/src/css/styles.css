@@ -697,6 +697,9 @@ button {
     width: 200px; }
   .btn-3 .fas {
     margin-right: 10px; }
+  .btn-3.disabled {
+    opacity: 0.5;
+    cursor: auto; }
 
 .nodepartment {
   display: flex;
@@ -1039,7 +1042,6 @@ a {
 
 .shift__text {
   text-transform: capitalize;
-  font-size: 18px;
   justify-self: center;
   align-self: center;
   color: white; }
