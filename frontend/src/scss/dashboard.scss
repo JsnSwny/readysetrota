@@ -157,11 +157,12 @@
     }
   }
   &__contact {
-    color: #a3a3a3;
+    color: white;
+    .fas {
+      margin-right: 10px;
+    }
   }
-  // .fas {
-  //   margin-right: 10px;
-  // }
+
   &__dates {
     display: flex;
     flex-wrap: wrap;

@@ -119,6 +119,12 @@ const Profile = (props) => {
               : employee.first_name + " " + employee.last_name + "'s "}
             Profile
           </h1>
+          {employee && employee.user && (
+            <small className="dashboard__contact">
+              <i class="fas fa-envelope"></i>
+              {employee.user.email}
+            </small>
+          )}
           {id_param &&
             employee.position.map((item) => (
               <p key={item.id} className="subtitle">
@@ -130,23 +136,16 @@ const Profile = (props) => {
       {!id_param && <DepartmentPicker />}
       {currentDepartment != 0 && (
         <div className="dashboard container-2">
-          {/* {user_set && (
-        <small className="dashboard__contact">
-          <i class="fas fa-envelope"></i>
-          {employee.user.email}
-        </small>
-      )} */}
-
           <div className="dashboard__block">
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
-              {/* <a
+              <a
                 className="btn-4"
                 target="_blank"
                 href={`/export?id=${employee.id}`}
               >
                 Export Shifts as PDF
-              </a> */}
+              </a>
             </div>
 
             <div className="dashboard__block-container">

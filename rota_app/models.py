@@ -64,7 +64,7 @@ class Availability(models.Model):
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.CharField(max_length=20, null=True, blank=True)
     info = models.TextField(blank=True, null=True)
-    employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE, null=True, blank=True)
+    employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.date} - {self.name} - {self.employee}'
 

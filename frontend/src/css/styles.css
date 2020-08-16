@@ -371,7 +371,9 @@
     font-weight: bold; }
 
 .dashboard__contact {
-  color: #a3a3a3; }
+  color: white; }
+  .dashboard__contact .fas {
+    margin-right: 10px; }
 
 .dashboard__dates {
   display: flex;

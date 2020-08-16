@@ -32,7 +32,7 @@ const UpdateDate = (props) => {
       <UpdateDepartment />
       {currentDepartment != 0 && (
         <Fragment>
-          {
+          {user.business && (
             <button
               onClick={() => {
                 availability.length > 0
@@ -45,7 +45,7 @@ const UpdateDate = (props) => {
             >
               Show Availabilities
             </button>
-          }
+          )}
 
           {(current_employee || business) && (
             <a
