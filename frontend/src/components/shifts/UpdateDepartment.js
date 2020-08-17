@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getDepartments,
-  setDepartment,
-  getEmployees,
-} from "../../actions/employees";
+import { getDepartments, setDepartment } from "../../actions/employees";
 import { getShifts } from "../../actions/shifts";
 
 const UpdateDepartment = () => {

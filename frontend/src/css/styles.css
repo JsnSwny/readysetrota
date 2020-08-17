@@ -375,6 +375,10 @@
   .dashboard__contact .fas {
     margin-right: 10px; }
 
+.dashboard__text {
+  font-size: 18px;
+  margin-top: 15px; }
+
 .dashboard__dates {
   display: flex;
   flex-wrap: wrap;
@@ -490,6 +494,8 @@
       text-align: center; }
     .dashboard__header-wrapper {
       justify-content: center; }
+  .dashboard__text {
+    text-align: center; }
   .dashboard .table {
     min-width: 0;
     max-width: 300px;
@@ -544,6 +550,38 @@
   .title,
   .subtitle {
     text-align: center; } }
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; }
+  .loader__circle {
+    border: 16px solid #2a2a2a;
+    border-radius: 50%;
+    border-top: 16px solid #ec70c9;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.3s linear infinite;
+    /* Safari */
+    animation: spin 0.3s linear infinite; }
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg); } }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;700&display=swap");
 * {
@@ -1113,39 +1151,6 @@ a {
 
 .shift__shift-noshift {
   background: #e0e0e0; }
-
-.shiftsloading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; }
-
-.loader {
-  border: 16px solid #2a2a2a;
-  border-radius: 50%;
-  border-top: 16px solid #ec70c9;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 0.3s linear infinite;
-  /* Safari */
-  animation: spin 0.3s linear infinite; }
-
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg); }
-  100% {
-    -webkit-transform: rotate(360deg); } }
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg); }
-  100% {
-    transform: rotate(360deg); } }
 
 @media only screen and (max-width: 1000px) {
   .employee__name {

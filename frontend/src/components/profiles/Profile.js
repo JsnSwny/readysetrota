@@ -1,11 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getShiftsByID,
-  getSwapRequests,
-  updateShiftSwap,
-  updateShift,
-} from "../../actions/shifts";
+import { getShiftsByID, getSwapRequests } from "../../actions/shifts";
 import {
   getEmployees,
   getAvailability,
@@ -13,7 +8,7 @@ import {
   addAvailability,
   deleteAvailability,
 } from "../../actions/employees";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import {
   format,
   parse,
@@ -27,13 +22,11 @@ import {
   differenceInWeeks,
 } from "date-fns";
 import Pagination from "./Pagination";
-import { Link, Redirect } from "react-router-dom";
 import DepartmentPicker from "./DepartmentPicker";
 import { toast } from "react-toastify";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
-  const { history } = props;
   let user = useSelector((state) => state.auth.user);
   let permissions = user.all_permissions;
   let swap_requests = useSelector((state) => state.shifts.swap_requests);
@@ -92,16 +85,13 @@ const Profile = (props) => {
     }
   }, [employee]);
 
-  // if (employees.some((item) => item.id != id)) {
-  //   return false;
-  // }
   const [currentPage, setCurrentPage] = useState(1);
   const [shiftsPerPage, setShiftsPerPage] = useState(5);
 
   const indexOfLastShift = currentPage * shiftsPerPage;
   const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
   const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
-  // let user_set = employee.user ? true : false;
+
   if (!employee && id_param) {
     return true;
   }
@@ -147,53 +137,59 @@ const Profile = (props) => {
                 Export Shifts as PDF
               </a>
             </div>
+            {currentShifts.length > 0 ? (
+              <div className="dashboard__block-container">
+                <div className="dashboard__table-heading table">
+                  <p className="short">Date</p>
+                  <p className="short">Time</p>
+                  <p className="long">Info</p>
+                  <p className="short">Department</p>
+                  <p className="short">Business</p>
+                </div>
 
-            <div className="dashboard__block-container">
-              <div className="dashboard__table-heading table">
-                <p className="short">Date</p>
-                <p className="short">Time</p>
-                <p className="long">Info</p>
-                <p className="short">Department</p>
-                <p className="short">Business</p>
+                {currentShifts.map((item) => (
+                  <Fragment key={item.id}>
+                    {!item.published &&
+                    !permissions.includes("can_view_unpublished_shifts") ? (
+                      ""
+                    ) : (
+                      <div
+                        className={`dashboard__table-row table ${
+                          !item.published ? "unpublished" : ""
+                        }`}
+                      >
+                        <p className="short">
+                          <span className="block">
+                            {format(parseISO(item.date, "dd-MM-yyyy"), "EEEE ")}
+                          </span>
+                          <span>
+                            {format(
+                              parseISO(item.date, "dd-MM-yyyy"),
+                              "MMMM d YYY"
+                            )}
+                          </span>
+                        </p>
+                        <p className="short">
+                          {item.start_time.substr(0, 5)} - {item.end_time}
+                        </p>
+                        <p className={`long ${item.info ? "" : "info"}`}>
+                          {item.info ? item.info : "N/A"}
+                        </p>
+                        <p className="short extra">{item.department.name}</p>
+                        <p className="short extra">
+                          {item.department.owner.business.name}
+                        </p>
+                      </div>
+                    )}
+                  </Fragment>
+                ))}
               </div>
+            ) : (
+              <p className="dashboard__text">
+                You currently have no upcoming shifts.
+              </p>
+            )}
 
-              {currentShifts.map((item) => (
-                <Fragment key={item.id}>
-                  {!item.published &&
-                  !permissions.includes("can_view_unpublished_shifts") ? (
-                    ""
-                  ) : (
-                    <div
-                      className={`dashboard__table-row table ${
-                        !item.published ? "unpublished" : ""
-                      }`}
-                    >
-                      <p className="short">
-                        <span className="block">
-                          {format(parseISO(item.date, "dd-MM-yyyy"), "EEEE ")}
-                        </span>
-                        <span>
-                          {format(
-                            parseISO(item.date, "dd-MM-yyyy"),
-                            "MMMM d YYY"
-                          )}
-                        </span>
-                      </p>
-                      <p className="short">
-                        {item.start_time.substr(0, 5)} - {item.end_time}
-                      </p>
-                      <p className={`long ${item.info ? "" : "info"}`}>
-                        {item.info ? item.info : "N/A"}
-                      </p>
-                      <p className="short extra">{item.department.name}</p>
-                      <p className="short extra">
-                        {item.department.owner.business.name}
-                      </p>
-                    </div>
-                  )}
-                </Fragment>
-              ))}
-            </div>
             <Pagination
               shiftsPerPage={shiftsPerPage}
               totalShifts={shifts.length}

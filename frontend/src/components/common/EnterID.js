@@ -1,14 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import {
-  getEmployees,
-  getPositions,
-  deleteEmployee,
-} from "../../actions/employees";
-import { checkUUID, uuidReset } from "../../actions/employees";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { checkUUID } from "../../actions/employees";
 import { useParams, Redirect } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const EnterID = (props) => {
   let { id } = useParams();

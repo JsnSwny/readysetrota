@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { getShifts } from "../../actions/shifts";
 import { format, parseISO, addDays } from "date-fns";
 import UpdateDepartment from "../shifts/UpdateDepartment";
 import EmailStaff from "./EmailStaff";

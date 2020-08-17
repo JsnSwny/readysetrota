@@ -1,21 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getShiftsByID,
-  getSwapRequests,
-  updateShiftSwap,
-  updateShift,
-} from "../../actions/shifts";
-import {
   getEmployees,
   getDepartments,
-  getPositions,
   setDepartment,
 } from "../../actions/employees";
-import { useParams } from "react-router-dom";
-import { format, parse, parseISO } from "date-fns";
-import Pagination from "./Pagination";
-import { Link, Redirect } from "react-router-dom";
 import CreateShift from "../layout/CreateShift";
 
 const BusinessProfile = (props) => {

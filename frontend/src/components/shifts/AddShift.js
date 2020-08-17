@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployees } from "../../actions/employees";
 import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 

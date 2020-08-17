@@ -163,6 +163,11 @@
     }
   }
 
+  &__text {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+
   &__dates {
     display: flex;
     flex-wrap: wrap;
@@ -322,6 +327,9 @@
       &-wrapper {
         justify-content: center;
       }
+    }
+    &__text {
+      text-align: center;
     }
     .table {
       min-width: 0;

@@ -1,12 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { publish } from "../../actions/shifts";
 
-const UpdateDepartment = (props) => {
+const EmailStaff = () => {
   const dispatch = useDispatch();
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
 
   return (
     <button
@@ -20,4 +17,4 @@ const UpdateDepartment = (props) => {
   );
 };
 
-export default UpdateDepartment;
+export default EmailStaff;

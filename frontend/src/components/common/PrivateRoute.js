@@ -1,31 +1,20 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import ShiftList from "../shifts/ShiftList";
-import NoDepartment from "./NoDepartment";
-import EnterID from "./EnterID";
+import { useSelector } from "react-redux";
+import Loading from "../common/Loading";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   let auth = useSelector((state) => state.auth);
-  let groups = [];
-  if (auth.user) {
-    groups = auth.user.groups;
-    groups = groups.map((item) => item.name);
-  }
 
-  const { path, computedMatch, pass, user_only_pass } = rest;
+  const { computedMatch } = rest;
   let url = computedMatch.url;
-
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
 
   return (
     <Route
       {...rest}
       render={(props) => {
         if (auth.isLoading) {
-          return <h2>Loading...</h2>;
+          return <Loading />;
         } else if (!auth.isAuthenticated) {
           return (
             <Redirect

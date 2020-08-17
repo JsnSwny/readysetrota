@@ -11,28 +11,14 @@ import {
   parseISO,
   eachDayOfInterval,
   parse,
-  differenceInHours,
   differenceInMinutes,
   addDays,
 } from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
+import Loading from "../common/Loading";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-
-// import {
-//   EmailShareButton,
-//   FacebookShareButton,
-//   WhatsappShareButton,
-//   FacebookMessengerShareButton,
-// } from "react-share";
-
-// import {
-//   EmailIcon,
-//   FacebookIcon,
-//   FacebookMessengerIcon,
-//   WhatsappIcon,
-// } from "react-share";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
@@ -235,11 +221,7 @@ const ShiftList = () => {
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
       />
-      {isLoading && (
-        <div className="shiftsloading">
-          <span className="loader"></span>
-        </div>
-      )}
+      {isLoading && <Loading />}
       {currentDepartment != 0 && (
         <div className={`shiftList container ${filterDate ? "filtered" : ""}`}>
           {employeesList.map((employee) => (

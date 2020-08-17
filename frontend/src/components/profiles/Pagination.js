@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import ShiftList from "./ShiftList";
 
 const Pagination = ({
   shiftsPerPage,
@@ -23,21 +22,23 @@ const Pagination = ({
       : pageNumbers;
 
   return (
-    <nav className="pagination">
-      <ul className="pagination__container">
-        {filteredNumbers.map((number) => (
-          <li
-            key={number}
-            className={`pagination__number ${
-              number == currentPage ? "pagination__current" : ""
-            }`}
-            onClick={() => setCurrentPage(number)}
-          >
-            {number}
-          </li>
-        ))}
-      </ul>
-    </nav>
+    pageNumbers.length > 1 && (
+      <nav className="pagination">
+        <ul className="pagination__container">
+          {filteredNumbers.map((number) => (
+            <li
+              key={number}
+              className={`pagination__number ${
+                number == currentPage ? "pagination__current" : ""
+              }`}
+              onClick={() => setCurrentPage(number)}
+            >
+              {number}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
   );
 };
 

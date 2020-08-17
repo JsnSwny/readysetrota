@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addEmployee,
   getPositions,
-  getDepartments,
   addDepartment,
   addPosition,
   updateDepartment,
@@ -14,9 +13,7 @@ import {
   deleteEmployee,
   updateBusinessName,
 } from "../../actions/employees";
-import { contextType } from "react-modal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const AddStaff = (props) => {
   const { onClose, form, staffPosition, update } = props;

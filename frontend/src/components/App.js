@@ -6,9 +6,8 @@ import Nav from "./layout/Nav";
 
 import { Provider } from "react-redux";
 import store from "../store";
-import Shifts from "./shifts/Shifts";
+import ShiftList from "./shifts/ShiftList";
 import "../css/styles.css";
-import Staff from "./employees/Staff";
 
 import Register from "./accounts/Register";
 import Login from "./accounts/Login";
@@ -16,11 +15,11 @@ import Login from "./accounts/Login";
 import PrivateRoute from "./common/PrivateRoute";
 
 import { loadUser } from "../actions/auth";
-import Home from "./common/Home";
+import Home from "./profiles/Home";
 import { setWidth } from "../actions/responsive";
 
 import ChangePassword from "./accounts/ChangePassword";
-import Profile from "./shifts/Profile";
+import Profile from "./profiles/Profile";
 import EnterID from "./common/EnterID";
 
 import { ToastContainer } from "react-toastify";
@@ -46,7 +45,7 @@ const App = () => {
               component={Home}
               user_only_pass={true}
             />
-            <PrivateRoute path="/rota" exact component={Shifts} />
+            <PrivateRoute path="/rota" exact component={ShiftList} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
