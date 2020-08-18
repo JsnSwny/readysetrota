@@ -1,0 +1,21 @@
+.container {
+  width: calc(100vw - 40px);
+  margin: 0 auto;
+}
+
+.container-left {
+  width: 20%;
+  min-width: 150px;
+  max-width: 300px;
+}
+
+.container-right {
+  width: 80%;
+  display: flex;
+  flex: 1;
+}
+
+.container-2 {
+  width: 80%;
+  margin: 0 auto;
+}

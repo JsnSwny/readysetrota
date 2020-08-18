@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;700&display=swap");
+
+/*======Typography=======*/
+$base-font-family: "Poppins", sans-serif;
+
+/*======Colors=======*/
+$pink: #ec70c9;
+$pink2: #f3a4a5;
+$white: #fff;
+$green: #5bd075;
+$red: #d05b5b;
+$yellow: #e9a659;
+
+$breakpoints: (
+  "stamp": "screen and (max-width: 399px)",
+  "thumb": "screen and (max-width: 499px)",
+  "mobile": "screen and (max-width: 600px)",
+  "tablet": "screen and (max-width: 1000px)",
+  "laptop": "screen and (max-width: 1200px)",
+);
+
+@mixin wi-mq($alias) {
+  // Search breakpoint map for alias
+  $query: map-get($breakpoints, $alias);
+
+  // If alias exists, print out media query
+  @if $query {
+    @media #{$query} {
+      @content;
+    }
+  } @else {
+    @error "No breakpoint found for #{$alias}";
+  }
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: $base-font-family;
+  background-color: #f4f4f4;
+  height: 100%;
+}

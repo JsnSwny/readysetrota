@@ -1,0 +1,87 @@
+// Buttons
+
+.btn {
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease background-color;
+  color: white;
+  font-size: 16px;
+  &:focus {
+    outline: none;
+  }
+  @include wi-mq(mobile) {
+    font-size: 14px;
+  }
+  &-1 {
+    @extend .btn;
+    background-color: #202020;
+    padding: 5px;
+    border-radius: 5px;
+    &:hover {
+      background-color: #5a5a5a;
+    }
+  }
+  &-3 {
+    @extend .btn;
+    height: 35px;
+    border-radius: 10px;
+    margin-right: 10px;
+    border: 1px solid rgb(190, 190, 190);
+    background-color: white;
+    padding: 0 20px;
+    color: #ec70c9;
+    width: 200px;
+    @include wi-mq(tablet) {
+      margin-right: 0;
+      margin: 5px 0;
+      width: 80%;
+      max-width: 400px;
+      // &.button {
+      //   width: 80%;
+      //   max-width: 400px;
+      // }
+    }
+    &:focus {
+      outline: none;
+    }
+    .fas {
+      margin-right: 10px;
+    }
+    &.disabled {
+      opacity: 0.5;
+      cursor: auto;
+    }
+  }
+  &-4 {
+    @extend .btn;
+    background-color: #963cbdff;
+    color: white;
+    margin-left: 20px;
+    padding: 5px 25px;
+    border-radius: 10px;
+    &:hover {
+      background-color: rgb(170, 84, 207);
+    }
+  }
+  &-modal {
+    @extend .btn;
+    padding: 10px 0;
+    width: 45%;
+    margin-top: 20px;
+    display: block;
+    &--confirm {
+      @extend .btn-modal;
+      background-color: $green;
+      &:hover {
+        background-color: #3aad53;
+      }
+    }
+    &--cancel {
+      @extend .btn-modal;
+      background-color: $red;
+      &:hover {
+        background-color: #db3b3b;
+      }
+    }
+  }
+}

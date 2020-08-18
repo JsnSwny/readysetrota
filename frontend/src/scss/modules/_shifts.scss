@@ -1,0 +1,360 @@
+.dates {
+  height: 100px;
+  position: relative;
+  &.fixed {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    opacity: 0.7;
+    .btn-1 {
+      display: none;
+    }
+  }
+  .container-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+  .btn-1 {
+    max-width: 200px;
+    width: 90%;
+    padding: 10px 0;
+    background-color: #202020;
+    font-size: 16px;
+  }
+  .fa-user-plus {
+    margin-right: 10px;
+  }
+  &__pickerWrapper {
+    display: flex;
+    text-align: center;
+    height: 35px;
+
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      cursor: pointer;
+      border: 1px solid rgb(190, 190, 190);
+      padding: 0 10px;
+      &:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+      &:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+      &:hover {
+        i {
+          color: #ec70c9;
+        }
+      }
+    }
+    i {
+      cursor: pointer;
+      transition: 0.2s all ease;
+      font-size: 20px;
+    }
+  }
+  &__pickerDate {
+    font-size: 16px;
+    color: #ec70c9;
+    background-color: white;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 100%;
+    border-top: 1px solid rgb(190, 190, 190);
+    border-bottom: 1px solid rgb(190, 190, 190);
+    align-self: center;
+  }
+  &__container {
+    display: flex;
+  }
+  &__date {
+    text-align: center;
+    background-color: #202020;
+    justify-content: center;
+    color: white;
+    h1 {
+      font-size: 14px;
+    }
+    .btn-1 {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+  &__sort {
+    cursor: pointer;
+    font-size: 24px;
+    transition: 0.2s ease all;
+    &:hover {
+      color: #ee6de7;
+    }
+  }
+  &__mobile {
+    position: fixed;
+    top: 0;
+    left: 10px;
+    right: 10px;
+    bottom: 40px;
+    display: none;
+    align-items: flex-end;
+    justify-content: space-between;
+    z-index: 10;
+    pointer-events: none;
+    i {
+      cursor: pointer;
+      font-size: 48px;
+      z-index: 10;
+      pointer-events: auto;
+      opacity: 0.5;
+    }
+  }
+}
+
+.employee {
+  &__wrapper {
+    background-color: #dedede;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100px;
+    justify-content: center;
+    position: relative;
+    &.active {
+      border: 3px #ee6de7 dotted;
+    }
+  }
+  &__name {
+    font-size: 16px;
+    transition: 0.2s ease-in-out color;
+    &:hover {
+      color: #ad408e;
+    }
+    &-container {
+      display: flex;
+      align-items: center;
+    }
+  }
+  &__position {
+    font-size: 12px;
+    color: #818181;
+  }
+  &__hours {
+    font-size: 12px;
+  }
+  &__surname {
+    font-weight: bold;
+  }
+}
+
+.shiftList {
+  margin-top: 8px;
+  .rota__container:nth-child(even) {
+    .employee__wrapper {
+      background-color: #d1d1d1;
+    }
+    .shift__shift-noshift {
+      background-color: #d1d1d1;
+      &.available {
+        background-color: $green;
+      }
+      &.partial {
+        background-color: $yellow;
+      }
+      &.unavailable {
+        background-color: $red;
+      }
+    }
+  }
+}
+
+.rota__container {
+  display: flex;
+  align-items: flex-start;
+  margin: 4px 0;
+}
+
+.shiftList {
+  &.filtered {
+    .rota__container:nth-child(even) {
+      .shift__shift-noshift {
+        &:not(.filtered) {
+          background-color: #8b8b8b;
+        }
+      }
+    }
+    .shift {
+      &__shift {
+        &:not(.filtered) {
+          background-color: #c352be;
+        }
+        &-noshift {
+          &:not(.filtered) {
+            background: rgb(179, 179, 179);
+          }
+        }
+      }
+    }
+  }
+}
+
+.shift {
+  &__text {
+    text-transform: capitalize;
+
+    justify-self: center;
+    align-self: center;
+    color: white;
+  }
+  &__shift {
+    background-color: #ee6de7;
+    border-radius: 10px;
+    overflow-x: auto;
+    position: relative;
+    overflow: auto;
+    padding: 5px 15px;
+    &.unpublished {
+      opacity: 0.5;
+    }
+    &.available {
+      background-color: $green;
+    }
+    &.partial {
+      background-color: $yellow;
+    }
+    &.unavailable {
+      background-color: $red;
+    }
+  }
+  &__wrapper {
+    width: 100%;
+    margin: 0 auto;
+    color: white;
+
+    transition: 0.2s color ease-in-out;
+    display: flex;
+    flex-direction: column;
+    .flex {
+      display: flex;
+    }
+    &.hide {
+      display: none;
+    }
+    &.edit {
+      .shift__time {
+        cursor: pointer;
+        transition: 0.2s ease-in color;
+        &:hover {
+          color: #202020;
+          .shift__info {
+            color: #202020;
+          }
+        }
+      }
+    }
+    .fa-exchange-alt {
+      cursor: pointer;
+    }
+    .fa-eye,
+    .fa-eye-slash {
+      margin-left: 10px;
+    }
+  }
+  &__time {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  &__info {
+    font-weight: normal;
+    font-size: 14px;
+    color: rgb(243, 243, 243);
+    word-wrap: break-word;
+    transition: 0.2s ease-in-out color;
+    i {
+      margin-right: 5px;
+    }
+  }
+  &__shift-noshift {
+    @extend .shift__shift;
+    background: #e0e0e0;
+  }
+  &__add {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    cursor: pointer;
+    position: static;
+    display: block;
+    &--white {
+      @extend .shift__add;
+
+      color: white;
+    }
+  }
+}
+
+.shift__shift-noshift {
+  background: #e0e0e0;
+}
+
+@media only screen and (max-width: 1000px) {
+  .employee {
+    &__name {
+      font-size: 14px;
+    }
+    &__wrapper {
+      padding: 0 10px;
+    }
+    &__copied {
+      display: none;
+    }
+  }
+  .shift {
+    &__time {
+      font-size: 14px;
+    }
+  }
+  .dates {
+    &__pickerWrapper {
+      width: 80%;
+      max-width: 400px;
+      margin-top: 5px;
+      display: none;
+    }
+    &__pickerDate {
+      width: 80%;
+      max-width: 400px;
+      flex: 1;
+    }
+    &__mobile {
+      display: flex;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .dates {
+    .btn-1 {
+      font-size: 14px;
+      width: 100%;
+    }
+    &__date {
+      font-size: 14px;
+    }
+    .fa-user-plus {
+      font-size: 14px;
+    }
+    &__sort {
+      font-size: 18px;
+    }
+  }
+}

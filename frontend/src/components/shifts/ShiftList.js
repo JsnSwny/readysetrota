@@ -193,7 +193,11 @@ const ShiftList = () => {
     if (!available) {
       return false;
     } else {
-      return available.name;
+      return {
+        name: available.name,
+        start: available.start_time,
+        end: available.end_time,
+      };
     }
   };
 
@@ -380,7 +384,7 @@ const ShiftList = () => {
                                   }
                                 </span>
                                 <span>
-                                  {permissions.includes(
+                                  {/* {permissions.includes(
                                     "can_view_unpublished_shifts"
                                   ) &&
                                     (shift.published ? (
@@ -391,7 +395,7 @@ const ShiftList = () => {
                                       )
                                     ) : (
                                       ""
-                                    ))}
+                                    ))} */}
                                 </span>
                               </div>
                               {shift.info && (
@@ -411,6 +415,7 @@ const ShiftList = () => {
                       className={`item-block shift__shift-noshift ${
                         showAvailabilities &&
                         isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                          .name
                       } ${
                         filterDate == format(result, "YYY-MM-dd")
                           ? "filtered"
@@ -435,17 +440,32 @@ const ShiftList = () => {
                         </p>
                       )}
                       {showAvailabilities && (
-                        <p
-                          className={`shift__text ${isAvailable(
-                            employee.id,
-                            format(result, "YYY-MM-dd")
-                          )}`}
-                        >
-                          {isAvailable(
-                            employee.id,
-                            format(result, "YYY-MM-dd")
+                        <Fragment>
+                          <p className={`shift__text`}>
+                            {
+                              isAvailable(
+                                employee.id,
+                                format(result, "YYY-MM-dd")
+                              ).name
+                            }
+                          </p>
+                          {isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                            .start && (
+                            <p className="shift__text">
+                              {isAvailable(
+                                employee.id,
+                                format(result, "YYY-MM-dd")
+                              ).start.substr(0, 5)}{" "}
+                              -{" "}
+                              {
+                                isAvailable(
+                                  employee.id,
+                                  format(result, "YYY-MM-dd")
+                                ).end
+                              }
+                            </p>
                           )}
-                        </p>
+                        </Fragment>
                       )}
                     </div>
                   )

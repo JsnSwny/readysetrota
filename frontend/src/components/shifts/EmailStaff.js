@@ -10,7 +10,7 @@ const EmailStaff = () => {
       onClick={() => {
         dispatch(publish());
       }}
-      className="btn-3 button"
+      className="btn-3"
     >
       <i className="fas fa-check"></i>Publish
     </button>

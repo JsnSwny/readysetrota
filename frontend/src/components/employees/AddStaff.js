@@ -223,7 +223,7 @@ const AddStaff = (props) => {
         )}
 
         <div className="staffForm__buttons">
-          <button type="submit" value="update" className="btn-1">
+          <button type="submit" value="update" className="btn-modal--confirm">
             {update ? "Update" : "Create"}
           </button>
           {form != "BusinessName" && (
@@ -242,8 +242,7 @@ const AddStaff = (props) => {
                 onClose();
               }}
               value="delete"
-              className="btn-1"
-              style={{ backgroundColor: "#d05b5b" }}
+              className="btn-modal--cancel"
             >
               {update ? "Delete" : "Cancel"}
             </button>

@@ -38,7 +38,6 @@ class ShiftViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = ShiftSerializer
-
     queryset = Shift.objects.all()
 
     def perform_create(self, serializer):

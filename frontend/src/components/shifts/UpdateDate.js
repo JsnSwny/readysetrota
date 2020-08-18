@@ -38,9 +38,7 @@ const UpdateDate = (props) => {
                   ? setShowAvailabilities(!showAvailabilities)
                   : toast.warning("There are no availabilities to show!");
               }}
-              className={`btn-3 button ${
-                availability.length > 0 ? "" : "disabled"
-              }`}
+              className={`btn-3 ${availability.length > 0 ? "" : "disabled"}`}
             >
               Show Availabilities
             </button>
@@ -58,7 +56,7 @@ const UpdateDate = (props) => {
               }`}
               target="_blank"
             >
-              <button className="btn-3 button">Export Shifts</button>
+              <button className="btn-3">Export Shifts</button>
             </a>
           )}
 

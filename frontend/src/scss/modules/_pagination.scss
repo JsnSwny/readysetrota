@@ -1,0 +1,25 @@
+.pagination {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  padding: 0 50px;
+  &__container {
+    padding: 10px 0;
+    position: relative;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__number {
+    background-color: white;
+    padding: 5px 10px;
+    list-style: none;
+    cursor: pointer;
+  }
+  &__current {
+    color: $pink;
+    font-weight: bold;
+  }
+}

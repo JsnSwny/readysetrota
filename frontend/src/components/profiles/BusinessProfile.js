@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   getEmployees,
   getDepartments,
@@ -140,32 +141,34 @@ const BusinessProfile = (props) => {
               <div className="dashboard__wrapper">
                 {employees.map((item) => (
                   <div key={item.id} className="dashboard__item">
-                    <p className="title-md bold">
-                      {item.first_name} <strong>{item.last_name}</strong>
-                      {permissions.includes("can_view_uuid") && !item.user && (
-                        <Fragment>
-                          <i
-                            style={{
-                              marginLeft: "10px",
-                              cursor: "pointer",
-                            }}
-                            onClick={(e) => {
-                              toast.info(
-                                <div>
-                                  {item.first_name + " " + item.last_name}
-                                  <br /> UUID copied! <br /> <br />{" "}
-                                  <small>{item.uuid}</small>
-                                </div>
-                              );
-                              copyToClipboard(
-                                `www.readysetrota.com/join/${item.uuid}/`
-                              );
-                            }}
-                            className="fas fa-clipboard"
-                          ></i>
-                        </Fragment>
-                      )}
-                    </p>
+                    <Link to={`/profile/${item.id}`}>
+                      <p className="title-md bold">
+                        {item.first_name} <strong>{item.last_name}</strong>
+                        {permissions.includes("can_view_uuid") && !item.user && (
+                          <Fragment>
+                            <i
+                              style={{
+                                marginLeft: "10px",
+                                cursor: "pointer",
+                              }}
+                              onClick={(e) => {
+                                toast.info(
+                                  <div>
+                                    {item.first_name + " " + item.last_name}
+                                    <br /> UUID copied! <br /> <br />{" "}
+                                    <small>{item.uuid}</small>
+                                  </div>
+                                );
+                                copyToClipboard(
+                                  `www.readysetrota.com/join/${item.uuid}/`
+                                );
+                              }}
+                              className="fas fa-clipboard"
+                            ></i>
+                          </Fragment>
+                        )}
+                      </p>
+                    </Link>
                     <p className="subtitle-sm">
                       {item.position.map(
                         (position) =>
@@ -174,16 +177,21 @@ const BusinessProfile = (props) => {
                           )
                       )}
                     </p>
-                    <button
-                      onClick={() => {
-                        setOpen(true);
-                        setType("staff");
-                        setUpdate(item);
-                      }}
-                      className="btn-4"
-                    >
-                      Edit
-                    </button>
+                    <div>
+                      <button
+                        onClick={() => {
+                          setOpen(true);
+                          setType("staff");
+                          setUpdate(item);
+                        }}
+                        className="btn-4"
+                      >
+                        Edit
+                      </button>
+                      <Link to={`/profile/${item.id}`}>
+                        <button className="btn-4">Profile</button>
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>

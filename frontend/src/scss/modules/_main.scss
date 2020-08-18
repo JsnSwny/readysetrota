@@ -1,0 +1,127 @@
+.title {
+  font-size: 36px;
+  line-height: 30px;
+  &-md {
+    @extend .title;
+    font-size: 24px;
+  }
+  &-sm {
+    @extend .title;
+    font-size: 18px;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 24px;
+  &-md {
+    @extend .subtitle;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  &-sm {
+    @extend .subtitle;
+    font-size: 16px;
+  }
+}
+
+.error {
+  font-size: 12px;
+  color: $red;
+}
+
+.success {
+  font-size: 12px;
+  color: $green;
+}
+
+.delete_icon {
+  i {
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    transition: 0.2s ease all;
+    cursor: pointer;
+    &:hover {
+      color: rgb(230, 52, 52);
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+}
+
+.nodepartment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
+  align-items: center;
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  .btn-3 {
+    margin-right: 0;
+  }
+}
+
+.item-block {
+  flex: 1;
+  margin: 0 2px;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  align-self: flex-start;
+  &:first-child {
+    margin: 0 2px 0 4px;
+  }
+  &:last-child {
+    margin: 0 0 0 2px;
+  }
+}
+
+.button-layout {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 20px auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: calc(100vw - 10px);
+  }
+  .container-left {
+    min-width: 50%;
+  }
+
+  .item-block {
+    &:first-child {
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .container-2 {
+    width: 90%;
+  }
+  .btn-4 {
+    margin-left: 0;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .button-layout {
+    flex-direction: column;
+    a {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+}
