@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Rota - {{ employee.first_name }} {{ employee.last_name }}</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: black;
+      }
+
+      table {
+        margin-top: 20px;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 700px;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 5px;
+      }
+      .heading {
+        font-size: 18px;
+      }
+      .footer {
+        margin-top: 20px;
+      }
+      .updated {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="heading">
+      Hi {{ employee.first_name }}, your rota has been
+      <strong>updated!</strong>
+    </p>
+    <br />
+    <p>You can view your rota online at https://www.readysetrota.com</p>
+    <p>Here are your upcoming shifts:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Info</th>
+          <th>Department</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shift in shifts %}
+
+        <tr class="{% if not shift.published %} updated{% endif %}">
+          <td>{{ shift.date|date:"l jS F" }}</td>
+          <td>{{ shift.start_time|time:"H:i" }}</td>
+          <td>{{ shift.end_time }}</td>
+          {% if shift.info %}
+          <td>{{ shift.info }}</td>
+          {% else %}
+          <td>N/A</td>
+          {% endif %}
+          <td>{{ shift.department.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
