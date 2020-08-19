@@ -26,7 +26,7 @@ const Login = (props) => {
       <div className="login">
         <div className="login__box">
           <div className="login__left login__part">
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit} autoComplete="on">
               <div className="form-group">
                 <label>Email</label>
                 <input
@@ -37,6 +37,7 @@ const Login = (props) => {
                     setUsername(e.target.value);
                   }}
                   value={username}
+                  autoComplete="username"
                 />
                 <p className="error">{errors.username}</p>
               </div>
@@ -49,8 +50,8 @@ const Login = (props) => {
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
+                  autoComplete="current-password"
                   value={password}
-                  autoComplete="on"
                 />
                 <p className="error">{errors.password}</p>
                 <p className="error">{errors.non_field_errors}</p>
