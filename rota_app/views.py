@@ -50,8 +50,13 @@ class Publish(APIView):
     def get(self, request):
         shifts = Shift.objects.filter(owner=self.request.user, published=False)
         shifts_list = list(shifts.values_list('pk', flat=True))
+        print("shifts list")
+        print(shifts_list)
+        print("shifts")
+        print(shifts)
+        print(self.request.user)
         
-        publish_email.delay(shifts_list)
+        publish_email.delay(shifts_list, self.request.user.id)
 
         for i in shifts:
             i.published = True
