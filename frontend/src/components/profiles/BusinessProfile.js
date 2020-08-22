@@ -1,59 +1,40 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   getEmployees,
   getDepartments,
   getPositions,
 } from "../../actions/employees";
-import CreateShift from "../layout/CreateShift";
 import DepartmentPicker from "./DepartmentPicker";
-import { toast } from "react-toastify";
+import PositionPicker from "./PositionPicker";
+import StaffPicker from "./StaffPicker";
 
 const BusinessProfile = (props) => {
+  const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
 
   useEffect(() => {
     dispatch(getDepartments());
+    dispatch(getEmployees());
     dispatch(getPositions(true));
     dispatch(getPositions());
-    dispatch(getEmployees());
   }, [currentDepartment]);
 
-  const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
-  const [type, setType] = useState("");
+  useEffect(() => {
+    dispatch(getPositions(true));
+    dispatch(getPositions());
+  }, [currentBusiness]);
+
   let user = useSelector((state) => state.auth.user);
-  let permissions = user.all_permissions;
-
-  let positions = useSelector((state) => state.employees.positions);
-  let employees = useSelector((state) => state.employees.employees);
-
-  function copyToClipboard(text) {
-    var dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = text;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-  }
 
   return (
     <Fragment>
-      <CreateShift
-        open={open}
-        type={type}
-        onConfirm={() => {
-          setOpen(false);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        update={update}
-      />
       <div className="dashboard__header">
         <div className="container-2">
           <h1 className="title">Your Business</h1>
@@ -81,123 +62,18 @@ const BusinessProfile = (props) => {
       </div>
       <DepartmentPicker />
       {currentDepartment != 0 && (
-        <Fragment>
-          <div className="dashboard container-2">
-            <div className="dashboard__block">
-              <div className="dashboard__block-title-container">
-                <p className="dashboard__block-title">Positions</p>
-                <i
-                  onClick={() => {
-                    setOpen(true);
-                    setType("Position");
-                    setUpdate(false);
-                  }}
-                  className="fas fa-plus-square"
-                ></i>
-              </div>
-              <div className="dashboard__wrapper">
-                {positions.map((item) => (
-                  <div key={item.id} className="dashboard__item">
-                    <p className="title-md bold">{item.name}</p>
-                    <p className="subtitle-sm">
-                      {
-                        employees.filter((employee) =>
-                          employee.position.some(
-                            (position) => position.id == item.id
-                          )
-                        ).length
-                      }{" "}
-                      employees
-                    </p>
-
-                    <button
-                      onClick={() => {
-                        setOpen(true);
-                        setType("Position");
-                        setUpdate(item);
-                      }}
-                      className="btn-4"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="dashboard container-2">
-            <div className="dashboard__block">
-              <div className="dashboard__block-title-container">
-                <p className="dashboard__block-title">Staff</p>
-                <i
-                  onClick={() => {
-                    setOpen(true);
-                    setType("staff");
-                    setUpdate(false);
-                  }}
-                  className="fas fa-plus-square"
-                ></i>
-              </div>
-              <div className="dashboard__wrapper">
-                {employees.map((item) => (
-                  <div key={item.id} className="dashboard__item">
-                    <Link to={`/profile/${item.id}`}>
-                      <p className="title-md bold">
-                        {item.first_name} <strong>{item.last_name}</strong>
-                        {permissions.includes("can_view_uuid") && !item.user && (
-                          <Fragment>
-                            <i
-                              style={{
-                                marginLeft: "10px",
-                                cursor: "pointer",
-                              }}
-                              onClick={(e) => {
-                                toast.info(
-                                  <div>
-                                    {item.first_name + " " + item.last_name}
-                                    <br /> UUID copied! <br /> <br />{" "}
-                                    <small>{item.uuid}</small>
-                                  </div>
-                                );
-                                copyToClipboard(
-                                  `www.readysetrota.com/join/${item.uuid}/`
-                                );
-                              }}
-                              className="fas fa-clipboard"
-                            ></i>
-                          </Fragment>
-                        )}
-                      </p>
-                    </Link>
-                    <p className="subtitle-sm">
-                      {item.position.map(
-                        (position) =>
-                          position.department.id == currentDepartment && (
-                            <span key={position.id}>{position.name}</span>
-                          )
-                      )}
-                    </p>
-                    <div>
-                      <button
-                        onClick={() => {
-                          setOpen(true);
-                          setType("staff");
-                          setUpdate(item);
-                        }}
-                        className="btn-4"
-                      >
-                        Edit
-                      </button>
-                      <Link to={`/profile/${item.id}`}>
-                        <button className="btn-4">Profile</button>
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Fragment>
+        <PositionPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+        />
+      )}
+      {currentDepartment != 0 && (
+        <StaffPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+        />
       )}
     </Fragment>
   );

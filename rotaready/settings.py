@@ -147,4 +147,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'build')
 MEDIA_URL = '/media/'
 
+CELERY_BROKER_URL = 'redis://h:p436693afc958fd5687deaa36bde26ab84d816e450e92126056f63a6d7efde285@ec2-52-210-219-209.eu-west-1.compute.amazonaws.com:23309'
 
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TAST_SERIALIZER = "json"

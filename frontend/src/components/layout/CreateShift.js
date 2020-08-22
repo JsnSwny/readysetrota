@@ -7,8 +7,7 @@ const CreateShift = (props) => {
   const {
     open,
     onClose,
-    employeeName,
-    employeeID,
+    employee,
     date,
     type,
     staffPosition,
@@ -23,8 +22,7 @@ const CreateShift = (props) => {
         <div className="shiftModal__container">
           {type == "shift" ? (
             <AddShift
-              employeeName={employeeName}
-              employeeID={employeeID}
+              employee={employee}
               date={date}
               onClose={onClose}
               shift={shift}

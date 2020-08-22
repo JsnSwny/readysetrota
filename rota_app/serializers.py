@@ -1,30 +1,49 @@
 from rest_framework import serializers
 from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
 from accounts.serializers import UserSerializer
+from django.contrib.auth.models import User
 
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = '__all__'
-        depth = 1
+        fields = ('id', 'name',)
+
+
+class BasicUserSerializer(serializers.ModelSerializer):
+    business = BusinessSerializer()
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'business')
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    admins = BasicUserSerializer(read_only=True, many=True)
+    admins_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='admins', write_only=True, many=True, required=False)
+    owner = BasicUserSerializer(read_only=True)
+    business = BusinessSerializer(read_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Department
-        fields = '__all__'
+        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business', 'business_id')
         depth = 1
 
 class PositionSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True)
-    
+    business = BusinessSerializer(read_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Position
         fields = '__all__'
         depth = 3
 
+class BasicPositionSerializer(serializers.ModelSerializer):   
+    class Meta:
+        model = Position
+        fields = ('id', 'name', 'department',)
+        depth = 1
+
 class EmployeeSerializer(serializers.ModelSerializer):
+    # shifts = EmployeeShiftSerializer(read_only=True, many=True)
     position = PositionSerializer(read_only=True, many=True)
 
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
@@ -36,10 +55,23 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         depth = 1
 
+class EmployeeListSerializer(serializers.ModelSerializer):
+    position = BasicPositionSerializer(read_only=True, many=True)
+    class Meta:
+        model = Employee
+        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position',)
+
 class CheckUUIDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('__all__')
+        depth = 1
+
+class ShiftListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Shift
+        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen',)
         depth = 1
 
 class ShiftSerializer(serializers.ModelSerializer):
@@ -54,7 +86,7 @@ class ShiftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shift
         fields = '__all__'
-        depth = 2
+        depth = 1
 
 class ShiftSwapSerializer(serializers.ModelSerializer):
     employee_approved = serializers.BooleanField(required=False)

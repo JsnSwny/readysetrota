@@ -8,6 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   UPDATE_BUSINESS,
+  SET_DEPARTMENT,
 } from "../actions/types";
 
 const initialState = {
@@ -20,6 +21,15 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case SET_DEPARTMENT:
+      return {
+        ...state,
+        business:
+          state.user.business != null ||
+          state.user.department_admin.some(
+            (item) => item.id == parseInt(action.payload)
+          ),
+      };
     case UPDATE_BUSINESS:
       return {
         ...state,
@@ -36,7 +46,11 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
-        business: action.payload.groups.some((item) => item.name == "Business"),
+        business:
+          action.payload.business != null ||
+          action.payload.department_admin.some(
+            (item) => item.id == parseInt(action.department)
+          ),
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:

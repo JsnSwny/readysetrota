@@ -222,8 +222,14 @@
     position: relative;
     overflow: auto;
     padding: 5px 15px;
-    &.unpublished {
+    &.date-before {
       opacity: 0.5;
+      .shift__add {
+        visibility: hidden;
+      }
+    }
+    &.unpublished {
+      background-color: #ee6de786;
     }
     &.available {
       background-color: $green;
@@ -288,12 +294,7 @@
     background: #e0e0e0;
   }
   &__add {
-    position: absolute;
-    top: 10px;
-    left: 15px;
     cursor: pointer;
-    position: static;
-    display: block;
     &--white {
       @extend .shift__add;
 

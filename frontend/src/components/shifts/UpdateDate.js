@@ -24,7 +24,6 @@ const UpdateDate = (props) => {
     employee.position.some((item) => item.department.id == currentDepartment)
   )[0];
   let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
-  let permissions = user.all_permissions;
 
   return (
     <div className="button-layout container">
@@ -60,7 +59,7 @@ const UpdateDate = (props) => {
             </a>
           )}
 
-          {permissions.includes("can_publish_shifts") && <EmailStaff />}
+          {business && <EmailStaff />}
           <div className="dates__pickerWrapper">
             <p
               onClick={() => {

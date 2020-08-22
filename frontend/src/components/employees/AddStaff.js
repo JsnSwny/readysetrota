@@ -21,6 +21,7 @@ const AddStaff = (props) => {
   let positions = useSelector((state) => state.employees.all_positions);
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
+  let employees = useSelector((state) => state.employees.employees);
   const dispatch = useDispatch();
   useEffect(() => {
     if (form == "staff") {
@@ -31,6 +32,13 @@ const AddStaff = (props) => {
 
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
+  );
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
+
+  let department_obj = departments.filter(
+    (item) => item.id == currentDepartment
   );
 
   // Disable Positions in Department of already selected positions
@@ -75,6 +83,13 @@ const AddStaff = (props) => {
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState([]);
 
+  const [admins, setAdmins] = useState([]);
+  useEffect(() => {
+    form == "Department" &&
+      update &&
+      setAdmins(update.admins.map((item) => item.id));
+  }, [update]);
+
   useEffect(() => {
     if (update) {
       setName(update.name);
@@ -111,10 +126,16 @@ const AddStaff = (props) => {
       }
     } else if (form == "Department") {
       if (update) {
-        dispatch(updateDepartment(update.id, { name }));
+        dispatch(
+          updateDepartment(update.id, {
+            name,
+            business_id: currentBusiness,
+            admins_id: admins,
+          })
+        );
         toast.success("Department updated!");
       } else {
-        dispatch(addDepartment({ name }));
+        dispatch(addDepartment({ name, business_id: currentBusiness }));
         toast.success("Department added!");
       }
       setName("");
@@ -125,11 +146,18 @@ const AddStaff = (props) => {
           updatePosition(update.id, {
             name,
             department_id: currentDepartment,
+            business_id: currentBusiness,
           })
         );
         toast.success("Position updated!");
       } else {
-        dispatch(addPosition({ name }));
+        dispatch(
+          addPosition({
+            name,
+            department_id: parseInt(currentDepartment),
+            business_id: currentBusiness,
+          })
+        );
         toast.success("Position added!");
       }
       setName("");
@@ -209,17 +237,52 @@ const AddStaff = (props) => {
             </div>
           </Fragment>
         ) : (
-          <div className="staffForm__control">
-            <label className="staffForm__label">Name:</label>
-            <input
-              className="staffForm__input"
-              type="text"
-              name="name "
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-            ></input>
-            <p className="error">{errors.name}</p>
-          </div>
+          <Fragment>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Name:</label>
+              <input
+                className="staffForm__input"
+                type="text"
+                name="name "
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+              ></input>
+              <p className="error">{errors.name}</p>
+            </div>
+            {form == "Department" &&
+              update &&
+              employees.some((item) => item.user) && (
+                <div className="staffForm__control">
+                  <label className="staffForm__label">Admins:</label>
+                  <select
+                    className="staffForm__input"
+                    onChange={(e) => {
+                      setAdmins(
+                        [...e.target.options]
+                          .filter((o) => o.selected)
+                          .map((o) => o.value)
+                      );
+                    }}
+                    name="admins"
+                    value={admins}
+                    multiple
+                  >
+                    {employees.map(
+                      (item) =>
+                        item.user &&
+                        item.position.some(
+                          (item) => item.department.name == update.name
+                        ) && (
+                          <option key={item.user} value={item.user}>
+                            {item.first_name} {item.last_name}
+                          </option>
+                        )
+                    )}
+                  </select>
+                  <p className="error">{errors.admins}</p>
+                </div>
+              )}
+          </Fragment>
         )}
 
         <div className="staffForm__buttons">

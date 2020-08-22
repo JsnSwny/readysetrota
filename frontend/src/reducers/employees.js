@@ -20,6 +20,8 @@ import {
   ADD_AVAILABILITY,
   UPDATE_AVAILABILITY,
   DELETE_AVAILABILITY,
+  USER_LOADED,
+  LOGIN_SUCCESS,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -33,15 +35,29 @@ const initialState = {
   positions: [],
   all_positions: [],
   departments: [],
-
   current_department: localStorage.getItem("current_department")
     ? localStorage.getItem("current_department")
     : 0,
+  current_business: 0,
   uuid_success: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        current_business: action.payload.business
+          ? action.payload.business.id
+          : "",
+      };
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        current_business: action.payload.user.business
+          ? action.payload.user.business.id
+          : "",
+      };
     case GET_AVAILABILITY:
       return {
         ...state,
@@ -85,6 +101,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: action.payload,
+        current_business:
+          action.payload.length > 0
+            ? action.payload[0].business.id
+            : state.current_business,
       };
     case RESET_DEPARTMENT:
       localStorage.setItem("current_department", 0);
@@ -97,6 +117,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         current_department: action.payload,
+        current_business:
+          state.departments.length > 0
+            ? state.departments[0].business.id
+            : state.current_business,
       };
     case ADD_EMPLOYEE:
       if (
@@ -135,6 +159,9 @@ export default function (state = initialState, action) {
         positions: state.positions.filter(
           (position) => position.id !== action.payload
         ),
+        all_positions: state.all_positions.filter(
+          (position) => position.id !== action.payload
+        ),
       };
     case DELETE_DEPARTMENT:
       return {
@@ -142,11 +169,16 @@ export default function (state = initialState, action) {
         departments: state.departments.filter(
           (department) => department.id !== action.payload
         ),
+        current_department:
+          action.payload == state.current_department
+            ? 0
+            : state.current_department,
       };
     case ADD_POSITION:
       return {
         ...state,
         positions: [...state.positions, action.payload],
+        all_positions: [...state.all_positions, action.payload],
       };
     case UPDATE_POSITION:
       return {

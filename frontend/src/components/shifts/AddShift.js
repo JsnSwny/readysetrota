@@ -4,8 +4,7 @@ import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 
 const AddShift = (props) => {
-  const { date, employeeID, employeeName, onClose, shift } = props;
-
+  const { date, employee, onClose, shift } = props;
   let updating = shift ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
@@ -40,7 +39,7 @@ const AddShift = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: employeeID,
+      employee_id: employee.id,
       start_time: startTime,
       end_time: endTime,
       info,
@@ -89,7 +88,7 @@ const AddShift = (props) => {
             type="text"
             name="employee"
             onChange={(e) => setEmployee(e.target.value)}
-            value={employeeName}
+            value={`${employee.first_name} ${employee.last_name}`}
             disabled
           />
         </div>
@@ -144,8 +143,9 @@ const AddShift = (props) => {
         )}
 
         <div className="staffForm__popular-container">
-          {popular_times.map((item) => (
+          {popular_times.map((item, i) => (
             <p
+              key={i}
               className="staffForm__popular"
               onClick={() => {
                 setStartTime(item.start_time);

@@ -25,7 +25,7 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
   });
   axios
     .get(
-      `/api/shifts/?date_after=${startdate}&date_before=${enddate}&department=${
+      `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
         getState().employees.current_department
       }&ordering=date,start_time`,
       tokenConfig(getState)

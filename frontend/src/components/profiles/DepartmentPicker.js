@@ -1,33 +1,21 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getEmployees,
-  getDepartments,
-  setDepartment,
-} from "../../actions/employees";
+import { setDepartment } from "../../actions/employees";
 import CreateShift from "../layout/CreateShift";
 
-const BusinessProfile = (props) => {
+const DepartmentPicker = (props) => {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getDepartments());
-    dispatch(getEmployees());
-  }, []);
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("");
   const [update, setUpdate] = useState(false);
 
   let departments = useSelector((state) => state.employees.departments);
-  let employees = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
-
   let user = useSelector((state) => state.auth.user);
-  let business = useSelector((state) => state.auth.business);
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
@@ -54,7 +42,7 @@ const BusinessProfile = (props) => {
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">Departments</p>
-            {business && (
+            {user.business && (
               <i
                 onClick={() => {
                   setOpen(true);
@@ -83,7 +71,7 @@ const BusinessProfile = (props) => {
                   positions
                 </p>
                 <div>
-                  {business && (
+                  {user.business && (
                     <button
                       onClick={() => {
                         setOpen(true);
@@ -116,4 +104,4 @@ const BusinessProfile = (props) => {
   );
 };
 
-export default BusinessProfile;
+export default DepartmentPicker;

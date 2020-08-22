@@ -1,6 +1,6 @@
 from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
 from rest_framework import viewsets, permissions
-from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer
+from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, ShiftListSerializer, EmployeeListSerializer
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -31,6 +31,20 @@ class BusinessViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Business.objects.filter(owner=self.request.user)
 
+class ShiftListViewSet(viewsets.ModelViewSet):
+    
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = ShiftListSerializer
+    queryset = Shift.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = ShiftFilter
+    ordering_fields = ('date', 'start_time')
 
 class ShiftViewSet(viewsets.ModelViewSet):
     
@@ -69,38 +83,54 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     filter_class = EmployeeFilter
     ordering_fields = ('first_name',)
 
+class EmployeeListViewSet(viewsets.ModelViewSet):
+    
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = EmployeeListSerializer
+
+    queryset = Employee.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = EmployeeFilter
+    ordering_fields = ('first_name',)
+
 class PositionFilter(django_filters.FilterSet):
     department = django_filters.NumberFilter()
+    department__business = django_filters.NumberFilter()
     class Meta:
         model = Position
-        fields = ['department']
+        fields = ['department', 'department__business']
+
+def clearEmployees(position):
+    employees = Employee.objects.filter(position=position)
+    for i in employees:
+        if len(i.position.all()) <= 1:
+            i.delete()
+        else:
+            shifts = Shift.objects.filter(employee=i)
+            for j in shifts:
+                if j.department == position.department:
+                    j.delete()
 
 class PositionViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = PositionSerializer
-    def get_queryset(self):
-        return self.request.user.positions.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
-        employees = Employee.objects.filter(position=self.get_object())
-        for i in employees:
-            if len(i.position.all()) <= 1:
-                i.delete()
-            else:
-                shifts = Shift.objects.filter(employee=i)
-                for j in shifts:
-                    if j.department == self.get_object().department:
-                        j.delete()
+        clearEmployees(self.get_object())
         return super(PositionViewSet, self).destroy(request, *args, **kwargs)
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = PositionFilter
-
     queryset = Position.objects.all()
     
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -110,7 +140,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = DepartmentSerializer
     def get_queryset(self):
-        if self.request.user.profile.role != "Business":
+        if not hasattr(self.request.user, "business"):
             return Department.objects.filter(pos_department__position__user=self.request.user).distinct()
         else:
             return self.request.user.departments.all()
@@ -118,6 +148,15 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+    def destroy(self, request, *args, **kwargs):
+        positions = Position.objects.filter(department=self.get_object().id)
+        for i in positions:
+            clearEmployees(i)
+            i.delete()
+            
+        return super(DepartmentViewSet, self).destroy(request, *args, **kwargs)
 
 
 class ShiftSwapFilter(django_filters.FilterSet):

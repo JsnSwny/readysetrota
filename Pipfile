@@ -21,6 +21,9 @@ whitenoise = "==5.0.1"
 Django = "==3.0.5"
 django-heroku = "*"
 django-xhtml2pdf = "*"
+redis = "*"
+celery = "*"
+gevent = "*"
 
 [requires]
 python_version = "3.7"

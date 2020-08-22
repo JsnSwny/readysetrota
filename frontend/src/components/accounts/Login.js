@@ -37,7 +37,7 @@ const Login = (props) => {
                     setUsername(e.target.value);
                   }}
                   value={username}
-                  autoComplete="username"
+                  autoComplete="email"
                 />
                 <p className="error">{errors.username}</p>
               </div>

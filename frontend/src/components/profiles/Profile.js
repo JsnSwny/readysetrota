@@ -7,6 +7,8 @@ import {
   updateAvailability,
   addAvailability,
   deleteAvailability,
+  getDepartments,
+  getPositions,
 } from "../../actions/employees";
 import { useParams, Redirect } from "react-router-dom";
 import {
@@ -23,12 +25,15 @@ import {
 } from "date-fns";
 import Pagination from "./Pagination";
 import DepartmentPicker from "./DepartmentPicker";
+import PositionPicker from "./PositionPicker";
+import StaffPicker from "./StaffPicker";
 import { toast } from "react-toastify";
 
 const Profile = (props) => {
+  const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
   let user = useSelector((state) => state.auth.user);
-  let permissions = user.all_permissions;
+  let business = useSelector((state) => state.auth.business);
   let swap_requests = useSelector((state) => state.shifts.swap_requests);
   let { id } = useParams();
   let availability = useSelector((state) => state.employees.availability);
@@ -36,10 +41,12 @@ const Profile = (props) => {
   const [dateRange, setDateRange] = useState([]);
   const [currentSelector, setCurrentSelector] = useState("unselected");
   let employees = useSelector((state) => state.employees.employees);
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
-
   let employee = {};
   let id_param = id;
 
@@ -58,7 +65,18 @@ const Profile = (props) => {
   let shifts = useSelector((state) => state.shifts.user_shifts);
 
   useEffect(() => {
+    dispatch(getDepartments());
     dispatch(getEmployees());
+    dispatch(getPositions(true));
+    dispatch(getPositions());
+  }, [currentDepartment]);
+
+  useEffect(() => {
+    dispatch(getPositions(true));
+    dispatch(getPositions());
+  }, [currentBusiness]);
+
+  useEffect(() => {
     if (!id_param) {
       dispatch(getShiftsByID(id, true));
       dispatch(getSwapRequests(id));
@@ -109,7 +127,7 @@ const Profile = (props) => {
     return true;
   }
 
-  if (!user.business && id_param) {
+  if (!business && id_param) {
     return <Redirect to="" />;
   }
   return (
@@ -124,7 +142,7 @@ const Profile = (props) => {
           </h1>
           {employee && employee.user && (
             <small className="dashboard__contact">
-              <i class="fas fa-envelope"></i>
+              <i className="fas fa-envelope"></i>
               {employee.user.email}
             </small>
           )}
@@ -137,6 +155,20 @@ const Profile = (props) => {
         </div>
       </div>
       {!id_param && <DepartmentPicker />}
+      {!id_param && currentDepartment != 0 && business && (
+        <PositionPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+        />
+      )}
+      {!id_param && currentDepartment != 0 && business && (
+        <StaffPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+        />
+      )}
       {currentDepartment != 0 && (
         <div className="dashboard container-2">
           <div className="dashboard__block">
@@ -145,7 +177,7 @@ const Profile = (props) => {
               <a
                 className="btn-4"
                 target="_blank"
-                href={`/export?id=${employee.id}`}
+                href={`/export?id=${employee && employee.id}`}
               >
                 Export Shifts as PDF
               </a>
@@ -162,8 +194,7 @@ const Profile = (props) => {
 
                 {currentShifts.map((item) => (
                   <Fragment key={item.id}>
-                    {!item.published &&
-                    !permissions.includes("can_view_unpublished_shifts") ? (
+                    {!item.published && !business ? (
                       ""
                     ) : (
                       <div
@@ -437,7 +468,7 @@ const Profile = (props) => {
                         </p>
                       </div>
 
-                      <i class="fas fa-exchange-alt"></i>
+                      <i className="fas fa-exchange-alt"></i>
                       <div
                         className={`dashboard__request ${
                           request.swap_to.employee[0].user.id == user.id

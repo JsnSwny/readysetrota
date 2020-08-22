@@ -14,8 +14,11 @@ from django.http import HttpResponse, FileResponse
 from django import template
 from django.core import mail
 from django.template.loader import render_to_string
+from .tasks import publish_email
+
 
 # Create your views here.
+
 class CheckUUID(APIView):
     def get(self, request, *args, **kwargs):
         try:
@@ -42,58 +45,19 @@ class GetPopularTimes(APIView):
         most_common = shifts.values("start_time", "end_time", "owner").annotate(count=Count('start_time')).order_by("-count")[:10]
         return Response(most_common)
 
+
 class Publish(APIView):
     def get(self, request):
-        connection = mail.get_connection()
-        first_day = datetime.today()  - timedelta(days=datetime.today().weekday() % 7)
-        last_day = first_day + timedelta(days=6)
-        delta = timedelta(days=1)
-        
-
         shifts = Shift.objects.filter(owner=self.request.user, published=False)
-        shifts_sorted = sorted(shifts, key = attrgetter("employee.id"))
-        shifts_unique = [list(grp) for k, grp in groupby(shifts_sorted, attrgetter("employee.id"))]
-        email = []
-        today_date = datetime.now().strftime("%d/%m/%Y")
+        shifts_list = list(shifts.values_list('pk', flat=True))
         
-        connection.open()
-
-        for idx, val in enumerate(shifts_unique):
-            
-            employee = shifts_unique[idx][0].employee
-            
-            all_shifts = Shift.objects.filter(employee=employee, date__gte=first_day, date__lte=last_day)
-            
-            body = "Your rota has been updated\n\n"
-            for shift in sorted(shifts_unique[idx], key = attrgetter("date")):
-                body += f'{shift.date.strftime("%d %B %Y")}\n{str(shift.start_time)[0:5]} - {shift.end_time}\n\n'
-
-            body += "Your shifts for this week:\n\n"
-            while first_day <= last_day:
-                body += first_day.strftime("%d %B %Y") + "\n"
-                daily_shifts = Shift.objects.filter(employee=employee, date=first_day)
-                for i in daily_shifts:
-                    body += f'{str(i.start_time)[0:5]} - {i.end_time} \n'
-                first_day += delta
-                body += "\n\n"
-            
-
-            body += "\n\nView your rota at www.readysetrota.com"
-            if employee.user:
-                shifts = Shift.objects.filter(employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
-                html_message = render_to_string("emailshifts.html", context = {'shifts': shifts, 'employee': employee})
-                mail_item = mail.EmailMultiAlternatives("Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
-                mail_item.attach_alternative(html_message, "text/html")
-                email.append(mail_item)
+        publish_email.delay(shifts_list)
 
         for i in shifts:
             i.published = True
             i.save()
-        connection.send_messages(email)
-        connection.close()
 
         ids = (o.id for o in shifts)
-        
         return Response(ids)
     
 class ExportShifts(APIView):

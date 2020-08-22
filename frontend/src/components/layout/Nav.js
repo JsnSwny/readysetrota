@@ -64,7 +64,7 @@ const Nav = () => {
                 <Link to="/rota">
                   <li>Rota</li>
                 </Link>
-                {user && user.profile.role != "Business" && (
+                {user && !user.business && (
                   <Link to="/join">
                     <li>Join</li>
                   </Link>
@@ -105,7 +105,7 @@ const Nav = () => {
               Rota
             </li>
           </Link>
-          {user && user.profile.role != "Business" && (
+          {user && !user.business && (
             <Link to="/join">
               <li
                 onClick={() => {

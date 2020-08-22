@@ -40,13 +40,15 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {});
+    .catch((err) => {
+      console.log(err.response);
+    });
 };
 
 export const getEmployees = () => (dispatch, getState) => {
   axios
     .get(
-      `/api/employees/?position__department=${
+      `/api/employeelist/?position__department=${
         getState().employees.current_department
       }&ordering=first_name`,
       tokenConfig(getState)
@@ -114,19 +116,21 @@ export const getPositions = (all = false) => (dispatch, getState) => {
   axios
     .get(
       `/api/positions/${
-        all ? `?department=${getState().employees.current_department}` : ""
+        all
+          ? `?department__business=${getState().employees.current_business}`
+          : `?department=${getState().employees.current_department}`
       }`,
       tokenConfig(getState)
     )
     .then((res) => {
       if (all) {
         dispatch({
-          type: GET_POSITIONS,
+          type: GET_ALL_POSITIONS,
           payload: res.data,
         });
       } else {
         dispatch({
-          type: GET_ALL_POSITIONS,
+          type: GET_POSITIONS,
           payload: res.data,
         });
       }
@@ -149,7 +153,6 @@ export const deletePosition = (id) => (dispatch, getState) => {
 
 // Add Employee
 export const addPosition = (position) => (dispatch, getState) => {
-  position.department_id = getState().employees.current_department;
   axios
     .post("/api/positions/", position, tokenConfig(getState))
     .then((res) => {
@@ -160,6 +163,7 @@ export const addPosition = (position) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
     .catch((err) => {
+      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
@@ -181,6 +185,7 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
 
 // Add Employee
 export const addDepartment = (department) => (dispatch, getState) => {
+  console.log(department);
   axios
     .post("/api/departments/", department, tokenConfig(getState))
     .then((res) => {
@@ -191,6 +196,7 @@ export const addDepartment = (department) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
     .catch((err) => {
+      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
@@ -206,7 +212,7 @@ export const updateDepartment = (id, department) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch();
+    .catch((err) => console.log(err.response));
 };
 
 // Delete Position
@@ -220,6 +226,7 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
       });
       dispatch(getEmployees());
       dispatch(getPositions(true));
+      dispatch(getPositions());
     })
     .catch((error) => {});
 };

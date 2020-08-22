@@ -15,6 +15,8 @@ class Department(models.Model):
     def __str__(self):
         return f'{self.name} - {self.owner}'
     owner = models.ForeignKey(User, related_name="departments", on_delete=models.CASCADE)
+    admins = models.ManyToManyField(User, related_name="department_admin", blank=True)
+    business = models.ForeignKey(Business, related_name="department_business", on_delete=models.CASCADE, null=True, blank=True)
 
 class Position(models.Model):
     name = models.CharField(max_length=100)
@@ -22,6 +24,7 @@ class Position(models.Model):
         return f'{self.name} - {self.department.owner}'
     owner = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
     department = models.ForeignKey(Department, related_name="pos_department", on_delete=models.CASCADE)
+    business = models.ForeignKey(Business, related_name="position_business", on_delete=models.CASCADE, null=True, blank=True)
 
 class Employee(models.Model):
     first_name = models.CharField(max_length=25)

@@ -29,12 +29,16 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = ('__all__')
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ('id', 'name',)
+
         # User Serializer
 class UserSerializer(serializers.ModelSerializer):
-    profile = UserProfileSerializer()
     business = BusinessSerializer()
     all_permissions = serializers.SerializerMethodField()
-
+    department_admin = DepartmentSerializer(read_only=True, many=True)
     def get_all_permissions(self, obj):
         permissions = []
         for i in obj.groups.all():
@@ -46,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
          
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business')
+        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
         depth = 3
 
 
