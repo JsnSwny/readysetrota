@@ -10,7 +10,7 @@ from itertools import groupby
 from datetime import datetime, timedelta
 
 @shared_task
-def publish_email(shifts_list, id):
+def publish_email(shifts_list, owner_id):
     new_shifts = Shift.objects.filter(id__in=shifts_list)
     connection = mail.get_connection()
     shifts_sorted = sorted(new_shifts, key = attrgetter("employee.id"))
@@ -30,5 +30,5 @@ def publish_email(shifts_list, id):
 
     connection.send_messages(email)
     connection.close()
-    return id
+    return owner_id
 
