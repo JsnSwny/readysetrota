@@ -56,7 +56,7 @@ class Publish(APIView):
         print(shifts)
         print(self.request.user)
         
-        publish_email.delay(shifts_list, self.request.user.id)
+        publish_email.delay(shifts_list)
 
         for i in shifts:
             i.published = True
