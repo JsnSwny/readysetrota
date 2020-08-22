@@ -22,6 +22,7 @@ import {
   DELETE_AVAILABILITY,
   USER_LOADED,
   LOGIN_SUCCESS,
+  REGISTER_SUCCESS,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 
@@ -52,6 +53,8 @@ export default function (state = initialState, action) {
           : "",
       };
     case LOGIN_SUCCESS:
+    case USER_LOADED:
+    case REGISTER_SUCCESS:
       return {
         ...state,
         current_business: action.payload.user.business
