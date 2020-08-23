@@ -15,6 +15,13 @@ class BasicUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name', 'business')
 
+class BasicDepartmentSerializer(serializers.ModelSerializer):
+    business = BusinessSerializer(read_only=True)
+    class Meta:
+        model = Department
+        fields = ('id', 'name', 'business',)
+        depth = 1
+
 class DepartmentSerializer(serializers.ModelSerializer):
     admins = BasicUserSerializer(read_only=True, many=True)
     admins_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='admins', write_only=True, many=True, required=False)
@@ -68,10 +75,10 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
         depth = 1
 
 class ShiftListSerializer(serializers.ModelSerializer):
-    
+    department = BasicDepartmentSerializer(read_only=True)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department',)
         depth = 1
 
 class ShiftSerializer(serializers.ModelSerializer):

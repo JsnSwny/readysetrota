@@ -221,7 +221,7 @@ const Profile = (props) => {
                         </p>
                         <p className="short extra">{item.department.name}</p>
                         <p className="short extra">
-                          {item.department.owner.business.name}
+                          {item.department.business.name}
                         </p>
                       </div>
                     )}

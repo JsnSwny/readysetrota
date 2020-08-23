@@ -45,7 +45,7 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
 export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shifts/?date_after=${format(new Date(), "YYY-MM-dd")}${
+      `/api/shiftlist/?date_after=${format(new Date(), "YYY-MM-dd")}${
         user ? "&employee__user__id=" + id : "&employee=" + id
       }&ordering=date,start_time`,
       tokenConfig(getState)
