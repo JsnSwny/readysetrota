@@ -32,7 +32,7 @@ class Employee(models.Model):
     position = models.ManyToManyField(Position, related_name="position", blank=True)
     def __str__(self):
         return self.first_name + " " + self.last_name
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="employee")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="employee")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User, related_name="employees", on_delete=models.CASCADE, blank=True)
     business = models.ForeignKey(Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
