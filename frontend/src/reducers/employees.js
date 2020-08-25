@@ -106,7 +106,7 @@ export default function (state = initialState, action) {
         ...state,
         departments: action.payload,
         current_business:
-          action.payload.length > 0
+          state.current_department > 0 && action.payload.length > 0
             ? action.payload.filter(
                 (item) => item.id == parseInt(state.current_department)
               )[0].business.id
@@ -123,11 +123,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         current_department: action.payload,
-        current_business:
-          state.departments.length > 0
-            ? state.departments.filter((item) => item.id == action.payload)[0]
-                .business.id
-            : state.current_business,
       };
     case ADD_EMPLOYEE:
       if (
