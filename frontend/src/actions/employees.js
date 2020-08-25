@@ -22,10 +22,13 @@ import {
   ADD_AVAILABILITY,
   UPDATE_AVAILABILITY,
   DELETE_AVAILABILITY,
+  GET_HOLIDAYS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
 import { loadUser } from "./auth";
+
+import { format } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
@@ -280,7 +283,10 @@ export const uuidReset = () => (dispatch, getState) => {
 // Get Department
 export const getAvailability = (employee) => (dispatch, getState) => {
   axios
-    .get(`/api/availability/?employee__id=${employee}`, tokenConfig(getState))
+    .get(
+      `/api/availability/?employee__id=${employee}&ordering=date`,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: GET_AVAILABILITY,
@@ -289,13 +295,30 @@ export const getAvailability = (employee) => (dispatch, getState) => {
     });
 };
 
-export const getAllAvailability = (owner_id, startdate, enddate) => (
+export const getAllAvailability = (business, startdate, enddate) => (
   dispatch,
   getState
 ) => {
   axios
     .get(
-      `/api/availability/?employee__owner__id=${owner_id}&date_after=${startdate}&date_before=${enddate}`,
+      `/api/availability/?employee__business=${business}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_AVAILABILITY,
+        payload: res.data,
+      });
+    });
+};
+
+export const getHolidays = (business) => (dispatch, getState) => {
+  axios
+    .get(
+      `/api/availability/?employee__business=${business}&date_after=${format(
+        new Date(),
+        "YYY-MM-dd"
+      )}&name=holiday&ordering=date`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -343,5 +366,5 @@ export const updateAvailability = (id, obj) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch();
+    .catch((err) => console.log(err.response));
 };

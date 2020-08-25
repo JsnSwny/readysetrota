@@ -108,6 +108,7 @@ const AddStaff = (props) => {
         first_name: firstName,
         last_name: lastName,
         position_id: position,
+        business_id: currentBusiness,
       };
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {

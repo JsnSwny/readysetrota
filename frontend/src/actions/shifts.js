@@ -108,12 +108,19 @@ export const deleteShift = (id) => (dispatch, getState) => {
 
 // Get Popular Times
 export const getPopularTimes = () => (dispatch, getState) => {
-  axios.get(`/api-view/getpopulartimes`, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_POPULAR_TIMES,
-      payload: res.data,
+  axios
+    .get(
+      `/api-view/getpopulartimes?department=${
+        getState().employees.current_department
+      }`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_POPULAR_TIMES,
+        payload: res.data,
+      });
     });
-  });
 };
 
 // Get Popular Times

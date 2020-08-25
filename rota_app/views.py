@@ -41,18 +41,19 @@ class CheckUUID(APIView):
 
 class GetPopularTimes(APIView):
     def get(self, request):
-        shifts = Shift.objects.filter(owner=self.request.user)
-        most_common = shifts.values("start_time", "end_time", "owner").annotate(count=Count('start_time')).order_by("-count")[:10]
+        department_id = request.query_params.get('department')
+        shifts = Shift.objects.filter(department=department_id)
+        most_common = shifts.values("start_time", "end_time", "department").annotate(count=Count('start_time')).order_by("-count")[:10]
         return Response(most_common)
 
 
 class Publish(APIView):
     def get(self, request):
-        shifts = Shift.objects.filter(owner=self.request.user, published=False)
+        all_shifts = Shift.objects.filter(owner=self.request.user, published=False)
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
         connection = mail.get_connection()
-        shifts_sorted = sorted(shifts, key = attrgetter("employee.id"))
+        shifts_sorted = sorted(all_shifts, key = attrgetter("employee.id"))
         shifts_unique = [list(grp) for k, grp in groupby(shifts_sorted, attrgetter("employee.id"))]
         email = []
         today_date = datetime.now().strftime("%d/%m/%Y")
@@ -71,11 +72,11 @@ class Publish(APIView):
         connection.close()
         # publish_email.delay(shifts_list)
 
-        for i in shifts:
+        for i in all_shifts:
             i.published = True
             i.save()
 
-        ids = (o.id for o in shifts)
+        ids = (o.id for o in all_shifts)
         return Response(ids)
     
 class ExportShifts(APIView):

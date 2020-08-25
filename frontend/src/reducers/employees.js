@@ -23,6 +23,7 @@ import {
   USER_LOADED,
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
+  GET_HOLIDAYS,
 } from "../actions/types";
 import { format, addDays } from "date-fns";
 

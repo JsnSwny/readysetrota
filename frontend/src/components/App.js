@@ -21,6 +21,7 @@ import { setWidth } from "../actions/responsive";
 import ChangePassword from "./accounts/ChangePassword";
 import Profile from "./profiles/Profile";
 import EnterID from "./common/EnterID";
+import Landing from "./landing/Landing";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,6 +52,7 @@ const App = () => {
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={Profile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
+            <Route path="/landing" component={Landing} />
           </Switch>
         </div>
       </Router>

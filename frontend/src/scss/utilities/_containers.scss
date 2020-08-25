@@ -19,3 +19,21 @@
   width: 80%;
   margin: 0 auto;
 }
+
+.flex {
+  display: flex;
+  &-space-between {
+    @extend .flex;
+    justify-content: space-between;
+  }
+  &-space-around {
+    @extend .flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    @include wi-mq(tablet) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

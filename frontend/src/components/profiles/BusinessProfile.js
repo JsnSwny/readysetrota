@@ -4,10 +4,12 @@ import {
   getEmployees,
   getDepartments,
   getPositions,
+  getHolidays,
 } from "../../actions/employees";
 import DepartmentPicker from "./DepartmentPicker";
 import PositionPicker from "./PositionPicker";
 import StaffPicker from "./StaffPicker";
+import HolidayRequest from "./HolidayRequest";
 
 const BusinessProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -19,11 +21,14 @@ const BusinessProfile = (props) => {
     (state) => state.employees.current_department
   );
 
+  let holidays = useSelector((state) => state.employees.availability);
+
   useEffect(() => {
     dispatch(getDepartments());
     dispatch(getEmployees());
     dispatch(getPositions(true));
     dispatch(getPositions());
+    dispatch(getHolidays(currentBusiness));
   }, [currentDepartment]);
 
   useEffect(() => {
@@ -75,6 +80,9 @@ const BusinessProfile = (props) => {
           setType={setType}
         />
       )}
+      <div className="container-2">
+        <HolidayRequest holidays={holidays} business={true} />
+      </div>
     </Fragment>
   );
 };

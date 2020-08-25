@@ -173,6 +173,9 @@
       &.unavailable {
         background-color: $red;
       }
+      &.holiday {
+        background-color: #46cdda;
+      }
     }
   }
 }
@@ -237,8 +240,14 @@
     &.partial {
       background-color: $yellow;
     }
+    &.holiday {
+      background-color: #46cdda;
+    }
     &.unavailable {
       background-color: $red;
+    }
+    &.not-approved {
+      background-color: $red !important;
     }
   }
   &__wrapper {

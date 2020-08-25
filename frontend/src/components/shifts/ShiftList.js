@@ -44,11 +44,15 @@ const ShiftList = () => {
     (state) => state.employees.current_department
   );
 
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
+
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
   const updateShifts = (start_date, end_date) => {
-    dispatch(getAllAvailability(user.id, start_date, end_date));
+    dispatch(getAllAvailability(currentBusiness, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
   };
 
@@ -166,6 +170,7 @@ const ShiftList = () => {
         name: available.name,
         start: available.start_time,
         end: available.end_time,
+        approved: available.approved,
       };
     }
   };
@@ -316,6 +321,14 @@ const ShiftList = () => {
                         isAvailable(employee.id, format(result, "YYY-MM-dd"))
                           .name
                       } ${
+                        showAvailabilities &&
+                        isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                          .name == "holiday" &&
+                        !isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                          .approved
+                          ? "not-approved"
+                          : ""
+                      } ${
                         filterDate == format(result, "YYY-MM-dd")
                           ? "filtered"
                           : ""
@@ -337,6 +350,20 @@ const ShiftList = () => {
                               ).name
                             }
                           </p>
+                          {console.log(
+                            isAvailable(
+                              employee.id,
+                              format(result, "YYY-MM-dd")
+                            )
+                          )}
+                          {isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                            .name == "holiday" &&
+                            isAvailable(
+                              employee.id,
+                              format(result, "YYY-MM-dd")
+                            ).approved != true && (
+                              <p className="shift__text">Not Approved</p>
+                            )}
                           {isAvailable(employee.id, format(result, "YYY-MM-dd"))
                             .start && (
                             <p className="shift__text">

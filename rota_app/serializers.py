@@ -56,7 +56,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
     owner = UserSerializer(read_only=True)
     user = UserSerializer(read_only=True)
-
+    business = BusinessSerializer(read_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Employee
         fields = ('__all__')
@@ -64,9 +65,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class EmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
+    business = BusinessSerializer(read_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position',)
+        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id',)
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
     class Meta:

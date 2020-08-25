@@ -28,6 +28,7 @@ import DepartmentPicker from "./DepartmentPicker";
 import PositionPicker from "./PositionPicker";
 import StaffPicker from "./StaffPicker";
 import { toast } from "react-toastify";
+import HolidayRequest from "./HolidayRequest";
 
 const Profile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -351,6 +352,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("unselected");
+                    toast.info("Reset Selected");
                   }}
                   className={`dashboard__dates-colours-item gray ${
                     currentSelector == "unselected" ? "current" : ""
@@ -359,6 +361,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("available");
+                    toast.info("Available Selected");
                   }}
                   className={`dashboard__dates-colours-item green ${
                     currentSelector == "available" ? "current" : ""
@@ -367,6 +370,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("partial");
+                    toast.info("Partially Available Selected");
                   }}
                   className={`dashboard__dates-colours-item yellow ${
                     currentSelector == "partial" ? "current" : ""
@@ -375,9 +379,19 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("unavailable");
+                    toast.info("Unavailable Selected");
                   }}
                   className={`dashboard__dates-colours-item red ${
                     currentSelector == "unavailable" ? "current" : ""
+                  } `}
+                ></span>
+                <span
+                  onClick={() => {
+                    setCurrentSelector("holiday");
+                    toast.info("Holiday Selected");
+                  }}
+                  className={`dashboard__dates-colours-item blue ${
+                    currentSelector == "holiday" ? "current" : ""
                   } `}
                 ></span>
               </div>
@@ -390,6 +404,7 @@ const Profile = (props) => {
                 <span className="dashboard__dates-colours-text">
                   Unavailable
                 </span>
+                <span className="dashboard__dates-colours-text">Holiday</span>
               </div>
               {currentSelector == "partial" && (
                 <div className="dashboard__dates-times">
@@ -435,6 +450,9 @@ const Profile = (props) => {
                 </div>
               )}
             </div>
+            <HolidayRequest
+              holidays={availability.filter((item) => item.name == "holiday")}
+            />
 
             {/* <div className="dashboard__block--half">
               <div className="dashboard__block-title-container">
