@@ -59,7 +59,7 @@ class ShiftSwap(models.Model):
     shift_from = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="shift_from")
     shift_to = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="shift_to")
     employee_approved = models.BooleanField(null=True)
-    admin_approved = models.BooleanField(null=True)
+    admin_approved = models.BooleanField(null=True) 
     created_at = models.DateTimeField(auto_now_add=True) 
 
 class Availability(models.Model):
