@@ -116,11 +116,15 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 };
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {
+  let currentBusiness = getState().employees.current_business;
+  if (all && !currentBusiness) {
+    return false;
+  }
   axios
     .get(
       `/api/positions/${
         all
-          ? `?department__business=${getState().employees.current_business}`
+          ? `?department__business=${currentBusiness}`
           : `?department=${getState().employees.current_department}`
       }`,
       tokenConfig(getState)
