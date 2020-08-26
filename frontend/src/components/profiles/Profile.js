@@ -311,6 +311,15 @@ const Profile = (props) => {
                               "You cannot set availability for a date before the current date!"
                             );
                           } else if (
+                            currentSelector == "unselected" &&
+                            !availability.some(
+                              (item) => item.date == format(date, "YYY-MM-dd")
+                            )
+                          ) {
+                            toast.warning(
+                              "You can't reset a date that doesn't have a value!"
+                            );
+                          } else if (
                             currentSelector == "partial" &&
                             !(startTime && endTime)
                           ) {
