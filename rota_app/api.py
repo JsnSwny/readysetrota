@@ -197,7 +197,7 @@ class AvailabilityFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
     class Meta:
         model = Availability
-        fields = ['employee__id', 'employee__owner__id', 'employee__business', 'date', 'name']
+        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'employee__business', 'date', 'name']
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
     permission_classes = [

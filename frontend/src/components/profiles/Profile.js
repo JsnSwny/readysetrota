@@ -103,7 +103,7 @@ const Profile = (props) => {
   useEffect(() => {
     if (employee) {
       dispatch(getAvailability(employee.id, employee.business.id));
-      dispatch(getHolidays(employee.business.id, employee.id));
+      dispatch(getHolidays(employee.business.id, employee.user.id));
     }
   }, [employee]);
 
