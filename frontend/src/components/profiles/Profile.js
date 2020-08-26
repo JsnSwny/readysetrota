@@ -23,6 +23,7 @@ import {
   endOfWeek,
   addMonths,
   differenceInWeeks,
+  differenceInDays,
 } from "date-fns";
 import Pagination from "./Pagination";
 import DepartmentPicker from "./DepartmentPicker";
@@ -102,8 +103,9 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (employee) {
+      let employee_user = id_param ? employee.user : employee.user.id;
       dispatch(getAvailability(employee.id, employee.business.id));
-      dispatch(getHolidays(employee.business.id, employee.user.id));
+      dispatch(getHolidays(employee.business.id, employee_user));
     }
   }, [employee]);
 
@@ -300,9 +302,9 @@ const Profile = (props) => {
                                 : null,
                             business_id: currentBusiness,
                           };
-                          if (differenceInWeeks(date, new Date()) > 8) {
+                          if (differenceInDays(date, new Date()) > 365) {
                             toast.warning(
-                              "Availability dates must be selected within 8 weeks from the current date!"
+                              "Availability dates must be selected within 365 days!"
                             );
                           } else if (date < new Date()) {
                             toast.warning(
