@@ -21,7 +21,7 @@ const BusinessProfile = (props) => {
     (state) => state.employees.current_department
   );
 
-  let holidays = useSelector((state) => state.employees.availability);
+  let holidays = useSelector((state) => state.employees.holidays);
 
   useEffect(() => {
     dispatch(getDepartments());

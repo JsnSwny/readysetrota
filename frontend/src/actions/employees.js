@@ -192,7 +192,6 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
 
 // Add Employee
 export const addDepartment = (department) => (dispatch, getState) => {
-  console.log(department);
   axios
     .post("/api/departments/", department, tokenConfig(getState))
     .then((res) => {
@@ -285,10 +284,10 @@ export const uuidReset = () => (dispatch, getState) => {
 };
 
 // Get Department
-export const getAvailability = (employee) => (dispatch, getState) => {
+export const getAvailability = (employee, business) => (dispatch, getState) => {
   axios
     .get(
-      `/api/availability/?employee__id=${employee}&ordering=date`,
+      `/api/availability/?employee__id=${employee}&business=${business}&ordering=date`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -316,10 +315,12 @@ export const getAllAvailability = (business, startdate, enddate) => (
     });
 };
 
-export const getHolidays = (business) => (dispatch, getState) => {
+export const getHolidays = (business, user = false) => (dispatch, getState) => {
   axios
     .get(
-      `/api/availability/?employee__business=${business}&date_after=${format(
+      `/api/availability/${
+        user ? `?employee__user__id=${user}` : `?employee__business=${business}`
+      }&date_after=${format(
         new Date(),
         "YYY-MM-dd"
       )}&name=holiday&ordering=date`,
@@ -327,7 +328,7 @@ export const getHolidays = (business) => (dispatch, getState) => {
     )
     .then((res) => {
       dispatch({
-        type: GET_AVAILABILITY,
+        type: GET_HOLIDAYS,
         payload: res.data,
       });
     });

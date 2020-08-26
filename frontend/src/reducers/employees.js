@@ -33,6 +33,7 @@ weekFromDate = format(weekFromDate, "YYY-MM-dd");
 
 const initialState = {
   availability: [],
+  holidays: [],
   employees: [],
   positions: [],
   all_positions: [],
@@ -67,10 +68,19 @@ export default function (state = initialState, action) {
         ...state,
         availability: action.payload,
       };
+    case GET_HOLIDAYS:
+      return {
+        ...state,
+        holidays: action.payload,
+      };
     case ADD_AVAILABILITY:
       return {
         ...state,
         availability: [...state.availability, action.payload],
+        holidays:
+          action.payload.name == "holiday"
+            ? [...state.holidays, action.payload]
+            : state.holidays,
       };
     case UPDATE_AVAILABILITY:
       return {
@@ -78,11 +88,19 @@ export default function (state = initialState, action) {
         availability: state.availability.map((item) =>
           item.id === action.payload.id ? action.payload : item
         ),
+        holidays: state.holidays.map((item) =>
+          item.id === action.payload.id
+            ? action.payload.name == "holiday" && action.payload
+            : item
+        ),
       };
     case DELETE_AVAILABILITY:
       return {
         ...state,
         availability: state.availability.filter(
+          (available) => available.id !== action.payload
+        ),
+        holidays: state.holidays.filter(
           (available) => available.id !== action.payload
         ),
       };

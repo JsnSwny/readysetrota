@@ -350,12 +350,6 @@ const ShiftList = () => {
                               ).name
                             }
                           </p>
-                          {console.log(
-                            isAvailable(
-                              employee.id,
-                              format(result, "YYY-MM-dd")
-                            )
-                          )}
                           {isAvailable(employee.id, format(result, "YYY-MM-dd"))
                             .name == "holiday" &&
                             isAvailable(

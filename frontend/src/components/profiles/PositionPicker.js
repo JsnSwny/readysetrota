@@ -35,17 +35,18 @@ const PositionPicker = (props) => {
                   }{" "}
                   employees
                 </p>
-
-                <button
-                  onClick={() => {
-                    setOpen(true);
-                    setUpdate(item);
-                    setType("Position");
-                  }}
-                  className="btn-4"
-                >
-                  Edit
-                </button>
+                <div className="btn-wrapper">
+                  <button
+                    onClick={() => {
+                      setOpen(true);
+                      setUpdate(item);
+                      setType("Position");
+                    }}
+                    className="btn-4"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             ))}
           </div>

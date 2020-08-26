@@ -19,6 +19,9 @@ const UpdateDate = (props) => {
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
   let user = useSelector((state) => state.auth.user);
   let current_employee = user.employee.filter((employee) =>
     employee.position.some((item) => item.department.id == currentDepartment)
@@ -48,11 +51,7 @@ const UpdateDate = (props) => {
               href={`/exportall?start_date=${date}&end_date=${format(
                 addDays(parseISO(date), 6),
                 "YYY-MM-dd"
-              )}&id=${
-                user.groups.some((item) => item.name == "Business")
-                  ? user.id
-                  : current_employee.owner.id
-              }`}
+              )}&id=${currentBusiness}`}
               target="_blank"
             >
               <button className="btn-3">Export Shifts</button>

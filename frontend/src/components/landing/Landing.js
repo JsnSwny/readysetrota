@@ -45,17 +45,22 @@ const Landing = () => {
           <div className="landing__about">
             <img src="/static/media/about.jpg" />
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare in
-              duis egestas duis vulputate mi felis id massa. Elit massa nunc
-              turpis odio et ipsum sit. Lorem mattis morbi elementum quis et
-              ullamcorper. Velit hendrerit iaculis in donec donec viverra. Sit
-              id mauris integer pellentesque. Felis, nisl sagittis feugiat sit
-              facilisis sed congue in. Sed urna, dictum arcu cursus feugiat.
-              Ullamcorper gravida facilisi in gravida mattis arcu. Viverra lorem
-              dignissim massa egestas urna massa. Ut diam leo aliquam eget
-              tortor mauris, vitae velit. Aliquam cras id faucibus id. Sed
-              vestibulum, hendrerit elementum non vel. Leo egestas in ante
-              integer.
+              My name is Jason Sweeney and I am a 21 year old computer science
+              student based in Edinburgh. For the last 3 years I have worked in
+              hospitality and have always felt that there should be a much
+              easier way to create and receive my schedule.
+              <br />
+              <br />
+              So in March 2020, during lockdown I began readysetrota, an easy to
+              use application which aims to simplify the way businesses make
+              their rotas. I wanted to give as much control and information to
+              the users in as few pages as possible.
+              <br />
+              <br />
+              From registering to having all of your positions, staff and shifts
+              created can take only minutes. I want to continue to build and
+              grow readysetrota as a must have application for any business that
+              relies on managing rotas.
             </p>
           </div>
         </div>

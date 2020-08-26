@@ -46,7 +46,7 @@ const StaffPicker = (props) => {
                   )}
                 </p>
                 {item.user != user.id && (
-                  <div>
+                  <div className="btn-wrapper">
                     <button
                       onClick={() => {
                         setOpen(true);

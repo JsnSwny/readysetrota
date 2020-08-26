@@ -62,15 +62,8 @@ const DepartmentPicker = (props) => {
                 }`}
               >
                 <p className="title-md bold">{item.name}</p>
-                <p className="subtitle-sm">
-                  {
-                    positions.filter(
-                      (position) => position.department.id == item.id
-                    ).length
-                  }{" "}
-                  positions
-                </p>
-                <div>
+                <p className="subtitle-sm">{item.business.name}</p>
+                <div className="btn-wrapper">
                   {user.business && (
                     <button
                       onClick={() => {

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
 const Pagination = ({
   shiftsPerPage,
@@ -20,6 +20,12 @@ const Pagination = ({
             number < currentPage + 4
         )
       : pageNumbers;
+
+  useEffect(() => {
+    if (totalShifts > 0 && currentPage > pageNumbers.length) {
+      setCurrentPage(currentPage - 1);
+    }
+  }, [pageNumbers]);
 
   return (
     pageNumbers.length > 1 && (

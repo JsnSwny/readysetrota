@@ -70,6 +70,7 @@ class Availability(models.Model):
     info = models.TextField(blank=True, null=True)
     employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE)
     approved = models.BooleanField(null=True, blank=True)
+    business = models.ForeignKey(Business, related_name="availability_business", on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return f'{self.date} - {self.name} - {self.employee}'
 

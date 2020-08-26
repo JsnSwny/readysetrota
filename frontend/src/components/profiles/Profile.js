@@ -9,6 +9,7 @@ import {
   deleteAvailability,
   getDepartments,
   getPositions,
+  getHolidays,
 } from "../../actions/employees";
 import { useParams, Redirect } from "react-router-dom";
 import {
@@ -38,6 +39,7 @@ const Profile = (props) => {
   let swap_requests = useSelector((state) => state.shifts.swap_requests);
   let { id } = useParams();
   let availability = useSelector((state) => state.employees.availability);
+  let holidays = useSelector((state) => state.employees.holidays);
   const [availabilityMonth, setAvailabilityMonth] = useState(new Date());
   const [dateRange, setDateRange] = useState([]);
   const [currentSelector, setCurrentSelector] = useState("unselected");
@@ -100,7 +102,8 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (employee) {
-      dispatch(getAvailability(employee.id));
+      dispatch(getAvailability(employee.id, employee.business.id));
+      dispatch(getHolidays(employee.business.id, employee.id));
     }
   }, [employee]);
 
@@ -113,7 +116,6 @@ const Profile = (props) => {
   const indexOfLastShift = currentPage * shiftsPerPage;
   const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
   const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
-
   let minutes = ["00", "15", "30", "45"];
   let hours = [];
   for (let i = 0; i < 24; i++) {
@@ -170,18 +172,26 @@ const Profile = (props) => {
           setType={setType}
         />
       )}
+      {/* <div className="container-2">
+        {!id_param && currentDepartment != 0 && business && (
+          <HolidayRequest holidays={holidays} business={true} />
+        )}
+      </div> */}
+
       {currentDepartment != 0 && (
         <div className="dashboard container-2">
           <div className="dashboard__block">
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
-              <a
-                className="btn-4"
-                target="_blank"
-                href={`/export?id=${employee && employee.id}`}
-              >
-                Export Shifts as PDF
-              </a>
+              {currentShifts.length > 0 && (
+                <a
+                  className="btn-4"
+                  target="_blank"
+                  href={`/export?id=${employee && employee.id}`}
+                >
+                  Export Shifts as PDF
+                </a>
+              )}
             </div>
             {currentShifts.length > 0 ? (
               <div className="dashboard__block-container">
@@ -288,6 +298,7 @@ const Profile = (props) => {
                               currentSelector == "partial" && endTime
                                 ? endTime
                                 : null,
+                            business_id: currentBusiness,
                           };
                           if (differenceInWeeks(date, new Date()) > 8) {
                             toast.warning(
@@ -303,6 +314,14 @@ const Profile = (props) => {
                           ) {
                             toast.warning(
                               "You must set a start and end time when creating a partial availability!"
+                            );
+                          } else if (
+                            shifts.some(
+                              (item) => item.date == format(date, "YYY-MM-dd")
+                            )
+                          ) {
+                            toast.warning(
+                              "You already have a shift for this date!"
                             );
                           } else {
                             availability.some((item) => item.date == obj.date)
@@ -326,13 +345,18 @@ const Profile = (props) => {
                           }
                         }}
                         className={`${currentSelector} current-${
-                          availability.filter(
+                          !shifts.some(
                             (item) => item.date == format(date, "YYY-MM-dd")
-                          )[0]
+                          )
                             ? availability.filter(
                                 (item) => item.date == format(date, "YYY-MM-dd")
-                              )[0].name
-                            : ""
+                              )[0]
+                              ? availability.filter(
+                                  (item) =>
+                                    item.date == format(date, "YYY-MM-dd")
+                                )[0].name
+                              : ""
+                            : "shift"
                         } ${
                           date < new Date()
                             ? "hidden-2"
@@ -352,7 +376,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("unselected");
-                    toast.info("Reset Selected");
+                    toast.info("Reset Selected", { autoClose: 2000 });
                   }}
                   className={`dashboard__dates-colours-item gray ${
                     currentSelector == "unselected" ? "current" : ""
@@ -361,7 +385,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("available");
-                    toast.info("Available Selected");
+                    toast.info("Available Selected", { autoClose: 2000 });
                   }}
                   className={`dashboard__dates-colours-item green ${
                     currentSelector == "available" ? "current" : ""
@@ -370,7 +394,9 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("partial");
-                    toast.info("Partially Available Selected");
+                    toast.info("Partially Available Selected", {
+                      autoClose: 2000,
+                    });
                   }}
                   className={`dashboard__dates-colours-item yellow ${
                     currentSelector == "partial" ? "current" : ""
@@ -379,7 +405,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("unavailable");
-                    toast.info("Unavailable Selected");
+                    toast.info("Unavailable Selected", { autoClose: 2000 });
                   }}
                   className={`dashboard__dates-colours-item red ${
                     currentSelector == "unavailable" ? "current" : ""
@@ -388,7 +414,7 @@ const Profile = (props) => {
                 <span
                   onClick={() => {
                     setCurrentSelector("holiday");
-                    toast.info("Holiday Selected");
+                    toast.info("Holiday Selected", { autoClose: 2000 });
                   }}
                   className={`dashboard__dates-colours-item blue ${
                     currentSelector == "holiday" ? "current" : ""
@@ -450,9 +476,7 @@ const Profile = (props) => {
                 </div>
               )}
             </div>
-            <HolidayRequest
-              holidays={availability.filter((item) => item.name == "holiday")}
-            />
+            <HolidayRequest holidays={holidays} />
 
             {/* <div className="dashboard__block--half">
               <div className="dashboard__block-title-container">
