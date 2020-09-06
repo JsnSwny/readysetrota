@@ -17,8 +17,11 @@ const Plans = () => {
   const [amountPerMonth, setAmountPerMonth] = useState(0);
   const [period, setPeriod] = useState("month");
   const [showPremium, setShowPremium] = useState(false);
+  // const stripePromise = loadStripe(
+  //   "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
+  // );
   const stripePromise = loadStripe(
-    "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
+    "pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV"
   );
   let loading = useSelector((state) => state.loading.loading);
   let errors = useSelector((state) => state.errors.msg);
@@ -86,7 +89,6 @@ const Plans = () => {
                 }}
                 value={employeesAmount}
               />
-              <p className="error">{errors.role}</p>
             </div>
             <h2 style={{ fontWeight: "normal", marginTop: "50px" }}>
               {employeesAmount} Employees

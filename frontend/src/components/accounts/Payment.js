@@ -65,7 +65,9 @@ const Payment = (props) => {
             <CardElement hidePostalCode={true} />
           </div>
 
-          <p className="error">{error}</p>
+          <p className="error" style={{ marginTop: "20px" }}>
+            {error}
+          </p>
           <button
             type="submit"
             style={{ width: "300px", marginTop: "50px" }}
