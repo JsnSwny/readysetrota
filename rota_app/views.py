@@ -217,6 +217,7 @@ def webhook(request):
         )
     except ValueError as e:
         return HttpResponse(status=200)
+    print(event)
     if event.type == "customer.subscription.deleted":
         customer = event.data.object.customer
 
