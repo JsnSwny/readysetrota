@@ -2,6 +2,10 @@
   &.container-2 {
     margin: 50px auto;
   }
+  &__plan {
+    font-size: 18px;
+    line-height: 35px;
+  }
   .table {
     border-radius: 10px;
     font-size: 16px;
@@ -21,7 +25,7 @@
   }
   .fa-plus-square {
     margin-left: 15px;
-    color: #963cbdff;
+    color: $purple;
     font-size: 28px;
     cursor: pointer;
   }
@@ -189,7 +193,7 @@
     }
     .btn-wrapper {
       font-size: 0;
-      @include wi-mq(tablet) {
+      @include wi-mq(laptop) {
         display: flex;
         justify-content: center;
       }

@@ -10,20 +10,9 @@ const Dates = (dates) => {
     updateShifts,
     showAvailabilities,
     setShowAvailabilities,
+    scrollPosition,
   } = dates;
   const [open, setOpen] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const handleScroll = () => {
-    setScrollPosition(window.pageYOffset);
-  };
-  let user = useSelector((state) => state.auth.user);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <Fragment>
@@ -31,6 +20,7 @@ const Dates = (dates) => {
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
         updateShifts={updateShifts}
+        scrollPosition={scrollPosition}
       />
       <CreateShift
         open={open}
@@ -43,7 +33,7 @@ const Dates = (dates) => {
         }}
       />
       <section
-        className={`dates container ${scrollPosition >= 260 ? " fixed" : ""}`}
+        className={`dates container ${scrollPosition >= 360 ? " fixed" : ""}`}
       >
         <div className="dates__container">
           <div className="container-left"></div>
@@ -58,7 +48,7 @@ const Dates = (dates) => {
                 </p>
                 <i
                   className="dates__sort fas fa-sort-down"
-                  onClick={() => filterEmployees(format(date, "YYY-MM-dd"))}
+                  onClick={() => filterEmployees(format(date, "yyyy-MM-dd"))}
                 ></i>
               </div>
             ))}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts, ExportAllShifts
+from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -12,6 +12,11 @@ urlpatterns = [
     path('export', ExportShifts.as_view(), name='export'),
     path('exportall', ExportAllShifts.as_view(), name='exportall'),
     path('api/', include('rota_app.urls')),
+    path('charge/', Charge.as_view(), name='charge'),
+    path('getCustomer/', getCustomer.as_view(), name='getCustomer'),
+    path('cancel/', Cancel.as_view(), name='cancel'),
+    path('sendmessage/', sendMessage.as_view(), name='sendMessage'),
+    path('webhook/', webhook, name='webhook'),
     
     
     

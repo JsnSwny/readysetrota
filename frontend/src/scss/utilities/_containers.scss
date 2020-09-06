@@ -29,7 +29,6 @@
   &-space-around {
     @extend .flex;
     justify-content: space-around;
-    align-items: flex-start;
     @include wi-mq(tablet) {
       flex-direction: column;
       justify-content: center;

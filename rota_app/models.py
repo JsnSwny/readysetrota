@@ -9,6 +9,17 @@ class Business(models.Model):
     def __str__(self):
         return f'{self.name} - {self.owner}'
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name="business")
+    PLANS = [
+        ("F", 'Free'),
+        ("P", 'Premium'),
+    ]
+    plan = models.CharField(
+        max_length=1,
+        choices=PLANS,
+        default="F",
+    )
+    total_employees = models.IntegerField(default=10)
+    subscription_cancellation = models.DateField(null=True, blank=True)
 
 class Department(models.Model):
     name = models.CharField(max_length=100)
@@ -77,5 +88,6 @@ class Availability(models.Model):
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
   role = models.CharField(max_length=100)
+  stripe_id = models.CharField(max_length=100, blank=True, null=True)
   def __str__(self):
       return self.user.email

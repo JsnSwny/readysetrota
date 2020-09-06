@@ -4,6 +4,8 @@ import employees from "./employees";
 import auth from "./auth";
 import responsive from "./responsive";
 import errors from "./errors";
+import payments from "./payments";
+import loading from "./loading";
 
 const appReducer = combineReducers({
   shifts,
@@ -11,6 +13,8 @@ const appReducer = combineReducers({
   auth,
   responsive,
   errors,
+  payments,
+  loading,
 });
 
 const rootReducer = (state, action) => {

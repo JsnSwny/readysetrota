@@ -6,8 +6,11 @@ from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import Group
 import json
+import stripe
 
+from rotaready.settings import STRIPE_SECRET_KEY
 
+stripe.api_key = STRIPE_SECRET_KEY
 
 
 
@@ -22,7 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation',)
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,13 +88,22 @@ class RegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'username': 'A user with that username already exists.'})
             
             user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
-            profile = UserProfile(user=user, role=validated_data['role'])
-            profile.save()
+            
             if validated_data['role'] == "Business":
                 my_group = Group.objects.get(name='Business') 
                 my_group.user_set.add(user) 
+                customer = stripe.Customer.create(
+                    description="",
+                    name="",
+                    email=validated_data['email']
+                )
                 business = Business(owner=user, name=validated_data['businessName'])
-                business.save()       
+                business.save()
+                profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
+                
+            else:
+                profile = UserProfile(user=user, role=validated_data['role'])
+            profile.save()
             return user
 
 # Login Serializers

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'frontend',
     'django_filters',
     'knox',
-    'accounts'
+    'accounts',
+    'stripe'
 ]
 
 REST_FRAMEWORK = {
@@ -151,3 +152,13 @@ CELERY_BROKER_URL = 'redis://h:p436693afc958fd5687deaa36bde26ab84d816e450e921260
 
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TAST_SERIALIZER = "json"
+
+if DEBUG:
+
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
+    STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
+else:
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
+    STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
+    # STRIPE_PUBLISHABLE_KEY = 'pk_live_pqBs7Warr2y274MGrFbyXmlX009qw5wklI'
+    # STRIPE_SECRET_KEY = 'sk_live_vwTiQ06gwS0m9iK5QMNSP1lF00Ja6UXdX6'

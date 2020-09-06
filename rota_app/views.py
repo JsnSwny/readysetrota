@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Employee, Shift
+from .models import Employee, Shift, UserProfile, Business
 from django.db.models import Count
 from .serializers import ShiftSerializer
 from operator import attrgetter
@@ -10,11 +10,18 @@ from itertools import groupby
 from datetime import datetime, timedelta
 from django.core.mail import send_mail, send_mass_mail
 from django_xhtml2pdf.utils import generate_pdf
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django import template
 from django.core import mail
 from django.template.loader import render_to_string
 from .tasks import publish_email
+import stripe
+from rest_framework.permissions import AllowAny
+import json
+from django.views.decorators.csrf import csrf_exempt
+from decimal import Decimal
+from rotaready.settings import STRIPE_SECRET_KEY
+from django.core import serializers
 
 
 # Create your views here.
@@ -102,3 +109,122 @@ class ExportAllShifts(APIView):
         result = generate_pdf('allshifts.html', file_object=resp, context = {'all_shifts': all_shifts}, )
         return result
 
+# Create your views here.
+class Charge(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, format=None):
+        if request.method == 'POST':
+            stripe.api_key = STRIPE_SECRET_KEY
+
+            pm = stripe.PaymentMethod.attach(
+                request.data['payment_method'],
+                customer=request.data['customer_id'],
+            )
+
+            stripe.Customer.modify(
+                request.data['customer_id'],
+                invoice_settings={"default_payment_method": pm.id},
+            )
+
+
+            price = stripe.Price.create(
+                unit_amount=request.data['charge'],
+                currency="gbp",
+                recurring={"interval": request.data['period']},
+                product="prod_HwsJxT2Z3YkyAt",
+            )
+
+
+            subscription = stripe.Subscription.create(
+                customer=request.data['customer_id'],
+                items=[
+                    {"price": price.id},
+                ],
+            )
+
+            if subscription:
+                user = UserProfile.objects.filter(stripe_id=request.data['customer_id']).first().user
+                business = Business.objects.filter(owner=user).first()
+                business.plan = "P"
+                business.total_employees = request.data['total_employees']
+                business.save()
+
+
+
+            return Response(subscription)
+
+class getCustomer(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, format=None):
+        stripe.api_key = STRIPE_SECRET_KEY
+        customer = stripe.Customer.retrieve(request.data['customer_id'])
+        
+        subscriptions = stripe.Subscription.list(customer=request.data['customer_id'])['data']
+        if subscriptions:
+            subscriptions = subscriptions[0]
+            obj = {"cancel_at": subscriptions['cancel_at'], "current_period_end": datetime.fromtimestamp(subscriptions['current_period_end']), "amount": subscriptions['plan']['amount'], "interval": subscriptions['plan']['interval'], "status": subscriptions['status'], "cancel_at_period_end": subscriptions['cancel_at_period_end']}
+        # data = serializers.serialize('json', [obj,])
+            return JsonResponse(obj)
+        else:
+            return Response(True)
+
+class Cancel(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, format=None):
+        stripe.api_key = STRIPE_SECRET_KEY
+
+        customer = stripe.Customer.retrieve(request.data['customer_id'])
+        for i in customer['subscriptions']['data']:
+            cancellation = stripe.Subscription.modify(
+                i.id,
+                cancel_at_period_end=True
+            )
+
+        cancelled_at = datetime.fromtimestamp(cancellation.cancel_at)
+
+        user = UserProfile.objects.filter(stripe_id=request.data['customer_id']).first().user
+        business = Business.objects.filter(owner=user).first()
+
+        business.subscription_cancellation = cancelled_at
+        business.save()
+
+        return JsonResponse({"subscription_cancellation": business.subscription_cancellation})
+
+        # data = serializers.serialize('python', [business,])
+        # return JsonResponse(data[0], safe=False)
+
+class sendMessage(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, format=None):
+        message = f"Name: {request.data['name']}\nEmail: {request.data['email']}\n\nMessage: {request.data['message']}"
+        send_mail(
+            "readysetrota - Contact Message from " + request.data['name'],
+            message,
+            "readysetrota@gmail.com",
+            ["jsnswny@gmail.com"],
+            fail_silently=False,
+        )
+        return Response(True)
+
+@csrf_exempt
+def webhook(request):
+    payload = request.body
+    event = None
+    stripe.api_key = STRIPE_SECRET_KEY
+    try:
+        event = stripe.Event.construct_from(
+            json.loads(payload), stripe.api_key
+        )
+    except ValueError as e:
+        return HttpResponse(status=200)
+    if event.type == "customer.subscription.deleted":
+        customer = event.data.object.customer
+
+        user = UserProfile.objects.filter(stripe_id=customer).first().user
+        business = Business.objects.filter(owner=user).first()
+        business.plan = "F"
+        business.total_employees = 10
+        business.subscription_cancellation = None
+        business.save()
+
+    return HttpResponse(status=200)

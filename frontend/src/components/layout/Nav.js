@@ -52,7 +52,7 @@ const Nav = () => {
     <Fragment>
       <nav className="nav">
         <Link className="nav__title-link" to="/">
-          <img className="nav__title" src="/static/media/logo-01.svg"></img>
+          <img className="nav__title" src="/static/media/logo2-01.svg"></img>
         </Link>
         <ul>
           <div className="nav__lisection">

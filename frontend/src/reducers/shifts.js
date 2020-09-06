@@ -9,6 +9,8 @@ import {
   UPDATE_SHIFT,
   PUBLISHED_SHIFTS,
   GET_SWAP_REQUESTS,
+  SEND_CHARGE,
+  CHARGE_COMPLETE,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -39,6 +41,16 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case SEND_CHARGE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case CHARGE_COMPLETE:
+      return {
+        ...state,
+        isLoading: false,
+      };
     case SHIFTS_LOADING:
       return {
         ...state,

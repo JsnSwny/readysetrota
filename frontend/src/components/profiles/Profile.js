@@ -45,6 +45,7 @@ const Profile = (props) => {
   const [dateRange, setDateRange] = useState([]);
   const [currentSelector, setCurrentSelector] = useState("unselected");
   let employees = useSelector((state) => state.employees.employees);
+  let plan = useSelector((state) => state.employees.business.plan);
   let currentBusiness = useSelector(
     (state) => state.employees.current_business
   );
@@ -179,7 +180,6 @@ const Profile = (props) => {
           <HolidayRequest holidays={holidays} business={true} />
         )}
       </div> */}
-
       {currentDepartment != 0 && (
         <div className="dashboard container-2">
           <div className="dashboard__block">
@@ -222,7 +222,7 @@ const Profile = (props) => {
                           <span>
                             {format(
                               parseISO(item.date, "dd-MM-yyyy"),
-                              "MMMM d YYY"
+                              "MMMM d yyyy"
                             )}
                           </span>
                         </p>
@@ -254,242 +254,251 @@ const Profile = (props) => {
               currentPage={currentPage}
             />
           </div>
-          <div className="dashboard__block--half-container">
-            <div className="dashboard__block--half">
-              <div className="dashboard__block-title-container">
-                <p className="dashboard__block-title">Availability</p>
-              </div>
-
-              <div className="dashboard__block-container">
-                <p className="dashboard__dates-title">
-                  <span
-                    onClick={() => {
-                      setAvailabilityMonth(addMonths(availabilityMonth, -1));
-                    }}
-                  >
-                    <i className="fas fa-caret-left"></i>
-                  </span>
-                  {format(availabilityMonth, "MMMM YYY")}
-                  <span
-                    onClick={() => {
-                      setAvailabilityMonth(addMonths(availabilityMonth, 1));
-                    }}
-                  >
-                    <i className="fas fa-caret-right"></i>
-                  </span>
-                </p>
-                <div className="dashboard__dates-date">
-                  {dateRange.map(
-                    (date, i) => i < 7 && <p key={i}>{format(date, "EEEEE")}</p>
-                  )}
+          {plan != "F" && (
+            <div className="dashboard__block--half-container">
+              <div className="dashboard__block--half">
+                <div className="dashboard__block-title-container">
+                  <p className="dashboard__block-title">Availability</p>
                 </div>
-                <div className="dashboard__dates">
-                  {dateRange.map((date) => (
-                    <div key={date} className="dashboard__dates-item">
-                      <p
-                        onClick={() => {
-                          let obj = {
-                            name: currentSelector,
-                            employee_id: employee.id,
-                            date: format(date, "YYY-MM-dd"),
-                            start_time:
-                              currentSelector == "partial" && startTime
-                                ? startTime
-                                : null,
-                            end_time:
-                              currentSelector == "partial" && endTime
-                                ? endTime
-                                : null,
-                            business_id: currentBusiness,
-                          };
-                          if (differenceInDays(date, new Date()) > 365) {
-                            toast.warning(
-                              "Availability dates must be selected within 365 days!"
-                            );
-                          } else if (date < new Date()) {
-                            toast.warning(
-                              "You cannot set availability for a date before the current date!"
-                            );
-                          } else if (
-                            currentSelector == "unselected" &&
-                            !availability.some(
-                              (item) => item.date == format(date, "YYY-MM-dd")
-                            )
-                          ) {
-                            toast.warning(
-                              "You can't reset a date that doesn't have a value!"
-                            );
-                          } else if (
-                            currentSelector == "partial" &&
-                            !(startTime && endTime)
-                          ) {
-                            toast.warning(
-                              "You must set a start and end time when creating a partial availability!"
-                            );
-                          } else if (
-                            shifts.some(
-                              (item) => item.date == format(date, "YYY-MM-dd")
-                            )
-                          ) {
-                            toast.warning(
-                              "You already have a shift for this date!"
-                            );
-                          } else {
-                            availability.some((item) => item.date == obj.date)
-                              ? currentSelector == "unselected"
-                                ? dispatch(
-                                    deleteAvailability(
-                                      availability.filter(
-                                        (item) => item.date == obj.date
-                                      )[0].id
+
+                <div className="dashboard__block-container">
+                  <p className="dashboard__dates-title">
+                    <span
+                      onClick={() => {
+                        setAvailabilityMonth(addMonths(availabilityMonth, -1));
+                      }}
+                    >
+                      <i className="fas fa-caret-left"></i>
+                    </span>
+                    {format(availabilityMonth, "MMMM yyyy")}
+                    <span
+                      onClick={() => {
+                        setAvailabilityMonth(addMonths(availabilityMonth, 1));
+                      }}
+                    >
+                      <i className="fas fa-caret-right"></i>
+                    </span>
+                  </p>
+                  <div className="dashboard__dates-date">
+                    {dateRange.map(
+                      (date, i) =>
+                        i < 7 && <p key={i}>{format(date, "EEEEE")}</p>
+                    )}
+                  </div>
+                  <div className="dashboard__dates">
+                    {dateRange.map((date) => (
+                      <div key={date} className="dashboard__dates-item">
+                        <p
+                          onClick={() => {
+                            let obj = {
+                              name: currentSelector,
+                              employee_id: employee.id,
+                              date: format(date, "yyyy-MM-dd"),
+                              start_time:
+                                currentSelector == "partial" && startTime
+                                  ? startTime
+                                  : null,
+                              end_time:
+                                currentSelector == "partial" && endTime
+                                  ? endTime
+                                  : null,
+                              business_id: currentBusiness,
+                            };
+                            if (differenceInDays(date, new Date()) > 365) {
+                              toast.warning(
+                                "Availability dates must be selected within 365 days!"
+                              );
+                            } else if (date < new Date()) {
+                              toast.warning(
+                                "You cannot set availability for a date before the current date!"
+                              );
+                            } else if (
+                              currentSelector == "unselected" &&
+                              !availability.some(
+                                (item) =>
+                                  item.date == format(date, "yyyy-MM-dd")
+                              )
+                            ) {
+                              toast.warning(
+                                "You can't reset a date that doesn't have a value!"
+                              );
+                            } else if (
+                              currentSelector == "partial" &&
+                              !(startTime && endTime)
+                            ) {
+                              toast.warning(
+                                "You must set a start and end time when creating a partial availability!"
+                              );
+                            } else if (
+                              shifts.some(
+                                (item) =>
+                                  item.date == format(date, "yyyy-MM-dd")
+                              )
+                            ) {
+                              toast.warning(
+                                "You already have a shift for this date!"
+                              );
+                            } else {
+                              availability.some((item) => item.date == obj.date)
+                                ? currentSelector == "unselected"
+                                  ? dispatch(
+                                      deleteAvailability(
+                                        availability.filter(
+                                          (item) => item.date == obj.date
+                                        )[0].id
+                                      )
                                     )
-                                  )
-                                : dispatch(
-                                    updateAvailability(
-                                      availability.filter(
-                                        (item) => item.date == obj.date
-                                      )[0].id,
-                                      obj
+                                  : dispatch(
+                                      updateAvailability(
+                                        availability.filter(
+                                          (item) => item.date == obj.date
+                                        )[0].id,
+                                        obj
+                                      )
                                     )
-                                  )
-                              : dispatch(addAvailability(obj));
-                          }
-                        }}
-                        className={`${currentSelector} current-${
-                          !shifts.some(
-                            (item) => item.date == format(date, "YYY-MM-dd")
-                          )
-                            ? availability.filter(
-                                (item) => item.date == format(date, "YYY-MM-dd")
-                              )[0]
+                                : dispatch(addAvailability(obj));
+                            }
+                          }}
+                          className={`${currentSelector} current-${
+                            !shifts.some(
+                              (item) => item.date == format(date, "yyyy-MM-dd")
+                            )
                               ? availability.filter(
                                   (item) =>
-                                    item.date == format(date, "YYY-MM-dd")
-                                )[0].name
+                                    item.date == format(date, "yyyy-MM-dd")
+                                )[0]
+                                ? availability.filter(
+                                    (item) =>
+                                      item.date == format(date, "yyyy-MM-dd")
+                                  )[0].name
+                                : ""
+                              : "shift"
+                          } ${
+                            date < new Date()
+                              ? "hidden-2"
+                              : date < startOfMonth(availabilityMonth) ||
+                                date > endOfMonth(availabilityMonth)
+                              ? "hidden"
                               : ""
-                            : "shift"
-                        } ${
-                          date < new Date()
-                            ? "hidden-2"
-                            : date < startOfMonth(availabilityMonth) ||
-                              date > endOfMonth(availabilityMonth)
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        {format(date, "d")}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="dashboard__dates-colours">
-                <span
-                  onClick={() => {
-                    setCurrentSelector("unselected");
-                    toast.info("Reset Selected", { autoClose: 2000 });
-                  }}
-                  className={`dashboard__dates-colours-item gray ${
-                    currentSelector == "unselected" ? "current" : ""
-                  } `}
-                ></span>
-                <span
-                  onClick={() => {
-                    setCurrentSelector("available");
-                    toast.info("Available Selected", { autoClose: 2000 });
-                  }}
-                  className={`dashboard__dates-colours-item green ${
-                    currentSelector == "available" ? "current" : ""
-                  } `}
-                ></span>
-                <span
-                  onClick={() => {
-                    setCurrentSelector("partial");
-                    toast.info("Partially Available Selected", {
-                      autoClose: 2000,
-                    });
-                  }}
-                  className={`dashboard__dates-colours-item yellow ${
-                    currentSelector == "partial" ? "current" : ""
-                  } `}
-                ></span>
-                <span
-                  onClick={() => {
-                    setCurrentSelector("unavailable");
-                    toast.info("Unavailable Selected", { autoClose: 2000 });
-                  }}
-                  className={`dashboard__dates-colours-item red ${
-                    currentSelector == "unavailable" ? "current" : ""
-                  } `}
-                ></span>
-                <span
-                  onClick={() => {
-                    setCurrentSelector("holiday");
-                    toast.info("Holiday Selected", { autoClose: 2000 });
-                  }}
-                  className={`dashboard__dates-colours-item blue ${
-                    currentSelector == "holiday" ? "current" : ""
-                  } `}
-                ></span>
-              </div>
-              <div className="dashboard__dates-colours">
-                <span className="dashboard__dates-colours-text">Reset</span>
-                <span className="dashboard__dates-colours-text">Available</span>
-                <span className="dashboard__dates-colours-text">
-                  Partially Available
-                </span>
-                <span className="dashboard__dates-colours-text">
-                  Unavailable
-                </span>
-                <span className="dashboard__dates-colours-text">Holiday</span>
-              </div>
-              {currentSelector == "partial" && (
-                <div className="dashboard__dates-times">
-                  <div className="staffForm__times">
-                    <div className="staffForm__control">
-                      <label className="staffForm__label">Start Time:</label>
-                      <select
-                        className="staffForm__input"
-                        onChange={(e) => setStartTime(e.target.value)}
-                        name="starttime"
-                        value={startTime}
-                      >
-                        <option value="" disabled>
-                          Select a start time
-                        </option>
-                        {hours.map((time) => (
-                          <option key={time} value={`${time}:00`}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="staffForm__control">
-                      <label className="staffForm__label">End Time:</label>
-                      <select
-                        className="staffForm__input"
-                        onChange={(e) => setEndTime(e.target.value)}
-                        name="endtime"
-                        value={endTime}
-                      >
-                        <option value="" disabled>
-                          Select an end time
-                        </option>
-                        <option value="Finish">Finish</option>
-                        {hours.map((time) => (
-                          <option key={time} value={time}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                          }`}
+                        >
+                          {format(date, "d")}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              )}
+                <div className="dashboard__dates-colours">
+                  <span
+                    onClick={() => {
+                      setCurrentSelector("unselected");
+                      toast.info("Reset Selected", { autoClose: 2000 });
+                    }}
+                    className={`dashboard__dates-colours-item gray ${
+                      currentSelector == "unselected" ? "current" : ""
+                    } `}
+                  ></span>
+                  <span
+                    onClick={() => {
+                      setCurrentSelector("available");
+                      toast.info("Available Selected", { autoClose: 2000 });
+                    }}
+                    className={`dashboard__dates-colours-item green ${
+                      currentSelector == "available" ? "current" : ""
+                    } `}
+                  ></span>
+                  <span
+                    onClick={() => {
+                      setCurrentSelector("partial");
+                      toast.info("Partially Available Selected", {
+                        autoClose: 2000,
+                      });
+                    }}
+                    className={`dashboard__dates-colours-item yellow ${
+                      currentSelector == "partial" ? "current" : ""
+                    } `}
+                  ></span>
+                  <span
+                    onClick={() => {
+                      setCurrentSelector("unavailable");
+                      toast.info("Unavailable Selected", { autoClose: 2000 });
+                    }}
+                    className={`dashboard__dates-colours-item red ${
+                      currentSelector == "unavailable" ? "current" : ""
+                    } `}
+                  ></span>
+                  <span
+                    onClick={() => {
+                      setCurrentSelector("holiday");
+                      toast.info("Holiday Selected", { autoClose: 2000 });
+                    }}
+                    className={`dashboard__dates-colours-item blue ${
+                      currentSelector == "holiday" ? "current" : ""
+                    } `}
+                  ></span>
+                </div>
+                <div className="dashboard__dates-colours">
+                  <span className="dashboard__dates-colours-text">Reset</span>
+                  <span className="dashboard__dates-colours-text">
+                    Available
+                  </span>
+                  <span className="dashboard__dates-colours-text">
+                    Partially Available
+                  </span>
+                  <span className="dashboard__dates-colours-text">
+                    Unavailable
+                  </span>
+                  <span className="dashboard__dates-colours-text">Holiday</span>
+                </div>
+                {currentSelector == "partial" && (
+                  <div className="dashboard__dates-times">
+                    <div className="staffForm__times">
+                      <div className="staffForm__control">
+                        <label className="staffForm__label">Start Time:</label>
+                        <select
+                          className="staffForm__input"
+                          onChange={(e) => setStartTime(e.target.value)}
+                          name="starttime"
+                          value={startTime}
+                        >
+                          <option value="" disabled>
+                            Select a start time
+                          </option>
+                          {hours.map((time) => (
+                            <option key={time} value={`${time}:00`}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="staffForm__control">
+                        <label className="staffForm__label">End Time:</label>
+                        <select
+                          className="staffForm__input"
+                          onChange={(e) => setEndTime(e.target.value)}
+                          name="endtime"
+                          value={endTime}
+                        >
+                          <option value="" disabled>
+                            Select an end time
+                          </option>
+                          <option value="Finish">Finish</option>
+                          {hours.map((time) => (
+                            <option key={time} value={time}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <HolidayRequest holidays={holidays} />
             </div>
-            <HolidayRequest holidays={holidays} />
+          )}
 
-            {/* <div className="dashboard__block--half">
+          {/* <div className="dashboard__block--half">
               <div className="dashboard__block-title-container">
                 <p className="dashboard__block-title">Shift Swap Requests</p>
               </div>
@@ -514,7 +523,7 @@ const Profile = (props) => {
                         <p>
                           {format(
                             parseISO(request.shift_from.date),
-                            "MMMM dd YYY"
+                            "MMMM dd yyyy"
                           )}{" "}
                           {request.shift_from.start_time.substr(0, 5)} -{" "}
                           {request.shift_from.end_time}
@@ -539,7 +548,7 @@ const Profile = (props) => {
                         <p>
                           {format(
                             parseISO(request.shift_to.date),
-                            "MMMM dd YYY"
+                            "MMMM dd yyyy"
                           )}{" "}
                           {request.shift_to.start_time.substr(0, 5)} -{" "}
                           {request.shift_to.end_time}
@@ -626,7 +635,6 @@ const Profile = (props) => {
                 ))}
               </div>
             </div> */}
-          </div>
         </div>
       )}
     </Fragment>

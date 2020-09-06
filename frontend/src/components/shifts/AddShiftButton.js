@@ -3,11 +3,12 @@ import CreateShift from "../layout/CreateShift";
 import { useSelector } from "react-redux";
 
 const AddShiftButton = (props) => {
-  const { employee, date, white } = props;
-  let business = useSelector((state) => state.auth.business);
+  const { employee, date, white, limit } = props;
+  let business = useSelector((state) => state.employees.business);
   const [open, setOpen] = useState("");
   return (
-    business && (
+    business &&
+    (!limit || employee.id <= limit) && (
       <Fragment>
         <CreateShift
           open={open}

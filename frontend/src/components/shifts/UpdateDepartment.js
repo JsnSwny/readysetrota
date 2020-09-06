@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDepartments, setDepartment } from "../../actions/employees";
 import { getShifts } from "../../actions/shifts";
+import { toast } from "react-toastify";
 
 const UpdateDepartment = () => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const UpdateDepartment = () => {
   let user = useSelector((state) => state.auth.user);
 
   let date = useSelector((state) => state.shifts.date);
-
+  let plan = useSelector((state) => state.employees.business.plan);
   let enddate = useSelector((state) => state.shifts.end_date);
 
   let currentDepartment = useSelector(
@@ -32,7 +33,12 @@ const UpdateDepartment = () => {
   return (
     <select
       onChange={(e) => {
-        setDep(e.target.value);
+        if (plan == "F" && e.target.value != departments[0].id) {
+          toast.warning("Upgrade to premium to unlock unlimited departments");
+          return false;
+        } else {
+          setDep(e.target.value);
+        }
       }}
       className="btn-3"
       value={currentDepartment == 0 ? "" : currentDepartment}

@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../common/CopyUUID";
+import { toast } from "react-toastify";
 
 const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -11,15 +12,33 @@ const StaffPicker = (props) => {
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
   );
+  let plan = useSelector((state) => state.employees.business.plan);
+  let total_employees = useSelector(
+    (state) => state.employees.business.total_employees
+  );
 
   return (
     <Fragment>
       <div className="dashboard container-2">
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
-            <p className="dashboard__block-title">Staff</p>
+            <p className="dashboard__block-title">
+              Staff ({employees.length} / {total_employees})
+            </p>
+
             <i
               onClick={() => {
+                if (plan == "F" && employees.length >= 10) {
+                  toast.warning(
+                    "Upgrade to premium to create more than 10 employees"
+                  );
+                  return false;
+                } else if (employees.length >= total_employees) {
+                  toast.warning(
+                    `You have reached your max number of ${total_employees} employees!`
+                  );
+                  return false;
+                }
                 setOpen(true);
                 setUpdate(false);
                 setType("staff");

@@ -10,6 +10,10 @@ $white: #fff;
 $green: #5bd075;
 $red: #d05b5b;
 $yellow: #e9a659;
+$blue: #222735;
+$gray: #202020;
+$border: rgb(235, 235, 235);
+$purple: rgb(153, 61, 192);
 
 $breakpoints: (
   "stamp": "screen and (max-width: 399px)",
@@ -37,10 +41,17 @@ $breakpoints: (
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  word-wrap: break-word;
 }
 
 body {
   font-family: $base-font-family;
   background-color: #f4f4f4;
   height: 100%;
+}
+
+button {
+  &:focus {
+    outline: none;
+  }
 }

@@ -23,6 +23,7 @@ import {
   UPDATE_AVAILABILITY,
   DELETE_AVAILABILITY,
   GET_HOLIDAYS,
+  SET_BUSINESS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -244,6 +245,17 @@ export const getDepartments = () => (dispatch, getState) => {
       type: GET_DEPARTMENTS,
       payload: res.data,
     });
+    dispatch({
+      type: SET_BUSINESS,
+      payload:
+        getState().employees.current_department > 0
+          ? res.data.filter(
+              (item) => item.id == getState().employees.current_department
+            )[0].business
+          : getState().auth.user.business
+          ? getState().auth.user.business
+          : { plan: "F" },
+    });
   });
 };
 
@@ -264,7 +276,6 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
           type: UUID_SUCCESS,
           payload: res.data.department_id,
         });
-        dispatch(loadUser());
         axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
           dispatch({
             type: GET_DEPARTMENTS,
@@ -322,7 +333,7 @@ export const getHolidays = (business, user = false) => (dispatch, getState) => {
         user ? `?employee__user=${user}` : `?employee__business=${business}`
       }&date_after=${format(
         new Date(),
-        "YYY-MM-dd"
+        "yyyy-MM-dd"
       )}&name=holiday&ordering=date`,
       tokenConfig(getState)
     )

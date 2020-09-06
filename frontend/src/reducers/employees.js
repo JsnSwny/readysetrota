@@ -24,12 +24,15 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   GET_HOLIDAYS,
+  SET_BUSINESS,
+  SUBSCRIPTION_CANCELLED,
+  CHARGE_COMPLETE,
 } from "../actions/types";
-import { format, addDays } from "date-fns";
+import { format, addDays, parseISO } from "date-fns";
 
-const todayDate = format(new Date(), "YYY-MM-dd");
+const todayDate = format(new Date(), "yyyy-MM-dd");
 var weekFromDate = addDays(new Date(), 7);
-weekFromDate = format(weekFromDate, "YYY-MM-dd");
+weekFromDate = format(weekFromDate, "yyyy-MM-dd");
 
 const initialState = {
   availability: [],
@@ -43,6 +46,7 @@ const initialState = {
     : 0,
   current_business: 0,
   uuid_success: false,
+  business: { plan: "F" },
 };
 
 export default function (state = initialState, action) {
@@ -129,6 +133,31 @@ export default function (state = initialState, action) {
                 (item) => item.id == parseInt(state.current_department)
               )[0].business.id
             : state.current_business,
+      };
+    case SET_BUSINESS:
+      return {
+        ...state,
+        business: action.payload,
+      };
+    case CHARGE_COMPLETE:
+      return {
+        ...state,
+        business: {
+          ...state.business,
+          plan: "P",
+          total_employees: action.employees,
+        },
+      };
+    case SUBSCRIPTION_CANCELLED:
+      return {
+        ...state,
+        business: {
+          ...state.business,
+          subscription_cancellation: format(
+            parseISO(action.payload.subscription_cancellation),
+            "yyyy-MM-dd"
+          ),
+        },
       };
     case RESET_DEPARTMENT:
       localStorage.setItem("current_department", 0);

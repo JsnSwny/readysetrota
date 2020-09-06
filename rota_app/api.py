@@ -21,13 +21,20 @@ class ShiftFilter(django_filters.FilterSet):
         fields = ['date', 'employee', 'department', 'employee__user__id']
         
 
+class BusinessFilter(django_filters.FilterSet):
+    class Meta:
+        model = Business
+        fields = ['id']
+
+
 class BusinessViewSet(viewsets.ModelViewSet):
     
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = BusinessSerializer
-
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = BusinessFilter
     def get_queryset(self):
         return Business.objects.filter(owner=self.request.user)
 

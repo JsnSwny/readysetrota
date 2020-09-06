@@ -29,6 +29,10 @@
   box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.25);
   display: flex;
   z-index: 1;
+  &.wide {
+    max-width: 900px;
+    text-align: center;
+  }
 }
 
 .login__left {

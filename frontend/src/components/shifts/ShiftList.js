@@ -13,6 +13,7 @@ import Loading from "../common/Loading";
 import { toast } from "react-toastify";
 import AddShiftButton from "./AddShiftButton";
 import Employee from "./Employee";
+import { Redirect } from "react-router-dom";
 
 const ShiftList = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,11 @@ const ShiftList = () => {
   const [currentDevice, setCurrentDevice] = useState("");
   const [shiftSwap, setShiftSwap] = useState({});
   const [showAvailabilities, setShowAvailabilities] = useState(false);
+  const [limit, setLimit] = useState("");
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   let user = useSelector((state) => state.auth.user);
-  let business = useSelector((state) => state.auth.business);
+  let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
   let availability = useSelector((state) => state.employees.availability);
@@ -115,6 +118,15 @@ const ShiftList = () => {
       }
     }
     setEmployeesList(employees);
+    if (employees.length > business.total_employees) {
+      let num = employees.length - business.total_employees;
+      let id_list = employees
+        .map((item) => item.id)
+        .sort()
+        .reverse();
+
+      setLimit(id_list[num]);
+    }
   }, [employees]);
 
   useEffect(() => {
@@ -175,6 +187,20 @@ const ShiftList = () => {
     }
   };
 
+  const handleScroll = () => {
+    setScrollPosition(window.pageYOffset);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  if (currentDepartment == 0) {
+    toast.warning("You must select a department to view the rota");
+    return <Redirect to="/" />;
+  }
   return (
     <Fragment>
       <CreateShift
@@ -197,11 +223,16 @@ const ShiftList = () => {
         updateShifts={updateShifts}
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
+        scrollPosition={scrollPosition}
       />
       {isLoading && <Loading />}
       {currentDepartment != 0 && (
-        <div className={`shiftList container ${filterDate ? "filtered" : ""}`}>
-          {employeesList.map((employee) => (
+        <div
+          className={`shiftList container ${filterDate ? "filtered" : ""} ${
+            scrollPosition >= 360 ? " fixed" : ""
+          }`}
+        >
+          {employeesList.map((employee, i) => (
             <div key={employee.id} className="rota__container">
               <Employee
                 employee={employee}
@@ -212,18 +243,18 @@ const ShiftList = () => {
               />
               <div className="container-right">
                 {result.map((result) =>
-                  getEmployeeShift(employee.id, format(result, "YYY-MM-dd"))
+                  getEmployeeShift(employee.id, format(result, "yyyy-MM-dd"))
                     .length > 0 ? (
                     <div
                       key={result}
                       className={`item-block shift__shift ${
-                        filterDate == format(result, "YYY-MM-dd")
+                        filterDate == format(result, "yyyy-MM-dd")
                           ? "filtered"
                           : ""
                       } ${
                         getEmployeeShift(
                           employee.id,
-                          format(result, "YYY-MM-dd")
+                          format(result, "yyyy-MM-dd")
                         ).some((item) => item.published == false)
                           ? "unpublished"
                           : ""
@@ -233,12 +264,13 @@ const ShiftList = () => {
                     >
                       <AddShiftButton
                         employee={employee}
-                        date={format(result, "YYY-MM-dd")}
+                        date={format(result, "yyyy-MM-dd")}
                         white={true}
+                        limit={limit}
                       />
                       {getEmployeeShift(
                         employee.id,
-                        format(result, "YYY-MM-dd")
+                        format(result, "yyyy-MM-dd")
                       ).map((shift) => (
                         <Fragment key={shift.id}>
                           {!business && shift.published == false ? (
@@ -318,18 +350,18 @@ const ShiftList = () => {
                       key={result}
                       className={`item-block shift__shift-noshift ${
                         showAvailabilities &&
-                        isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                        isAvailable(employee.id, format(result, "yyyy-MM-dd"))
                           .name
                       } ${
                         showAvailabilities &&
-                        isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                        isAvailable(employee.id, format(result, "yyyy-MM-dd"))
                           .name == "holiday" &&
-                        !isAvailable(employee.id, format(result, "YYY-MM-dd"))
+                        !isAvailable(employee.id, format(result, "yyyy-MM-dd"))
                           .approved
                           ? "not-approved"
                           : ""
                       } ${
-                        filterDate == format(result, "YYY-MM-dd")
+                        filterDate == format(result, "yyyy-MM-dd")
                           ? "filtered"
                           : ""
                       } ${
@@ -338,7 +370,8 @@ const ShiftList = () => {
                     >
                       <AddShiftButton
                         employee={employee}
-                        date={format(result, "YYY-MM-dd")}
+                        date={format(result, "yyyy-MM-dd")}
+                        limit={limit}
                       />
                       {showAvailabilities && (
                         <Fragment>
@@ -346,30 +379,34 @@ const ShiftList = () => {
                             {
                               isAvailable(
                                 employee.id,
-                                format(result, "YYY-MM-dd")
+                                format(result, "yyyy-MM-dd")
                               ).name
                             }
                           </p>
-                          {isAvailable(employee.id, format(result, "YYY-MM-dd"))
-                            .name == "holiday" &&
+                          {isAvailable(
+                            employee.id,
+                            format(result, "yyyy-MM-dd")
+                          ).name == "holiday" &&
                             isAvailable(
                               employee.id,
-                              format(result, "YYY-MM-dd")
+                              format(result, "yyyy-MM-dd")
                             ).approved != true && (
                               <p className="shift__text">Not Approved</p>
                             )}
-                          {isAvailable(employee.id, format(result, "YYY-MM-dd"))
-                            .start && (
+                          {isAvailable(
+                            employee.id,
+                            format(result, "yyyy-MM-dd")
+                          ).start && (
                             <p className="shift__text">
                               {isAvailable(
                                 employee.id,
-                                format(result, "YYY-MM-dd")
+                                format(result, "yyyy-MM-dd")
                               ).start.substr(0, 5)}{" "}
                               -{" "}
                               {
                                 isAvailable(
                                   employee.id,
-                                  format(result, "YYY-MM-dd")
+                                  format(result, "yyyy-MM-dd")
                                 ).end
                               }
                             </p>

@@ -41,7 +41,7 @@ const HolidayRequest = (props) => {
                 >
                   <p>
                     {item.employee.first_name} {item.employee.last_name} -{" "}
-                    {format(parseISO(item.date), "dd MMMM YYY")} (
+                    {format(parseISO(item.date), "dd MMMM yyyy")} (
                     {item.business.name})
                   </p>
                   {business && (
@@ -57,7 +57,7 @@ const HolidayRequest = (props) => {
                           };
                           dispatch(updateAvailability(item.id, obj));
                         }}
-                        class="fas fa-check-circle"
+                        className="fas fa-check-circle"
                       ></i>
                       <i
                         onClick={() => {
@@ -70,7 +70,7 @@ const HolidayRequest = (props) => {
                           };
                           dispatch(updateAvailability(item.id, obj));
                         }}
-                        class="fas fa-times-circle"
+                        className="fas fa-times-circle"
                       ></i>
                     </Fragment>
                   )}

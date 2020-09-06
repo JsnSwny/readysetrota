@@ -54,7 +54,7 @@
   }
   &-4 {
     @extend .btn;
-    background-color: #963cbdff;
+    background-color: $purple;
     color: white;
     margin-left: 20px;
     padding: 5px 25px;
@@ -65,7 +65,7 @@
   }
   &-5 {
     @extend .btn;
-    border: 2px solid #963cbd;
+    border: 2px solid $purple;
     padding: 8px 50px;
     border-radius: 10px;
     color: #963cbd;

@@ -22,6 +22,8 @@ import ChangePassword from "./accounts/ChangePassword";
 import Profile from "./profiles/Profile";
 import EnterID from "./common/EnterID";
 import Landing from "./landing/Landing";
+import Premium from "./accounts/Premium";
+import Plans from "./accounts/Plans";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,6 +35,7 @@ const App = () => {
       store.dispatch(setWidth(window.innerWidth));
     });
   }, []);
+
   return (
     <Provider store={store}>
       <Router>
@@ -52,7 +55,8 @@ const App = () => {
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={Profile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
-            <Route path="/landing" component={Landing} />
+
+            <PrivateRoute path="/premium" component={Plans} />
           </Switch>
         </div>
       </Router>

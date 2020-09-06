@@ -3,7 +3,7 @@
   position: relative;
   &.fixed {
     position: sticky;
-    top: 0;
+    top: 120px;
     left: 0;
     right: 0;
     z-index: 5;
@@ -76,6 +76,7 @@
   }
   &__container {
     display: flex;
+    margin-top: 20px;
   }
   &__date {
     text-align: center;
@@ -99,22 +100,54 @@
     }
   }
   &__mobile {
-    position: fixed;
-    top: 0;
-    left: 10px;
-    right: 10px;
-    bottom: 40px;
-    display: none;
-    align-items: flex-end;
-    justify-content: space-between;
+    width: 100%;
     z-index: 10;
     pointer-events: none;
-    i {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    &.fixed {
+      position: fixed;
+      top: 0;
+    }
+    &-container {
+      display: flex;
+      justify-content: center;
+    }
+    &-item {
+      transition: 0.2s ease-in-out color;
+      border-right: $border 3px solid;
+      &:first-child {
+        border-left: $border 3px solid;
+      }
+      &:hover {
+        color: $pink;
+      }
       cursor: pointer;
-      font-size: 48px;
-      z-index: 10;
+      max-width: 200px;
+      width: 100%;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       pointer-events: auto;
-      opacity: 0.5;
+      flex-direction: column;
+      &.disabled {
+        pointer-events: none;
+        &:hover {
+          color: black;
+        }
+        p,
+        i {
+          opacity: 0.2;
+        }
+      }
+      p {
+        margin-top: 10px;
+      }
+    }
+    i {
+      font-size: 36px;
+      z-index: 15;
     }
   }
 }
@@ -158,6 +191,9 @@
 
 .shiftList {
   margin-top: 8px;
+  &.fixed {
+    margin-top: 120px;
+  }
   .rota__container:nth-child(even) {
     .employee__wrapper {
       background-color: #d1d1d1;
@@ -317,6 +353,12 @@
 }
 
 @media only screen and (max-width: 1000px) {
+  .shiftList {
+    margin-bottom: 120px;
+    &.fixed {
+      margin-top: 8px;
+    }
+  }
   .employee {
     &__name {
       font-size: 14px;
@@ -334,6 +376,9 @@
     }
   }
   .dates {
+    &.fixed {
+      top: 0;
+    }
     &__pickerWrapper {
       width: 80%;
       max-width: 400px;
@@ -346,7 +391,34 @@
       flex: 1;
     }
     &__mobile {
-      display: flex;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      &.fixed {
+        top: auto;
+        opacity: 1;
+      }
+      border-top: $border 3px solid;
+      &-item {
+        max-width: none;
+        flex: 1;
+        height: 100px;
+        border-right: none;
+        &:not(:last-child) {
+          border-right: $border 3px solid;
+        }
+        &:first-child {
+          border-left: none;
+        }
+        i {
+          font-size: 28px;
+        }
+      }
+      p {
+        font-size: 12px;
+        text-align: center;
+      }
     }
   }
 }
@@ -365,6 +437,24 @@
     }
     &__sort {
       font-size: 18px;
+    }
+    &__mobile {
+      p {
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .dates {
+    &__mobile {
+      &-item {
+        height: 80px;
+      }
+      p {
+        display: none;
+      }
     }
   }
 }
