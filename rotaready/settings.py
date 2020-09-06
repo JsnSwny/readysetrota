@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'slrae8_tml#^9=@(htas#d18%w^d&3!s7!wd)toc=(pltaqzj&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = ['rotaready.herokuapp.com', 'localhost']
 
@@ -48,7 +48,10 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 }
 
 MIDDLEWARE = [
@@ -158,7 +161,5 @@ if DEBUG:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
     STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
 else:
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
-    STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
-    # STRIPE_PUBLISHABLE_KEY = 'pk_live_pqBs7Warr2y274MGrFbyXmlX009qw5wklI'
-    # STRIPE_SECRET_KEY = 'sk_live_vwTiQ06gwS0m9iK5QMNSP1lF00Ja6UXdX6'
+    STRIPE_PUBLISHABLE_KEY = 'pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV'
+    STRIPE_SECRET_KEY = 'sk_live_jF8c4B7h5RdSL2kvQMJqU6M600fSR01u86'
