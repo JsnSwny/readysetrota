@@ -18,6 +18,7 @@ const Premium = () => {
   const stripePromise = loadStripe(
     "pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV"
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
