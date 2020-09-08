@@ -23,9 +23,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ('role',)
 
 class BusinessSerializer(serializers.ModelSerializer):
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Business
-        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation',)
+        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees',)
+
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(business=obj.id).distinct()
+        return len(employees)
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:

@@ -24,9 +24,11 @@ import EnterID from "./common/EnterID";
 import Landing from "./landing/Landing";
 import Premium from "./accounts/Premium";
 import Plans from "./accounts/Plans";
+import PrivacyPolicy from "./landing/PrivacyPolicy";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TermsAndConditions from "./landing/TermsAndConditions";
 
 const App = () => {
   useEffect(() => {
@@ -52,6 +54,8 @@ const App = () => {
             <PrivateRoute path="/rota" exact component={ShiftList} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
+            <Route path="/privacy" component={PrivacyPolicy} />
+            <Route path="/terms" component={TermsAndConditions} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={Profile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />

@@ -90,7 +90,13 @@ const DepartmentPicker = (props) => {
                 }`}
               >
                 <p className="title-md bold">{item.name}</p>
-                <p className="subtitle-sm">{item.business.name}</p>
+                <p className="subtitle-sm" style={{ flex: "0" }}>
+                  {item.business.name}
+                </p>
+                <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
+                  {item.number_of_employees}{" "}
+                  {item.number_of_employees == 1 ? "employee" : "employees"}
+                </p>
                 <div className="btn-wrapper">
                   {user.business && (
                     <button

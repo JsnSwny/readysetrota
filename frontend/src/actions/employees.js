@@ -231,6 +231,10 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
         type: DELETE_DEPARTMENT,
         payload: id,
       });
+      dispatch({
+        type: SET_DEPARTMENT,
+        payload: 0,
+      });
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());

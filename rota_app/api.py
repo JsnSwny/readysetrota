@@ -85,7 +85,13 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
 
     def perform_create(self, serializer):
+        business = self.request.user.business
+        total_employees = business.total_employees
+        current_employees = Employee.objects.filter(business=business)
+        if len(current_employees) >= total_employees:
+            return False
         serializer.save(owner=self.request.user)
+
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = EmployeeFilter
     ordering_fields = ('first_name',)
@@ -154,6 +160,12 @@ class DepartmentViewSet(viewsets.ModelViewSet):
             
 
     def perform_create(self, serializer):
+        business = self.request.user.business
+        departments = Department.objects.filter(business=business)
+
+        if business.plan == "F" and len(departments) >= 1:
+            print("SIKE")
+            return False
         serializer.save(owner=self.request.user)
 
 

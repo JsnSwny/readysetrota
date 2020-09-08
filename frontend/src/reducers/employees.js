@@ -180,6 +180,10 @@ export default function (state = initialState, action) {
         return {
           ...state,
           employees: [...state.employees, action.payload],
+          business: {
+            ...state.business,
+            number_of_employees: state.business.number_of_employees + 1,
+          },
         };
       } else {
         return {
@@ -201,6 +205,10 @@ export default function (state = initialState, action) {
         employees: state.employees.filter(
           (employee) => employee.id !== action.payload
         ),
+        business: {
+          ...state.business,
+          number_of_employees: state.business.number_of_employees - 1,
+        },
       };
     case DELETE_POSITION:
       return {

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
-  let business = useSelector((state) => state.auth.business);
+  let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);
   let user = useSelector((state) => state.auth.user);
   let currentDepartment = useSelector(
@@ -17,23 +17,25 @@ const StaffPicker = (props) => {
     (state) => state.employees.business.total_employees
   );
 
+  console.log(business.number_of_employees);
+
   return (
     <Fragment>
       <div className="dashboard container-2">
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">
-              Staff ({employees.length} / {total_employees})
+              Staff ({business.number_of_employees} / {total_employees})
             </p>
 
             <i
               onClick={() => {
-                if (plan == "F" && employees.length >= 10) {
+                if (plan == "F" && business.number_of_employees >= 10) {
                   toast.warning(
                     "Upgrade to premium to create more than 10 employees"
                   );
                   return false;
-                } else if (employees.length >= total_employees) {
+                } else if (business.number_of_employees >= total_employees) {
                   toast.warning(
                     `You have reached your max number of ${total_employees} employees!`
                   );

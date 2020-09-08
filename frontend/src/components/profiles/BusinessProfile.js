@@ -119,20 +119,37 @@ const BusinessProfile = (props) => {
                     )}
                   </p>
                 ) : (
-                  <button
-                    onClick={() => {
-                      dispatch(cancelSubscription(user.profile.stripe_id));
-                    }}
-                    className="btn-4"
-                    style={{
-                      width: "300px",
-                      marginTop: "40px",
-                      marginLeft: "0",
-                      padding: "15px 0",
-                    }}
-                  >
-                    Cancel subscription
-                  </button>
+                  <Fragment>
+                    <button
+                      onClick={() => {
+                        dispatch(cancelSubscription(user.profile.stripe_id));
+                      }}
+                      className="btn-4"
+                      style={{
+                        width: "300px",
+                        marginTop: "40px",
+                        marginLeft: "0",
+                        padding: "15px 0",
+                      }}
+                    >
+                      Cancel subscription
+                    </button>
+                    {/* <button
+                      onClick={() => {
+                        dispatch(cancelSubscription(user.profile.stripe_id));
+                      }}
+                      className="btn-4"
+                      style={{
+                        width: "300px",
+                        marginTop: "10px",
+                        marginLeft: "0",
+                        display: "block",
+                        padding: "15px 0",
+                      }}
+                    >
+                      Change payment method
+                    </button> */}
+                  </Fragment>
                 )}
               </Fragment>
             )}

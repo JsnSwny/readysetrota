@@ -4,16 +4,25 @@ from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 
 class BusinessSerializer(serializers.ModelSerializer):
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Business
-        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation',)
+        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees',)
+
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(business=obj.id).distinct()
+        return len(employees)
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
     business = BusinessSerializer()
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'business')
+        fields = ('id', 'first_name', 'last_name', 'business', 'number_of_employees',)
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(position__department=obj.id).distinct()
+        return len(employees)
 
 class BasicDepartmentSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
@@ -28,10 +37,15 @@ class DepartmentSerializer(serializers.ModelSerializer):
     owner = BasicUserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Department
-        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business', 'business_id')
+        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business', 'business_id', 'number_of_employees',)
         depth = 1
+
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(position__department=obj.id).distinct()
+        return len(employees)
 
 class PositionSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)

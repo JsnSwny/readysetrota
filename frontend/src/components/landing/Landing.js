@@ -64,13 +64,12 @@ const Landing = () => {
       <section className="landing__section blue-section">
         <div className="container-2">
           <h2 className="landing__section-title">how it works</h2>
-          {/* <video className="landing__video" controls>
-            <source
-              src="/static/media/readysetrota-demo.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video> */}
+          <iframe
+            src="https://www.youtube.com/embed/vLT36DLVaSo"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
         </div>
       </section>
       <section className="landing__section">
@@ -246,6 +245,14 @@ const Landing = () => {
           </Link>
         </div>
       </section>
+      <footer>
+        readysetrota | developed by&nbsp;
+        <a href="https://www.facebook.com/sweeneysolutionsuk" target="_blank">
+          Jason Sweeney
+        </a>
+        &nbsp; | &nbsp;<Link to="privacy">Privacy Policy</Link>&nbsp;|&nbsp;
+        <Link to="terms">Terms and Conditions</Link>
+      </footer>
     </div>
   );
 };
