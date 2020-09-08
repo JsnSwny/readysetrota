@@ -9,6 +9,7 @@ import {
 import { tokenConfig } from "./auth";
 import axios from "axios";
 import { loadUser } from "./auth";
+import { getErrors, resetErrors } from "./errors";
 
 export const sendCharge = (obj) => (dispatch, getState) => {
   axios
@@ -21,6 +22,13 @@ export const sendCharge = (obj) => (dispatch, getState) => {
       period: obj.period,
     })
     .then((res) => {
+      if (res.data.error) {
+        dispatch({
+          type: LOAD_FINISH,
+        });
+        dispatch(getErrors({ payment: res.data.error }, 1));
+        return false;
+      }
       dispatch({
         type: CHARGE_COMPLETE,
         employees: obj.total_employees,

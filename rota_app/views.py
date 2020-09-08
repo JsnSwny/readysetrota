@@ -115,11 +115,14 @@ class Charge(APIView):
     def post(self, request, format=None):
         if request.method == 'POST':
             stripe.api_key = STRIPE_SECRET_KEY
-
-            pm = stripe.PaymentMethod.attach(
-                request.data['payment_method'],
-                customer=request.data['customer_id'],
-            )
+            pm = ""
+            try:
+                pm = stripe.PaymentMethod.attach(
+                    request.data['payment_method'],
+                    customer=request.data['customer_id'],
+                )
+            except Exception as e:
+                return JsonResponse({"error": e.error.message})
 
             stripe.Customer.modify(
                 request.data['customer_id'],
@@ -217,7 +220,6 @@ def webhook(request):
         )
     except ValueError as e:
         return HttpResponse(status=200)
-    print(event)
     if event.type == "customer.subscription.deleted":
         customer = event.data.object.customer
 

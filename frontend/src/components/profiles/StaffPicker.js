@@ -17,8 +17,6 @@ const StaffPicker = (props) => {
     (state) => state.employees.business.total_employees
   );
 
-  console.log(business.number_of_employees);
-
   return (
     <Fragment>
       <div className="dashboard container-2">

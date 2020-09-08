@@ -164,7 +164,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         departments = Department.objects.filter(business=business)
 
         if business.plan == "F" and len(departments) >= 1:
-            print("SIKE")
             return False
         serializer.save(owner=self.request.user)
 
