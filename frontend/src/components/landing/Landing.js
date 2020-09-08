@@ -246,11 +246,15 @@ const Landing = () => {
         </div>
       </section>
       <footer>
-        readysetrota | developed by&nbsp;
-        <a href="https://www.facebook.com/sweeneysolutionsuk" target="_blank">
-          Jason Sweeney
-        </a>
-        &nbsp; | &nbsp;<Link to="privacy">Privacy Policy</Link>&nbsp;|&nbsp;
+        readysetrota<span>&nbsp;|&nbsp;</span>
+        <p>
+          developed by&nbsp;
+          <a href="https://www.facebook.com/sweeneysolutionsuk" target="_blank">
+            Jason Sweeney
+          </a>
+        </p>
+        <span>&nbsp;|&nbsp;</span> <Link to="privacy">Privacy Policy</Link>
+        <span>&nbsp;|&nbsp;</span>
         <Link to="terms">Terms and Conditions</Link>
       </footer>
     </div>

@@ -378,4 +378,11 @@ footer {
   justify-content: center;
   align-items: center;
   color: white;
+  @include wi-mq(tablet) {
+    display: flex;
+    flex-direction: column;
+    span {
+      display: none;
+    }
+  }
 }
