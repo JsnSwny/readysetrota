@@ -77,13 +77,25 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         depth = 1
 
+
 class EmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    uuid = serializers.SerializerMethodField()
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id',)
+    def get_uuid(self, obj):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        if(hasattr(user, 'business')):
+            return obj.uuid
+        else:
+            return False
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
     class Meta:

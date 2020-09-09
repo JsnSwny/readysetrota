@@ -34,7 +34,11 @@ const Employee = (props) => {
     <div className="container-left">
       <div
         className={`employee__wrapper ${
-          !user.business && current_employee.id == employee.id ? " active" : ""
+          !user.business &&
+          current_employee &&
+          current_employee.id == employee.id
+            ? " active"
+            : ""
         }`}
       >
         <p className="employee__position">

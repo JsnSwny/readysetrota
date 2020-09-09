@@ -64,9 +64,12 @@ const ShiftList = () => {
     dispatch(uuidReset());
   }
 
-  let current_employee = user.employee.filter((employee) =>
-    employee.position.some((item) => item.department.id == currentDepartment)
-  )[0];
+  let current_employee = null;
+  if (user.employee) {
+    current_employee = user.employee.filter((employee) =>
+      employee.position.some((item) => item.department.id == currentDepartment)
+    )[0];
+  }
 
   const widthUpdate = () => {
     if (width > 1200) {
@@ -109,7 +112,7 @@ const ShiftList = () => {
   }, [currentDepartment]);
 
   useEffect(() => {
-    if (user && !user.business) {
+    if (user && !user.business && current_employee) {
       if (employees.length > 0) {
         employees = employees.filter(
           (employee) => employee.id !== current_employee.id
@@ -201,6 +204,7 @@ const ShiftList = () => {
     toast.warning("You must select a department to view the rota");
     return <Redirect to="/" />;
   }
+
   return (
     <Fragment>
       <CreateShift
