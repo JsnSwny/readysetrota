@@ -9,24 +9,28 @@ const Nav = () => {
   const [burger, setBurger] = useState(false);
   const dispatch = useDispatch();
   let employee = [];
-  const authLinks = (
-    <div className="nav__lisection">
-      {user && (
-        <div className="nav__welcome">
-          <span>Welcome {user.username} </span>
-          <li className="nav__logout">
-            <a
-              onClick={() => {
-                dispatch(logout());
-                setBurger(false);
-              }}
-            >
-              Logout
-            </a>
-          </li>
-        </div>
-      )}
-    </div>
+  const authLinks = user && (
+    <Fragment>
+      <Link to="/changepassword">
+        <li
+          onClick={() => {
+            setBurger(false);
+          }}
+        >
+          Change Password
+        </li>
+      </Link>
+      <li
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          dispatch(logout());
+          setBurger(false);
+        }}
+        className="nav__logout"
+      >
+        Logout
+      </li>
+    </Fragment>
   );
 
   const guestLinks = (
@@ -87,24 +91,28 @@ const Nav = () => {
       </nav>
       <div className={`hamburger__dropdown ${burger ? " active" : ""}`}>
         <ul>
-          <Link to="/">
-            <li
-              onClick={() => {
-                setBurger(false);
-              }}
-            >
-              Home
-            </li>
-          </Link>
-          <Link to="/rota">
-            <li
-              onClick={() => {
-                setBurger(false);
-              }}
-            >
-              Rota
-            </li>
-          </Link>
+          {user && (
+            <Fragment>
+              <Link to="/">
+                <li
+                  onClick={() => {
+                    setBurger(false);
+                  }}
+                >
+                  Home
+                </li>
+              </Link>
+              <Link to="/rota">
+                <li
+                  onClick={() => {
+                    setBurger(false);
+                  }}
+                >
+                  Rota
+                </li>
+              </Link>
+            </Fragment>
+          )}
           {user && !user.business && (
             <Link to="/join">
               <li

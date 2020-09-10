@@ -28,6 +28,10 @@ const DepartmentPicker = (props) => {
     setDep(departments[0].id);
   }
 
+  let currentBusiness = useSelector(
+    (state) => state.employees.current_business
+  );
+
   return (
     <Fragment>
       <CreateShift
@@ -114,7 +118,11 @@ const DepartmentPicker = (props) => {
                   {currentDepartment != item.id && (
                     <button
                       onClick={() => {
-                        if (plan == "F" && i > 0) {
+                        if (
+                          plan == "F" &&
+                          i > 0 &&
+                          item.business.id == currentBusiness
+                        ) {
                           toast.warning(
                             "Upgrade to premium to unlock unlimited departments"
                           );

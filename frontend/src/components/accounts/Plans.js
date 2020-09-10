@@ -34,7 +34,7 @@ const Plans = () => {
   }, []);
 
   useEffect(() => {
-    setAmountPerMonth(((employeesAmount - 15) / 5) * 2 + 10);
+    setAmountPerMonth(((employeesAmount - 10) / 5) * 2 + 10);
   }, [employeesAmount]);
 
   if (business.plan != "F") {
@@ -81,7 +81,7 @@ const Plans = () => {
                 type="range"
                 id="points"
                 name="points"
-                min="15"
+                min="10"
                 max="100"
                 step="5"
                 className="slider"

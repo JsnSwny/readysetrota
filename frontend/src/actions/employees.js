@@ -286,6 +286,7 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
             payload: res.data,
           });
         });
+        dispatch(loadUser());
       }
     })
     .catch();

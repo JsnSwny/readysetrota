@@ -14,7 +14,7 @@ const Landing = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setAmountPerMonth(((employees - 15) / 5) * 2 + 10);
+    setAmountPerMonth(((employees - 10) / 5) * 2 + 10);
   }, [employees]);
 
   const handleSubmit = (e) => {
@@ -154,7 +154,7 @@ const Landing = () => {
               value={employees}
             />
           </div>
-          {employees <= 10 ? (
+          {employees <= 5 ? (
             <div className="landing__pricing-item">
               <h2>free plan</h2>
               <ul>
