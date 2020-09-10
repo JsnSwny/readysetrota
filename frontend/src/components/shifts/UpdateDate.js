@@ -89,7 +89,7 @@ const UpdateDate = (props) => {
                       ? `/exportall?start_date=${date}&end_date=${format(
                           addDays(parseISO(date), 6),
                           "yyyy-MM-dd"
-                        )}&id=${currentBusiness}`
+                        )}&id=${currentDepartment}`
                       : ""
                   }`}
                   target={`${shifts.length > 0 ? "_blank" : ""}`}

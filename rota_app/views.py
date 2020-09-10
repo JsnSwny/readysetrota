@@ -112,13 +112,13 @@ class ExportShifts(APIView):
 class ExportAllShifts(APIView):
     def get(self, request):
         shifts = Shift.objects.filter(published=True, date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
-            'end_date'), department__business__id=request.query_params.get('id')).order_by('date')
+            'end_date'), department__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
             all_shifts[i] = Shift.objects.filter(
-                date=i, published=True, department__business__id=request.query_params.get('id')).order_by('start_time')
+                date=i, published=True, department__id=request.query_params.get('id')).order_by('start_time')
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('allshifts.html', file_object=resp, context={
