@@ -14,7 +14,7 @@ const EnterID = (props) => {
   let errors = useSelector((state) => state.errors.msg);
 
   useEffect(() => {
-    if (id) {
+    if (id && !user.business) {
       setUUID(id);
       dispatch(checkUUID(id, user.id));
     }
@@ -23,7 +23,9 @@ const EnterID = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
   };
-
+  if (user.business) {
+    return <Redirect to="/" />;
+  }
   if (!uuid_success) {
     return (
       <div className="enterid">
