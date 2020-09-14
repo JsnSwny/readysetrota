@@ -147,7 +147,7 @@ const ShiftList = () => {
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
       return obj.employee.id === employee && obj.date === date
-        ? business
+        ? admin
           ? !obj.published || obj.published
           : obj.published
         : "";
