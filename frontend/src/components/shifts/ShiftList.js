@@ -33,6 +33,7 @@ const ShiftList = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   let user = useSelector((state) => state.auth.user);
+  let admin = useSelector((state) => state.auth.business);
   let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
@@ -277,12 +278,12 @@ const ShiftList = () => {
                         format(result, "yyyy-MM-dd")
                       ).map((shift) => (
                         <Fragment key={shift.id}>
-                          {!business && shift.published == false ? (
+                          {!admin && shift.published == false ? (
                             ""
                           ) : (
                             <div
                               onClick={() => {
-                                if (business) {
+                                if (admin) {
                                   setOpen(true);
                                   setEmployee(employee);
                                   setType("shift");
@@ -290,7 +291,7 @@ const ShiftList = () => {
                                 }
                               }}
                               className={`shift__wrapper ${
-                                business ? "edit" : ""
+                                admin ? "edit" : ""
                               }`}
                             >
                               <div className="flex">
@@ -300,7 +301,7 @@ const ShiftList = () => {
                                 </p>
                                 <span>
                                   {
-                                    business ? (
+                                    admin ? (
                                       shift.published ? (
                                         <i className="fas fa-check"></i>
                                       ) : (

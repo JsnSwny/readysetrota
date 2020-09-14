@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const AddShiftButton = (props) => {
   const { employee, date, white, limit } = props;
-  let business = useSelector((state) => state.employees.business);
+  let business = useSelector((state) => state.auth.business);
   const [open, setOpen] = useState("");
   return (
     business &&
