@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 import uuid
 from datetime import datetime
+from jsonfield import JSONField
 
 class Business(models.Model):
     name = models.CharField(max_length=100)
@@ -37,6 +38,18 @@ class Position(models.Model):
     department = models.ForeignKey(Department, related_name="pos_department", on_delete=models.CASCADE)
     business = models.ForeignKey(Business, related_name="position_business", on_delete=models.CASCADE, null=True, blank=True)
 
+def default_availability():
+    return 
+    {
+        '0': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '1': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '2': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '3': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '4': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '5': {'name': 'unselected', 'start_time': None, 'end_time': None},
+        '6': {'name': 'unselected', 'start_time': None, 'end_time': None},
+    }
+
 class Employee(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
@@ -46,6 +59,7 @@ class Employee(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="employee")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User, related_name="employees", on_delete=models.CASCADE, blank=True)
+    default_availability = JSONField(default=default_availability)
     business = models.ForeignKey(Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
 
 class Shift(models.Model):
@@ -85,9 +99,13 @@ class Availability(models.Model):
     def __str__(self):
         return f'{self.date} - {self.name} - {self.employee}'
 
+
+
+
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
   role = models.CharField(max_length=100)
   stripe_id = models.CharField(max_length=100, blank=True, null=True)
+  
   def __str__(self):
       return self.user.email

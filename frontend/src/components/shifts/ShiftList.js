@@ -6,7 +6,7 @@ import {
   uuidReset,
   getAllAvailability,
 } from "../../actions/employees";
-import { format, parseISO, eachDayOfInterval, addDays } from "date-fns";
+import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import CreateShift from "../layout/CreateShift";
 import Loading from "../common/Loading";
@@ -180,7 +180,18 @@ const ShiftList = () => {
       (item) => item.employee.id == employee && item.date == date
     )[0];
     if (!available) {
-      return false;
+      date = parseISO(date);
+
+      return {
+        name: employees.filter((item) => item.id == employee)[0]
+          .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1].name,
+        start: employees.filter((item) => item.id == employee)[0]
+          .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1]
+          .start_time,
+        end: employees.filter((item) => item.id == employee)[0]
+          .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1]
+          .end_time,
+      };
     } else {
       return {
         name: available.name,
@@ -381,12 +392,14 @@ const ShiftList = () => {
                       {showAvailabilities && (
                         <Fragment>
                           <p className={`shift__text`}>
-                            {
+                            {isAvailable(
+                              employee.id,
+                              format(result, "yyyy-MM-dd")
+                            ).name != "unselected" &&
                               isAvailable(
                                 employee.id,
                                 format(result, "yyyy-MM-dd")
-                              ).name
-                            }
+                              ).name}
                           </p>
                           {isAvailable(
                             employee.id,

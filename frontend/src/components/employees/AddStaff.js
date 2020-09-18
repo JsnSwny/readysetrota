@@ -109,6 +109,15 @@ const AddStaff = (props) => {
         last_name: lastName,
         position_id: position,
         business_id: currentBusiness,
+        default_availability: {
+          0: { name: "unselected", start_time: null, end_time: null },
+          1: { name: "unselected", start_time: null, end_time: null },
+          2: { name: "unselected", start_time: null, end_time: null },
+          3: { name: "unselected", start_time: null, end_time: null },
+          4: { name: "unselected", start_time: null, end_time: null },
+          5: { name: "unselected", start_time: null, end_time: null },
+          6: { name: "unselected", start_time: null, end_time: null },
+        },
       };
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {

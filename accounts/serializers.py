@@ -37,16 +37,31 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = ('__all__')
 
+class BasicPositionSerializer(serializers.ModelSerializer):   
+    class Meta:
+        model = Position
+        fields = ('id', 'name', 'department',)
+        depth = 1
+
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ('id', 'name',)
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    position = BasicPositionSerializer(read_only=True, many=True)
+    business = BusinessSerializer(read_only=True)
+    default_availability = serializers.JSONField()
+    class Meta:
+        model = Employee
+        fields = ('id', 'first_name', 'last_name', 'user', 'owner', 'position', 'business', 'default_availability', 'business_id',)
 
         # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     business = BusinessSerializer()
     all_permissions = serializers.SerializerMethodField()
     department_admin = DepartmentSerializer(read_only=True, many=True)
+    employee = EmployeeSerializer(required=False, read_only=True, many=True)
     def get_all_permissions(self, obj):
         permissions = []
         for i in obj.groups.all():

@@ -98,7 +98,7 @@ export const updateEmployee = (id, employee) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch();
+    .catch((err) => console.log(err.response));
 };
 
 // Add Employee
@@ -113,7 +113,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       });
       dispatch(resetErrors());
     })
-    .catch();
+    .catch((err) => console.log(err.response));
 };
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {

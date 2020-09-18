@@ -10,6 +10,7 @@ import {
   getDepartments,
   getPositions,
   getHolidays,
+  updateEmployee,
 } from "../../actions/employees";
 import { useParams, Redirect } from "react-router-dom";
 import {
@@ -24,6 +25,7 @@ import {
   addMonths,
   differenceInWeeks,
   differenceInDays,
+  getDay,
 } from "date-fns";
 import Pagination from "./Pagination";
 import DepartmentPicker from "./DepartmentPicker";
@@ -136,6 +138,9 @@ const Profile = (props) => {
   if (!business && id_param) {
     return <Redirect to="" />;
   }
+
+  const days = { 1: "M", 2: "T", 3: "W", 4: "T", 5: "F", 6: "S", 7: "S" };
+
   return (
     <Fragment>
       <div className="dashboard__header">
@@ -262,6 +267,71 @@ const Profile = (props) => {
                 </div>
 
                 <div className="dashboard__block-container">
+                  <h4
+                    style={{
+                      textAlign: "center",
+                      marginTop: "20px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Default Availability
+                  </h4>
+                  <div
+                    className="dashboard__dates"
+                    style={{ marginBottom: "60px" }}
+                  >
+                    {[...Array(7)].map((e, i) => (
+                      <div key={i} className="dashboard__dates-item">
+                        <p
+                          onClick={() => {
+                            if (
+                              currentSelector == "partial" &&
+                              !(startTime && endTime)
+                            ) {
+                              toast.warning(
+                                "You must set a start and end time when creating a partial availability!"
+                              );
+                            } else if (currentSelector == "holiday") {
+                              toast.warning(
+                                "You can't set a holiday as a default availability!"
+                              );
+                            } else {
+                              let temp_availability =
+                                employee.default_availability;
+                              temp_availability[i] = {
+                                name: currentSelector,
+                                start_time:
+                                  currentSelector == "partial" && startTime
+                                    ? startTime
+                                    : null,
+                                end_time:
+                                  currentSelector == "partial" && endTime
+                                    ? endTime
+                                    : null,
+                              };
+
+                              let obj = {
+                                default_availability: temp_availability,
+                              };
+                              dispatch(
+                                updateEmployee(employee.id, {
+                                  ...employee,
+                                  obj,
+                                  position_id: employee.position.map(
+                                    (item) => item.id
+                                  ),
+                                  business_id: employee.business.id,
+                                })
+                              );
+                            }
+                          }}
+                          className={`${currentSelector} current-${employee.default_availability[i].name}`}
+                        >
+                          {days[i + 1]}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                   <p className="dashboard__dates-title">
                     <span
                       onClick={() => {
@@ -285,7 +355,7 @@ const Profile = (props) => {
                         i < 7 && <p key={i}>{format(date, "EEEEE")}</p>
                     )}
                   </div>
-                  <div className="dashboard__dates">
+                  <div className="dashboard__dates stretch">
                     {dateRange.map((date) => (
                       <div key={date} className="dashboard__dates-item">
                         <p
@@ -371,7 +441,9 @@ const Profile = (props) => {
                                     (item) =>
                                       item.date == format(date, "yyyy-MM-dd")
                                   )[0].name
-                                : ""
+                                : employee.default_availability[
+                                    getDay(date) == 0 ? 6 : getDay(date) - 1
+                                  ].name
                               : "shift"
                           } ${
                             date < new Date()

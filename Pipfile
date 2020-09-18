@@ -25,6 +25,7 @@ redis = "*"
 celery = "*"
 gevent = "*"
 stripe = "*"
+jsonfield = "*"
 
 [requires]
 python_version = "3.7"

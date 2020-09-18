@@ -228,4 +228,19 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date',)
     queryset = Availability.objects.all()
 
+# class DefaultAvailabilityFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = DefaultAvailability
+#         fields = ['employee__id', 'employee__user', 'employee__owner__id', 'employee__business']
+
+# class DefaultAvailabilityViewSet(viewsets.ModelViewSet):
+#     permission_classes = [
+#         permissions.AllowAny
+#     ]
+
+#     serializer_class = DefaultAvailabilitySerializer
+#     filter_backends = (DjangoFilterBackend, OrderingFilter)
+#     filter_class = DefaultAvailabilityFilter
+#     queryset = DefaultAvailability.objects.all()
+
 

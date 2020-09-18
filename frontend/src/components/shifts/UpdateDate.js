@@ -101,13 +101,9 @@ const UpdateDate = (props) => {
               {business && (
                 <div
                   onClick={() => {
-                    availability.length > 0
-                      ? setShowAvailabilities(!showAvailabilities)
-                      : toast.warning("There are no availabilities to show!");
+                    setShowAvailabilities(!showAvailabilities);
                   }}
-                  className={`dates__mobile-item ${
-                    availability.length == 0 ? "disabled" : ""
-                  }`}
+                  className={`dates__mobile-item`}
                 >
                   <i
                     className={`fas ${

@@ -66,7 +66,7 @@ class BasicPositionSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     # shifts = EmployeeShiftSerializer(read_only=True, many=True)
     position = PositionSerializer(read_only=True, many=True)
-
+    default_availability = serializers.JSONField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
     owner = UserSerializer(read_only=True)
     user = UserSerializer(read_only=True)
@@ -81,11 +81,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class EmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
+    default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     uuid = serializers.SerializerMethodField()
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id',)
+        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability',)
     def get_uuid(self, obj):
         user = None
         request = self.context.get("request")
@@ -141,3 +142,12 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         model = Availability
         fields = '__all__'
         depth = 1
+
+# class DefaultAvailabilitySerializer(serializers.ModelSerializer):
+#     availability = serializers.JSONField()
+#     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
+#     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+#     class Meta:
+#         model = DefaultAvailability
+#         fields = '__all__'
+#         depth = 1
