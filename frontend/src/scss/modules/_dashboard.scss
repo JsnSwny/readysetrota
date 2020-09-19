@@ -264,9 +264,9 @@
     flex-wrap: wrap;
     justify-content: center;
     max-width: 700px;
-    &.stretch {
-      min-height: 600px;
-    }
+    // &.stretch {
+    //   min-height: 600px;
+    // }
 
     margin: 0 auto;
     &-times {
