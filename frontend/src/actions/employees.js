@@ -335,7 +335,7 @@ export const getHolidays = (business, user = false) => (dispatch, getState) => {
   axios
     .get(
       `/api/availability/${
-        user ? `?employee__user=${user}` : `?employee__business=${business}`
+        user ? `?employee__id=${user}` : `?employee__business=${business}`
       }&date_after=${format(
         new Date(),
         "yyyy-MM-dd"

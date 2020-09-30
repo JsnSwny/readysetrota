@@ -124,3 +124,12 @@
     }
   }
 }
+
+.btn-wrapper {
+  font-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  @include wi-mq(laptop) {
+    justify-content: center;
+  }
+}

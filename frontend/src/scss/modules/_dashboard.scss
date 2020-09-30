@@ -191,13 +191,7 @@
     .subtitle-sm {
       flex: 1;
     }
-    .btn-wrapper {
-      font-size: 0;
-      @include wi-mq(laptop) {
-        display: flex;
-        justify-content: center;
-      }
-    }
+
     .btn-4 {
       align-self: flex-start;
       margin-left: 0;

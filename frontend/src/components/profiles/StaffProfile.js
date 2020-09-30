@@ -104,9 +104,8 @@ const StaffProfile = (props) => {
 
   useEffect(() => {
     if (employee) {
-      let employee_user = id_param ? employee.user : employee.user.id;
       dispatch(getAvailability(employee.id, employee.business.id));
-      dispatch(getHolidays(employee.business.id, employee_user));
+      dispatch(getHolidays(employee.business.id, employee.id));
     }
   }, [employee]);
 
@@ -556,6 +555,7 @@ const StaffProfile = (props) => {
                   </div>
                 )}
               </div>
+              {console.log(holidays)}
               <HolidayRequest holidays={holidays} />
             </div>
           )}
