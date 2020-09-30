@@ -15,7 +15,6 @@ import {
 import { useParams, Redirect } from "react-router-dom";
 import {
   format,
-  parse,
   parseISO,
   startOfMonth,
   endOfMonth,
@@ -23,18 +22,17 @@ import {
   startOfWeek,
   endOfWeek,
   addMonths,
-  differenceInWeeks,
   differenceInDays,
   getDay,
 } from "date-fns";
-import Pagination from "./Pagination";
-import DepartmentPicker from "./DepartmentPicker";
-import PositionPicker from "./PositionPicker";
-import StaffPicker from "./StaffPicker";
+import Pagination from "../common/Pagination";
+import DepartmentPicker from "./dashboard/DepartmentPicker";
+import PositionPicker from "./dashboard/PositionPicker";
+import StaffPicker from "./dashboard/StaffPicker";
 import { toast } from "react-toastify";
-import HolidayRequest from "./HolidayRequest";
+import HolidayRequest from "./dashboard/HolidayRequest";
 
-const Profile = (props) => {
+const StaffProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
   let user = useSelector((state) => state.auth.user);
@@ -180,17 +178,12 @@ const Profile = (props) => {
           setType={setType}
         />
       )}
-      {/* <div className="container-2">
-        {!id_param && currentDepartment != 0 && business && (
-          <HolidayRequest holidays={holidays} business={true} />
-        )}
-      </div> */}
       {currentDepartment != 0 && (
         <div className="dashboard container-2">
           <div className="dashboard__block">
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
-              {currentShifts.length > 0 && (
+              {currentShifts.filter((item) => item.published).length > 0 && (
                 <a
                   className="btn-4"
                   target="_blank"
@@ -232,7 +225,7 @@ const Profile = (props) => {
                           </span>
                         </p>
                         <p className="short">
-                          {item.start_time.substr(0, 5)} - {item.end_time}
+                          {item.start_time} - {item.end_time}
                         </p>
                         <p className={`long ${item.info ? "" : "info"}`}>
                           {item.info ? item.info : "N/A"}
@@ -253,8 +246,8 @@ const Profile = (props) => {
             )}
 
             <Pagination
-              shiftsPerPage={shiftsPerPage}
-              totalShifts={shifts.length}
+              itemsPerPage={shiftsPerPage}
+              totalItems={shifts.length}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
             />
@@ -302,7 +295,7 @@ const Profile = (props) => {
                                 name: currentSelector,
                                 start_time:
                                   currentSelector == "partial" && startTime
-                                    ? startTime
+                                    ? startTime.substr(0, 5)
                                     : null,
                                 end_time:
                                   currentSelector == "partial" && endTime
@@ -356,108 +349,105 @@ const Profile = (props) => {
                     )}
                   </div>
                   <div className="dashboard__dates stretch">
-                    {dateRange.map((date) => (
-                      <div key={date} className="dashboard__dates-item">
-                        <p
-                          onClick={() => {
-                            let obj = {
-                              name: currentSelector,
-                              employee_id: employee.id,
-                              date: format(date, "yyyy-MM-dd"),
-                              start_time:
-                                currentSelector == "partial" && startTime
-                                  ? startTime
-                                  : null,
-                              end_time:
-                                currentSelector == "partial" && endTime
-                                  ? endTime
-                                  : null,
-                              business_id: currentBusiness,
-                            };
-                            if (differenceInDays(date, new Date()) > 365) {
-                              toast.warning(
-                                "Availability dates must be selected within 365 days!"
-                              );
-                            } else if (date < new Date()) {
-                              toast.warning(
-                                "You cannot set availability for a date before the current date!"
-                              );
-                            } else if (
-                              currentSelector == "unselected" &&
-                              !availability.some(
-                                (item) =>
-                                  item.date == format(date, "yyyy-MM-dd")
-                              )
-                            ) {
-                              toast.warning(
-                                "You can't reset a date that doesn't have a value!"
-                              );
-                            } else if (
-                              currentSelector == "partial" &&
-                              !(startTime && endTime)
-                            ) {
-                              toast.warning(
-                                "You must set a start and end time when creating a partial availability!"
-                              );
-                            } else if (
-                              shifts.some(
-                                (item) =>
-                                  item.date == format(date, "yyyy-MM-dd")
-                              )
-                            ) {
-                              toast.warning(
-                                "You already have a shift for this date!"
-                              );
-                            } else {
-                              availability.some((item) => item.date == obj.date)
-                                ? currentSelector == "unselected"
-                                  ? dispatch(
-                                      deleteAvailability(
-                                        availability.filter(
-                                          (item) => item.date == obj.date
-                                        )[0].id
+                    {dateRange.map((date) => {
+                      const format_date = format(date, "yyyy-MM-dd");
+                      return (
+                        <div key={date} className="dashboard__dates-item">
+                          <p
+                            onClick={() => {
+                              let obj = {
+                                name: currentSelector,
+                                employee_id: employee.id,
+                                date: format_date,
+                                start_time:
+                                  currentSelector == "partial" && startTime
+                                    ? startTime
+                                    : null,
+                                end_time:
+                                  currentSelector == "partial" && endTime
+                                    ? endTime
+                                    : null,
+                                business_id: currentBusiness,
+                              };
+                              if (differenceInDays(date, new Date()) > 365) {
+                                toast.warning(
+                                  "Availability dates must be selected within 365 days!"
+                                );
+                              } else if (date < new Date()) {
+                                toast.warning(
+                                  "You cannot set availability for a date before the current date!"
+                                );
+                              } else if (
+                                currentSelector == "unselected" &&
+                                !availability.some(
+                                  (item) => item.date == format_date
+                                )
+                              ) {
+                                toast.warning(
+                                  "You can't reset a date that doesn't have a value!"
+                                );
+                              } else if (
+                                currentSelector == "partial" &&
+                                !(startTime && endTime)
+                              ) {
+                                toast.warning(
+                                  "You must set a start and end time when creating a partial availability!"
+                                );
+                              } else if (
+                                shifts.some((item) => item.date == format_date)
+                              ) {
+                                toast.warning(
+                                  "You already have a shift for this date!"
+                                );
+                              } else {
+                                availability.some(
+                                  (item) => item.date == obj.date
+                                )
+                                  ? currentSelector == "unselected"
+                                    ? dispatch(
+                                        deleteAvailability(
+                                          availability.filter(
+                                            (item) => item.date == obj.date
+                                          )[0].id
+                                        )
                                       )
-                                    )
-                                  : dispatch(
-                                      updateAvailability(
-                                        availability.filter(
-                                          (item) => item.date == obj.date
-                                        )[0].id,
-                                        obj
+                                    : dispatch(
+                                        updateAvailability(
+                                          availability.filter(
+                                            (item) => item.date == obj.date
+                                          )[0].id,
+                                          obj
+                                        )
                                       )
-                                    )
-                                : dispatch(addAvailability(obj));
-                            }
-                          }}
-                          className={`${currentSelector} current-${
-                            !shifts.some(
-                              (item) => item.date == format(date, "yyyy-MM-dd")
-                            )
-                              ? availability.filter(
-                                  (item) =>
-                                    item.date == format(date, "yyyy-MM-dd")
-                                )[0]
+                                  : dispatch(addAvailability(obj));
+                              }
+                            }}
+                            className={`${currentSelector} current-${
+                              !shifts.some((item) => item.date == format_date)
                                 ? availability.filter(
-                                    (item) =>
-                                      item.date == format(date, "yyyy-MM-dd")
-                                  )[0].name
-                                : employee.default_availability[
-                                    getDay(date) == 0 ? 6 : getDay(date) - 1
-                                  ].name
-                              : "shift"
-                          } ${
-                            date < new Date()
-                              ? "hidden-2"
-                              : date < startOfMonth(availabilityMonth) ||
-                                date > endOfMonth(availabilityMonth)
-                              ? "hidden"
-                              : ""
-                          }`}
-                        >
-                          {format(date, "d")}
-                        </p>
-                      </div>
-                    ))}
+                                    (item) => item.date == format_date
+                                  )[0]
+                                  ? availability.filter(
+                                      (item) => item.date == format_date
+                                    )[0].name
+                                  : employee.default_availability[
+                                      getDay(date) == 0 ? 6 : getDay(date) - 1
+                                    ].name
+                                : "shift"
+                            } ${
+                              date < new Date()
+                                ? "hidden-2"
+                                : date < startOfMonth(availabilityMonth) ||
+                                  date > endOfMonth(availabilityMonth)
+                                ? "hidden"
+                                : ""
+                            }`}
+                          >
+                            {format(date, "d")}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="dashboard__dates-colours">
@@ -713,4 +703,4 @@ const Profile = (props) => {
   );
 };
 
-export default Profile;
+export default StaffProfile;

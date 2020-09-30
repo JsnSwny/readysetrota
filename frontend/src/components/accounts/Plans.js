@@ -5,9 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import Loading from "../common/Loading";
 import { getCustomer } from "../../actions/payments";
-import { format, parseISO } from "date-fns";
 import { getDepartments } from "../../actions/employees";
-import { cancelSubscription } from "../../actions/payments";
 import { Redirect } from "react-router-dom";
 
 const Plans = () => {
@@ -50,11 +48,13 @@ const Plans = () => {
               Premium Plan
             </h1>
             <div
-              style={{ justifyContent: "center", marginBottom: "40px" }}
-              className="form-selector"
+              style={{ marginBottom: "40px" }}
+              className="flex-container--center"
             >
               <span
-                className={`form-control ${period == "month" ? " active" : ""}`}
+                className={`form-control ${
+                  period == "month" ? " active" : ""
+                } btn-toggle`}
                 onClick={() => {
                   setPeriod("month");
                 }}
@@ -62,7 +62,9 @@ const Plans = () => {
                 Monthly
               </span>
               <span
-                className={`form-control ${period == "year" ? " active" : ""}`}
+                className={`form-control ${
+                  period == "year" ? " active" : ""
+                } btn-toggle`}
                 onClick={() => {
                   setPeriod("year");
                 }}

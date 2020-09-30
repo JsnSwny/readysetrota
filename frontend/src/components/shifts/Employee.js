@@ -17,14 +17,15 @@ const Employee = (props) => {
 
   const getAllShifts = (employee) => {
     let hours = 0;
-    let shifts = shifts_list.filter((obj) => obj.employee.id === employee);
+    let shifts = shifts_list.filter(
+      (obj) => obj.employee && obj.employee.id === employee
+    );
     for (let i = 0; i < shifts.length; i++) {
-      let start = parse(shifts[i].start_time, "HH:mm:ss", new Date());
+      let start = parse(shifts[i].start_time, "HH:mm", new Date());
       let end = parse(shifts[i].end_time, "HH:mm", new Date());
       if (end < start) {
         end = addDays(end, 1);
       }
-
       if (end != "Invalid Date") hours += differenceInMinutes(end, start) / 60;
     }
     return hours;

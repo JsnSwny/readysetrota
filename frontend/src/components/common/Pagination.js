@@ -1,14 +1,14 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Pagination = ({
-  shiftsPerPage,
-  totalShifts,
+  itemsPerPage,
+  totalItems,
   setCurrentPage,
   currentPage,
 }) => {
   const pageNumbers = [];
 
-  for (let i = 1; i <= Math.ceil(totalShifts / shiftsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -22,7 +22,7 @@ const Pagination = ({
       : pageNumbers;
 
   useEffect(() => {
-    if (totalShifts > 0 && currentPage > pageNumbers.length) {
+    if (totalItems > 0 && currentPage > pageNumbers.length) {
       setCurrentPage(currentPage - 1);
     }
   }, [pageNumbers]);

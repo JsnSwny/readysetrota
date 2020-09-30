@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import CopyUUID from "../common/CopyUUID";
+import CopyUUID from "../../common/CopyUUID";
 import { toast } from "react-toastify";
 
 const StaffPicker = (props) => {

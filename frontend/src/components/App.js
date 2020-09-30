@@ -6,7 +6,8 @@ import Nav from "./layout/Nav";
 
 import { Provider } from "react-redux";
 import store from "../store";
-import ShiftList from "./shifts/ShiftList";
+import Rota from "./shifts/Rota";
+import ShiftTemplate from "./shifts/ShiftTemplate";
 import "../css/styles.css";
 
 import Register from "./accounts/Register";
@@ -19,10 +20,8 @@ import Home from "./profiles/Home";
 import { setWidth } from "../actions/responsive";
 
 import ChangePassword from "./accounts/ChangePassword";
-import Profile from "./profiles/Profile";
+import StaffProfile from "./profiles/StaffProfile";
 import EnterID from "./common/EnterID";
-import Landing from "./landing/Landing";
-import Premium from "./accounts/Premium";
 import Plans from "./accounts/Plans";
 import PrivacyPolicy from "./landing/PrivacyPolicy";
 
@@ -51,13 +50,14 @@ const App = () => {
               component={Home}
               user_only_pass={true}
             />
-            <PrivateRoute path="/rota" exact component={ShiftList} />
+            <PrivateRoute path="/rota" exact component={Rota} />
+            <PrivateRoute path="/template" exact component={ShiftTemplate} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/privacy" component={PrivacyPolicy} />
             <Route path="/terms" component={TermsAndConditions} />
             <PrivateRoute path="/changepassword" component={ChangePassword} />
-            <PrivateRoute path="/profile/:id" component={Profile} />
+            <PrivateRoute path="/profile/:id" component={StaffProfile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
 
             <PrivateRoute path="/premium" component={Plans} />

@@ -35,11 +35,11 @@ const Register = () => {
             <form onSubmit={onSubmit}>
               <div className="form-group">
                 <label>What role are you?</label>
-                <div className="form-selector">
+                <div className="flex-container">
                   <span
                     className={`form-control ${
-                      role == "User" ? " active" : ""
-                    }`}
+                      role == "User" ? "active" : ""
+                    } btn-toggle`}
                     onClick={() => {
                       setRole("User");
                     }}
@@ -48,8 +48,8 @@ const Register = () => {
                   </span>
                   <span
                     className={`form-control ${
-                      role == "Business" ? " active" : ""
-                    }`}
+                      role == "Business" ? "active" : ""
+                    } btn-toggle`}
                     onClick={() => {
                       setRole("Business");
                     }}

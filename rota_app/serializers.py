@@ -106,6 +106,9 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 
 class ShiftListSerializer(serializers.ModelSerializer):
     department = BasicDepartmentSerializer(read_only=True)
+    start_time = serializers.SerializerMethodField()
+    def get_start_time(self, obj):
+        return str(obj.start_time)[0:5]
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department',)

@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setDepartment } from "../../actions/employees";
-import CreateShift from "../layout/CreateShift";
+import { setDepartment } from "../../../actions/employees";
+import CreateShift from "../../modals/CreateShift";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 

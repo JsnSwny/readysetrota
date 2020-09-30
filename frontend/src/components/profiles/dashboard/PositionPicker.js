@@ -1,6 +1,5 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
-import CreateShift from "../layout/CreateShift";
 
 const PositionPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;

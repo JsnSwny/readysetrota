@@ -65,7 +65,7 @@ export const addShift = (shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: ADD_SHIFT,
-        payload: res.data,
+        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
       });
       dispatch(getPopularTimes());
 
@@ -81,7 +81,7 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: UPDATE_SHIFT,
-        payload: res.data,
+        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
       });
       dispatch(resetErrors());
       dispatch(getPopularTimes());

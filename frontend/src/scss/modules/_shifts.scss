@@ -83,6 +83,10 @@
     background-color: #202020;
     justify-content: center;
     color: white;
+    .modal {
+      color: black;
+      text-align: left;
+    }
     h1 {
       font-size: 14px;
     }
@@ -261,11 +265,16 @@
     position: relative;
     overflow: auto;
     padding: 5px 15px;
+    // color: white;
     &.date-before {
       opacity: 0.5;
       .shift__add {
         visibility: hidden;
       }
+    }
+    &.gray {
+      background: #e0e0e0;
+      color: black;
     }
     &.unpublished {
       background-color: #ee6de786;
@@ -284,6 +293,9 @@
     }
     &.not-approved {
       background-color: $red !important;
+    }
+    &.hidden {
+      background-color: transparent;
     }
   }
   &__wrapper {

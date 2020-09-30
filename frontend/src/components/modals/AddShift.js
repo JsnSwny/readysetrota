@@ -4,13 +4,15 @@ import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 
 const AddShift = (props) => {
-  const { date, employee, onClose, shift } = props;
+  const { date, employee, onClose, shift, template } = props;
   let updating = shift ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
   let current_department = useSelector(
     (state) => state.employees.current_department
   );
+
+  let employees = useSelector((state) => state.employees.employees);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -79,18 +81,33 @@ const AddShift = (props) => {
 
   return (
     <div className="staffForm">
-      <h1 style={{ fontSize: "28px", textAlign: "center" }}>Create Shift</h1>
+      <h1 style={{ fontSize: "28px", textAlign: "center", color: "black" }}>
+        Create Shift
+      </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
         <div className="staffForm__control">
           <label className="staffForm__label">Employee:</label>
-          <input
-            className="staffForm__input"
-            type="text"
-            name="employee"
-            onChange={(e) => setEmployee(e.target.value)}
-            value={`${employee.first_name} ${employee.last_name}`}
-            disabled
-          />
+          {employee ? (
+            <input
+              className="staffForm__input"
+              type="text"
+              name="employee"
+              onChange={(e) => setEmployee(e.target.value)}
+              value={`${employee.first_name} ${employee.last_name}`}
+              disabled
+            />
+          ) : (
+            <select value="" className="staffForm__input">
+              <option value="" disabled>
+                Select an Employee
+              </option>
+              {employees.map((employee) => (
+                <option value={employee.id}>
+                  {employee.first_name} {employee.last_name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <div className="staffForm__times">
           <div className="staffForm__control">
@@ -105,7 +122,7 @@ const AddShift = (props) => {
                 Select a start time
               </option>
               {hours.map((time) => (
-                <option key={time} value={`${time}:00`}>
+                <option key={time} value={`${time}`}>
                   {time}
                 </option>
               ))}
@@ -152,7 +169,7 @@ const AddShift = (props) => {
                 setEndTime(item.end_time);
               }}
             >
-              {item.start_time.substr(0, 5)} - {item.end_time}
+              {item.start_time} - {item.end_time}
             </p>
           ))}
         </div>

@@ -62,6 +62,12 @@
     &:hover {
       background-color: rgb(170, 84, 207);
     }
+    &--sm {
+      @extend .btn-4;
+      margin-left: 0;
+      width: 100px;
+      border-radius: 5px;
+    }
   }
   &-5 {
     @extend .btn;
@@ -95,6 +101,26 @@
       &:hover {
         background-color: #db3b3b;
       }
+    }
+  }
+  &-toggle {
+    display: block;
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    border-radius: 15px;
+    margin-right: 20px;
+    margin-top: 10px;
+    transition: 0.3s ease all;
+    cursor: pointer;
+    &.active {
+      background-color: #ec70c9;
+      color: white;
+    }
+    &--sm {
+      @extend .btn-toggle;
+      font-size: 16px;
+      margin: 5px 0;
+      margin-right: 10px;
     }
   }
 }

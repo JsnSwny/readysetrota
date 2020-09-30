@@ -47,23 +47,6 @@
   .form-group {
     margin-bottom: 30px;
   }
-  span {
-    display: block;
-    background-color: #f4f4f4;
-    padding: 10px 20px;
-    border-radius: 15px;
-    margin-right: 20px;
-    margin-top: 10px;
-    transition: 0.3s ease all;
-    cursor: pointer;
-    &.active {
-      background-color: #ec70c9;
-      color: white;
-    }
-  }
-  .form-selector {
-    display: flex;
-  }
 }
 
 .login__leftExtra {

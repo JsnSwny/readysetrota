@@ -6,10 +6,10 @@ import {
   getPositions,
   getHolidays,
 } from "../../actions/employees";
-import DepartmentPicker from "./DepartmentPicker";
-import PositionPicker from "./PositionPicker";
-import StaffPicker from "./StaffPicker";
-import HolidayRequest from "./HolidayRequest";
+import DepartmentPicker from "./dashboard/DepartmentPicker";
+import PositionPicker from "./dashboard/PositionPicker";
+import StaffPicker from "./dashboard/StaffPicker";
+import HolidayRequest from "./dashboard/HolidayRequest";
 import { Link } from "react-router-dom";
 import { cancelSubscription, getCustomer } from "../../actions/payments";
 import { parseISO, format } from "date-fns";

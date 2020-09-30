@@ -55,13 +55,15 @@ class GetPopularTimes(APIView):
         shifts = Shift.objects.filter(department=department_id)
         most_common = shifts.values("start_time", "end_time", "department").annotate(
             count=Count('start_time')).order_by("-count")[:10]
+        for i in most_common:
+            i['start_time'] = str(i['start_time'])[0:5]
         return Response(most_common)
 
 
 class Publish(APIView):
     def get(self, request):
         all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False)
+            owner=self.request.user, published=False).exclude(employee__isnull=True)
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
         connection = mail.get_connection()
