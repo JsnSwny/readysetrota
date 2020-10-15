@@ -102,17 +102,17 @@ const RotaBar = (props) => {
             {(current_employee || business) && (
               <a
                 className={`dates__mobile-item ${
-                  published_shifts == 0 ? "disabled" : ""
+                  published_shifts.length == 0 ? "disabled" : ""
                 }`}
                 href={`${
-                  published_shifts > 0
+                  published_shifts.length > 0
                     ? `/exportall?start_date=${date}&end_date=${format(
                         addDays(parseISO(date), 6),
                         "yyyy-MM-dd"
                       )}&id=${currentDepartment}`
                     : ""
                 }`}
-                target={`${published_shifts > 0 ? "_blank" : ""}`}
+                target={`${published_shifts.length > 0 ? "_blank" : ""}`}
               >
                 <i className="fas fa-file-download"></i>
                 <p>Export Shifts</p>
