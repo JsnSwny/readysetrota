@@ -24,6 +24,11 @@ import {
   DELETE_AVAILABILITY,
   GET_HOLIDAYS,
   SET_BUSINESS,
+  GET_SITES,
+  ADD_SITE,
+  UPDATE_SITE,
+  DELETE_SITE,
+  SET_SITE,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -33,6 +38,67 @@ import { format } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
+export const getSites = () => (dispatch, getState) => {
+  axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_SITES,
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_BUSINESS,
+      payload: getState().auth.user.business,
+    });
+  });
+};
+
+export const addSite = (site) => (dispatch, getState) => {
+  axios
+    .post("/api/sites/", site, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_SITE,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err.response));
+};
+
+export const updateSite = (id, site) => (dispatch, getState) => {
+  axios
+    .put(`/api/sites/${id}/`, site, tokenConfig(getState))
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: UPDATE_SITE,
+        payload: res.data,
+      });
+    })
+
+    .catch((err) => console.log(err.response));
+};
+
+export const deleteSite = (id) => (dispatch, getState) => {
+  axios
+    .delete(`/api/sites/${id}/`, tokenConfig(getState))
+    .then(() => {
+      dispatch({
+        type: DELETE_SITE,
+        payload: id,
+      });
+    })
+    .catch((error) => {});
+};
+
+export const setSite = (id) => (dispatch) => {
+  dispatch({
+    type: SET_SITE,
+    payload: id,
+  });
+  dispatch(getDepartments());
+  dispatch(getEmployees());
+  dispatch(setDepartment(0));
+};
+
 export const updateBusinessName = (id, name) => (dispatch, getState) => {
   axios
     .put(`/api/business/${id}/`, name, tokenConfig(getState))
@@ -41,7 +107,6 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
         type: UPDATE_BUSINESS,
         payload: res.data,
       });
-      dispatch(resetErrors());
     })
 
     .catch((err) => {
@@ -50,11 +115,21 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 };
 
 export const getEmployees = () => (dispatch, getState) => {
+  let current = getState().employees.current;
+  let query = '';
+
+  if(current.site > 0) {
+    query += `&position__department__site=${current.site}`
+  } 
+  if(current.department > 0) {
+    query += `&position__department=${current.department}`
+  }
+  if(current.site == 0 && current.department == 0) {
+    query += `&business=${current.business}`
+  }
   axios
     .get(
-      `/api/employeelist/?position__department=${
-        getState().employees.current_department
-      }&ordering=first_name`,
+      `/api/employeelist/?${query}&ordering=first_name`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -63,7 +138,7 @@ export const getEmployees = () => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch();
+    .catch(err => console.log(err.response));
 };
 
 export const setDepartment = (id) => (dispatch) => {
@@ -71,7 +146,7 @@ export const setDepartment = (id) => (dispatch) => {
     type: SET_DEPARTMENT,
     payload: id,
   });
-  dispatch(getEmployees());
+  // dispatch(getEmployees());
 };
 
 // Add Employee
@@ -109,7 +184,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       dispatch({
         type: ADD_EMPLOYEE,
         payload: res.data,
-        current_dep: getState().employees.current_department,
+        current_dep: getState().employees.current.department,
       });
       dispatch(resetErrors());
     })
@@ -117,16 +192,29 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 };
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {
-  let currentBusiness = getState().employees.current_business;
-  if (all && !currentBusiness) {
+  let current = getState().employees.current;
+
+  let query = '';
+
+  if(current.site > 0) {
+    query += `&department__site=${current.site}`
+  } 
+  if(current.department > 0) {
+    query += `&department=${current.department}`
+  }
+  if(current.site == 0 && current.department == 0) {
+    query += `&business=${current.business}`
+  }
+
+  if (all && !current.business) {
     return false;
   }
   axios
     .get(
       `/api/positions/${
         all
-          ? `?department__business=${currentBusiness}`
-          : `?department=${getState().employees.current_department}`
+          ? `?department__business=${current.business}`
+          : `?${query}`
       }`,
       tokenConfig(getState)
     )
@@ -142,7 +230,7 @@ export const getPositions = (all = false) => (dispatch, getState) => {
           payload: res.data,
         });
       }
-    });
+    }).catch(err => console.log(err.response));
 };
 
 // Delete Position
@@ -244,23 +332,17 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
 
 // Get Department
 export const getDepartments = () => (dispatch, getState) => {
-  axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_DEPARTMENTS,
-      payload: res.data,
+  axios
+    .get(
+      `/api/departments/${getState().employees.current.site > 0 ? `?site__id=${getState().employees.current.site}` : ""}`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_DEPARTMENTS,
+        payload: res.data,
+      });
     });
-    dispatch({
-      type: SET_BUSINESS,
-      payload:
-        getState().employees.current_department > 0
-          ? res.data.filter(
-              (item) => item.id == getState().employees.current_department
-            )[0].business
-          : getState().auth.user.business
-          ? getState().auth.user.business
-          : { plan: "F" },
-    });
-  });
 };
 
 // Get Department

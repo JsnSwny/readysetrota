@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .api import ShiftViewSet, EmployeeViewSet, PositionViewSet, DepartmentViewSet, ShiftSwapViewSet, BusinessViewSet, AvailabilityViewSet, ShiftListViewSet, EmployeeListViewSet
+from .api import ShiftViewSet, EmployeeViewSet, PositionViewSet, DepartmentViewSet, ShiftSwapViewSet, BusinessViewSet, AvailabilityViewSet, ShiftListViewSet, EmployeeListViewSet, SiteViewSet
 from .views import CheckUUID
 from django.urls import path, include
 
@@ -13,6 +13,7 @@ router.register('departments', DepartmentViewSet, 'departments')
 router.register('shiftswap', ShiftSwapViewSet, 'shiftswap')
 router.register('business', BusinessViewSet, 'business')
 router.register('availability', AvailabilityViewSet, 'availability')
+router.register('sites', SiteViewSet, 'sites')
 
 
 

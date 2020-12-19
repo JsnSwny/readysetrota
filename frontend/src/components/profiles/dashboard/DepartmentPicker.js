@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDepartment } from "../../../actions/employees";
 import CreateShift from "../../modals/CreateShift";
@@ -13,24 +13,13 @@ const DepartmentPicker = (props) => {
   const [update, setUpdate] = useState(false);
 
   let departments = useSelector((state) => state.employees.departments);
-  let positions = useSelector((state) => state.employees.all_positions);
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
+  let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
   let plan = useSelector((state) => state.employees.business.plan);
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
-  };
-
-  if (currentDepartment == 0 && departments.length == 1) {
-    setDep(departments[0].id);
-  }
-
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
-  );
+  };  
 
   return (
     <Fragment>
@@ -89,54 +78,52 @@ const DepartmentPicker = (props) => {
             {departments.map((item, i) => (
               <div
                 key={item.id}
-                className={`dashboard__item ${
-                  currentDepartment == item.id && "current"
+                className={`dashboard__item--sm ${
+                  (current.department == item.id || current.department == 0) && "current"
                 }`}
               >
-                <p className="title-md bold">{item.name}</p>
+                <p className="title-md bold">
+                  {item.name}{" "}
+                  {user.business && (
+                    <i
+                    onClick={() => {
+                      setOpen(true);
+                      setType("Department");
+                      setUpdate(item);
+                    }}
+                    class="fas fa-edit"
+                  ></i>
+                  )}
+                  
+                  <i
+                    onClick={() => {
+                      if (
+                        plan == "F" &&
+                        i > 0 &&
+                        item.business.id == current.business
+                      ) {
+                        toast.warning(
+                          "Upgrade to premium to unlock unlimited departments"
+                        );
+                        return false;
+                      } else {
+                        if(current.department == item.id) {
+                          setDep(0)
+                        } else {
+                          setDep(item.id);
+                        }
+                      }
+                    }}
+                    class="fas fa-check-circle"
+                  ></i>
+                </p>
                 <p className="subtitle-sm" style={{ flex: "0" }}>
-                  {item.business.name}
+                  {current.site == 0 && item.site.name}
                 </p>
                 <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
                   {item.number_of_employees}{" "}
                   {item.number_of_employees == 1 ? "employee" : "employees"}
                 </p>
-                <div className="btn-wrapper">
-                  {user.business && (
-                    <button
-                      onClick={() => {
-                        setOpen(true);
-                        setType("Department");
-                        setUpdate(item);
-                      }}
-                      className="btn-4"
-                    >
-                      Edit
-                    </button>
-                  )}
-
-                  {currentDepartment != item.id && (
-                    <button
-                      onClick={() => {
-                        if (
-                          plan == "F" &&
-                          i > 0 &&
-                          item.business.id == currentBusiness
-                        ) {
-                          toast.warning(
-                            "Upgrade to premium to unlock unlimited departments"
-                          );
-                          return false;
-                        } else {
-                          setDep(item.id);
-                        }
-                      }}
-                      className="btn-4"
-                    >
-                      Select
-                    </button>
-                  )}
-                </div>
               </div>
             ))}
           </div>

@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
   let business = useSelector((state) => state.employees.business);
-  let employees = useSelector((state) => state.employees.employees);
   let user = useSelector((state) => state.auth.user);
   let currentDepartment = useSelector(
     (state) => state.employees.current_department
@@ -16,6 +15,7 @@ const StaffPicker = (props) => {
   let total_employees = useSelector(
     (state) => state.employees.business.total_employees
   );
+  let employees = useSelector(state => state.employees.employees)
 
   return (
     <Fragment>
@@ -48,12 +48,21 @@ const StaffPicker = (props) => {
           </div>
           <div className="dashboard__wrapper">
             {employees.map((item) => (
-              <div key={item.id} className="dashboard__item">
+              <div key={item.id} className="dashboard__item--sm">
                 <p className="title-md bold">
                   <Link to={`/profile/${item.id}`}>
                     {item.first_name} <strong>{item.last_name}</strong>
                   </Link>
                   {business && !item.user && <CopyUUID employee={item} />}
+                  {item.user != user.id && (
+                  <i
+                    onClick={() => {
+                      setOpen(true);
+                      setUpdate(item);
+                      setType("staff");
+                    }}
+                    class="fas fa-edit"
+                  ></i>)}
                 </p>
 
                 <p className="subtitle-sm">
@@ -64,23 +73,6 @@ const StaffPicker = (props) => {
                       )
                   )}
                 </p>
-                {item.user != user.id && (
-                  <div className="btn-wrapper">
-                    <button
-                      onClick={() => {
-                        setOpen(true);
-                        setUpdate(item);
-                        setType("staff");
-                      }}
-                      className="btn-4"
-                    >
-                      Edit
-                    </button>
-                    <Link to={`/profile/${item.id}`}>
-                      <button className="btn-4">Profile</button>
-                    </Link>
-                  </div>
-                )}
               </div>
             ))}
           </div>

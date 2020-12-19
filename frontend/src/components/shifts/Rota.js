@@ -35,20 +35,14 @@ const Rota = () => {
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
 
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
-
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
-  );
+  let current = useSelector((state) => state.employees.current);
 
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
-    dispatch(getAllAvailability(currentBusiness, start_date, end_date));
+    dispatch(getAllAvailability(current.business, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
   };
 
@@ -56,7 +50,7 @@ const Rota = () => {
   let current_employee = null;
   if (user.employee) {
     current_employee = user.employee.filter((employee) =>
-      employee.position.some((item) => item.department.id == currentDepartment)
+      employee.position.some((item) => item.department.id == current.department)
     )[0];
   }
 
@@ -98,7 +92,7 @@ const Rota = () => {
       return;
     }
     updateShifts(start_date, end_date);
-  }, [currentDepartment]);
+  }, [current.department]);
 
   useEffect(() => {
     if (user && !user.business && current_employee) {
@@ -187,7 +181,7 @@ const Rota = () => {
     };
   }, []);
 
-  if (currentDepartment == 0) {
+  if (current.department == 0) {
     toast.warning("You must select a department to view the rota");
     return <Redirect to="/" />;
   }
@@ -209,7 +203,7 @@ const Rota = () => {
         template={template}
       />
       {isLoading && <Loading />}
-      {currentDepartment != 0 &&
+      {current.department != 0 &&
         (template ? (
           <ShiftTemplate shifts={shifts_list} result={result} />
         ) : (
@@ -225,7 +219,7 @@ const Rota = () => {
                   current_employee={current_employee}
                   shifts_list={shifts_list}
                   user={user}
-                  currentDepartment={currentDepartment}
+                  currentDepartment={current.department}
                 />
                 <div className="container-right">
                   {result.map((result) => {

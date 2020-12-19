@@ -18,6 +18,8 @@ import { tokenConfig } from "./auth";
 import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
+let test = "hello";
+
 // Get Bookings
 export const getShifts = (startdate, enddate) => (dispatch, getState) => {
   dispatch({

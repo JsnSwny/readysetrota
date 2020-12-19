@@ -12,6 +12,9 @@ import {
   updateEmployee,
   deleteEmployee,
   updateBusinessName,
+  addSite,
+  updateSite,
+  deleteSite,
 } from "../../actions/employees";
 import { toast } from "react-toastify";
 
@@ -22,6 +25,7 @@ const AddStaff = (props) => {
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
   let employees = useSelector((state) => state.employees.employees);
+  let sites = useSelector(state => state.employees.sites)
   const dispatch = useDispatch();
   useEffect(() => {
     if (form == "staff") {
@@ -30,15 +34,10 @@ const AddStaff = (props) => {
     }
   }, []);
 
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
-  );
+  let current = useSelector((state) => state.employees.current);
 
   let department_obj = departments.filter(
-    (item) => item.id == currentDepartment
+    (item) => item.id == current.department
   );
 
   // Disable Positions in Department of already selected positions
@@ -108,7 +107,7 @@ const AddStaff = (props) => {
         first_name: firstName,
         last_name: lastName,
         position_id: position,
-        business_id: currentBusiness,
+        business_id: current.business,
         default_availability: {
           0: { name: "unselected", start_time: null, end_time: null },
           1: { name: "unselected", start_time: null, end_time: null },
@@ -139,13 +138,20 @@ const AddStaff = (props) => {
         dispatch(
           updateDepartment(update.id, {
             name,
-            business_id: currentBusiness,
+            business_id: current.business,
+            site_id: current.site,
             admins_id: admins,
           })
         );
         toast.success("Department updated!");
       } else {
-        dispatch(addDepartment({ name, business_id: currentBusiness }));
+        dispatch(
+          addDepartment({
+            name,
+            business_id: current.business,
+            site_id: current.site,
+          })
+        );
         toast.success("Department added!");
       }
       setName("");
@@ -155,8 +161,8 @@ const AddStaff = (props) => {
         dispatch(
           updatePosition(update.id, {
             name,
-            department_id: currentDepartment,
-            business_id: currentBusiness,
+            department_id: current.department,
+            business_id: current.business,
           })
         );
         toast.success("Position updated!");
@@ -164,11 +170,31 @@ const AddStaff = (props) => {
         dispatch(
           addPosition({
             name,
-            department_id: parseInt(currentDepartment),
-            business_id: currentBusiness,
+            department_id: parseInt(current.department),
+            business_id: current.business,
           })
         );
         toast.success("Position added!");
+      }
+      setName("");
+      onClose();
+    } else if (form == "Site") {
+      if (update) {
+        dispatch(
+          updateSite(update.id, {
+            name,
+            business_id: current.business,
+          })
+        );
+        toast.success("Site updated!");
+      } else {
+        dispatch(
+          addSite({
+            name,
+            business_id: current.business,
+          })
+        );
+        toast.success("Site added!");
       }
       setName("");
       onClose();
@@ -310,6 +336,12 @@ const AddStaff = (props) => {
                     dispatch(deletePosition(update.id));
                   } else if (form == "staff") {
                     dispatch(deleteEmployee(update.id));
+                  } else if (form == "Site") {
+                    if(sites.length == 1) {
+                      toast.warning("You cannot delete this site!");
+                      return false;
+                    }
+                    dispatch(deleteSite(update.id));
                   }
                 }
                 onClose();

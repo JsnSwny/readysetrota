@@ -1,6 +1,6 @@
-from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability, Site
 from rest_framework import viewsets, permissions
-from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, ShiftListSerializer, EmployeeListSerializer
+from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, ShiftListSerializer, EmployeeListSerializer, SiteSerializer
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -73,7 +73,7 @@ class EmployeeFilter(django_filters.FilterSet):
     position__department = django_filters.NumberFilter(distinct=True)
     class Meta:
         model = Employee
-        fields = ['position__department']
+        fields = ['position__department', 'position__department__site', 'business']
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     
@@ -116,7 +116,7 @@ class PositionFilter(django_filters.FilterSet):
     department__business = django_filters.NumberFilter()
     class Meta:
         model = Position
-        fields = ['department', 'department__business']
+        fields = ['department', 'department__business', 'business', 'department__site']
 
 def clearEmployees(position):
     employees = Employee.objects.filter(position=position)
@@ -145,6 +145,12 @@ class PositionViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = PositionFilter
     queryset = Position.objects.all()
+
+class DepartmentFilter(django_filters.FilterSet):
+    site__id = django_filters.NumberFilter()
+    class Meta:
+        model = Department
+        fields = ['site__id', 'name']
     
 class DepartmentViewSet(viewsets.ModelViewSet):
     
@@ -152,12 +158,15 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = DepartmentSerializer
+    queryset = Department.objects.all()
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = DepartmentFilter
+
     def get_queryset(self):
         if not hasattr(self.request.user, "business"):
             return Department.objects.filter(pos_department__position__user=self.request.user).distinct()
         else:
             return self.request.user.departments.all()
-            
 
     def perform_create(self, serializer):
         business = self.request.user.business
@@ -228,19 +237,19 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date',)
     queryset = Availability.objects.all()
 
-# class DefaultAvailabilityFilter(django_filters.FilterSet):
-#     class Meta:
-#         model = DefaultAvailability
-#         fields = ['employee__id', 'employee__user', 'employee__owner__id', 'employee__business']
+class SiteFilter(django_filters.FilterSet):
+    class Meta:
+        model = Employee
+        fields = ['business']
 
-# class DefaultAvailabilityViewSet(viewsets.ModelViewSet):
-#     permission_classes = [
-#         permissions.AllowAny
-#     ]
+class SiteViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    def get_queryset(self):
+        business = self.request.user.business
+        return Site.objects.filter(business=business)
+    serializer_class = SiteSerializer
 
-#     serializer_class = DefaultAvailabilitySerializer
-#     filter_backends = (DjangoFilterBackend, OrderingFilter)
-#     filter_class = DefaultAvailabilityFilter
-#     queryset = DefaultAvailability.objects.all()
 
 

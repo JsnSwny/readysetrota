@@ -17,7 +17,13 @@ const CreateShift = (props) => {
     template,
   } = props;
 
-  const staffTypes = ["staff", "Position", "Department", "BusinessName"];
+  const staffTypes = [
+    "staff",
+    "Position",
+    "Department",
+    "BusinessName",
+    "Site",
+  ];
 
   const getModal = () => {
     if (type == "shift") {

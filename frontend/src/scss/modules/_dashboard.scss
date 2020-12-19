@@ -188,6 +188,18 @@
       min-height: 130px;
     }
     margin: 0 0.25rem 0.5rem;
+    &--sm {
+      @extend .dashboard__item;
+      min-height: 100%;
+      i {
+        margin: 0 5px;
+        cursor: pointer;
+        transition: 0.2s ease-in-out color;
+        &:hover {
+          color: $green;
+        }
+      }
+    }
     .subtitle-sm {
       flex: 1;
     }

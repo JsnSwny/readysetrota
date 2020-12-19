@@ -1,10 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const PositionPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
-  let positions = useSelector((state) => state.employees.positions);
   let employees = useSelector((state) => state.employees.employees);
+  let positions = useSelector(state => state.employees.positions)
+  let current = useSelector((state) => state.employees.current);
   return (
     <Fragment>
       <div className="dashboard container-2">
@@ -22,8 +23,21 @@ const PositionPicker = (props) => {
           </div>
           <div className="dashboard__wrapper">
             {positions.map((item) => (
-              <div key={item.id} className="dashboard__item">
-                <p className="title-md bold">{item.name}</p>
+              <div key={item.id} className="dashboard__item--sm">
+               <p className="title-md bold">
+                  {item.name}{" "}
+                  <i
+                    onClick={() => {
+                      setOpen(true);
+                      setUpdate(item);
+                      setType("Position");
+                    }}
+                    class="fas fa-edit"
+                  ></i>
+                </p>
+                <p className="subtitle-sm" style={{ flex: "0" }}>
+                  {current.site == 0 && `${item.department.name} - ${item.department.site.name}`}
+                </p>
                 <p className="subtitle-sm">
                   {
                     employees.filter((employee) =>
@@ -34,18 +48,6 @@ const PositionPicker = (props) => {
                   }{" "}
                   employees
                 </p>
-                <div className="btn-wrapper">
-                  <button
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("Position");
-                    }}
-                    className="btn-4"
-                  >
-                    Edit
-                  </button>
-                </div>
               </div>
             ))}
           </div>

@@ -5,10 +5,12 @@ import {
   getDepartments,
   getPositions,
   getHolidays,
+  getSites,
 } from "../../actions/employees";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
+import SitePicker from "./dashboard/SitePicker";
 import HolidayRequest from "./dashboard/HolidayRequest";
 import { Link } from "react-router-dom";
 import { cancelSubscription, getCustomer } from "../../actions/payments";
@@ -18,20 +20,21 @@ import Loading from "../common/Loading";
 const BusinessProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
-  );
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
+
+
+  let current = useSelector(
+    (state) => state.employees.current
   );
 
   let loading = useSelector((state) => state.loading.loading);
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
   let subscription = useSelector((state) => state.payments.subscription);
+  let employees = useSelector((state) => state.employees.employees);
 
   useEffect(() => {
     dispatch(getCustomer(user.profile.stripe_id));
+    
   }, []);
 
   useEffect(() => {
@@ -39,13 +42,41 @@ const BusinessProfile = (props) => {
     dispatch(getEmployees());
     dispatch(getPositions(true));
     dispatch(getPositions());
-    dispatch(getHolidays(currentBusiness));
-  }, [currentDepartment]);
+    dispatch(getSites());
+  }, [current.site]);
+
+  // useEffect(() => {
+  //   setCurrentEmployees(employees)
+  //   if(currentDepartment > 0) {
+  //     setCurrentEmployees(employees.filter(employee => employee.position.some(pos => pos.department.id == currentDepartment)));
+  //   }
+  // }, [employees]);
+
+  // useEffect(() => {
+  //   setCurrentPositions(positions)
+  //   if(currentDepartment > 0) {
+  //     setCurrentPositions(positions.filter(position => position.department.id == currentDepartment));
+  //   }
+  // }, [positions]);
+
+  // useEffect(() => {
+  //   setCurrentEmployees(employees.filter(employee => employee.position.some(pos => pos.department.id == currentDepartment)));
+  //   setCurrentPositions(positions.filter(position => position.department.id == currentDepartment));
+  // }, [currentDepartment]);
+
+  useEffect(() => {
+    dispatch(getDepartments());
+    dispatch(getEmployees());
+    dispatch(getPositions(true));
+    dispatch(getPositions());
+    dispatch(getHolidays(current.business));
+    dispatch(getSites());
+  }, [current.department]);
 
   useEffect(() => {
     dispatch(getPositions(true));
     dispatch(getPositions());
-  }, [currentBusiness]);
+  }, [current.business]);
 
   let user = useSelector((state) => state.auth.user);
   return (
@@ -134,21 +165,6 @@ const BusinessProfile = (props) => {
                     >
                       Cancel subscription
                     </button>
-                    {/* <button
-                      onClick={() => {
-                        dispatch(cancelSubscription(user.profile.stripe_id));
-                      }}
-                      className="btn-4"
-                      style={{
-                        width: "300px",
-                        marginTop: "10px",
-                        marginLeft: "0",
-                        display: "block",
-                        padding: "15px 0",
-                      }}
-                    >
-                      Change payment method
-                    </button> */}
                   </Fragment>
                 )}
               </Fragment>
@@ -171,21 +187,18 @@ const BusinessProfile = (props) => {
           )}
         </div>
       </div>
+      <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
       <DepartmentPicker />
-      {currentDepartment != 0 && (
         <PositionPicker
           setOpen={setOpen}
           setUpdate={setUpdate}
           setType={setType}
         />
-      )}
-      {currentDepartment != 0 && (
         <StaffPicker
           setOpen={setOpen}
           setUpdate={setUpdate}
           setType={setType}
         />
-      )}
       {business.plan != "F" && (
         <div className="container-2">
           <HolidayRequest holidays={holidays} business={true} />
