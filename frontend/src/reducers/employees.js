@@ -52,7 +52,9 @@ const initialState = {
   ? localStorage.getItem("current_department")
   : 0, 
   business: 0, 
-  site: 0 },
+  site: localStorage.getItem("current_site")
+  ? parseInt(localStorage.getItem("current_site"))
+  : 0,  },
   current_department: localStorage.getItem("current_department")
     ? localStorage.getItem("current_department")
     : 0,
@@ -63,6 +65,7 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+  let newState = {};
   switch (action.type) {
     case USER_LOADED:
       return {
@@ -102,14 +105,21 @@ export default function (state = initialState, action) {
         sites: action.payload,
         current: {
           ...state.current,
-          site: action.payload.length > 0 ? action.payload[0].id : state.current.site
+          site: state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site
         }
       };
 
     case ADD_SITE:
+      localStorage.setItem("current_site", action.payload.id);
       return {
         ...state,
         sites: [...state.sites, action.payload],
+        current: {
+          ...state.current,
+          site: action.payload.id
+        },
+        positions: [],
+        employees: [],
       };
     case UPDATE_SITE:
       return {
@@ -119,11 +129,23 @@ export default function (state = initialState, action) {
         ),
       };
     case DELETE_SITE:
-      return {
+      let newSites = state.sites.filter((site) => site.id !== action.payload);
+      newState = {
         ...state,
-        sites: state.sites.filter((site) => site.id !== action.payload),
-      };
+        sites: newSites,
+        current: {
+          ...state.current,
+          site: newSites.length > 0 && action.payload == state.current.site ? newSites[0].id : state.current.site
+        },
+        postions: [],
+        employees: []
+      }
+
+      localStorage.setItem("current_site", newState.current.site);
+
+      return newState;
     case SET_SITE:
+      localStorage.setItem("current_site", action.payload);
       return {
         ...state,
         current: {
@@ -182,14 +204,17 @@ export default function (state = initialState, action) {
         all_positions: action.payload,
       };
     case GET_DEPARTMENTS:
-      return {
+      
+      newState = {
         ...state,
         departments: action.payload,
         current: {
-          ...state.current,
-          department: action.payload.length > 0 ? action.payload[0].id : state.current.department
+        ...state.current,
+        department: state.current.department == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.department
         }
-      };
+      }
+      localStorage.setItem("current_department", newState.current.department);
+      return newState;
     case SET_BUSINESS:
       return {
         ...state,
@@ -236,6 +261,7 @@ export default function (state = initialState, action) {
         positions: [],       
       };
     case ADD_EMPLOYEE:
+      console.log(action.payload)
       if (
         action.payload.position.some(
           (item) => item.department.id == parseInt(action.current_dep)
@@ -273,6 +299,10 @@ export default function (state = initialState, action) {
           ...state.business,
           number_of_employees: state.business.number_of_employees - 1,
         },
+        // departments: {
+        //   ...state.departments,
+          // number_of_employees: state.departments.number_of_employees - 1,
+        // }
       };
     case DELETE_POSITION:
       return {
@@ -285,18 +315,21 @@ export default function (state = initialState, action) {
         ),
       };
     case DELETE_DEPARTMENT:
-      return {
+      let newDepartments = state.departments.filter(
+        (department) => department.id !== action.payload
+      );
+      newState = {
         ...state,
-        departments: state.departments.filter(
-          (department) => department.id !== action.payload
-        ),
+        departments: newDepartments,
         current: {
           ...state.current,
-          department: action.payload == state.current.department
-          ? 0
-          : state.current.department,
+          department: newDepartments.length > 0 && action.payload == state.current.department ? newDepartments[0].id : state.current.department
         }
-      };
+      }
+
+      localStorage.setItem("current_department", newState.current.department);
+
+      return newState;
     case ADD_POSITION:
       return {
         ...state,
@@ -311,11 +344,13 @@ export default function (state = initialState, action) {
         ),
       };
     case ADD_DEPARTMENT:
+      localStorage.setItem("current_department", action.payload.id);
       return {
         ...state,
         departments: [...state.departments, action.payload],
         current: {
-          ...state.current
+          ...state.current,
+          department: action.payload.id
         }
       };
 

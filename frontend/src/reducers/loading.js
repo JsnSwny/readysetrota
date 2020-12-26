@@ -1,4 +1,4 @@
-import { LOAD_START, LOAD_FINISH, SET_DEPARTMENT, SET_SITE, GET_DEPARTMENTS, GET_POSITIONS, GET_EMPLOYEES, GET_SITES } from "../actions/types";
+import { LOAD_START, LOAD_FINISH, SET_DEPARTMENT, SET_SITE, GET_DEPARTMENTS, GET_POSITIONS, GET_EMPLOYEES, GET_SITES, RESET_LOADING } from "../actions/types";
 
 const initialState = {
   any: false,
@@ -52,6 +52,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         sites: false
+      }
+    case RESET_LOADING:
+      return {
+        ...state,
+        sites: false,
+        positions: false,
+        employees: false
       }
     default:
       return state;

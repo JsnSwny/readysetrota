@@ -221,6 +221,7 @@ const AddStaff = (props) => {
                 type="text"
                 name="first_name "
                 onChange={(e) => setFirstName(e.target.value)}
+                autoFocus
                 value={firstName}
               ></input>
               <p className="error">{errors.name}</p>
@@ -282,6 +283,7 @@ const AddStaff = (props) => {
                 name="name "
                 onChange={(e) => setName(e.target.value)}
                 value={name}
+                autoFocus
               ></input>
               <p className="error">{errors.name}</p>
             </div>

@@ -7,6 +7,9 @@ import {
   getHolidays,
   getSites,
 } from "../../actions/employees";
+import {
+  resetLoading
+} from "../../actions/loading";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
@@ -29,6 +32,7 @@ const BusinessProfile = (props) => {
   let loading = useSelector((state) => state.loading);
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
+  let sites = useSelector((state) => state.employees.sites);
   let subscription = useSelector((state) => state.payments.subscription);
   let employees = useSelector((state) => state.employees.employees);
 
@@ -38,10 +42,12 @@ const BusinessProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    if(current.site == 0) {
+    if(sites.length == 0) {
       dispatch(getSites());
-    } else {
-      dispatch(getDepartments());
+    }
+    dispatch(getDepartments());
+    if(current.department == 0) {
+      dispatch(resetLoading());
     }
   }, [current.site]);
 
@@ -65,12 +71,10 @@ const BusinessProfile = (props) => {
   // }, [currentDepartment]);
 
   useEffect(() => {
-    if(current.department != 0) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
-      dispatch(getHolidays(current.business));
-    }
+    dispatch(getEmployees());
+    dispatch(getPositions(true));
+    dispatch(getPositions());
+    dispatch(getHolidays(current.business));
   }, [current.department]);
 
   let user = useSelector((state) => state.auth.user);

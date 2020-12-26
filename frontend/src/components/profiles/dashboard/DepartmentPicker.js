@@ -85,39 +85,41 @@ const DepartmentPicker = (props) => {
                   (current.department == item.id || current.department == 0) && "current"
                 }`}
               >
-                <p className="title-md bold">
-                  {item.name}{" "}
-                  {user.business && (
+                <div className="title-md bold">
+                  <p>{item.name}{" "}</p>
+                  <div>
+                    {user.business && (
+                      <i
+                      onClick={() => {
+                        setOpen(true);
+                        setType("Department");
+                        setUpdate(item);
+                      }}
+                      class="fas fa-edit"
+                    ></i>
+                    )}
+                    
                     <i
-                    onClick={() => {
-                      setOpen(true);
-                      setType("Department");
-                      setUpdate(item);
-                    }}
-                    class="fas fa-edit"
-                  ></i>
-                  )}
-                  
-                  <i
-                    onClick={() => {
-                      if (
-                        plan == "F" &&
-                        i > 0 &&
-                        item.business.id == current.business
-                      ) {
-                        toast.warning(
-                          "Upgrade to premium to unlock unlimited departments"
-                        );
-                        return false;
-                      } else {
-                        if(current.department != item.id) {
-                          setDep(item.id);
+                      onClick={() => {
+                        if (
+                          plan == "F" &&
+                          i > 0 &&
+                          item.business.id == current.business
+                        ) {
+                          toast.warning(
+                            "Upgrade to premium to unlock unlimited departments"
+                          );
+                          return false;
+                        } else {
+                          if(current.department != item.id) {
+                            setDep(item.id);
+                          }
                         }
-                      }
-                    }}
-                    class="fas fa-check-circle"
-                  ></i>
-                </p>
+                      }}
+                      class="fas fa-check-circle"
+                    ></i>
+                  </div>
+                </div>
                 <p className="subtitle-sm" style={{ flex: "0" }}>
                   {current.site == 0 && item.site.name}
                 </p>

@@ -44,22 +44,24 @@ const SitePicker = (props) => {
               >
                 <p className="title-md bold">
                   {item.name}{" "}
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("Site");
-                    }}
-                    class="fas fa-edit"
-                  ></i>
-                  <i
-                    onClick={() => {
-                      if(current.site != item.id) {
-                        dispatch(setSite(item.id));
-                      }  
-                    }}
-                    class="fas fa-check-circle"
-                  ></i>
+                  <div>
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdate(item);
+                        setType("Site");
+                      }}
+                      class="fas fa-edit"
+                    ></i>
+                    <i
+                      onClick={() => {
+                        if(current.site != item.id) {
+                          dispatch(setSite(item.id));
+                        }  
+                      }}
+                      class="fas fa-check-circle"
+                    ></i>
+                  </div>
                 </p>
               </div>
             ))}

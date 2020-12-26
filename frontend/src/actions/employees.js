@@ -88,7 +88,7 @@ export const deleteSite = (id) => (dispatch, getState) => {
         payload: id,
       });
     })
-    .catch((error) => {});
+    .catch((error) => {console.log(error)});
 };
 
 export const setSite = (id) => (dispatch, getState) => {
@@ -165,6 +165,8 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
         type: DELETE_EMPLOYEE,
         payload: id,
       });
+      // Remove later and update number of employees through reducer
+      dispatch(getDepartments());
     })
     .catch((error) => {});
 };
@@ -194,6 +196,9 @@ export const addEmployee = (employee) => (dispatch, getState) => {
         current_dep: getState().employees.current.department,
       });
       dispatch(resetErrors());
+
+      // Remove later and update number of employees through reducer
+      dispatch(getDepartments());
     })
     .catch((err) => console.log(err.response));
 };
@@ -322,19 +327,16 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
   axios
     .delete(`/api/departments/${id}/`, tokenConfig(getState))
     .then(() => {
+      console.log("deleting department")
       dispatch({
         type: DELETE_DEPARTMENT,
         payload: id,
-      });
-      dispatch({
-        type: SET_DEPARTMENT,
-        payload: 0,
       });
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
     })
-    .catch((error) => {});
+    .catch((error) => {console.log(error)});
 };
 
 // Get Department

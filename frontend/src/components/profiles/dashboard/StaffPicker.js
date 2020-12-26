@@ -55,16 +55,19 @@ const StaffPicker = (props) => {
                   <Link to={`/profile/${item.id}`}>
                     {item.first_name} <strong>{item.last_name}</strong>
                   </Link>
-                  {business && !item.user && <CopyUUID employee={item} />}
-                  {item.user != user.id && (
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("staff");
-                    }}
-                    class="fas fa-edit"
-                  ></i>)}
+                  <div>
+                    {business && !item.user && <CopyUUID employee={item} />}
+                    {item.user != user.id && (
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdate(item);
+                        setType("staff");
+                      }}
+                      class="fas fa-edit"
+                    ></i>)}
+                  </div>
+                  
                 </p>
 
                 <p className="subtitle-sm">

@@ -249,6 +249,17 @@ class SiteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         business = self.request.user.business
         return Site.objects.filter(business=business)
+
+    def destroy(self, request, *args, **kwargs):
+        departments = Department.objects.filter(site=self.get_object().id)
+        print(departments)
+        for i in departments:
+            positions = Position.objects.filter(department=i.id)
+            for j in positions:
+                clearEmployees(j)
+                j.delete()
+            
+        return super(SiteViewSet, self).destroy(request, *args, **kwargs)
     serializer_class = SiteSerializer
 
 
