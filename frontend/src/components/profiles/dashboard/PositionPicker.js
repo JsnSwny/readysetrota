@@ -6,6 +6,7 @@ const PositionPicker = (props) => {
   let employees = useSelector((state) => state.employees.employees);
   let positions = useSelector(state => state.employees.positions)
   let current = useSelector((state) => state.employees.current);
+  let loading = useSelector((state) => state.loading);
   return (
     <Fragment>
       <div className="dashboard container-2">
@@ -21,6 +22,7 @@ const PositionPicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
+          {loading.positions && <small class="loading-text">Loading positions...</small>}
           <div className="dashboard__wrapper">
             {positions.map((item) => (
               <div key={item.id} className="dashboard__item--sm">

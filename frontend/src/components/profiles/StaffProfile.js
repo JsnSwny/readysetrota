@@ -555,7 +555,6 @@ const StaffProfile = (props) => {
                   </div>
                 )}
               </div>
-              {console.log(holidays)}
               <HolidayRequest holidays={holidays} />
             </div>
           )}

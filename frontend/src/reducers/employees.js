@@ -100,6 +100,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         sites: action.payload,
+        current: {
+          ...state.current,
+          site: action.payload.length > 0 ? action.payload[0].id : state.current.site
+        }
       };
 
     case ADD_SITE:
@@ -115,7 +119,6 @@ export default function (state = initialState, action) {
         ),
       };
     case DELETE_SITE:
-      console.log(action.payload);
       return {
         ...state,
         sites: state.sites.filter((site) => site.id !== action.payload),
@@ -125,8 +128,12 @@ export default function (state = initialState, action) {
         ...state,
         current: {
           ...state.current,
-          site: action.payload
-        }
+          site: action.payload,
+          department: 0
+        },
+        departments: [],
+        employees: [],
+        positions: []
       };
     case ADD_AVAILABILITY:
       return {
@@ -178,6 +185,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: action.payload,
+        current: {
+          ...state.current,
+          department: action.payload.length > 0 ? action.payload[0].id : state.current.department
+        }
       };
     case SET_BUSINESS:
       return {
@@ -220,7 +231,9 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           department: action.payload,
-        }
+        },
+        employees: [],
+        positions: [],       
       };
     case ADD_EMPLOYEE:
       if (
@@ -301,6 +314,9 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: [...state.departments, action.payload],
+        current: {
+          ...state.current
+        }
       };
 
     case UPDATE_DEPARTMENT:

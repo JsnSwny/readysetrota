@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import Loading from "../common/Loading";
 import { getCustomer } from "../../actions/payments";
-import { getDepartments } from "../../actions/employees";
+// import { getDepartments } from "../../actions/employees";
 import { Redirect } from "react-router-dom";
 
 const Plans = () => {
@@ -28,7 +28,6 @@ const Plans = () => {
   let subscription = useSelector((state) => state.payments.subscription);
   useEffect(() => {
     dispatch(getCustomer(user.profile.stripe_id));
-    dispatch(getDepartments());
   }, []);
 
   useEffect(() => {

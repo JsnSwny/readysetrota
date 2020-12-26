@@ -38,6 +38,8 @@ import { format } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
+import { loadStart, loadFinish } from "./loading";
+
 export const getSites = () => (dispatch, getState) => {
   axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
     dispatch({
@@ -89,14 +91,16 @@ export const deleteSite = (id) => (dispatch, getState) => {
     .catch((error) => {});
 };
 
-export const setSite = (id) => (dispatch) => {
+export const setSite = (id) => (dispatch, getState) => {
+  let isLoading = Object.keys(getState().loading).some(k => getState().loading[k]);
+  if(isLoading) {
+    return false;
+  }
+
   dispatch({
     type: SET_SITE,
     payload: id,
   });
-  dispatch(getDepartments());
-  dispatch(getEmployees());
-  dispatch(setDepartment(0));
 };
 
 export const updateBusinessName = (id, name) => (dispatch, getState) => {
@@ -141,12 +145,15 @@ export const getEmployees = () => (dispatch, getState) => {
     .catch(err => console.log(err.response));
 };
 
-export const setDepartment = (id) => (dispatch) => {
+export const setDepartment = (id) => (dispatch, getState) => {
+  let isLoading = Object.keys(getState().loading).some(k => getState().loading[k]);
+  if(isLoading) {
+    return false;
+  }
   dispatch({
     type: SET_DEPARTMENT,
     payload: id,
   });
-  // dispatch(getEmployees());
 };
 
 // Add Employee

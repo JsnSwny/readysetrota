@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.loading-text {
+  opacity: 1;
+  -webkit-animation: fade 1s linear infinite; /* Safari */
+  animation: fade 1s linear infinite;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -9,6 +9,7 @@ const SitePicker = (props) => {
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
   let departments = useSelector((state) => state.employees.departments)
+  let loading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
   return (
     <Fragment>
@@ -31,6 +32,8 @@ const SitePicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
+          {loading.sites && <small class="loading-text">Loading sites...</small>}
+          
           <div className="dashboard__wrapper">
             {sites.map((item) => (
               <div
@@ -51,17 +54,9 @@ const SitePicker = (props) => {
                   ></i>
                   <i
                     onClick={() => {
-                      dispatch(setSite(item.id));
-                      if(current.site == item.id) {
-                        dispatch(setSite(0))
-                      } else {
-                        // console.log(departments.filter(dep => dep.site.id == item.id))
-                        // if(departments.filter(dep => dep.site.id == item.id).length == 1) {
-                        //   console.log(departments.filter(dep => dep.site.id == item.id)[0].id)
-                        //   dispatch(setDepartment(departments.filter(dep => dep.site.id == item.id)[0].id))
-                        // }
-                      }
-                      
+                      if(current.site != item.id) {
+                        dispatch(setSite(item.id));
+                      }  
                     }}
                     class="fas fa-check-circle"
                   ></i>

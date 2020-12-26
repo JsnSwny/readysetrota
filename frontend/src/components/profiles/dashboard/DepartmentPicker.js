@@ -16,6 +16,7 @@ const DepartmentPicker = (props) => {
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
   let plan = useSelector((state) => state.employees.business.plan);
+  let loading = useSelector((state) => state.loading);
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
@@ -73,8 +74,10 @@ const DepartmentPicker = (props) => {
               </Link>
             </Fragment>
           )}
+          {loading.departments && <small class="loading-text">Loading departments...</small>}
 
           <div className="dashboard__wrapper">
+            
             {departments.map((item, i) => (
               <div
                 key={item.id}
@@ -107,9 +110,7 @@ const DepartmentPicker = (props) => {
                         );
                         return false;
                       } else {
-                        if(current.department == item.id) {
-                          setDep(0)
-                        } else {
+                        if(current.department != item.id) {
                           setDep(item.id);
                         }
                       }

@@ -10,7 +10,6 @@ import { loadStart, loadFinish } from "../../actions/loading";
 
 const Payment = (props) => {
   let errors = useSelector((state) => state.errors.msg);
-  console.log(errors);
   const dispatch = useDispatch();
   const { amount, total_employees, period } = props;
   let user = useSelector((state) => state.auth.user);

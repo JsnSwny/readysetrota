@@ -26,7 +26,7 @@ const BusinessProfile = (props) => {
     (state) => state.employees.current
   );
 
-  let loading = useSelector((state) => state.loading.loading);
+  let loading = useSelector((state) => state.loading);
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
   let subscription = useSelector((state) => state.payments.subscription);
@@ -38,11 +38,11 @@ const BusinessProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getDepartments());
-    dispatch(getEmployees());
-    dispatch(getPositions(true));
-    dispatch(getPositions());
-    dispatch(getSites());
+    if(current.site == 0) {
+      dispatch(getSites());
+    } else {
+      dispatch(getDepartments());
+    }
   }, [current.site]);
 
   // useEffect(() => {
@@ -65,23 +65,18 @@ const BusinessProfile = (props) => {
   // }, [currentDepartment]);
 
   useEffect(() => {
-    dispatch(getDepartments());
-    dispatch(getEmployees());
-    dispatch(getPositions(true));
-    dispatch(getPositions());
-    dispatch(getHolidays(current.business));
-    dispatch(getSites());
+    if(current.department != 0) {
+      dispatch(getEmployees());
+      dispatch(getPositions(true));
+      dispatch(getPositions());
+      dispatch(getHolidays(current.business));
+    }
   }, [current.department]);
-
-  useEffect(() => {
-    dispatch(getPositions(true));
-    dispatch(getPositions());
-  }, [current.business]);
 
   let user = useSelector((state) => state.auth.user);
   return (
     <Fragment>
-      {loading && <Loading />}
+      {/* {loading.any && <Loading />} */}
       <div className="dashboard__header">
         <div className="container-2">
           <h1 className="title">Your Business</h1>
@@ -189,16 +184,21 @@ const BusinessProfile = (props) => {
       </div>
       <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
       <DepartmentPicker />
+      {current.department != 0 && (
         <PositionPicker
-          setOpen={setOpen}
-          setUpdate={setUpdate}
-          setType={setType}
+        setOpen={setOpen}
+        setUpdate={setUpdate}
+        setType={setType}
         />
+      )}
+      {current.department != 0 && (
         <StaffPicker
-          setOpen={setOpen}
-          setUpdate={setUpdate}
-          setType={setType}
+        setOpen={setOpen}
+        setUpdate={setUpdate}
+        setType={setType}
         />
+      )}
+        
       {business.plan != "F" && (
         <div className="container-2">
           <HolidayRequest holidays={holidays} business={true} />

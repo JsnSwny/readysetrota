@@ -16,6 +16,7 @@ const StaffPicker = (props) => {
     (state) => state.employees.business.total_employees
   );
   let employees = useSelector(state => state.employees.employees)
+  let loading = useSelector((state) => state.loading);
 
   return (
     <Fragment>
@@ -46,6 +47,7 @@ const StaffPicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
+          {loading.employees && <small class="loading-text">Loading staff...</small>}
           <div className="dashboard__wrapper">
             {employees.map((item) => (
               <div key={item.id} className="dashboard__item--sm">
