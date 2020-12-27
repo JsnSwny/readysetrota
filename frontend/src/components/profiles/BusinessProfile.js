@@ -18,12 +18,10 @@ import HolidayRequest from "./dashboard/HolidayRequest";
 import { Link } from "react-router-dom";
 import { cancelSubscription, getCustomer } from "../../actions/payments";
 import { parseISO, format } from "date-fns";
-import Loading from "../common/Loading";
 
 const BusinessProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
-
 
   let current = useSelector(
     (state) => state.employees.current
@@ -51,36 +49,18 @@ const BusinessProfile = (props) => {
     }
   }, [current.site]);
 
-  // useEffect(() => {
-  //   setCurrentEmployees(employees)
-  //   if(currentDepartment > 0) {
-  //     setCurrentEmployees(employees.filter(employee => employee.position.some(pos => pos.department.id == currentDepartment)));
-  //   }
-  // }, [employees]);
-
-  // useEffect(() => {
-  //   setCurrentPositions(positions)
-  //   if(currentDepartment > 0) {
-  //     setCurrentPositions(positions.filter(position => position.department.id == currentDepartment));
-  //   }
-  // }, [positions]);
-
-  // useEffect(() => {
-  //   setCurrentEmployees(employees.filter(employee => employee.position.some(pos => pos.department.id == currentDepartment)));
-  //   setCurrentPositions(positions.filter(position => position.department.id == currentDepartment));
-  // }, [currentDepartment]);
-
   useEffect(() => {
-    dispatch(getEmployees());
-    dispatch(getPositions(true));
-    dispatch(getPositions());
-    dispatch(getHolidays(current.business));
+    if(current.department > 0) {
+      dispatch(getEmployees());
+      dispatch(getPositions(true));
+      dispatch(getPositions());
+      dispatch(getHolidays(current.business));
+    }
   }, [current.department]);
 
   let user = useSelector((state) => state.auth.user);
   return (
     <Fragment>
-      {/* {loading.any && <Loading />} */}
       <div className="dashboard__header">
         <div className="container-2">
           <h1 className="title">Your Business</h1>

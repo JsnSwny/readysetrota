@@ -207,7 +207,6 @@ export const getPositions = (all = false) => (dispatch, getState) => {
   let current = getState().employees.current;
 
   let query = '';
-
   if(current.site > 0) {
     query += `&department__site=${current.site}`
   } 
@@ -225,7 +224,7 @@ export const getPositions = (all = false) => (dispatch, getState) => {
     .get(
       `/api/positions/${
         all
-          ? `?department__business=${current.business}`
+          ? `?department__site=${current.site}`
           : `?${query}`
       }`,
       tokenConfig(getState)

@@ -261,7 +261,6 @@ export default function (state = initialState, action) {
         positions: [],       
       };
     case ADD_EMPLOYEE:
-      console.log(action.payload)
       if (
         action.payload.position.some(
           (item) => item.department.id == parseInt(action.current_dep)
@@ -299,10 +298,6 @@ export default function (state = initialState, action) {
           ...state.business,
           number_of_employees: state.business.number_of_employees - 1,
         },
-        // departments: {
-        //   ...state.departments,
-          // number_of_employees: state.departments.number_of_employees - 1,
-        // }
       };
     case DELETE_POSITION:
       return {
@@ -318,12 +313,17 @@ export default function (state = initialState, action) {
       let newDepartments = state.departments.filter(
         (department) => department.id !== action.payload
       );
+      let deleted_employees = state.employees.filter(item => item.position.some(pos => pos.department.id == action.payload));
       newState = {
         ...state,
         departments: newDepartments,
         current: {
           ...state.current,
           department: newDepartments.length > 0 && action.payload == state.current.department ? newDepartments[0].id : state.current.department
+        },
+        business: {
+          ...state.business,
+          number_of_employees: state.business.number_of_employees - deleted_employees.length
         }
       }
 

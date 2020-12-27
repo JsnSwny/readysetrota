@@ -116,7 +116,7 @@ class PositionFilter(django_filters.FilterSet):
     department__business = django_filters.NumberFilter()
     class Meta:
         model = Position
-        fields = ['department', 'department__business', 'business', 'department__site']
+        fields = ['department', 'department__business', 'department__site', 'business', 'department__site']
 
 def clearEmployees(position):
     employees = Employee.objects.filter(position=position)

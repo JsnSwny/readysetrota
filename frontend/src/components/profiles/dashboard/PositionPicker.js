@@ -22,7 +22,6 @@ const PositionPicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
-          {console.log(loading)}
           {loading.positions && <small class="loading-text">Loading positions...</small>}
           <div className="dashboard__wrapper">
             {positions.map((item) => (
