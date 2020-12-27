@@ -5,8 +5,8 @@ const ShiftTemplate = (props) => {
   const { shifts, result } = props;
   let obj = {};
   for (let i = 0; i < result.length; i++) {
-    obj[format(result[i], "YYY-MM-dd")] = shifts.filter(
-      (item) => item.date == format(result[i], "YYY-MM-dd")
+    obj[format(result[i], "yyyy-MM-dd")] = shifts.filter(
+      (item) => item.date == format(result[i], "yyyy-MM-dd")
     );
   }
 
@@ -21,7 +21,7 @@ const ShiftTemplate = (props) => {
           <div className="rota__container">
             <div className="container-right">
               {result.map((date) => {
-                const shift = obj[format(date, "YYY-MM-dd")][i];
+                const shift = obj[format(date, "yyyy-MM-dd")][i];
                 return shift ? (
                   <div
                     className={`item-block ${
