@@ -13,8 +13,8 @@ const UpdateDepartment = () => {
   let plan = useSelector((state) => state.employees.business.plan);
   let enddate = useSelector((state) => state.shifts.end_date);
 
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
+  let current = useSelector(
+    (state) => state.employees.current
   );
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const UpdateDepartment = () => {
     dispatch(getShifts(date, enddate));
   };
 
-  if (currentDepartment == 0 && departments.length == 1) {
+  if (current.department == 0 && departments.length == 1) {
     setDep(departments[0].id);
   }
 
@@ -41,7 +41,7 @@ const UpdateDepartment = () => {
         }
       }}
       className="btn-3"
-      value={currentDepartment == 0 ? "" : currentDepartment}
+      value={current.department == 0 ? "" : current.department}
     >
       <option value="" disabled>
         Select Department

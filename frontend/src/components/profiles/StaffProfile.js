@@ -46,12 +46,10 @@ const StaffProfile = (props) => {
   const [currentSelector, setCurrentSelector] = useState("unselected");
   let employees = useSelector((state) => state.employees.employees);
   let plan = useSelector((state) => state.employees.business.plan);
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
+  let current = useSelector(
+    (state) => state.employees.current
   );
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
+
   let employee = {};
   let id_param = id;
 
@@ -61,7 +59,7 @@ const StaffProfile = (props) => {
   id = parseInt(id);
   if (!id_param) {
     employee = user.employee.filter((employee) =>
-      employee.position.some((item) => item.department.id == currentDepartment)
+      employee.position.some((item) => item.department.id == current.department)
     )[0];
   } else {
     employee = employees.filter((item) => item.id == id)[0];
@@ -74,12 +72,12 @@ const StaffProfile = (props) => {
     dispatch(getEmployees());
     dispatch(getPositions(true));
     dispatch(getPositions());
-  }, [currentDepartment]);
+  }, [current.department]);
 
   useEffect(() => {
     dispatch(getPositions(true));
     dispatch(getPositions());
-  }, [currentBusiness]);
+  }, [current.business]);
 
   useEffect(() => {
     if (!id_param) {
@@ -163,21 +161,21 @@ const StaffProfile = (props) => {
         </div>
       </div>
       {!id_param && <DepartmentPicker />}
-      {!id_param && currentDepartment != 0 && business && (
+      {!id_param && current.department != 0 && business && (
         <PositionPicker
           setOpen={setOpen}
           setUpdate={setUpdate}
           setType={setType}
         />
       )}
-      {!id_param && currentDepartment != 0 && business && (
+      {!id_param && current.department != 0 && business && (
         <StaffPicker
           setOpen={setOpen}
           setUpdate={setUpdate}
           setType={setType}
         />
       )}
-      {currentDepartment != 0 && (
+      {current.department != 0 && (
         <div className="dashboard container-2">
           <div className="dashboard__block">
             <div className="dashboard__block-title-container">
@@ -366,7 +364,7 @@ const StaffProfile = (props) => {
                                   currentSelector == "partial" && endTime
                                     ? endTime
                                     : null,
-                                business_id: currentBusiness,
+                                business_id: current.business,
                               };
                               if (differenceInDays(date, new Date()) > 365) {
                                 toast.warning(

@@ -22,8 +22,8 @@ const RotaBar = (props) => {
   let business = useSelector((state) => state.auth.business);
   let shifts = useSelector((state) => state.shifts.shifts);
   let published_shifts = shifts.filter((item) => item.published);
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
+  let current = useSelector(
+    (state) => state.employees.current
   );
   let user = useSelector((state) => state.auth.user);
 
@@ -36,7 +36,7 @@ const RotaBar = (props) => {
   };
 
   let current_employee = user.employee.filter((employee) =>
-    employee.position.some((item) => item.department.id == currentDepartment)
+    employee.position.some((item) => item.department.id == current.department)
   )[0];
   let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
 
@@ -64,7 +64,7 @@ const RotaBar = (props) => {
 
   return (
     <div className="button-layout">
-      {currentDepartment != 0 && (
+      {current.department != 0 && (
         <div
           className={`dates__mobile ${scrollPosition >= 360 ? " fixed" : ""}`}
         >
@@ -109,7 +109,7 @@ const RotaBar = (props) => {
                     ? `/exportall?start_date=${date}&end_date=${format(
                         addDays(parseISO(date), 6),
                         "yyyy-MM-dd"
-                      )}&id=${currentDepartment}`
+                      )}&id=${current.department}`
                     : ""
                 }`}
                 target={`${published_shifts.length > 0 ? "_blank" : ""}`}

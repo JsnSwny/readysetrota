@@ -8,8 +8,8 @@ const AddShift = (props) => {
   let updating = shift ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
-  let current_department = useSelector(
-    (state) => state.employees.current_department
+  let current = useSelector(
+    (state) => state.employees.current
   );
 
   let employees = useSelector((state) => state.employees.employees);
@@ -46,7 +46,7 @@ const AddShift = (props) => {
       end_time: endTime,
       info,
       date: shift ? shift.date : date,
-      department_id: current_department,
+      department_id: current.department,
       published: false,
     };
     shift

@@ -95,7 +95,7 @@ const AddStaff = (props) => {
       if (form == "staff") {
         setFirstName(update.first_name);
         setLastName(update.last_name);
-        setPosition(update.position.map((item) => item.id));
+        setPosition(update.position.map((item) => item));
       }
     }
   }, [update]);
@@ -106,7 +106,7 @@ const AddStaff = (props) => {
       const employee = {
         first_name: firstName,
         last_name: lastName,
-        position_id: position,
+        position_id: position.map(pos => pos.id),
         business_id: current.business,
         default_availability: {
           0: { name: "unselected", start_time: null, end_time: null },
@@ -238,38 +238,23 @@ const AddStaff = (props) => {
               <p className="error">{errors.name}</p>
             </div>
             <div className="staffForm__control">
-              <label className="staffForm__label">Position:</label>
-              <select
-                className="staffForm__input"
-                onChange={(e) => {
-                  return checkDepartment(
-                    [...e.target.options]
-                      .filter((o) => o.selected)
-                      .map((o) => o.value)
-                  )
-                    ? setPosition(
-                        [...e.target.options]
-                          .filter((o) => o.selected)
-                          .map((o) => o.value)
-                      )
-                    : false;
-                }}
-                name="position"
-                value={position}
-                multiple
-              >
-                {positions.map((item) =>
-                  getDepartment(item.id) ? (
-                    <option disabled key={item.id} value={item.id}>
-                      {item.name} ({item.department.name})
-                    </option>
-                  ) : (
-                    <option key={item.id} value={item.id}>
-                      {item.name} ({item.department.name})
-                    </option>
-                  )
-                )}
-              </select>
+              <label className="staffForm__label">Position(s):</label>
+              <div>
+              {departments.map(dep => <Fragment>
+                <strong>{dep.name}</strong>
+                <div className="flex-container--wrap">
+                  {positions.map(pos => pos.department.id == dep.id && (
+                    <p onClick={() => {
+                      position.some(item => item.id != pos.id && item.department.id == pos.department.id) ? setPosition([...position.filter(item => item.department.id != pos.department.id), pos]) : position.some(item => item.id == pos.id) ? setPosition(position.filter(item => item.id != pos.id)) :
+                    
+                      setPosition([...position, pos])
+                    }}
+                    className={`btn-toggle--sm ${position.some(item => item.id == pos.id) ? "active" : ""} ${position.some(item => item.id != pos.id && item.department.id == pos.department.id) ? "disabled" : ""}`}>{pos.name}</p>)
+                  )}
+                </div>
+                
+              </Fragment>)}
+              </div>
               <p className="error">{errors.position_id}</p>
             </div>
           </Fragment>

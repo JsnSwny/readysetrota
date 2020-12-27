@@ -8,8 +8,8 @@ const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
   let business = useSelector((state) => state.employees.business);
   let user = useSelector((state) => state.auth.user);
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
+  let current = useSelector(
+    (state) => state.employees.current
   );
   let plan = useSelector((state) => state.employees.business.plan);
   let total_employees = useSelector(
@@ -73,7 +73,7 @@ const StaffPicker = (props) => {
                 <p className="subtitle-sm">
                   {item.position.map(
                     (position) =>
-                      position.department.id == currentDepartment && (
+                      position.department.id == current.department && (
                         <span key={position.id}>{position.name}</span>
                       )
                   )}

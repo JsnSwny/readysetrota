@@ -55,11 +55,6 @@ const initialState = {
   site: localStorage.getItem("current_site")
   ? parseInt(localStorage.getItem("current_site"))
   : 0,  },
-  current_department: localStorage.getItem("current_department")
-    ? localStorage.getItem("current_department")
-    : 0,
-  current_business: 0,
-  current_site: 0,
   uuid_success: false,
   business: { plan: "F" },
 };
