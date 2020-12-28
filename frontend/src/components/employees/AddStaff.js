@@ -16,6 +16,7 @@ import {
   updateSite,
   deleteSite,
 } from "../../actions/employees";
+import PositionField from "./PositionField"
 import { toast } from "react-toastify";
 
 const AddStaff = (props) => {
@@ -28,7 +29,7 @@ const AddStaff = (props) => {
   let sites = useSelector(state => state.employees.sites)
   const dispatch = useDispatch();
   useEffect(() => {
-    if (form == "staff") {
+    if (form == "Staff") {
       positions = dispatch(getPositions());
       staffPosition && setPosition(staffPosition.toString());
     }
@@ -36,51 +37,11 @@ const AddStaff = (props) => {
 
   let current = useSelector((state) => state.employees.current);
 
-  let department_obj = departments.filter(
-    (item) => item.id == current.department
-  );
-
-  // Disable Positions in Department of already selected positions
-  const getDepartment = (id) => {
-    let department = positions.filter((item) => item.id == id)[0].department.id;
-    let positionsInDepartment = positions
-      .filter((item) => item.department.id == department && item.id != id)
-      .map((pos) => pos.id);
-    for (let i = 0; i < position.length; i++) {
-      if (positionsInDepartment.includes(parseInt(position[i]))) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  // Prevent Shift Clicking to Select More Positions
-  const checkDepartment = (arr) => {
-    let obj = {};
-    let department_list = departments.map((item) => item.id);
-    let position_list = positions.filter((item) =>
-      arr.includes(item.id.toString())
-    );
-    for (const key of department_list) {
-      let test = position_list
-        .filter((item) => {
-          return item.department.id == key;
-        })
-        .map((pos) => pos.id);
-      obj[key] = test;
-    }
-    for (let key in obj) {
-      if (obj[key].length > 1) {
-        return false;
-      }
-    }
-    return true;
-  };
-
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState([]);
+  const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
 
   const [admins, setAdmins] = useState([]);
   useEffect(() => {
@@ -92,7 +53,7 @@ const AddStaff = (props) => {
   useEffect(() => {
     if (update) {
       setName(update.name);
-      if (form == "staff") {
+      if (form == "Staff") {
         setFirstName(update.first_name);
         setLastName(update.last_name);
         setPosition(update.position.map((item) => item));
@@ -102,7 +63,7 @@ const AddStaff = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (form == "staff") {
+    if (form == "Staff") {
       const employee = {
         first_name: firstName,
         last_name: lastName,
@@ -206,13 +167,15 @@ const AddStaff = (props) => {
     }
   };
 
+  const staffForm = {}
+
   return (
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center" }}>
-        {form != "BusinessName" ? form : "Business Name"}
+        {formTitles[form]}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
-        {form === "staff" ? (
+        {form === "Staff" ? (
           <Fragment>
             <div className="staffForm__control">
               <label className="staffForm__label">First Name:</label>
@@ -239,22 +202,7 @@ const AddStaff = (props) => {
             </div>
             <div className="staffForm__control">
               <label className="staffForm__label">Position(s):</label>
-              <div>
-              {departments.map(dep => <Fragment>
-                <strong>{dep.name}</strong>
-                <div className="flex-container--wrap">
-                  {positions.map(pos => pos.department.id == dep.id && (
-                    <p onClick={() => {
-                      position.some(item => item.id != pos.id && item.department.id == pos.department.id) ? setPosition([...position.filter(item => item.department.id != pos.department.id), pos]) : position.some(item => item.id == pos.id) ? setPosition(position.filter(item => item.id != pos.id)) :
-                    
-                      setPosition([...position, pos])
-                    }}
-                    className={`btn-toggle--sm ${position.some(item => item.id == pos.id) ? "active" : ""} ${position.some(item => item.id != pos.id && item.department.id == pos.department.id) ? "disabled" : ""}`}>{pos.name}</p>)
-                  )}
-                </div>
-                
-              </Fragment>)}
-              </div>
+              <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
               <p className="error">{errors.position_id}</p>
             </div>
           </Fragment>
@@ -321,7 +269,7 @@ const AddStaff = (props) => {
                     dispatch(deleteDepartment(update.id));
                   } else if (form == "Position") {
                     dispatch(deletePosition(update.id));
-                  } else if (form == "staff") {
+                  } else if (form == "Staff") {
                     dispatch(deleteEmployee(update.id));
                   } else if (form == "Site") {
                     if(sites.length == 1) {

@@ -18,7 +18,7 @@ const CreateShift = (props) => {
   } = props;
 
   const staffTypes = [
-    "staff",
+    "Staff",
     "Position",
     "Department",
     "BusinessName",

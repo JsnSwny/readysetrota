@@ -13,7 +13,7 @@ const HolidayRequest = (props) => {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [filteredHolidays, setFilteredHolidays] = useState(holidays);
 
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState(business ? "Unmarked" : "All");
 
   const filters = ["All", "Unmarked", "Unapproved", "Approved"];
 

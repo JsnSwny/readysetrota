@@ -44,9 +44,9 @@ const BusinessProfile = (props) => {
       dispatch(getSites());
     }
     dispatch(getDepartments());
-    if(current.department == 0) {
-      dispatch(resetLoading());
-    }
+    dispatch(getEmployees());
+    dispatch(getPositions(true));
+    dispatch(getPositions());
   }, [current.site]);
 
   useEffect(() => {
