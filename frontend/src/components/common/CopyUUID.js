@@ -13,20 +13,16 @@ const CopyUUID = (props) => {
   }
   return (
     <i
-      style={{
-        marginLeft: "10px",
-        cursor: "pointer",
-      }}
       onClick={(e) => {
         toast.info(
           <div>
-            {employee.first_name + " " + employee.last_name}
+            {`${employee.first_name} ${employee.last_name}`}
             <br /> UUID copied! <br /> <br /> <small>{employee.uuid}</small>
           </div>
         );
         copyToClipboard(`www.readysetrota.com/join/${employee.uuid}/`);
       }}
-      className="fas fa-clipboard"
+      className="btn-uuid fas fa-clipboard"
     ></i>
   );
 };

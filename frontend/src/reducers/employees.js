@@ -10,7 +10,6 @@ import {
   DELETE_POSITION,
   DELETE_DEPARTMENT,
   SET_DEPARTMENT,
-  RESET_DEPARTMENT,
   UUID_SUCCESS,
   UUID_RESET,
   UPDATE_DEPARTMENT,
@@ -20,9 +19,6 @@ import {
   ADD_AVAILABILITY,
   UPDATE_AVAILABILITY,
   DELETE_AVAILABILITY,
-  USER_LOADED,
-  LOGIN_SUCCESS,
-  REGISTER_SUCCESS,
   GET_HOLIDAYS,
   SET_BUSINESS,
   SUBSCRIPTION_CANCELLED,
@@ -32,12 +28,9 @@ import {
   UPDATE_SITE,
   DELETE_SITE,
   SET_SITE,
+  LOGOUT_SUCCESS,
 } from "../actions/types";
-import { format, addDays, parseISO } from "date-fns";
-
-const todayDate = format(new Date(), "yyyy-MM-dd");
-var weekFromDate = addDays(new Date(), 7);
-weekFromDate = format(weekFromDate, "yyyy-MM-dd");
+import { format, parseISO } from "date-fns";
 
 const initialState = {
   availability: [],
@@ -89,7 +82,8 @@ export default function (state = initialState, action) {
         sites: [...state.sites, action.payload],
         current: {
           ...state.current,
-          site: action.payload.id
+          site: action.payload.id,
+          department: 0
         },
         positions: [],
         employees: [],
@@ -217,13 +211,15 @@ export default function (state = initialState, action) {
           ),
         },
       };
-    case RESET_DEPARTMENT:
+    case LOGOUT_SUCCESS:
       localStorage.setItem("current_department", 0);
       return {
         ...state,
         current: {
           ...state.current,
           department: 0,
+          site: 0,
+          business: 0
         }
       };
     case SET_DEPARTMENT:

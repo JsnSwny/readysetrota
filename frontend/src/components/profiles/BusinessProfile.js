@@ -7,6 +7,9 @@ import {
   getHolidays,
   getSites,
 } from "../../actions/employees";
+import {
+  resetLoading
+} from "../../actions/loading";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
@@ -40,9 +43,12 @@ const BusinessProfile = (props) => {
       dispatch(getSites());
     }
     dispatch(getDepartments());
-    dispatch(getEmployees());
-    dispatch(getPositions(true));
-    dispatch(getPositions());
+
+    // Fix double execution - needed to stop loading
+    // dispatch(getEmployees());
+    // dispatch(getPositions(true));
+    // dispatch(getPositions());
+    dispatch(resetLoading())
   }, [current.site]);
 
   useEffect(() => {

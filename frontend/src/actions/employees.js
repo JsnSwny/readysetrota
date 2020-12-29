@@ -38,12 +38,9 @@ import { format } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
-import { loadStart, loadFinish } from "./loading";
-
 export const getSites = () => (dispatch, getState) => {
   
   axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
-    console.log(res.data)
     dispatch({
       type: GET_SITES,
       payload: res.data,
@@ -328,7 +325,6 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
   axios
     .delete(`/api/departments/${id}/`, tokenConfig(getState))
     .then(() => {
-      console.log("deleting department")
       dispatch({
         type: DELETE_DEPARTMENT,
         payload: id,
@@ -348,6 +344,7 @@ export const getDepartments = () => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
+      console.log(`/api/departments/${getState().employees.current.site > 0 ? `?site__id=${getState().employees.current.site}` : ""}`)
       dispatch({
         type: GET_DEPARTMENTS,
         payload: res.data,

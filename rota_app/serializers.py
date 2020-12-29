@@ -149,7 +149,7 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
-    business = BusinessSerializer()
+    business = BusinessSerializer(required=False)
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id')
