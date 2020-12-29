@@ -215,10 +215,6 @@ export const getPositions = (all = false) => (dispatch, getState) => {
   if(current.site == 0 && current.department == 0) {
     query += `&business=${current.business}`
   }
-
-  if (all && !current.business) {
-    return false;
-  }
   axios
     .get(
       `/api/positions/${
@@ -229,6 +225,7 @@ export const getPositions = (all = false) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
+      console.log(`positions finished ${all}`)
       if (all) {
         dispatch({
           type: GET_ALL_POSITIONS,
