@@ -41,14 +41,16 @@ import { tokenConfig } from "./auth";
 import { loadStart, loadFinish } from "./loading";
 
 export const getSites = () => (dispatch, getState) => {
+  
   axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
+    console.log(res.data)
     dispatch({
       type: GET_SITES,
       payload: res.data,
     });
     dispatch({
       type: SET_BUSINESS,
-      payload: getState().auth.user.business,
+      payload: res.data[0].business,
     });
   });
 };

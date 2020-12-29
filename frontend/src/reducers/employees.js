@@ -49,12 +49,12 @@ const initialState = {
   departments: [],
   current: { 
     department: localStorage.getItem("current_department")
-  ? localStorage.getItem("current_department")
-  : 0, 
-  business: 0, 
-  site: localStorage.getItem("current_site")
-  ? parseInt(localStorage.getItem("current_site"))
-  : 0,  },
+      ? localStorage.getItem("current_department")
+      : 0, 
+    business: 0, 
+    site: localStorage.getItem("current_site")
+      ? parseInt(localStorage.getItem("current_site"))
+      : 0,  },
   uuid_success: false,
   business: { plan: "F" },
 };
@@ -62,28 +62,6 @@ const initialState = {
 export default function (state = initialState, action) {
   let newState = {};
   switch (action.type) {
-    case USER_LOADED:
-      return {
-        ...state,
-        current: {
-          ...state.current,
-          business: action.payload.business
-          ? action.payload.business.id
-          : ""
-        },
-      };
-    case LOGIN_SUCCESS:
-    case USER_LOADED:
-    case REGISTER_SUCCESS:
-      return {
-        ...state,
-        current: {
-          ...state.current,
-          business: action.payload.user.business
-          ? action.payload.user.business.id
-          : ""
-        },
-      };
     case GET_AVAILABILITY:
       return {
         ...state,
@@ -214,6 +192,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         business: action.payload,
+        current: {
+          ...state.current,
+          business: action.payload.id
+        }
       };
     case CHARGE_COMPLETE:
       return {

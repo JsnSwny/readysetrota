@@ -247,9 +247,14 @@ class SiteViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     def get_queryset(self):
-        business = self.request.user.business
-        return Site.objects.filter(business=business)
-
+        if not hasattr(self.request.user, "business"):
+            Department.objects.filter(pos_department__position__user=self.request.user).distinct()
+            sites = Site.objects.filter(department_site__pos_department__position__user=self.request.user).distinct()
+            return sites
+        else:
+            business = self.request.user.business
+            return Site.objects.filter(business=business)
+            
     def destroy(self, request, *args, **kwargs):
         departments = Department.objects.filter(site=self.get_object().id)
         print(departments)

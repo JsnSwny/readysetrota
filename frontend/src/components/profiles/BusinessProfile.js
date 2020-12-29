@@ -7,9 +7,6 @@ import {
   getHolidays,
   getSites,
 } from "../../actions/employees";
-import {
-  resetLoading
-} from "../../actions/loading";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
@@ -36,7 +33,6 @@ const BusinessProfile = (props) => {
 
   useEffect(() => {
     dispatch(getCustomer(user.profile.stripe_id));
-    
   }, []);
 
   useEffect(() => {

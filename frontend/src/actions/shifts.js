@@ -18,8 +18,6 @@ import { tokenConfig } from "./auth";
 import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
-let test = "hello";
-
 // Get Bookings
 export const getShifts = (startdate, enddate) => (dispatch, getState) => {
   dispatch({
@@ -48,7 +46,7 @@ export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios
     .get(
       `/api/shiftlist/?date_after=${format(new Date(), "yyyy-MM-dd")}${
-        user ? "&employee__user__id=" + id : "&employee=" + id
+        user ? `&employee__user__id=${id}` : `&employee= ${id}`
       }&ordering=date,start_time`,
       tokenConfig(getState)
     )
