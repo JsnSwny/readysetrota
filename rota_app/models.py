@@ -25,6 +25,7 @@ class Business(models.Model):
 class Site(models.Model):
     name = models.CharField(max_length=100)
     business = models.ForeignKey(Business, related_name="site_business", on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ManyToManyField(User, related_name="site_admin", blank=True)
 
 class Department(models.Model):
     name = models.CharField(max_length=100)

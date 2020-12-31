@@ -2,22 +2,25 @@ import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSite, setDepartment } from "../../../actions/employees";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const SitePicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
-  let departments = useSelector((state) => state.employees.departments)
   let loading = useSelector((state) => state.loading);
+  let user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  let siteAdmin = sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user.id) : false;
   return (
     <Fragment>
       <div className="dashboard container-2">
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">Sites</p>
-            <i
+            {user.business && (
+              <i
               onClick={() => {
                 if (plan == "F" && sites.length >= 1) {
                   toast.warning(
@@ -31,7 +34,27 @@ const SitePicker = (props) => {
               }}
               className="fas fa-plus-square"
             ></i>
+            )
+            }
+            
           </div>
+          {sites.length == 0 && !user.business && (
+            <Fragment>
+              <p>You are not associated with any businesses yet</p>
+              <Link to="/join">
+                <button
+                  className="btn-4"
+                  style={{
+                    marginLeft: "0",
+                    padding: "15px 20px",
+                    marginTop: "20px",
+                  }}
+                >
+                  Join a Business
+                </button>
+              </Link>
+            </Fragment>
+          )}
           {loading.sites && <small class="loading-text">Loading sites...</small>}
           
           <div className="dashboard__wrapper">
@@ -45,7 +68,8 @@ const SitePicker = (props) => {
                 <p className="title-md bold">
                   {item.name}{" "}
                   <div>
-                    <i
+                    {user.business && (
+                      <i
                       onClick={() => {
                         setOpen(true);
                         setUpdate(item);
@@ -53,6 +77,8 @@ const SitePicker = (props) => {
                       }}
                       class="fas fa-edit"
                     ></i>
+                    )}
+                    
                     <i
                       onClick={() => {
                         if(current.site != item.id) {

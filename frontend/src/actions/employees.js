@@ -39,15 +39,17 @@ import { format } from "date-fns";
 import { tokenConfig } from "./auth";
 
 export const getSites = () => (dispatch, getState) => {
-  
-  axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
+  let current_site = getState().employees.current.site
+  let current_department = getState().employees.current.department
+
+  axios.get(`/api/sites/?current_department=${current_department}&current_site=${current_site}`, tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_SITES,
       payload: res.data,
     });
     dispatch({
       type: SET_BUSINESS,
-      payload: res.data[0].business,
+      payload: res.data.length > 0 ? res.data[0].business : 0,
     });
   });
 };
@@ -68,7 +70,6 @@ export const updateSite = (id, site) => (dispatch, getState) => {
   axios
     .put(`/api/sites/${id}/`, site, tokenConfig(getState))
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: UPDATE_SITE,
         payload: res.data,
@@ -186,8 +187,9 @@ export const updateEmployee = (id, employee) => (dispatch, getState) => {
 
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
+  let current = getState().employees.current;
   axios
-    .post("/api/employees/", employee, tokenConfig(getState))
+    .post(`/api/employees/?business=${current.business}`, employee, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_EMPLOYEE,
@@ -225,7 +227,6 @@ export const getPositions = (all = false) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(`positions finished ${all}`)
       if (all) {
         dispatch({
           type: GET_ALL_POSITIONS,
@@ -288,8 +289,9 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
 
 // Add Employee
 export const addDepartment = (department) => (dispatch, getState) => {
+  let current = getState().employees.current;
   axios
-    .post("/api/departments/", department, tokenConfig(getState))
+    .post(`/api/departments/?business=${current.business}`, department, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_DEPARTMENT,
@@ -330,18 +332,19 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
       dispatch(getPositions(true));
       dispatch(getPositions());
     })
-    .catch((error) => {console.log(error)});
+    .catch((error) => {console.log(error.response)});
 };
 
 // Get Department
 export const getDepartments = () => (dispatch, getState) => {
+  let current_site = getState().employees.current.site
+  let current_department = getState().employees.current.department
   axios
     .get(
-      `/api/departments/${getState().employees.current.site > 0 ? `?site__id=${getState().employees.current.site}` : ""}`,
+      `/api/departments/${getState().employees.current.site > 0 ? `?site__id=${getState().employees.current.site}&current_department=${current_department}` : ""}`,
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(`/api/departments/${getState().employees.current.site > 0 ? `?site__id=${getState().employees.current.site}` : ""}`)
       dispatch({
         type: GET_DEPARTMENTS,
         payload: res.data,

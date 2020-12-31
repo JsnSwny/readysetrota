@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setDepartment } from "../../../actions/employees";
 import CreateShift from "../../modals/CreateShift";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+
 
 const DepartmentPicker = (props) => {
   const dispatch = useDispatch();
+  const { admin } = props
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("");
@@ -39,7 +40,7 @@ const DepartmentPicker = (props) => {
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">Departments</p>
-            {user.business && (
+            {admin && (
               <i
                 onClick={() => {
                   if (plan == "F" && departments.length >= 1) {
@@ -57,23 +58,7 @@ const DepartmentPicker = (props) => {
               ></i>
             )}
           </div>
-          {departments.length == 0 && !user.business && (
-            <Fragment>
-              <p>You are not associated with any businesses yet</p>
-              <Link to="/join">
-                <button
-                  className="btn-4"
-                  style={{
-                    marginLeft: "0",
-                    padding: "15px 20px",
-                    marginTop: "20px",
-                  }}
-                >
-                  Join a Business
-                </button>
-              </Link>
-            </Fragment>
-          )}
+          
           {loading.departments && <small class="loading-text">Loading departments...</small>}
 
           <div className="dashboard__wrapper">
@@ -88,7 +73,7 @@ const DepartmentPicker = (props) => {
                 <div className="title-md bold">
                   <p>{item.name}{" "}</p>
                   <div>
-                    {user.business && (
+                    {admin && (
                       <i
                       onClick={() => {
                         setOpen(true);

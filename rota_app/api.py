@@ -85,7 +85,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
 
     def perform_create(self, serializer):
-        business = self.request.user.business
+        business = int(self.request.query_params.get('business'))
+        business = Business.objects.filter(id=business).first()
+
         total_employees = business.total_employees
         current_employees = Employee.objects.filter(business=business)
         if len(current_employees) >= total_employees:
@@ -162,21 +164,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = DepartmentFilter
 
-    def get_queryset(self):
-        if not hasattr(self.request.user, "business"):
-            return Department.objects.filter(pos_department__position__user=self.request.user).distinct()
-        else:
-            return self.request.user.departments.all()
-
-    def perform_create(self, serializer):
-        business = self.request.user.business
-        departments = Department.objects.filter(business=business)
-
-        if business.plan == "F" and len(departments) >= 1:
-            return False
-        serializer.save(owner=self.request.user)
-
-
     def destroy(self, request, *args, **kwargs):
         positions = Position.objects.filter(department=self.get_object().id)
         for i in positions:
@@ -184,6 +171,28 @@ class DepartmentViewSet(viewsets.ModelViewSet):
             i.delete()
             
         return super(DepartmentViewSet, self).destroy(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Department.objects.filter(business=self.request.user.business)
+
+        departments = Department.objects.filter(pos_department__position__user=self.request.user)
+        for i in self.request.user.site_admin.all():
+            departments = departments | Department.objects.filter(site=i)  
+
+        return departments.distinct()
+
+    def perform_create(self, serializer):
+        business = int(self.request.query_params.get('business'))
+        business = Business.objects.filter(id=business).first()
+        departments = Department.objects.filter(business=business)
+
+        if business.plan == "F" and len(departments) >= 1:
+            return False
+        serializer.save(owner=self.request.user)
+
+
+    
 
 
 class ShiftSwapFilter(django_filters.FilterSet):
@@ -247,13 +256,14 @@ class SiteViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     def get_queryset(self):
-        if not hasattr(self.request.user, "business"):
-            Department.objects.filter(pos_department__position__user=self.request.user).distinct()
-            sites = Site.objects.filter(department_site__pos_department__position__user=self.request.user).distinct()
-            return sites
-        else:
+        if hasattr(self.request.user, "business"):
             business = self.request.user.business
             return Site.objects.filter(business=business)
+            
+        sites = Site.objects.filter(department_site__pos_department__position__user=self.request.user)
+        sites = sites | self.request.user.site_admin.all()
+
+        return sites.distinct()
             
     def destroy(self, request, *args, **kwargs):
         departments = Department.objects.filter(site=self.get_object().id)

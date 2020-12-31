@@ -69,14 +69,13 @@ class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
     default_availability = serializers.JSONField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
-    owner = UserSerializer(read_only=True)
-    user = UserSerializer(read_only=True)
+    # owner = UserSerializer(read_only=True)
+    # user = UserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Employee
         fields = ('__all__')
-        depth = 1
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -152,5 +151,5 @@ class SiteSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(required=False)
     class Meta:
         model = Site
-        fields = ('id', 'name', 'business', 'business_id')
+        fields = ('id', 'name', 'business', 'business_id', 'admins',)
         depth: 1

@@ -62,6 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
     all_permissions = serializers.SerializerMethodField()
     department_admin = DepartmentSerializer(read_only=True, many=True)
     employee = EmployeeSerializer(required=False, read_only=True, many=True)
+    # site_admin = serializers.SerializerMethodField()
     def get_all_permissions(self, obj):
         permissions = []
         for i in obj.groups.all():
@@ -70,6 +71,14 @@ class UserSerializer(serializers.ModelSerializer):
         for i in obj.user_permissions.all():
             permissions.append(i.codename)
         return list(dict.fromkeys(permissions))
+    # def get_site_admin(self, obj):
+    #     user_employees = Employee.objects.filter(user=obj.id, site_admin=True).distinct()
+    #     site_ids = []
+    #     for i in user_employees:
+    #         print(i)
+    #         site_id = Site.objects.filter(department_site__pos_department__position=i).first().id
+    #         site_ids.append(site_id)
+    #     return site_ids
          
     class Meta:
         model = User

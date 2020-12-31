@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShiftsByID } from "../../actions/shifts";
 import {
@@ -31,6 +31,10 @@ const StaffProfile = (props) => {
   let current = useSelector(
     (state) => state.employees.current
   );
+    
+  let siteAdmin = sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user.id) : false;
+
+  const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
   
@@ -62,19 +66,22 @@ const StaffProfile = (props) => {
   }, [current.department]);
 
   useEffect(() => {
+    if(typeof(employee) !== 'undefined') {
+      setCurrentEmployee(employee);
+    }
     if(employee) {
       dispatch(getAvailability(employee.id, employee.business.id));
       dispatch(getHolidays(employee.business.id, employee.id));
     }
-    
   }, [employee])
+
 
   if (!business && id_param) {
     return <Redirect to="" />;
   }
-  if(typeof(employee) === 'undefined') {
-    return <Loading />;
-  }
+  // if(!currentEmployee) {
+  //   return <Loading />;
+  // }
 
   return ( 
     <Fragment>
@@ -83,7 +90,7 @@ const StaffProfile = (props) => {
           <h1 className="title">
             {!id_param
               ? "Your "
-              : `${employee.first_name} ${employee.last_name}'s `}
+              : `${currentEmployee.first_name} ${currentEmployee.last_name}'s `}
             Profile
           </h1>
         </div>
@@ -92,8 +99,8 @@ const StaffProfile = (props) => {
       {!id_param && (
         <Fragment>
           <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
-          <DepartmentPicker />
-          {current.department != 0 && business && (
+          <DepartmentPicker admin={siteAdmin} />
+          {current.department != 0 && siteAdmin && (
             <Fragment>
               <PositionPicker
                 setOpen={setOpen}
@@ -110,10 +117,10 @@ const StaffProfile = (props) => {
         </Fragment>
       )}
 
-      {current.department != 0 && (
+      {current.department != 0 && currentEmployee && (
         <div className="dashboard container-2">
-          <UpcomingShifts employee={employee} />
-          {plan == "P" && <Availability employee={employee} />}
+          <UpcomingShifts employee={currentEmployee} />
+          {plan == "P" && <Availability employee={currentEmployee} />}
         </div>
       )}
     </Fragment>

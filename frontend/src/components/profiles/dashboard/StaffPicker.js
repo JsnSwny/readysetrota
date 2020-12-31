@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
@@ -17,6 +17,19 @@ const StaffPicker = (props) => {
   );
   let employees = useSelector(state => state.employees.employees)
   let loading = useSelector((state) => state.loading);
+  let sites = useSelector((state) => state.employees.sites)
+  let departments = useSelector((state) => state.employees.departments)
+
+  let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
+  }
+
+  const isDepartmentAdmin = (user_id) => {
+    return departments.find(dep => dep.id == current.department) ? departments.find(dep => dep.id == current.department).admins.includes(user_id) : false;
+  }
+
 
   return (
     <Fragment>
@@ -51,11 +64,16 @@ const StaffPicker = (props) => {
           <div className="dashboard__wrapper">
             {employees.map((item) => (
               <div key={item.id} className="dashboard__item--sm">
-                <p className="title-md bold">
+                <div className={`title-md bold ${isSiteAdmin(item.user) ? "admin" : ""}`}>
                   <Link to={`/profile/${item.id}`}>
                     {item.first_name} <strong>{item.last_name}</strong>
                   </Link>
                   <div>
+                    {item.user && (
+                      <i
+                      class={`fas fa-crown ${isSiteAdmin(item.user) ? "site-admin" : isDepartmentAdmin(item.user) ? "department-admin" : ""}`}></i>
+                    )}
+                    
                     {business && !item.user && <CopyUUID employee={item} />}
                     {item.user != user.id && (
                     <i
@@ -68,7 +86,7 @@ const StaffPicker = (props) => {
                     ></i>)}
                   </div>
                   
-                </p>
+                </div>
 
                 <p className="subtitle-sm">
                   {item.position.map(

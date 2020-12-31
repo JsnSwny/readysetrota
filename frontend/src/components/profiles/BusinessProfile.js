@@ -169,7 +169,7 @@ const BusinessProfile = (props) => {
         </div>
       </div>
       <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
-      <DepartmentPicker />
+      <DepartmentPicker admin={true} />
       {current.department != 0 && (
         <PositionPicker
         setOpen={setOpen}

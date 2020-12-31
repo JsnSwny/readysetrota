@@ -34,14 +34,21 @@ const AddStaff = (props) => {
       staffPosition && setPosition(staffPosition.toString());
     }
   }, []);
-
   let current = useSelector((state) => state.employees.current);
+
+  let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
 
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState([]);
+  const [siteAdmin, setSiteAdmin] = useState(false);
   const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
+
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
+  }
 
   const [admins, setAdmins] = useState([]);
   useEffect(() => {
@@ -57,6 +64,7 @@ const AddStaff = (props) => {
         setFirstName(update.first_name);
         setLastName(update.last_name);
         setPosition(update.position.map((item) => item));
+        setSiteAdmin(isSiteAdmin(update.user))
       }
     }
   }, [update]);
@@ -77,12 +85,31 @@ const AddStaff = (props) => {
           4: { name: "unselected", start_time: null, end_time: null },
           5: { name: "unselected", start_time: null, end_time: null },
           6: { name: "unselected", start_time: null, end_time: null },
-        },
+        }
       };
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
           dispatch(updateEmployee(update.id, employee));
+          if(siteAdmin) {
+            dispatch(
+              updateSite(current.site, {
+                ...current_site,
+                admins: [...current_site.admins, update.user],
+                business_id: current_site.business.id
+              })
+            );
+          } else {
+            console.log("note site admin")
+            console.log(current_site.admins.filter(item => item != update.user))
+            dispatch(
+              updateSite(current.site, {
+                ...current_site,
+                admins: current_site.admins.filter(item => item != update.user),
+                business_id: current_site.business.id
+              })
+            );
+          }
           toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));
@@ -92,6 +119,7 @@ const AddStaff = (props) => {
         setFirstName("");
         setLastName("");
         setPosition("");
+        setSiteAdmin(false);
         onClose();
       }
     } else if (form == "Department") {
@@ -204,6 +232,18 @@ const AddStaff = (props) => {
               <label className="staffForm__label">Position(s):</label>
               <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
               <p className="error">{errors.position_id}</p>
+            </div>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Site admin?</label>
+              <input
+                type="checkbox"
+                name="site_admin"
+                onChange={(e) => {
+                  setSiteAdmin(!siteAdmin)
+                }}
+                checked={siteAdmin}
+              ></input>
+              <p className="error">{errors.name}</p>
             </div>
           </Fragment>
         ) : (
