@@ -91,25 +91,25 @@ const AddStaff = (props) => {
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
           dispatch(updateEmployee(update.id, employee));
-          if(siteAdmin) {
-            dispatch(
-              updateSite(current.site, {
-                ...current_site,
-                admins: [...current_site.admins, update.user],
-                business_id: current_site.business.id
-              })
-            );
-          } else {
-            console.log("note site admin")
-            console.log(current_site.admins.filter(item => item != update.user))
-            dispatch(
-              updateSite(current.site, {
-                ...current_site,
-                admins: current_site.admins.filter(item => item != update.user),
-                business_id: current_site.business.id
-              })
-            );
-          }
+          if(update.user) {
+            if(siteAdmin) {
+              dispatch(
+                updateSite(current.site, {
+                  ...current_site,
+                  admins: [...current_site.admins, update.user],
+                  business_id: current_site.business.id
+                })
+              );
+            } else {
+              dispatch(
+                updateSite(current.site, {
+                  ...current_site,
+                  admins: current_site.admins.filter(item => item != update.user),
+                  business_id: current_site.business.id
+                })
+              );
+            }
+          } 
           toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));
@@ -233,7 +233,8 @@ const AddStaff = (props) => {
               <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
               <p className="error">{errors.position_id}</p>
             </div>
-            <div className="staffForm__control">
+            {update && update.user && (
+              <div className="staffForm__control">
               <label className="staffForm__label">Site admin?</label>
               <input
                 type="checkbox"
@@ -245,6 +246,8 @@ const AddStaff = (props) => {
               ></input>
               <p className="error">{errors.name}</p>
             </div>
+            )}
+            
           </Fragment>
         ) : (
           <Fragment>
