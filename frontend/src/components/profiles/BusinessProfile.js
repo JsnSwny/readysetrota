@@ -182,11 +182,11 @@ const BusinessProfile = (props) => {
         />
       )}
         
-      {/* {business.plan != "F" && (
+      {business.plan != "F" && (
         <div className="container-2">
           <HolidayRequest holidays={holidays} admin={true} />
         </div>
-      )} */}
+      )}
     </Fragment>
   );
 };

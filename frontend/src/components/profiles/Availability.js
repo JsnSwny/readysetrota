@@ -368,7 +368,7 @@ const Availability = (props) => {
                 </div>
             )}
             </div>
-            {/* <HolidayRequest holidays={holidays} admin={admin} /> */}
+            <HolidayRequest holidays={holidays} admin={admin} />
         </div>
     )
 }
