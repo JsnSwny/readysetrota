@@ -50,7 +50,6 @@ const BusinessProfile = (props) => {
 
   useEffect(() => {
     if(current.department > 0) {
-      console.log("department updating")
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());

@@ -53,13 +53,14 @@ const StaffProfile = (props) => {
     if(sites.length == 0) {
       dispatch(getSites());
     }
+    if(current.site > 0) {
+      dispatch(getDepartments());
+    }
   }, [current.site]);
 
   useEffect(() => {
     if(current.site > 0) {
-      dispatch(getDepartments());
       if(isSiteAdmin(user.id)) {
-        console.log("GETTING HOLIDAYS")
         dispatch(getHolidays(current.site));
       }
     }
@@ -70,7 +71,6 @@ const StaffProfile = (props) => {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
-      // dispatch(getHolidays(current.business));
     }
   }, [current.department]);
 
