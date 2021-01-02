@@ -193,7 +193,12 @@
     }
     @include wi-mq(tablet) {
       min-height: 130px;
+      width: calc(50% - 0.5rem);
     }
+    @include wi-mq(mobile) {
+      width: 100%;
+    }
+
     margin: 0 0.25rem 0.5rem;
 
     &--sm {
@@ -492,7 +497,6 @@
       }
       .subtitle {
         font-size: 18px;
-        text-align: center;
       }
       &-wrapper {
         justify-content: center;
@@ -572,10 +576,5 @@
     &__wrapper {
       justify-content: center;
     }
-  }
-
-  .title,
-  .subtitle {
-    text-align: center;
   }
 }
