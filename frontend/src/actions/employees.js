@@ -443,12 +443,11 @@ export const getAllAvailability = (site, startdate, enddate) => (
     });
 };
 
-export const getHolidays = (business, user = false) => (dispatch, getState) => {
-  console.log(`employees.js - ${business}`);
+export const getHolidays = (site, user = false) => (dispatch, getState) => {
   axios
     .get(
       `/api/availability/${
-        user ? `?employee__id=${user}` : `?employee__business=${business}`
+        user ? `?employee__id=${user}` : `?employee__position__department__site=${site}`
       }&date_after=${format(
         new Date(),
         "yyyy-MM-dd"
@@ -456,12 +455,11 @@ export const getHolidays = (business, user = false) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(res.data)
       dispatch({
         type: GET_HOLIDAYS,
         payload: res.data,
       });
-    });
+    }).catch(err => console.log(err.response));
 };
 
 export const addAvailability = (obj) => (dispatch, getState) => {

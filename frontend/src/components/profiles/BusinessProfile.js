@@ -44,6 +44,7 @@ const BusinessProfile = (props) => {
     }
     if(current.site > 0) {
       dispatch(getDepartments());
+      dispatch(getHolidays(current.site));
     }
   }, [current.site]);
 
@@ -53,7 +54,6 @@ const BusinessProfile = (props) => {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
-      dispatch(getHolidays(current.business));
     }
   }, [current.department]);
 
@@ -184,7 +184,7 @@ const BusinessProfile = (props) => {
         
       {business.plan != "F" && (
         <div className="container-2">
-          <HolidayRequest holidays={holidays} business={true} />
+          <HolidayRequest holidays={holidays} admin={true} />
         </div>
       )}
     </Fragment>

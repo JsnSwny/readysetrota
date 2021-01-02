@@ -53,10 +53,17 @@ const StaffProfile = (props) => {
     if(sites.length == 0) {
       dispatch(getSites());
     }
+  }, [current.site]);
+
+  useEffect(() => {
     if(current.site > 0) {
       dispatch(getDepartments());
+      if(isSiteAdmin(user.id)) {
+        console.log("GETTING HOLIDAYS")
+        dispatch(getHolidays(current.site));
+      }
     }
-  }, [current.site]);
+  }, [sites]);
 
   useEffect(() => {
     if(current.department > 0) {
@@ -66,15 +73,6 @@ const StaffProfile = (props) => {
       // dispatch(getHolidays(current.business));
     }
   }, [current.department]);
-
-  useEffect(() => {
-    if (current.business > 0) {
-      if(isSiteAdmin(user.id)) {
-        dispatch(getHolidays(current.business));
-      }
-    }
-    
-  }, [current.business]);
 
   useEffect(() => {
     if(typeof(employee) !== 'undefined') {
@@ -134,7 +132,7 @@ const StaffProfile = (props) => {
       {current.department != 0 && currentEmployee && (
         <div className="dashboard container-2">
           <UpcomingShifts employee={currentEmployee} />
-          {plan == "P" && <Availability employee={currentEmployee} />}
+          {plan == "P" && <Availability employee={currentEmployee} admin={isSiteAdmin(user.id)} />}
         </div>
       )}
     </Fragment>

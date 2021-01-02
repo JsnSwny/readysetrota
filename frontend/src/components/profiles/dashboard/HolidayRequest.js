@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import Pagination from "../../common/Pagination";
 
 const HolidayRequest = (props) => {
-  const { holidays, business } = props;
+  const { holidays, admin } = props;
 
   const dispatch = useDispatch();
 
@@ -13,7 +13,7 @@ const HolidayRequest = (props) => {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [filteredHolidays, setFilteredHolidays] = useState(holidays);
 
-  const [filter, setFilter] = useState(business ? "Unmarked" : "All");
+  const [filter, setFilter] = useState(admin ? "Unmarked" : "All");
 
   const filters = ["All", "Unmarked", "Unapproved", "Approved"];
 
@@ -40,7 +40,7 @@ const HolidayRequest = (props) => {
     <div className="dashboard__block--half">
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">
-          {business ? "Review" : "Your"} Holiday Requests
+          {admin ? "Review" : "Your"} Holiday Requests
         </p>
       </div>
       <div className="btn-wrapper">
@@ -75,9 +75,9 @@ const HolidayRequest = (props) => {
                     <p>
                       {item.employee.first_name} {item.employee.last_name} -{" "}
                       {format(parseISO(item.date), "dd MMMM yyyy")} (
-                      {item.business.name})
+                      {item.site.name})
                     </p>
-                    {business && (
+                    {admin && (
                       <Fragment>
                         <i
                           onClick={() => {
@@ -86,7 +86,7 @@ const HolidayRequest = (props) => {
                               employee_id: item.employee.id,
                               date: item.date,
                               approved: true,
-                              business_id: item.business.id,
+                              site_id: item.site.id,
                             };
                             dispatch(updateAvailability(item.id, obj));
                           }}
@@ -99,7 +99,7 @@ const HolidayRequest = (props) => {
                               employee_id: item.employee.id,
                               date: item.date,
                               approved: false,
-                              business_id: item.business.id,
+                              site_id: item.site.id,
                             };
                             dispatch(updateAvailability(item.id, obj));
                           }}

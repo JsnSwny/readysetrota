@@ -37,8 +37,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: false,
-        positions: state.postions != false && action.payload.length != 0,
-        employees: state.postions != false && action.payload.length != 0
+        positions: state.positions != false && action.payload.length != 0,
+        employees: state.employees != false && action.payload.length != 0
       }
     case GET_POSITIONS:
       return {
@@ -53,7 +53,10 @@ export default function (state = initialState, action) {
     case GET_SITES:
       return {
         ...state,
-        sites: false
+        sites: false,
+        departments: state.departments != false && action.payload.length != 0,
+        positions: state.positions != false && action.payload.length != 0,
+        employees: state.employees != false && action.payload.length != 0
       }
     case RESET_LOADING:
       return {

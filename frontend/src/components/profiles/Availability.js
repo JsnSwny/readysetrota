@@ -21,7 +21,7 @@ import {
   } from "date-fns";
 
 const Availability = (props) => {
-    const { employee } = props;
+    const { employee, admin } = props;
 
     const dispatch = useDispatch();
 
@@ -179,7 +179,7 @@ const Availability = (props) => {
                                 currentSelector == "partial" && endTime
                                 ? endTime
                                 : null,
-                            business_id: current.business,
+                            site_id: current.site,
                             };
                             if (differenceInDays(date, new Date()) > 365) {
                             toast.warning(
@@ -368,7 +368,7 @@ const Availability = (props) => {
                 </div>
             )}
             </div>
-            <HolidayRequest holidays={holidays} />
+            <HolidayRequest holidays={holidays} admin={admin} />
         </div>
     )
 }

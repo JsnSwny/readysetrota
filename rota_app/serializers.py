@@ -140,7 +140,7 @@ class ShiftSwapSerializer(serializers.ModelSerializer):
 
 class AvailabilitySerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
     class Meta:
         model = Availability
         fields = '__all__'
