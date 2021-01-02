@@ -67,7 +67,7 @@ const SitePicker = (props) => {
               >
                 <p className="title-md bold">
                   {item.name}{" "}
-                  <div>
+                  <div className="flex">
                     {user.business && (
                       <i
                       onClick={() => {

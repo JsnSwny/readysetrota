@@ -4,10 +4,8 @@ import { useSelector } from "react-redux";
 
 const AddShiftButton = (props) => {
   const { employee, date, white, limit, template } = props;
-  let business = useSelector((state) => state.auth.business);
   const [open, setOpen] = useState("");
   return (
-    business &&
     (!limit || employee.id <= limit) && (
       <Fragment>
         <CreateShift

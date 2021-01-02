@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getEmployees, getAllAvailability } from "../../actions/employees";
+import { getEmployees, getAllAvailability, getSites, getDepartments } from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -25,7 +25,7 @@ const Rota = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   let user = useSelector((state) => state.auth.user);
-  let admin = useSelector((state) => state.auth.business);
+  let sites = useSelector((state) => state.employees.sites)
   let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
@@ -40,9 +40,13 @@ const Rota = () => {
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
+
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
-    dispatch(getAllAvailability(current.business, start_date, end_date));
+    dispatch(getAllAvailability(current.site, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
   };
 
@@ -85,12 +89,15 @@ const Rota = () => {
   const firstUpdateDepartment = useRef(true);
   useEffect(() => {
     dispatch(getEmployees());
+    dispatch(getSites());
+    dispatch(getDepartments());
 
     dispatch(getPopularTimes());
     if (firstUpdateDepartment.current) {
       widthUpdate();
       return;
     }
+
     updateShifts(start_date, end_date);
   }, [current.department]);
 
@@ -129,7 +136,7 @@ const Rota = () => {
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
       return obj.employee && obj.employee.id === employee && obj.date === date
-        ? admin
+        ? isSiteAdmin(user.id)
           ? !obj.published || obj.published
           : obj.published
         : "";
@@ -233,10 +240,11 @@ const Rota = () => {
                       employee,
                       showAvailabilities,
                       filterDate,
+                      admin: isSiteAdmin(user.id)
                     };
 
                     return shifts.length > 0 ? (
-                      <Shift {...props} shifts={shifts} admin={admin} />
+                      <Shift {...props} shifts={shifts}  />
                     ) : (
                       <NoShift {...props} />
                     );

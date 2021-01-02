@@ -68,7 +68,7 @@ const StaffPicker = (props) => {
                   <Link to={`/profile/${item.id}`}>
                     {item.first_name} <strong>{item.last_name}</strong>
                   </Link>
-                  <div>
+                  <div className="flex">
                     {item.user && (
                       <i
                       class={`fas fa-crown ${isSiteAdmin(item.user) ? "site-admin" : isDepartmentAdmin(item.user) ? "department-admin" : ""}`}></i>

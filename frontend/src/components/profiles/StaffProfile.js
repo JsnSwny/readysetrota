@@ -9,6 +9,7 @@ import {
   getHolidays,
   getSites
 } from "../../actions/employees";
+import { resetLoading } from "../../actions/loading";
 import { useParams, Redirect } from "react-router-dom";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
@@ -32,15 +33,17 @@ const StaffProfile = (props) => {
     (state) => state.employees.current
   );
     
-  let siteAdmin = sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user.id) : false;
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
 
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
   
-  let employee = user.employee.find((employee) =>
+  let employee = (id_param && employees.find((item) => item.id == employee_id)) ||user.employee.find((employee) =>
     employee.position.some((item) => item.department.id == current.department)
-  ) || employees.find((item) => item.id == employee_id);
+  );
 
   useEffect(() => {
     dispatch(getShiftsByID(employee_id, user.id == employee_id));
@@ -50,10 +53,9 @@ const StaffProfile = (props) => {
     if(sites.length == 0) {
       dispatch(getSites());
     }
-    dispatch(getDepartments());
-    dispatch(getEmployees());
-    dispatch(getPositions(true));
-    dispatch(getPositions());
+    if(current.site > 0) {
+      dispatch(getDepartments());
+    }
   }, [current.site]);
 
   useEffect(() => {
@@ -61,22 +63,34 @@ const StaffProfile = (props) => {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
-      dispatch(getHolidays(current.business));
+      // dispatch(getHolidays(current.business));
     }
   }, [current.department]);
+
+  useEffect(() => {
+    if (current.business > 0) {
+      if(isSiteAdmin(user.id)) {
+        dispatch(getHolidays(current.business));
+      }
+    }
+    
+  }, [current.business]);
 
   useEffect(() => {
     if(typeof(employee) !== 'undefined') {
       setCurrentEmployee(employee);
     }
     if(employee) {
-      dispatch(getAvailability(employee.id, employee.business.id));
-      dispatch(getHolidays(employee.business.id, employee.id));
+      dispatch(getAvailability(employee.id, employee.business_id));
+      if(!isSiteAdmin(user.id)) {
+        dispatch(getHolidays(employee.business_id, employee.id));
+      }
+      
     }
   }, [employee])
 
 
-  if (!business && id_param) {
+  if (!isSiteAdmin(user.id) && id_param) {
     return <Redirect to="" />;
   }
   // if(!currentEmployee) {
@@ -99,8 +113,8 @@ const StaffProfile = (props) => {
       {!id_param && (
         <Fragment>
           <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
-          <DepartmentPicker admin={siteAdmin} />
-          {current.department != 0 && siteAdmin && (
+          <DepartmentPicker admin={isSiteAdmin(user.id)} />
+          {current.department != 0 && isSiteAdmin(user.id) && (
             <Fragment>
               <PositionPicker
                 setOpen={setOpen}

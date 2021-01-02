@@ -90,26 +90,8 @@ const AddStaff = (props) => {
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
-          dispatch(updateEmployee(update.id, employee));
-          if(update.user) {
-            if(siteAdmin) {
-              dispatch(
-                updateSite(current.site, {
-                  ...current_site,
-                  admins: [...current_site.admins, update.user],
-                  business_id: current_site.business.id
-                })
-              );
-            } else {
-              dispatch(
-                updateSite(current.site, {
-                  ...current_site,
-                  admins: current_site.admins.filter(item => item != update.user),
-                  business_id: current_site.business.id
-                })
-              );
-            }
-          } 
+          dispatch(updateEmployee(update, employee, siteAdmin, current_site));
+          
           toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));

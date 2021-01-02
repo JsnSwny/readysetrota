@@ -72,7 +72,7 @@ const DepartmentPicker = (props) => {
               >
                 <div className="title-md bold">
                   <p>{item.name}{" "}</p>
-                  <div>
+                  <div className="flex">
                     {admin && (
                       <i
                       onClick={() => {

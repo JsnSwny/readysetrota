@@ -43,12 +43,15 @@ const Shift = (props) => {
           shifts.some((item) => item.published == false) ? "unpublished" : ""
         } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
-        <AddShiftButton
+        {admin && (
+          <AddShiftButton
           employee={employee}
           date={format_date}
           white={true}
           limit={limit}
         />
+        )}
+        
         {shifts.map((shift) => (
           <Fragment key={shift.id}>
             {!admin && shift.published == false ? (

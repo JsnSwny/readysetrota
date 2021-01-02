@@ -171,18 +171,40 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
     .catch((error) => {});
 };
 
-export const updateEmployee = (id, employee) => (dispatch, getState) => {
+export const updateEmployee = (update, employee, siteAdmin, current_site) => (dispatch, getState) => {
+  let current = getState().employees.current;
   axios
-    .put(`/api/employees/${id}/`, employee, tokenConfig(getState))
+    .put(`/api/employees/${update.id}/`, employee, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_EMPLOYEE,
         payload: res.data,
       });
+      console.log(update)
+      console.log(siteAdmin)
+      if(update.user) {
+        if(siteAdmin) {
+          dispatch(
+            updateSite(current.site, {
+              ...current_site,
+              admins: [...current_site.admins, update.user],
+              business_id: current_site.business.id
+            })
+          );
+        } else {
+          dispatch(
+            updateSite(current.site, {
+              ...current_site,
+              admins: current_site.admins.filter(item => item != update.user),
+              business_id: current_site.business.id
+            })
+          );
+        }
+      } 
       dispatch(resetErrors());
     })
 
-    .catch((err) => console.log(err.response));
+    .catch((err) => console.log(err));
 };
 
 // Add Employee
@@ -390,6 +412,7 @@ export const uuidReset = () => (dispatch, getState) => {
 
 // Get Department
 export const getAvailability = (employee, business) => (dispatch, getState) => {
+  console.log(`/api/availability/?employee__id=${employee}&business=${business}&ordering=date`)
   axios
     .get(
       `/api/availability/?employee__id=${employee}&business=${business}&ordering=date`,
@@ -403,13 +426,13 @@ export const getAvailability = (employee, business) => (dispatch, getState) => {
     });
 };
 
-export const getAllAvailability = (business, startdate, enddate) => (
+export const getAllAvailability = (site, startdate, enddate) => (
   dispatch,
   getState
 ) => {
   axios
     .get(
-      `/api/availability/?employee__business=${business}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
+      `/api/availability/?employee__position__department__site=${site}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -421,6 +444,7 @@ export const getAllAvailability = (business, startdate, enddate) => (
 };
 
 export const getHolidays = (business, user = false) => (dispatch, getState) => {
+  console.log(`employees.js - ${business}`);
   axios
     .get(
       `/api/availability/${
@@ -432,6 +456,7 @@ export const getHolidays = (business, user = false) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
+      console.log(res.data)
       dispatch({
         type: GET_HOLIDAYS,
         payload: res.data,

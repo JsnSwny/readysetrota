@@ -10,6 +10,7 @@ const NoShift = (props) => {
     filterDate,
     limit,
     employee,
+    admin
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
   return (
@@ -25,7 +26,9 @@ const NoShift = (props) => {
         result <= addDays(new Date(), -1) ? "date-before" : ""
       }`}
     >
-      <AddShiftButton employee={employee} date={format_date} limit={limit} />
+      {admin && (
+        <AddShiftButton employee={employee} date={format_date} limit={limit} />
+      )}
       {showAvailabilities && (
         <Fragment>
           <p className={`shift__text`}>

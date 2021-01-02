@@ -42,17 +42,14 @@ const BusinessProfile = (props) => {
     if(sites.length == 0) {
       dispatch(getSites());
     }
-    dispatch(getDepartments());
-
-    // Fix double execution - needed to stop loading
-    // dispatch(getEmployees());
-    // dispatch(getPositions(true));
-    // dispatch(getPositions());
-    dispatch(resetLoading())
+    if(current.site > 0) {
+      dispatch(getDepartments());
+    }
   }, [current.site]);
 
   useEffect(() => {
     if(current.department > 0) {
+      console.log("department updating")
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());

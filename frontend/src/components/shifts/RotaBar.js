@@ -26,6 +26,11 @@ const RotaBar = (props) => {
     (state) => state.employees.current
   );
   let user = useSelector((state) => state.auth.user);
+  let sites = useSelector((state) => state.employees.sites)
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -99,7 +104,7 @@ const RotaBar = (props) => {
             </div> */}
 
             {/* EXPORT SHIFTS */}
-            {(current_employee || business) && (
+            {(current_employee || isSiteAdmin(user.id)) && (
               <a
                 className={`dates__mobile-item ${
                   published_shifts.length == 0 ? "disabled" : ""
@@ -120,7 +125,7 @@ const RotaBar = (props) => {
             )}
 
             {/* AVAILABILITIES */}
-            {business && (
+            {isSiteAdmin(user.id) && (
               <div
                 onClick={() => {
                   setShowAvailabilities(!showAvailabilities);
@@ -137,7 +142,7 @@ const RotaBar = (props) => {
             )}
 
             {/* PUBLISH SHIFTS */}
-            {business && (
+            {isSiteAdmin(user.id) && (
               <div
                 onClick={() => {
                   dispatch(publish());

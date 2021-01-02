@@ -118,8 +118,10 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           site: action.payload,
-          department: 0
+          department: 0,
+          business: state.sites.find(item => item.id == action.payload).business.id
         },
+        
         departments: [],
         employees: [],
         positions: []

@@ -37,6 +37,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: false,
+        positions: state.postions != false && action.payload.length != 0,
+        employees: state.postions != false && action.payload.length != 0
       }
     case GET_POSITIONS:
       return {

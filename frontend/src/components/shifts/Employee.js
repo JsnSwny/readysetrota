@@ -13,7 +13,12 @@ const Employee = (props) => {
     current_employee,
   } = props;
 
-  let business = useSelector((state) => state.auth.business);
+  let current = useSelector((state) => state.employees.current)
+  let sites = useSelector((state) => state.employees.sites);
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
 
   const getAllShifts = (employee) => {
     let hours = 0;
@@ -58,7 +63,7 @@ const Employee = (props) => {
             </p>
           </Link>
 
-          {business && !employee.user && <CopyUUID employee={employee} />}
+          {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />}
         </div>
         <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>
       </div>
