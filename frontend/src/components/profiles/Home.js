@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
-import Profile from "./Profile";
+import StaffProfile from "./StaffProfile";
 import BusinessProfile from "./BusinessProfile";
-import CreateShift from "../layout/CreateShift";
+import CreateShift from "../modals/CreateShift";
 
 const Home = () => {
   let user = useSelector((state) => state.auth.user);
@@ -29,7 +29,11 @@ const Home = () => {
           setType={setType}
         />
       ) : (
-        <Profile setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
+        <StaffProfile
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+        />
       )}
     </Fragment>
   );

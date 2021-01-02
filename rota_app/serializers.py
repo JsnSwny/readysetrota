@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability
+from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability, Site
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 
@@ -37,10 +37,11 @@ class DepartmentSerializer(serializers.ModelSerializer):
     owner = BasicUserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Department
-        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business', 'business_id', 'number_of_employees',)
+        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business', 'business_id', 'number_of_employees', 'site', 'site_id',)
         depth = 1
 
     def get_number_of_employees(self, obj):
@@ -68,14 +69,13 @@ class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
     default_availability = serializers.JSONField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
-    owner = UserSerializer(read_only=True)
-    user = UserSerializer(read_only=True)
+    # owner = UserSerializer(read_only=True)
+    # user = UserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
         model = Employee
         fields = ('__all__')
-        depth = 1
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -106,6 +106,9 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 
 class ShiftListSerializer(serializers.ModelSerializer):
     department = BasicDepartmentSerializer(read_only=True)
+    start_time = serializers.SerializerMethodField()
+    def get_start_time(self, obj):
+        return str(obj.start_time)[0:5]
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department',)
@@ -137,17 +140,16 @@ class ShiftSwapSerializer(serializers.ModelSerializer):
 
 class AvailabilitySerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
     class Meta:
         model = Availability
         fields = '__all__'
         depth = 1
 
-# class DefaultAvailabilitySerializer(serializers.ModelSerializer):
-#     availability = serializers.JSONField()
-#     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
-#     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
-#     class Meta:
-#         model = DefaultAvailability
-#         fields = '__all__'
-#         depth = 1
+class SiteSerializer(serializers.ModelSerializer):
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    business = BusinessSerializer(required=False)
+    class Meta:
+        model = Site
+        fields = ('id', 'name', 'business', 'business_id', 'admins',)
+        depth: 1

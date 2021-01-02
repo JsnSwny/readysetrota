@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import AddShift from "../shifts/AddShift";
+import AddShift from "../modals/AddShift";
 import AddStaff from "../employees/AddStaff";
 import { getShiftsByID, swapShifts } from "../../actions/shifts";
 

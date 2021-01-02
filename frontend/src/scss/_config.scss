@@ -20,7 +20,8 @@ $breakpoints: (
   "thumb": "screen and (max-width: 499px)",
   "mobile": "screen and (max-width: 600px)",
   "tablet": "screen and (max-width: 1000px)",
-  "laptop": "screen and (max-width: 1200px)",
+  "laptop": "screen and (max-width: 1600px)",
+  "widescreen": "screen and (max-width: 2000px)",
 );
 
 @mixin wi-mq($alias) {

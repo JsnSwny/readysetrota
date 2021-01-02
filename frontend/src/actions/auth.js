@@ -8,7 +8,6 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  RESET_DEPARTMENT,
 } from "./types";
 
 import { getErrors } from "./errors";
@@ -103,9 +102,6 @@ export const logout = () => (dispatch, getState) => {
       dispatch({
         type: LOGOUT_SUCCESS,
         payload: res.data,
-      });
-      dispatch({
-        type: RESET_DEPARTMENT,
       });
     })
     .catch((err) => {});

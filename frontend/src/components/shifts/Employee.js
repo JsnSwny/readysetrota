@@ -13,18 +13,24 @@ const Employee = (props) => {
     current_employee,
   } = props;
 
-  let business = useSelector((state) => state.auth.business);
+  let current = useSelector((state) => state.employees.current)
+  let sites = useSelector((state) => state.employees.sites);
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
 
   const getAllShifts = (employee) => {
     let hours = 0;
-    let shifts = shifts_list.filter((obj) => obj.employee.id === employee);
+    let shifts = shifts_list.filter(
+      (obj) => obj.employee && obj.employee.id === employee
+    );
     for (let i = 0; i < shifts.length; i++) {
-      let start = parse(shifts[i].start_time, "HH:mm:ss", new Date());
+      let start = parse(shifts[i].start_time, "HH:mm", new Date());
       let end = parse(shifts[i].end_time, "HH:mm", new Date());
       if (end < start) {
         end = addDays(end, 1);
       }
-
       if (end != "Invalid Date") hours += differenceInMinutes(end, start) / 60;
     }
     return hours;
@@ -57,7 +63,7 @@ const Employee = (props) => {
             </p>
           </Link>
 
-          {business && !employee.user && <CopyUUID employee={employee} />}
+          {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />}
         </div>
         <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>
       </div>

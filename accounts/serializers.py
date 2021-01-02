@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business, Position
+from rota_app.models import UserProfile, Employee, Department, Business, Position, Site
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
@@ -62,6 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
     all_permissions = serializers.SerializerMethodField()
     department_admin = DepartmentSerializer(read_only=True, many=True)
     employee = EmployeeSerializer(required=False, read_only=True, many=True)
+    # site_admin = serializers.SerializerMethodField()
     def get_all_permissions(self, obj):
         permissions = []
         for i in obj.groups.all():
@@ -70,6 +71,14 @@ class UserSerializer(serializers.ModelSerializer):
         for i in obj.user_permissions.all():
             permissions.append(i.codename)
         return list(dict.fromkeys(permissions))
+    # def get_site_admin(self, obj):
+    #     user_employees = Employee.objects.filter(user=obj.id, site_admin=True).distinct()
+    #     site_ids = []
+    #     for i in user_employees:
+    #         print(i)
+    #         site_id = Site.objects.filter(department_site__pos_department__position=i).first().id
+    #         site_ids.append(site_id)
+    #     return site_ids
          
     class Meta:
         model = User
@@ -83,7 +92,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     businessName = serializers.CharField(write_only=True, required=False, allow_blank=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     
-
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'password2', 'role', 'businessName')
@@ -120,7 +128,10 @@ class RegisterSerializer(serializers.ModelSerializer):
                 business = Business(owner=user, name=validated_data['businessName'])
                 business.save()
                 profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
-                
+                site = Site(business=business, name="Default Site")
+                site.save()
+                department = Department(business=business, site=site, name="Default Department", owner=user)
+                department.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
             profile.save()

@@ -26,7 +26,7 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
   axios
     .get(
       `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
-        getState().employees.current_department
+        getState().employees.current.department
       }&ordering=date,start_time`,
       tokenConfig(getState)
     )
@@ -46,7 +46,7 @@ export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios
     .get(
       `/api/shiftlist/?date_after=${format(new Date(), "yyyy-MM-dd")}${
-        user ? "&employee__user__id=" + id : "&employee=" + id
+        user ? `&employee__user__id=${id}` : `&employee= ${id}`
       }&ordering=date,start_time`,
       tokenConfig(getState)
     )
@@ -65,7 +65,7 @@ export const addShift = (shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: ADD_SHIFT,
-        payload: res.data,
+        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
       });
       dispatch(getPopularTimes());
 
@@ -81,7 +81,7 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: UPDATE_SHIFT,
-        payload: res.data,
+        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
       });
       dispatch(resetErrors());
       dispatch(getPopularTimes());
@@ -111,7 +111,7 @@ export const getPopularTimes = () => (dispatch, getState) => {
   axios
     .get(
       `/api-view/getpopulartimes?department=${
-        getState().employees.current_department
+        getState().employees.current.department
       }`,
       tokenConfig(getState)
     )

@@ -12,7 +12,11 @@ import {
   updateEmployee,
   deleteEmployee,
   updateBusinessName,
+  addSite,
+  updateSite,
+  deleteSite,
 } from "../../actions/employees";
+import PositionField from "./PositionField"
 import { toast } from "react-toastify";
 
 const AddStaff = (props) => {
@@ -22,66 +26,29 @@ const AddStaff = (props) => {
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
   let employees = useSelector((state) => state.employees.employees);
+  let sites = useSelector(state => state.employees.sites)
   const dispatch = useDispatch();
   useEffect(() => {
-    if (form == "staff") {
+    if (form == "Staff") {
       positions = dispatch(getPositions());
       staffPosition && setPosition(staffPosition.toString());
     }
   }, []);
+  let current = useSelector((state) => state.employees.current);
 
-  let currentDepartment = useSelector(
-    (state) => state.employees.current_department
-  );
-  let currentBusiness = useSelector(
-    (state) => state.employees.current_business
-  );
-
-  let department_obj = departments.filter(
-    (item) => item.id == currentDepartment
-  );
-
-  // Disable Positions in Department of already selected positions
-  const getDepartment = (id) => {
-    let department = positions.filter((item) => item.id == id)[0].department.id;
-    let positionsInDepartment = positions
-      .filter((item) => item.department.id == department && item.id != id)
-      .map((pos) => pos.id);
-    for (let i = 0; i < position.length; i++) {
-      if (positionsInDepartment.includes(parseInt(position[i]))) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  // Prevent Shift Clicking to Select More Positions
-  const checkDepartment = (arr) => {
-    let obj = {};
-    let department_list = departments.map((item) => item.id);
-    let position_list = positions.filter((item) =>
-      arr.includes(item.id.toString())
-    );
-    for (const key of department_list) {
-      let test = position_list
-        .filter((item) => {
-          return item.department.id == key;
-        })
-        .map((pos) => pos.id);
-      obj[key] = test;
-    }
-    for (let key in obj) {
-      if (obj[key].length > 1) {
-        return false;
-      }
-    }
-    return true;
-  };
+  let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
 
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState([]);
+  const [siteAdmin, setSiteAdmin] = useState(false);
+  const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
+
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
+  }
 
   const [admins, setAdmins] = useState([]);
   useEffect(() => {
@@ -93,22 +60,23 @@ const AddStaff = (props) => {
   useEffect(() => {
     if (update) {
       setName(update.name);
-      if (form == "staff") {
+      if (form == "Staff") {
         setFirstName(update.first_name);
         setLastName(update.last_name);
-        setPosition(update.position.map((item) => item.id));
+        setPosition(update.position.map((item) => item));
+        setSiteAdmin(isSiteAdmin(update.user))
       }
     }
   }, [update]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (form == "staff") {
+    if (form == "Staff") {
       const employee = {
         first_name: firstName,
         last_name: lastName,
-        position_id: position,
-        business_id: currentBusiness,
+        position_id: position.map(pos => pos.id),
+        business_id: current.business,
         default_availability: {
           0: { name: "unselected", start_time: null, end_time: null },
           1: { name: "unselected", start_time: null, end_time: null },
@@ -117,12 +85,13 @@ const AddStaff = (props) => {
           4: { name: "unselected", start_time: null, end_time: null },
           5: { name: "unselected", start_time: null, end_time: null },
           6: { name: "unselected", start_time: null, end_time: null },
-        },
+        }
       };
 
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
-          dispatch(updateEmployee(update.id, employee));
+          dispatch(updateEmployee(update, employee, siteAdmin, current_site));
+          
           toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));
@@ -132,6 +101,7 @@ const AddStaff = (props) => {
         setFirstName("");
         setLastName("");
         setPosition("");
+        setSiteAdmin(false);
         onClose();
       }
     } else if (form == "Department") {
@@ -139,13 +109,20 @@ const AddStaff = (props) => {
         dispatch(
           updateDepartment(update.id, {
             name,
-            business_id: currentBusiness,
+            business_id: current.business,
+            site_id: current.site,
             admins_id: admins,
           })
         );
         toast.success("Department updated!");
       } else {
-        dispatch(addDepartment({ name, business_id: currentBusiness }));
+        dispatch(
+          addDepartment({
+            name,
+            business_id: current.business,
+            site_id: current.site,
+          })
+        );
         toast.success("Department added!");
       }
       setName("");
@@ -155,8 +132,8 @@ const AddStaff = (props) => {
         dispatch(
           updatePosition(update.id, {
             name,
-            department_id: currentDepartment,
-            business_id: currentBusiness,
+            department_id: current.department,
+            business_id: current.business,
           })
         );
         toast.success("Position updated!");
@@ -164,11 +141,31 @@ const AddStaff = (props) => {
         dispatch(
           addPosition({
             name,
-            department_id: parseInt(currentDepartment),
-            business_id: currentBusiness,
+            department_id: parseInt(current.department),
+            business_id: current.business,
           })
         );
         toast.success("Position added!");
+      }
+      setName("");
+      onClose();
+    } else if (form == "Site") {
+      if (update) {
+        dispatch(
+          updateSite(update.id, {
+            name,
+            business_id: current.business,
+          })
+        );
+        toast.success("Site updated!");
+      } else {
+        dispatch(
+          addSite({
+            name,
+            business_id: current.business,
+          })
+        );
+        toast.success("Site added!");
       }
       setName("");
       onClose();
@@ -180,13 +177,15 @@ const AddStaff = (props) => {
     }
   };
 
+  const staffForm = {}
+
   return (
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center" }}>
-        {form != "BusinessName" ? form : "Business Name"}
+        {formTitles[form]}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
-        {form === "staff" ? (
+        {form === "Staff" ? (
           <Fragment>
             <div className="staffForm__control">
               <label className="staffForm__label">First Name:</label>
@@ -195,6 +194,7 @@ const AddStaff = (props) => {
                 type="text"
                 name="first_name "
                 onChange={(e) => setFirstName(e.target.value)}
+                autoFocus
                 value={firstName}
               ></input>
               <p className="error">{errors.name}</p>
@@ -211,40 +211,25 @@ const AddStaff = (props) => {
               <p className="error">{errors.name}</p>
             </div>
             <div className="staffForm__control">
-              <label className="staffForm__label">Position:</label>
-              <select
-                className="staffForm__input"
-                onChange={(e) => {
-                  return checkDepartment(
-                    [...e.target.options]
-                      .filter((o) => o.selected)
-                      .map((o) => o.value)
-                  )
-                    ? setPosition(
-                        [...e.target.options]
-                          .filter((o) => o.selected)
-                          .map((o) => o.value)
-                      )
-                    : false;
-                }}
-                name="position"
-                value={position}
-                multiple
-              >
-                {positions.map((item) =>
-                  getDepartment(item.id) ? (
-                    <option disabled key={item.id} value={item.id}>
-                      {item.name} ({item.department.name})
-                    </option>
-                  ) : (
-                    <option key={item.id} value={item.id}>
-                      {item.name} ({item.department.name})
-                    </option>
-                  )
-                )}
-              </select>
+              <label className="staffForm__label">Position(s):</label>
+              <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
               <p className="error">{errors.position_id}</p>
             </div>
+            {update && update.user && (
+              <div className="staffForm__control">
+              <label className="staffForm__label">Site admin?</label>
+              <input
+                type="checkbox"
+                name="site_admin"
+                onChange={(e) => {
+                  setSiteAdmin(!siteAdmin)
+                }}
+                checked={siteAdmin}
+              ></input>
+              <p className="error">{errors.name}</p>
+            </div>
+            )}
+            
           </Fragment>
         ) : (
           <Fragment>
@@ -256,6 +241,7 @@ const AddStaff = (props) => {
                 name="name "
                 onChange={(e) => setName(e.target.value)}
                 value={name}
+                autoFocus
               ></input>
               <p className="error">{errors.name}</p>
             </div>
@@ -308,8 +294,14 @@ const AddStaff = (props) => {
                     dispatch(deleteDepartment(update.id));
                   } else if (form == "Position") {
                     dispatch(deletePosition(update.id));
-                  } else if (form == "staff") {
+                  } else if (form == "Staff") {
                     dispatch(deleteEmployee(update.id));
+                  } else if (form == "Site") {
+                    if(sites.length == 1) {
+                      toast.warning("You cannot delete this site!");
+                      return false;
+                    }
+                    dispatch(deleteSite(update.id));
                   }
                 }
                 onClose();

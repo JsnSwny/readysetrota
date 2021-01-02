@@ -16,7 +16,7 @@ import { format, addDays, startOfWeek } from "date-fns";
 
 const todayDate = format(
   startOfWeek(new Date(), { weekStartsOn: 1 }),
-  "YYY-MM-dd"
+  "yyyy-MM-dd"
 );
 
 let width = window.innerWidth;
@@ -27,7 +27,7 @@ var weekFromDate = addDays(
   dateRange
 );
 
-weekFromDate = format(weekFromDate, "YYY-MM-dd");
+weekFromDate = format(weekFromDate, "yyyy-MM-dd");
 
 const initialState = {
   shifts: [],

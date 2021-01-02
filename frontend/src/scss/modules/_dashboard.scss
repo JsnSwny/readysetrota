@@ -183,21 +183,66 @@
     min-height: 150px;
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: calc(20% - 0.5rem);
+    min-width: 220px;
+    @include wi-mq(widescreen) {
+      width: calc(25% - 0.5rem);
+    }
+    @include wi-mq(laptop) {
+      width: calc(33.33% - 0.5rem);
+    }
     @include wi-mq(tablet) {
       min-height: 130px;
     }
     margin: 0 0.25rem 0.5rem;
+
+    &--sm {
+      @extend .dashboard__item;
+      min-height: 100%;
+      i {
+        margin: 0 5px;
+        cursor: pointer;
+        transition: 0.2s ease-in-out color, 0.5s ease-in-out opacity;
+        &.fa-crown {
+          opacity: 0;
+          &.site-admin {
+            display: inline;
+            color: $pink;
+            opacity: 1;
+            &:hover {
+              color: lighten($pink, 10%);
+            }
+          }
+          &.department-admin {
+            display: inline;
+            color: $purple;
+            opacity: 1;
+            &:hover {
+              color: lighten($purple, 10%);
+            }
+          }
+        }
+        &:hover {
+          color: $green;
+        }
+      }
+      .title-md {
+        display: flex;
+        justify-content: space-between;
+        p {
+          max-width: 70%;
+        }
+        &.admin {
+          a {
+            color: $pink;
+          }
+        }
+      }
+    }
     .subtitle-sm {
       flex: 1;
     }
-    .btn-wrapper {
-      font-size: 0;
-      @include wi-mq(laptop) {
-        display: flex;
-        justify-content: center;
-      }
-    }
+
     .btn-4 {
       align-self: flex-start;
       margin-left: 0;

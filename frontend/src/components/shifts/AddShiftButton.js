@@ -1,13 +1,11 @@
 import React, { useState, Fragment } from "react";
-import CreateShift from "../layout/CreateShift";
+import CreateShift from "../modals/CreateShift";
 import { useSelector } from "react-redux";
 
 const AddShiftButton = (props) => {
-  const { employee, date, white, limit } = props;
-  let business = useSelector((state) => state.auth.business);
+  const { employee, date, white, limit, template } = props;
   const [open, setOpen] = useState("");
   return (
-    business &&
     (!limit || employee.id <= limit) && (
       <Fragment>
         <CreateShift
@@ -21,8 +19,9 @@ const AddShiftButton = (props) => {
           }}
           employee={employee}
           date={date}
+          template={template}
         />
-        <div style={{ display: "flex" }}>
+        <div class={`flex-container${template && "--center"}`}>
           <p
             onClick={() => {
               setOpen(true);

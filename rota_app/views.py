@@ -55,37 +55,42 @@ class GetPopularTimes(APIView):
         shifts = Shift.objects.filter(department=department_id)
         most_common = shifts.values("start_time", "end_time", "department").annotate(
             count=Count('start_time')).order_by("-count")[:10]
+        for i in most_common:
+            i['start_time'] = str(i['start_time'])[0:5]
         return Response(most_common)
 
 
 class Publish(APIView):
     def get(self, request):
         all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False)
+            owner=self.request.user, published=False).exclude(employee__isnull=True)
+
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
-        connection = mail.get_connection()
-        shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
-        shifts_unique = [list(grp) for k, grp in groupby(
-            shifts_sorted, attrgetter("employee.id"))]
-        email = []
-        today_date = datetime.now().strftime("%d/%m/%Y")
-        connection.open()
-        for idx, val in enumerate(shifts_unique):
 
-            employee = shifts_unique[idx][0].employee
-            if employee.user:
-                shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
-                html_message = render_to_string("emailshifts.html", context={
-                                                'shifts': shifts, 'employee': employee})
-                mail_item = mail.EmailMultiAlternatives(
-                    "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
-                mail_item.attach_alternative(html_message, "text/html")
-                email.append(mail_item)
+        # connection = mail.get_connection()
+        # shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
+        # shifts_unique = [list(grp) for k, grp in groupby(
+        #     shifts_sorted, attrgetter("employee.id"))]
+        # email = []
+        # today_date = datetime.now().strftime("%d/%m/%Y")
+        # connection.open()
+        # for idx, val in enumerate(shifts_unique):
 
-        connection.send_messages(email)
-        connection.close()
+        #     employee = shifts_unique[idx][0].employee
+        #     if employee.user:
+        #         shifts = Shift.objects.filter(
+        #             employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
+        #         html_message = render_to_string("emailshifts.html", context={
+        #                                         'shifts': shifts, 'employee': employee})
+        #         mail_item = mail.EmailMultiAlternatives(
+        #             "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
+        #         mail_item.attach_alternative(html_message, "text/html")
+        #         email.append(mail_item)
+
+        # connection.send_messages(email)
+        # connection.close()
+
         # publish_email.delay(shifts_list)
 
         for i in all_shifts:

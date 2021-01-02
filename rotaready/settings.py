@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'slrae8_tml#^9=@(htas#d18%w^d&3!s7!wd)toc=(pltaqzj&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = ['rotaready.herokuapp.com', 'localhost']
 
@@ -99,6 +99,7 @@ DATABASES = {
     }
 }
 
+DATABASE_OPTIONS = {'timeout': 30}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -141,7 +142,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'readysetrota@gmail.com'
-EMAIL_HOST_PASSWORD = 'rotasetready'
+EMAIL_HOST_PASSWORD = (os.environ.get("EMAIL_PASSWORD"))
 
 django_heroku.settings(locals())
 

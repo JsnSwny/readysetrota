@@ -22,12 +22,18 @@ class Business(models.Model):
     total_employees = models.IntegerField(default=5)
     subscription_cancellation = models.DateField(null=True, blank=True)
 
+class Site(models.Model):
+    name = models.CharField(max_length=100)
+    business = models.ForeignKey(Business, related_name="site_business", on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ManyToManyField(User, related_name="site_admin", blank=True)
+
 class Department(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
         return f'{self.name} - {self.owner}'
     owner = models.ForeignKey(User, related_name="departments", on_delete=models.CASCADE)
     admins = models.ManyToManyField(User, related_name="department_admin", blank=True)
+    site = models.ForeignKey(Site, related_name="department_site", on_delete=models.CASCADE, null=True, blank=True)
     business = models.ForeignKey(Business, related_name="department_business", on_delete=models.CASCADE, null=True, blank=True)
 
 class Position(models.Model):
@@ -95,7 +101,7 @@ class Availability(models.Model):
     info = models.TextField(blank=True, null=True)
     employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE)
     approved = models.BooleanField(null=True, blank=True)
-    business = models.ForeignKey(Business, related_name="availability_business", on_delete=models.CASCADE, null=True, blank=True)
+    site = models.ForeignKey(Site, related_name="availability_site", on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return f'{self.date} - {self.name} - {self.employee}'
 
