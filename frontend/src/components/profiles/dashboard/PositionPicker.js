@@ -1,12 +1,126 @@
-import React, { Fragment, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { Fragment, useEffect, useRef, useCallback, useState } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useSelector, useDispatch } from "react-redux";
+import update from 'immutability-helper';
+import { updatePositionIndex } from "../../../actions/employees";
+
+const MovableItem = ({position, props, index, movePosition}) => {
+  const dispatch = useDispatch();
+  let employees = useSelector((state) => state.employees.employees);
+  let current = useSelector((state) => state.employees.current);
+  const { setOpen, setUpdate, setType } = props;
+
+  const ref = useRef(null);
+
+  const [, drop] = useDrop({
+    accept: 'position',
+    hover(item, monitor) {
+        if (!ref.current) {
+            return;
+        }
+        const dragIndex = item.index;
+        const hoverIndex = index;
+        // Don't replace items with themselves
+        if (dragIndex === hoverIndex) {
+            return;
+        }
+        // Determine rectangle on screen
+        const hoverBoundingRect = ref.current?.getBoundingClientRect();
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+        // Get pixels to the top
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+        // Dragging downwards
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+            return;
+        }
+        // Dragging upwards
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+            return;
+        }
+        // Time to actually perform the action
+        movePosition(dragIndex, hoverIndex);
+        // Note: we're mutating the monitor item here!
+        // Generally it's better to avoid mutations,
+        // but it's good here for the sake of performance
+        // to avoid expensive index searches.
+        item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: 'position', id: position.id, index },
+    collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+    }), 
+  });
+
+  const opacity = isDragging ? 0 : 1;
+
+  drag(drop(ref));
+
+  return (
+    <div ref={ref} style={{ opacity }} className="dashboard__item--sm">
+      <p className="title-md bold">
+        {position.name}{" "}
+        <i
+          onClick={() => {
+            setOpen(true);
+            setUpdate(position);
+            setType("Position");
+          }}
+          class="fas fa-edit"
+        ></i>
+      </p>
+      <p className="subtitle-sm" style={{ flex: "0" }}>
+        {current.site == 0 && `${position.department.name} - ${position.department.site.name}`}
+      </p>
+      <p className="subtitle-sm">
+        {
+          employees.filter((employee) =>
+            employee.position.some(
+              (item) => item.id == position.id
+            )
+          ).length
+        }{" "}
+        employees
+      </p>
+    </div>
+  )
+}
+
 
 const PositionPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
-  let employees = useSelector((state) => state.employees.employees);
+  const dispatch = useDispatch();
   let positions = useSelector(state => state.employees.positions)
-  let current = useSelector((state) => state.employees.current);
   let loading = useSelector((state) => state.loading);
+
+  const [newPositions, setNewPositions] = useState([]);
+
+  useEffect(() => {
+    console.log(positions.sort((a, b) => a.order - b.order))
+    setNewPositions(positions.sort((a, b) => (a.order===null)-(b.order===null) ||a.order - b.order))
+  }, [positions])
+
+  const movePosition = useCallback((dragIndex, hoverIndex) => {
+    const dragPosition = newPositions[dragIndex];
+    setNewPositions(update(newPositions, {
+        $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragPosition],
+        ],
+      }));
+    }
+    
+    );
+
   return (
     <Fragment>
       <div className="dashboard container-2">
@@ -22,36 +136,16 @@ const PositionPicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
+          <button onClick={() => {
+            dispatch(updatePositionIndex(newPositions))
+          }} className="btn-4">Update Positions</button>
           {loading.positions && <small class="loading-text">Loading positions...</small>}
           <div className="dashboard__wrapper">
-            {positions.map((item) => (
-              <div key={item.id} className="dashboard__item--sm">
-               <p className="title-md bold">
-                  {item.name}{" "}
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("Position");
-                    }}
-                    class="fas fa-edit"
-                  ></i>
-                </p>
-                <p className="subtitle-sm" style={{ flex: "0" }}>
-                  {current.site == 0 && `${item.department.name} - ${item.department.site.name}`}
-                </p>
-                <p className="subtitle-sm">
-                  {
-                    employees.filter((employee) =>
-                      employee.position.some(
-                        (position) => position.id == item.id
-                      )
-                    ).length
-                  }{" "}
-                  employees
-                </p>
-              </div>
-            ))}
+            <DndProvider backend={HTML5Backend}>
+              {newPositions.map((item, i) => (
+                <MovableItem key={item.id} position={item} props={props} index={i} movePosition={movePosition} />
+              ))}
+            </DndProvider>
           </div>
         </div>
       </div>

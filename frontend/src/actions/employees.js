@@ -501,3 +501,14 @@ export const updateAvailability = (id, obj) => (dispatch, getState) => {
 
     .catch((err) => console.log(err.response));
 };
+
+export const updatePositionIndex = (positions) => (dispatch, getState) => {
+  let requests = [];
+  requests = positions.map((item, index) => axios.put(`/api/positions/${item.id}/`, 
+    {...item, order: index}), tokenConfig(getState))
+  
+  
+  axios.all(requests).then(axios.spread((...args) => {
+    console.log(args)
+  })).catch(err => console.log(err.response))
+}

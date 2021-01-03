@@ -42,6 +42,7 @@ class Position(models.Model):
         return f'{self.name} - {self.department.owner}'
     owner = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
     department = models.ForeignKey(Department, related_name="pos_department", on_delete=models.CASCADE)
+    order = models.IntegerField(blank=True, null=True)
     business = models.ForeignKey(Business, related_name="position_business", on_delete=models.CASCADE, null=True, blank=True)
 
 def default_availability():
