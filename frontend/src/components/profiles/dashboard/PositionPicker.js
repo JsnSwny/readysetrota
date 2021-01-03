@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import update from 'immutability-helper';
 import { updatePositionIndex } from "../../../actions/employees";
 import { toast } from "react-toastify";
+import { TouchBackend } from "react-dnd-touch-backend";
 
 const MovableItem = ({position, props, index, movePosition}) => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const MovableItem = ({position, props, index, movePosition}) => {
     }), 
   });
 
-  const opacity = isDragging ? 0 : 1;
+  const opacity = isDragging ? 0.3 : 1;
 
   drag(drop(ref));
 
@@ -121,6 +122,10 @@ const PositionPicker = (props) => {
     
     );
 
+  const isMobile = window.innerWidth < 680;
+
+  console.log(isMobile);
+
   return (
     <Fragment>
       <div className="dashboard container-2">
@@ -142,7 +147,7 @@ const PositionPicker = (props) => {
           }}><i class="fas fa-save"></i> Save Position Order</p>
           {loading.positions && <small class="loading-text">Loading positions...</small>}
           <div className="dashboard__wrapper">
-            <DndProvider backend={HTML5Backend}>
+            <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
               {newPositions.map((item, i) => (
                 <MovableItem key={item.id} position={item} props={props} index={i} movePosition={movePosition} />
               ))}
