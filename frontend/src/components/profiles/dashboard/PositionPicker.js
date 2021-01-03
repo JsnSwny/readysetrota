@@ -4,6 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector, useDispatch } from "react-redux";
 import update from 'immutability-helper';
 import { updatePositionIndex } from "../../../actions/employees";
+import { toast } from "react-toastify";
 
 const MovableItem = ({position, props, index, movePosition}) => {
   const dispatch = useDispatch();
@@ -105,7 +106,6 @@ const PositionPicker = (props) => {
   const [newPositions, setNewPositions] = useState([]);
 
   useEffect(() => {
-    console.log(positions.sort((a, b) => a.order - b.order))
     setNewPositions(positions.sort((a, b) => (a.order===null)-(b.order===null) ||a.order - b.order))
   }, [positions])
 
@@ -136,9 +136,10 @@ const PositionPicker = (props) => {
               className="fas fa-plus-square"
             ></i>
           </div>
-          <button onClick={() => {
+          <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
             dispatch(updatePositionIndex(newPositions))
-          }} className="btn-4">Update Positions</button>
+            toast.success("Position orders updated!")
+          }}><i class="fas fa-save"></i> Save Position Order</p>
           {loading.positions && <small class="loading-text">Loading positions...</small>}
           <div className="dashboard__wrapper">
             <DndProvider backend={HTML5Backend}>

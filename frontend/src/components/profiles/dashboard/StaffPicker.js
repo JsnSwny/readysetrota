@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
@@ -19,6 +19,7 @@ const StaffPicker = (props) => {
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites)
   let departments = useSelector((state) => state.employees.departments)
+  let positions = useSelector((state) => state.employees.positions)
 
   let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
 
@@ -30,6 +31,22 @@ const StaffPicker = (props) => {
     return departments.find(dep => dep.id == current.department) ? departments.find(dep => dep.id == current.department).admins.includes(user_id) : false;
   }
 
+  const [staffSort, setStaffSort] = useState(localStorage.getItem("staff_sort") ? localStorage.getItem("staff_sort") : "alphabetical");
+
+  const sortEmployees = () => {
+    if(positions.length > 0) {
+      switch(staffSort) {
+        case "position":
+          return employees.sort((a,b) => positions.find(pos => pos.id == a.position.find(item => item.department.id == current.department).id).order - positions.find(pos => pos.id == b.position.find(item => item.department.id == current.department).id).order)
+          
+        default:
+          return employees.sort((a,b) => a.first_name.localeCompare(b.first_name));
+      }
+    } else {
+      return employees;
+    }
+    
+  }
 
   return (
     <Fragment>
@@ -61,8 +78,19 @@ const StaffPicker = (props) => {
             ></i>
           </div>
           {loading.employees && <small class="loading-text">Loading staff...</small>}
+          <div className="flex-container--wrap">
+            <span onClick={() => {
+              setStaffSort("alphabetical")
+              localStorage.setItem("staff_sort", "alphabetical")
+            }} className={`btn-toggle--sm ${staffSort == "alphabetical" ? "active" : ""}`}>Sort Alphabetically</span>
+            <span onClick={() => {
+              setStaffSort("position")
+              localStorage.setItem("staff_sort", "position")
+            }} className={`btn-toggle--sm ${staffSort == "position" ? "active" : ""}`}>Sort by Position</span>
+          </div>
+
           <div className="dashboard__wrapper">
-            {employees.map((item) => (
+            {sortEmployees().map((item) => (
               <div key={item.id} className="dashboard__item--sm">
                 <div className={`title-md bold ${isSiteAdmin(item.user) ? "admin" : ""}`}>
                   <Link to={`/profile/${item.id}`}>

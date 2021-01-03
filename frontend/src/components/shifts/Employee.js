@@ -55,7 +55,9 @@ const Employee = (props) => {
               )
           )}
         </p>
+        <p className="employee__hours">{employee.position.find(item => item.department.id == currentDepartment).name}</p>
         <div className="employee__name-container">
+        
           <Link to={`/profile/${employee.id}`}>
             <p className="employee__name">
               {employee.first_name}
@@ -65,6 +67,7 @@ const Employee = (props) => {
 
           {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />}
         </div>
+        
         <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>
       </div>
     </div>

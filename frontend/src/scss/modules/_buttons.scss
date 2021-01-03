@@ -68,6 +68,12 @@
       width: 100px;
       border-radius: 5px;
     }
+    &--lg {
+      @extend .btn-4;
+      margin-left: 0;
+      min-width: 200px;
+      padding: 10px;
+    }
   }
   &-5 {
     @extend .btn;

@@ -61,7 +61,7 @@ class PositionSerializer(serializers.ModelSerializer):
 class BasicPositionSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Position
-        fields = ('id', 'name', 'department',)
+        fields = ('id', 'name', 'department', 'order',)
         depth = 1
 
 class EmployeeSerializer(serializers.ModelSerializer):

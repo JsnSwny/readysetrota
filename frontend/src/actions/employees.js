@@ -180,8 +180,6 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (di
         type: UPDATE_EMPLOYEE,
         payload: res.data,
       });
-      console.log(update)
-      console.log(siteAdmin)
       if(update.user) {
         if(siteAdmin) {
           dispatch(
@@ -412,7 +410,6 @@ export const uuidReset = () => (dispatch, getState) => {
 
 // Get Department
 export const getAvailability = (employee, business) => (dispatch, getState) => {
-  console.log(`/api/availability/?employee__id=${employee}&business=${business}&ordering=date`)
   axios
     .get(
       `/api/availability/?employee__id=${employee}&business=${business}&ordering=date`,
@@ -509,6 +506,11 @@ export const updatePositionIndex = (positions) => (dispatch, getState) => {
   
   
   axios.all(requests).then(axios.spread((...args) => {
-    console.log(args)
+    for(let i=0; i<args.length; i++) {
+      dispatch({
+        type: UPDATE_POSITION,
+        payload: args[i].data,
+      });
+    }
   })).catch(err => console.log(err.response))
 }

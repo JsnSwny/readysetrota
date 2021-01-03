@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getEmployees, getAllAvailability, getSites, getDepartments } from "../../actions/employees";
+import { getEmployees, getAllAvailability, getSites, getDepartments, getPositions } from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -30,6 +30,7 @@ const Rota = () => {
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
   let availability = useSelector((state) => state.employees.availability);
+  let positions = useSelector((state) => state.employees.positions)
 
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
@@ -92,6 +93,7 @@ const Rota = () => {
     dispatch(getEmployees());
     dispatch(getSites());
     dispatch(getDepartments());
+    dispatch(getPositions());
 
     dispatch(getPopularTimes());
     if (firstUpdateDepartment.current) {
@@ -194,6 +196,23 @@ const Rota = () => {
     return <Redirect to="/" />;
   }
 
+  const [staffSort, setStaffSort] = useState(localStorage.getItem("staff_sort") ? localStorage.getItem("staff_sort") : "alphabetical");
+
+  const sortEmployees = () => {
+    if(positions.length > 0) {
+      switch(staffSort) {
+        case "position":
+          return employeesList.sort((a,b) => positions.find(pos => pos.id == a.position.find(item => item.department.id == current.department).id).order - positions.find(pos => pos.id == b.position.find(item => item.department.id == current.department).id).order)
+          
+        default:
+          return employeesList.sort((a,b) => a.first_name.localeCompare(b.first_name));
+      }
+    } else {
+      return employeesList;
+    }
+    
+  }
+
   return (
     <Fragment>
       <RotaBar
@@ -220,7 +239,7 @@ const Rota = () => {
               scrollPosition >= 360 ? " fixed" : ""
             }`}
           >
-            {employeesList.map((employee, i) => (
+            {sortEmployees().map((employee, i) => (
               <div key={employee.id} className="rota__container">
                 <Employee
                   employee={employee}
