@@ -59,6 +59,7 @@ const Rota = () => {
   }
 
   const widthUpdate = () => {
+    let currentDate = format(new Date(), "yyyy-MM-dd");
     if (width > 1200) {
       if (currentDevice != "Desktop") {
         updateShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd"));
@@ -66,12 +67,12 @@ const Rota = () => {
       }
     } else if (width > 600) {
       if (currentDevice != "Tablet") {
-        updateShifts(date, format(addDays(parsedDate, 2), "yyyy-MM-dd"));
+        updateShifts(currentDate, format(addDays(new Date(), 2), "yyyy-MM-dd"));
         setCurrentDevice("Tablet");
       }
     } else {
       if (currentDevice != "Mobile") {
-        updateShifts(date, format(addDays(parsedDate, 0), "yyyy-MM-dd"));
+        updateShifts(currentDate, currentDate);
         setCurrentDevice("Mobile");
       }
     }
