@@ -12,6 +12,7 @@ const MovableItem = ({position, props, index, movePosition}) => {
   let employees = useSelector((state) => state.employees.employees);
   let current = useSelector((state) => state.employees.current);
   const { setOpen, setUpdate, setType } = props;
+  let positions = useSelector(state => state.employees.positions)
 
   const ref = useRef(null);
 
@@ -68,7 +69,7 @@ const MovableItem = ({position, props, index, movePosition}) => {
   drag(drop(ref));
 
   return (
-    <div ref={ref} style={{ opacity }} className="dashboard__item--sm">
+    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm ${(index != positions.find(item => item.id == position.id).order) ? "unsaved" : ""}`}>
       <p className="title-md bold">
         {position.name}{" "}
         <i
@@ -123,8 +124,6 @@ const PositionPicker = (props) => {
     );
 
   const isMobile = window.innerWidth < 680;
-
-  console.log(isMobile);
 
   return (
     <Fragment>
