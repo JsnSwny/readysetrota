@@ -43,7 +43,7 @@ const HolidayRequest = (props) => {
           {admin ? "Review" : "Your"} Holiday Requests
         </p>
       </div>
-      <div className="btn-wrapper">
+      <div className="flex-container--wrap">
         {filters.map((item) => (
           <span
             className={`btn-toggle--sm ${filter == item && "active"}`}

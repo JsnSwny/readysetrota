@@ -132,6 +132,11 @@
       margin: 5px 0;
       margin-right: 10px;
     }
+    @include wi-mq(mobile) {
+      padding: 5px 10px;
+      border-radius: 7.5px;
+      font-size: 14px;
+    }
   }
   &-uuid {
     margin-left: 10px;

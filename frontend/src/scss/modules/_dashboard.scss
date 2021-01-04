@@ -234,6 +234,7 @@
       .title-md {
         display: flex;
         justify-content: space-between;
+        font-size: 18px;
         p {
           max-width: 70%;
         }
@@ -242,6 +243,9 @@
             color: $pink;
           }
         }
+      }
+      .subtitle-sm {
+        font-size: 14px;
       }
     }
     .subtitle-sm {
@@ -484,6 +488,15 @@
         }
       }
     }
+    &__header {
+      .title {
+        font-size: 32px;
+        line-height: 30px;
+      }
+      .subtitle {
+        font-size: 16px;
+      }
+    }
   }
 }
 
@@ -498,12 +511,9 @@
       .subtitle {
         font-size: 18px;
       }
-      &-wrapper {
-        justify-content: center;
-      }
     }
     &__text {
-      text-align: center;
+      font-size: 16px;
     }
     .table {
       min-width: 0;
@@ -538,13 +548,6 @@
       padding: 30px 20px;
       &-title {
         font-size: 24px;
-        &-container {
-          flex-direction: column;
-          margin-bottom: 30px;
-          .btn-4 {
-            margin-top: 10px;
-          }
-        }
       }
       &-container {
         display: flex;
@@ -572,9 +575,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    &__wrapper {
-      justify-content: center;
     }
   }
 }
