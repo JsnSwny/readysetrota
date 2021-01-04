@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 const MovableItem = ({position, props, index, movePosition}) => {
-  const dispatch = useDispatch();
   let employees = useSelector((state) => state.employees.employees);
   let current = useSelector((state) => state.employees.current);
   const { setOpen, setUpdate, setType } = props;
@@ -69,7 +68,7 @@ const MovableItem = ({position, props, index, movePosition}) => {
   drag(drop(ref));
 
   return (
-    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm ${(index != positions.find(item => item.id == position.id).order) ? "unsaved" : ""}`}>
+    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm ${(positions.find(item => item.id == position.id) && index != positions.find(item => item.id == position.id).order) ? "unsaved" : ""}`}>
       <p className="title-md bold">
         {position.name}{" "}
         <i
@@ -126,35 +125,31 @@ const PositionPicker = (props) => {
   const isMobile = window.innerWidth < 680;
 
   return (
-    <Fragment>
-      <div className="dashboard container-2">
-        <div className="dashboard__block">
-          <div className="dashboard__block-title-container">
-            <p className="dashboard__block-title">Positions</p>
-            <i
-              onClick={() => {
-                setOpen(true);
-                setUpdate(false);
-                setType("Position");
-              }}
-              className="fas fa-plus-square"
-            ></i>
-          </div>
-          <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
-            dispatch(updatePositionIndex(newPositions))
-            toast.success("Position orders updated!")
-          }}><i class="fas fa-save"></i> Save Position Order</p>
-          {loading.positions && <small class="loading-text">Loading positions...</small>}
-          <div className="dashboard__wrapper">
-            <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-              {newPositions.map((item, i) => (
-                <MovableItem key={item.id} position={item} props={props} index={i} movePosition={movePosition} />
-              ))}
-            </DndProvider>
-          </div>
-        </div>
+    <div className="dashboard__block">
+      <div className="dashboard__block-title-container">
+        <p className="dashboard__block-title">Positions</p>
+        <i
+          onClick={() => {
+            setOpen(true);
+            setUpdate(false);
+            setType("Position");
+          }}
+          className="fas fa-plus-square"
+        ></i>
       </div>
-    </Fragment>
+      <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
+        dispatch(updatePositionIndex(newPositions))
+        toast.success("Position orders updated!")
+      }}><i class="fas fa-save"></i> Save Position Order</p>
+      {loading.positions && <small class="loading-text">Loading positions...</small>}
+      <div className="dashboard__wrapper">
+        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+          {newPositions.map((item, i) => (
+            <MovableItem key={item.id} position={item} props={props} index={i} movePosition={movePosition} />
+          ))}
+        </DndProvider>
+      </div>
+    </div>
   );
 };
 

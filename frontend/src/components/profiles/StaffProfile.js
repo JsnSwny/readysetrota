@@ -96,7 +96,7 @@ const StaffProfile = (props) => {
   // }
 
   return ( 
-    <Fragment>
+      <Fragment>
       <div className="dashboard__header">
         <div className="container-2">
           <h1 className="title">
@@ -107,6 +107,10 @@ const StaffProfile = (props) => {
           </h1>
         </div>
       </div>
+      <div class="dashboard container-2">
+      {current.department != 0 && currentEmployee && (
+        <UpcomingShifts employee={currentEmployee} />
+      )}
 
       {!id_param && (
         <Fragment>
@@ -129,12 +133,12 @@ const StaffProfile = (props) => {
         </Fragment>
       )}
 
+
+
       {current.department != 0 && currentEmployee && (
-        <div className="dashboard container-2">
-          <UpcomingShifts employee={currentEmployee} />
-          {plan == "P" && <Availability employee={currentEmployee} admin={isSiteAdmin(user.id)} />}
-        </div>
+        plan == "P" && <Availability employee={currentEmployee} admin={isSiteAdmin(user.id)} />
       )}
+    </div>
     </Fragment>
   );
 };

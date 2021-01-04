@@ -84,6 +84,7 @@ const BusinessProfile = (props) => {
           </div>
         </div>
       </div>
+
       <div className="dashboard container-2">
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
@@ -163,29 +164,27 @@ const BusinessProfile = (props) => {
             </Link>
           )}
         </div>
-      </div>
-      <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
-      <DepartmentPicker admin={true} />
-      {current.department != 0 && (
-        <PositionPicker
-        setOpen={setOpen}
-        setUpdate={setUpdate}
-        setType={setType}
-        />
-      )}
-      {current.department != 0 && (
-        <StaffPicker
-        setOpen={setOpen}
-        setUpdate={setUpdate}
-        setType={setType}
-        />
-      )}
-        
-      {business.plan != "F" && (
-        <div className="container-2">
+        <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
+        <DepartmentPicker admin={true} />
+        {current.department != 0 && (
+          <PositionPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+          />
+        )}
+        {current.department != 0 && (
+          <StaffPicker
+          setOpen={setOpen}
+          setUpdate={setUpdate}
+          setType={setType}
+          />
+        )}
+          
+        {business.plan != "F" && (
           <HolidayRequest holidays={holidays} admin={true} />
-        </div>
-      )}
+        )}
+      </div>
     </Fragment>
   );
 };

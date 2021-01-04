@@ -36,7 +36,6 @@ const DepartmentPicker = (props) => {
         }}
         update={update}
       />
-      <div className="dashboard container-2">
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">Departments</p>
@@ -116,7 +115,6 @@ const DepartmentPicker = (props) => {
             ))}
           </div>
         </div>
-      </div>
     </Fragment>
   );
 };

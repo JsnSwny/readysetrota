@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setSite, setDepartment } from "../../../actions/employees";
+import { setSite } from "../../../actions/employees";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -12,89 +12,85 @@ const SitePicker = (props) => {
   let loading = useSelector((state) => state.loading);
   let user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  let siteAdmin = sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user.id) : false;
+
   return (
-    <Fragment>
-      <div className="dashboard container-2">
-        <div className="dashboard__block">
-          <div className="dashboard__block-title-container">
-            <p className="dashboard__block-title">Sites</p>
-            {user.business && (
-              <i
-              onClick={() => {
-                if (plan == "F" && sites.length >= 1) {
-                  toast.warning(
-                    "Upgrade to premium to unlock unlimited departments"
-                  );
-                  return false;
-                }
-                setOpen(true);
-                setUpdate(false);
-                setType("Site");
-              }}
-              className="fas fa-plus-square"
-            ></i>
-            )
+    <div className="dashboard__block">
+      <div className="dashboard__block-title-container">
+        <p className="dashboard__block-title">Sites</p>
+        {user.business && (
+          <i
+          onClick={() => {
+            if (plan == "F" && sites.length >= 1) {
+              toast.warning(
+                "Upgrade to premium to unlock unlimited departments"
+              );
+              return false;
             }
-            
-          </div>
-          {sites.length == 0 && !user.business && (
-            <Fragment>
-              <p>You are not associated with any businesses yet</p>
-              <Link to="/join">
-                <button
-                  className="btn-4"
-                  style={{
-                    marginLeft: "0",
-                    padding: "15px 20px",
-                    marginTop: "20px",
-                  }}
-                >
-                  Join a Business
-                </button>
-              </Link>
-            </Fragment>
-          )}
-          {loading.sites && <small class="loading-text">Loading sites...</small>}
-          
-          <div className="dashboard__wrapper">
-            {sites.map((item) => (
-              <div
-                key={item.id}
-                className={`dashboard__item--sm ${
-                  (current.site == item.id || current.site == 0) && "current"
-                }`}
-              >
-                <p className="title-md bold">
-                  {item.name}{" "}
-                  <div className="flex">
-                    {user.business && (
-                      <i
-                      onClick={() => {
-                        setOpen(true);
-                        setUpdate(item);
-                        setType("Site");
-                      }}
-                      class="fas fa-edit"
-                    ></i>
-                    )}
-                    
-                    <i
-                      onClick={() => {
-                        if(current.site != item.id) {
-                          dispatch(setSite(item.id));
-                        }  
-                      }}
-                      class="fas fa-check-circle"
-                    ></i>
-                  </div>
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+            setOpen(true);
+            setUpdate(false);
+            setType("Site");
+          }}
+          className="fas fa-plus-square"
+        ></i>
+        )
+        }
+        
       </div>
-    </Fragment>
+      {sites.length == 0 && !user.business && (
+        <Fragment>
+          <p>You are not associated with any businesses yet</p>
+          <Link to="/join">
+            <button
+              className="btn-4"
+              style={{
+                marginLeft: "0",
+                padding: "15px 20px",
+                marginTop: "20px",
+              }}
+            >
+              Join a Business
+            </button>
+          </Link>
+        </Fragment>
+      )}
+      {loading.sites && <small class="loading-text">Loading sites...</small>}
+      
+      <div className="dashboard__wrapper">
+        {sites.map((item) => (
+          <div
+            key={item.id}
+            className={`dashboard__item--sm ${
+              (current.site == item.id || current.site == 0) && "current"
+            }`}
+          >
+            <p className="title-md bold">
+              {item.name}{" "}
+              <div className="flex">
+                {user.business && (
+                  <i
+                  onClick={() => {
+                    setOpen(true);
+                    setUpdate(item);
+                    setType("Site");
+                  }}
+                  class="fas fa-edit"
+                ></i>
+                )}
+                
+                <i
+                  onClick={() => {
+                    if(current.site != item.id) {
+                      dispatch(setSite(item.id));
+                    }  
+                  }}
+                  class="fas fa-check-circle"
+                ></i>
+              </div>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
