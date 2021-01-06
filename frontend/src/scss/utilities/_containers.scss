@@ -1,5 +1,5 @@
 .container {
-  width: calc(100vw - 40px);
+  width: calc(100vw - 340px);
   margin: 0 auto;
 }
 
@@ -15,7 +15,7 @@
 }
 
 .container-2 {
-  width: 80%;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -79,5 +79,10 @@
   &--wrap {
     @extend .flex-container;
     flex-wrap: wrap;
+  }
+  &--center-vh {
+    @extend .flex-container;
+    justify-content: center;
+    align-items: center;
   }
 }

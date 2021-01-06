@@ -17,7 +17,6 @@ import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker"
 import Availability from "./Availability";
 import UpcomingShifts from "./UpcomingShifts";
-import Loading from "../common/Loading";
 
 const StaffProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -59,31 +58,12 @@ const StaffProfile = (props) => {
   }, [current.site]);
 
   useEffect(() => {
-    if(current.site > 0) {
-      if(isSiteAdmin(user.id)) {
-        dispatch(getHolidays(current.site));
-      }
-    }
-  }, [sites]);
-
-  useEffect(() => {
-    if(current.department > 0) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
-    }
-  }, [current.department]);
-
-  useEffect(() => {
     if(typeof(employee) !== 'undefined') {
       setCurrentEmployee(employee);
     }
     if(employee) {
       dispatch(getAvailability(employee.id, employee.business_id));
-      if(!isSiteAdmin(user.id)) {
-        dispatch(getHolidays(employee.business_id, employee.id));
-      }
-      
+      dispatch(getHolidays(employee.business_id, employee.id));
     }
   }, [employee])
 
@@ -91,55 +71,16 @@ const StaffProfile = (props) => {
   if (!isSiteAdmin(user.id) && id_param) {
     return <Redirect to="" />;
   }
-  // if(!currentEmployee) {
-  //   return <Loading />;
-  // }
 
-  return ( 
-      <Fragment>
-      <div className="dashboard__header">
-        <div className="container-2">
-          <h1 className="title">
-            {!id_param
-              ? "Your "
-              : `${currentEmployee.first_name} ${currentEmployee.last_name}'s `}
-            Profile
-          </h1>
-        </div>
-      </div>
-      <div class="dashboard container-2">
+  return (   
+    <div class="dashboard container-2">
       {current.department != 0 && currentEmployee && (
-        <UpcomingShifts employee={currentEmployee} />
-      )}
-
-      {!id_param && (
         <Fragment>
-          <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
-          <DepartmentPicker admin={isSiteAdmin(user.id)} />
-          {current.department != 0 && isSiteAdmin(user.id) && (
-            <Fragment>
-              <PositionPicker
-                setOpen={setOpen}
-                setUpdate={setUpdate}
-                setType={setType}
-              />
-              <StaffPicker
-                setOpen={setOpen}
-                setUpdate={setUpdate}
-                setType={setType}
-              />
-            </Fragment>
-          )}
+          <UpcomingShifts employee={currentEmployee} />
+          {plan == "P" && <Availability employee={currentEmployee} />}
         </Fragment>
       )}
-
-
-
-      {current.department != 0 && currentEmployee && (
-        plan == "P" && <Availability employee={currentEmployee} admin={isSiteAdmin(user.id)} />
-      )}
     </div>
-    </Fragment>
   );
 };
 

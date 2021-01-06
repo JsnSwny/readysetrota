@@ -72,7 +72,7 @@ const Availability = (props) => {
             </div>
 
             <div className="dashboard__block-container">
-                <h4
+                {/* <h4
                 style={{
                     textAlign: "center",
                     marginTop: "20px",
@@ -136,7 +136,7 @@ const Availability = (props) => {
                     </p>
                     </div>
                 ))}
-                </div>
+                </div> */}
                 <p className="dashboard__dates-title">
                 <span
                     onClick={() => {

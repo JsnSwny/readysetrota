@@ -59,7 +59,7 @@ const BusinessProfile = (props) => {
   let user = useSelector((state) => state.auth.user);
   return (
     <Fragment>
-      <div className="dashboard__header">
+      {/* <div className="dashboard__header">
         <div className="container-2">
           <h1 className="title">Your Business</h1>
           <div className="dashboard__header-wrapper">
@@ -83,10 +83,10 @@ const BusinessProfile = (props) => {
             ></i>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="dashboard container-2">
-        <div className="dashboard__block">
+        {/* <div className="dashboard__block">
           <div className="dashboard__block-title-container">
             <p className="dashboard__block-title">Current Plan</p>
           </div>
@@ -163,7 +163,7 @@ const BusinessProfile = (props) => {
               </button>
             </Link>
           )}
-        </div>
+        </div> */}
         <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
         <DepartmentPicker admin={true} />
         {current.department != 0 && (

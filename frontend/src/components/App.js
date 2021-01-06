@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Nav from "./layout/Nav";
+import SideNav from "./layout/SideNav"
 
 import { Provider } from "react-redux";
 import store from "../store";
@@ -29,6 +30,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TermsAndConditions from "./landing/TermsAndConditions";
 
+import StaffManagement from "./profiles/StaffManagement";
+
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
@@ -40,9 +43,11 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <ToastContainer position="bottom-center" />
+        <SideNav />
         <div className="App">
-          <Nav />
-          <ToastContainer position="bottom-center" />
+          {/* <Nav /> */}
+          
           <Switch>
             <PrivateRoute
               path="/"
@@ -52,6 +57,7 @@ const App = () => {
             />
             <PrivateRoute path="/rota" exact component={Rota} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />
+            <PrivateRoute path="/staff-management" exact component={StaffManagement} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/privacy" component={PrivacyPolicy} />
