@@ -15,6 +15,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
     let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     let sites = useSelector((state) => state.employees.sites);
     let user = useSelector((state) => state.auth.user);
+    let width = useSelector((state) => state.responsive.width);
 
     const location = useLocation();
 
@@ -32,6 +33,10 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
         }
     }, [user]);
 
+    const toggleNav = () => {
+        width < 1000 && setSidebarOpen(!sidebarOpen)
+    }
+
     const sidenavProps = {setSidebarOpen, sidebarOpen};
 
     if(!isAuthenticated) {
@@ -42,10 +47,10 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                 }} class={`fas fa-bars`}></i>
                 <div className="sidenav__content">
                     <div className="sidenav__links">
-                        <NavLink {...sidenavProps} link="/" icon="fas fa-home" title="Home" />
-                        <NavLink {...sidenavProps} link="/login" icon="fas fa-sign-in-alt" title="Login" />
-                        <NavLink {...sidenavProps} link="/register" icon="fas fa-user-plus" title="Register" />
-                        <Link onClick={() => {setSidebarOpen(!sidebarOpen)}} className="sidenav__logo--bottom" to="/">
+                        <NavLink  toggleNav={toggleNav} link="/" icon="fas fa-home" title="Home" />
+                        <NavLink toggleNav={toggleNav} link="/login" icon="fas fa-sign-in-alt" title="Login" />
+                        <NavLink toggleNav={toggleNav} link="/register" icon="fas fa-user-plus" title="Register" />
+                        <Link onClick={() => {toggleNav()}} className="sidenav__logo--bottom" to="/">
                             <img src="/static/media/logo2-01.svg"></img>
                         </Link>
                     </div>
@@ -65,12 +70,12 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                     </div>
                     <p className="sidenav__name">{userName}</p>
                     <div className="sidenav__links">
-                        <NavLink {...sidenavProps} link="/" icon="fas fa-home" title="Dashboard" />
-                        {isSiteAdmin(user.id) && <NavLink {...sidenavProps} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
-                        <NavLink {...sidenavProps} link="/rota" icon="fas fa-briefcase" title="Rota" />
+                        <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" />
+                        {isSiteAdmin(user.id) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
+                        <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" />
 
                         <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}>
-                            <NavLink {...sidenavProps} link="/profile" icon="fas fa-user" title="Profile" />
+                            <NavLink toggleNav={toggleNav} link="/profile" icon="fas fa-user" title="Profile" />
                             <div className="sidenav__sublinks">
                                 <div onClick={() => {
                                         dispatch(logout());
@@ -80,11 +85,11 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                                         <i class="fas fa-sign-out-alt"></i> Logout
                                     </div>
                                 </div>
-                                <NavLink {...sidenavProps} link="/changepassword" icon="fas fa-lock" title="Change password" />
+                                <NavLink toggleNav={toggleNav} link="/changepassword" icon="fas fa-lock" title="Change password" />
                             </div>
                         </div>
-                        {!user.business && <NavLink {...sidenavProps} link="/join" icon="fas fa-user-plus" title="Join" />}
-                        <Link onClick={() => {setSidebarOpen(!sidebarOpen)}} className="sidenav__logo--bottom" to="/">
+                        {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
+                        <Link onClick={() => {toggleNav()}} className="sidenav__logo--bottom" to="/">
                             <img src="/static/media/logo2-01.svg"></img>
                         </Link>
                     </div>
