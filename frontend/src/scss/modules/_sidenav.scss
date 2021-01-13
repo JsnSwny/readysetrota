@@ -12,7 +12,7 @@
   background-color: $blue;
   display: flex;
   flex-direction: column;
-  padding: 50px 0;
+  padding: 60px 0;
   color: white;
   position: fixed;
   top: 0;
@@ -56,11 +56,16 @@
     @include wi-mq(mobile) {
       display: block;
       width: 100%;
-      height: 40px;
+      height: 60px;
       background-color: $blue;
       position: fixed;
       top: 0;
       z-index: 15;
+      .fa-bars {
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 32px;
+      }
     }
     
 

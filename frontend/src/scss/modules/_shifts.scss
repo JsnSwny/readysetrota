@@ -3,6 +3,9 @@
   position: relative;
   &.container {
     margin-top: 50px;
+    @include wi-mq(mobile) {
+      margin-top: 0;
+    }
   }
   .item-block {
     @include wi-mq(mobile) {

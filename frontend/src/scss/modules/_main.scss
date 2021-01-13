@@ -99,6 +99,9 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  @include wi-mq(mobile) {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 600px) {
