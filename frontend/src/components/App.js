@@ -74,7 +74,11 @@ const App = () => {
           {...shiftInfo}
         />
         <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <div className="sidenav__bar"></div>
+        <div className="sidenav__bar">
+          <i onClick={() => {
+              setSidebarOpen(!sidebarOpen);
+            }} class={`fas fa-bars`}></i>
+        </div>
         <div className={`App ${sidebarOpen ? "open" : ""}`}>
           
           <Switch>

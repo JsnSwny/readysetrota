@@ -1,3 +1,12 @@
+.fa-bars {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
 .sidenav {
   @include sidenav_size('width');
   background-color: $blue;
@@ -29,9 +38,17 @@
     -moz-box-shadow: none;
     padding-bottom: 30px;
     min-height: 100%;
-    .fa-bars {
-      // background-color: $blue; 
-      // padding: 10px;
+  }
+  // &.open {
+  //   .fa-bars {
+  //     @include wi-mq(mobile) {
+  //       display: block;
+  //     }
+  //   }
+  // }
+  .fa-bars {
+    @include wi-mq(mobile) {
+      display: none;
     }
   }
   &__bar {
@@ -43,7 +60,7 @@
       background-color: $blue;
       position: fixed;
       top: 0;
-      z-index: 5;
+      z-index: 15;
     }
     
 
@@ -56,20 +73,10 @@
     left: 0;
     @include wi-mq(mobile) {
       background: $blue;
-      .fa-bars {
-        color: white;
-      }
     }
     .sidenav__content {
       opacity: 1;
     }
-  }
-  .fa-bars {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    cursor: pointer;
   }
   &__profile-pic {
     margin: 0 auto;
