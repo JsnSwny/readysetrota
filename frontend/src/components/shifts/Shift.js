@@ -62,17 +62,6 @@ const Shift = (props) => {
                   <p className="shift__time">
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>
-                  <span>
-                    {admin ? (
-                      shift.published ? (
-                        <i className="fas fa-check"></i>
-                      ) : (
-                        <i className="fas fa-times"></i>
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </span>
                 </div>
                 {shift.info && (
                   <p className="shift__info">

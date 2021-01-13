@@ -2,6 +2,7 @@
   position: fixed;
   background-color: rgba(0, 0, 0, 0.6);
   left: 0;
+  margin-top: 0;
   @include wi-mq(mobile) {
     left: 0;
     top: 40px;

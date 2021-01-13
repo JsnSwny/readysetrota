@@ -2,7 +2,6 @@
   height: 100px;
   position: relative;
   &.container {
-    margin-top: 50px;
     @include wi-mq(mobile) {
       margin-top: 0;
     }
@@ -15,6 +14,9 @@
   &.fixed {
     position: sticky;
     top: 120px;
+    @include wi-mq(laptop) {
+      top: 100px;
+    }
     left: 0;
     right: 0;
     z-index: 5;
@@ -90,7 +92,6 @@
   }
   &__container {
     display: flex;
-    margin-top: 20px;
   }
   &__date {
     text-align: center;
@@ -293,10 +294,16 @@
   &__shift {
     background-color: #ee6de7;
     border-radius: 10px;
-    overflow-x: auto;
+    // overflow-x: auto;
     position: relative;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 5px 15px;
+    &:hover {
+      .shift__add {
+        opacity: 1;
+      }
+    }
     // color: white;
     &.date-before {
       opacity: 0.5;
@@ -395,10 +402,24 @@
   }
   &__add {
     cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    display: flex;
+    opacity: 0.4;
+    transition: 0.2s ease opacity, 0.2s ease transform;
+    &:hover {
+      transform: rotate(90deg);
+    }
     &--white {
       @extend .shift__add;
-
       color: white;
+      opacity: 0.6;
     }
   }
 }
