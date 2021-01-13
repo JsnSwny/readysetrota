@@ -16,6 +16,7 @@ import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker"
 import Availability from "./Availability";
+import HolidayRequest from "./dashboard/HolidayRequest";
 import UpcomingShifts from "./UpcomingShifts";
 
 const StaffProfile = (props) => {
@@ -39,6 +40,8 @@ const StaffProfile = (props) => {
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
+
+  let holidays = useSelector((state) => state.employees.holidays);
   
   let employee = (id_param && employees.find((item) => item.id == employee_id)) ||user.employee.find((employee) =>
     employee.position.some((item) => item.department.id == current.department)
@@ -58,6 +61,22 @@ const StaffProfile = (props) => {
   }, [current.site]);
 
   useEffect(() => {
+    if(current.site > 0) {
+      if(isSiteAdmin(user.id)) {
+        dispatch(getHolidays(current.site));
+      }
+    }
+  }, [sites]);
+
+  useEffect(() => {
+    if(current.department > 0) {
+      dispatch(getEmployees());
+      dispatch(getPositions(true));
+      dispatch(getPositions());
+    }
+  }, [current.department]);
+
+  useEffect(() => {
     if(typeof(employee) !== 'undefined') {
       setCurrentEmployee(employee);
     }
@@ -74,9 +93,13 @@ const StaffProfile = (props) => {
 
   return (   
     <div class="dashboard container-2">
+      <SitePicker {...props} />
+      <DepartmentPicker />
       {current.department != 0 && currentEmployee && (
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />
+          
+          <HolidayRequest holidays={holidays} admin={isSiteAdmin(user.id)} />
           {plan == "P" && <Availability employee={currentEmployee} />}
         </Fragment>
       )}

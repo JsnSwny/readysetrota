@@ -16,24 +16,28 @@ const SitePicker = (props) => {
   return (
     <div className="dashboard__block">
       <div className="dashboard__block-title-container">
+        <div className="flex-container--align-center">
         <p className="dashboard__block-title">Sites</p>
-        {user.business && (
-          <i
-          onClick={() => {
-            if (plan == "F" && sites.length >= 1) {
-              toast.warning(
-                "Upgrade to premium to unlock unlimited departments"
-              );
-              return false;
-            }
-            setOpen(true);
-            setUpdate(false);
-            setType("Site");
-          }}
-          className="fas fa-plus-square"
-        ></i>
-        )
-        }
+          {user.business && (
+            <i
+            onClick={() => {
+              if (plan == "F" && sites.length >= 1) {
+                toast.warning(
+                  "Upgrade to premium to unlock unlimited departments"
+                );
+                return false;
+              }
+              setOpen(true);
+              setUpdate(false);
+              setType("Site");
+            }}
+            className="fas fa-plus"
+          ></i>
+          )
+          }
+        </div>
+        
+        
         
       </div>
       {sites.length == 0 && !user.business && (
@@ -63,7 +67,7 @@ const SitePicker = (props) => {
               (current.site == item.id || current.site == 0) && "current"
             }`}
           >
-            <p className="title-md bold">
+            <p className="title-md bold flex-container--between-center">
               {item.name}{" "}
               <div className="flex">
                 {user.business && (

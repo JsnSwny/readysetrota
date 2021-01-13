@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -31,6 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import TermsAndConditions from "./landing/TermsAndConditions";
 
 import StaffManagement from "./profiles/StaffManagement";
+import CreateShift from "./modals/CreateShift";
 
 const App = () => {
   useEffect(() => {
@@ -40,13 +41,41 @@ const App = () => {
     });
   }, []);
 
+  const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [type, setType] = useState("");
+  const [shiftInfo, setShiftInfo] = useState({});
+  
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
+
+
+  const modalProps = {
+    setOpen,
+    setUpdate,
+    setType,
+    setShiftInfo
+  }
+
   return (
     <Provider store={store}>
       <Router>
         <ToastContainer position="bottom-center" />
-        <SideNav />
-        <div className="App">
-          {/* <Nav /> */}
+        <CreateShift
+          open={open}
+          type={type}
+          onConfirm={() => {
+            setOpen(false);
+          }}
+          onClose={() => {
+            setOpen(false);
+          }}
+          update={update}
+          sidebarOpen={sidebarOpen}
+          {...shiftInfo}
+        />
+        <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <div className="sidenav__bar"></div>
+        <div className={`App ${sidebarOpen ? "open" : ""}`}>
           
           <Switch>
             <PrivateRoute
@@ -55,9 +84,9 @@ const App = () => {
               component={Home}
               user_only_pass={true}
             />
-            <PrivateRoute path="/rota" exact component={Rota} />
+            <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />
-            <PrivateRoute path="/staff-management" exact component={StaffManagement} />
+            <PrivateRoute admin={true} path="/staff-management" exact component={StaffManagement} modalProps={modalProps} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/privacy" component={PrivacyPolicy} />

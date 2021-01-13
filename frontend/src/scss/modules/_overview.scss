@@ -1,0 +1,14 @@
+.overview {
+    margin-top: 20px;
+    &__item {
+        width: 150px;
+        height: 150px;
+        background-color: $pink;
+        padding: 10px 0;
+        color: white;
+        border-radius: 50%;
+        &:not(:last-child) {
+            margin-right: 30px;
+        }
+    }
+}

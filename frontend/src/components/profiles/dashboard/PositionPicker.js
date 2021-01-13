@@ -68,8 +68,8 @@ const MovableItem = ({position, props, index, movePosition}) => {
   drag(drop(ref));
 
   return (
-    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm ${(positions.find(item => item.id == position.id) && index != positions.find(item => item.id == position.id).order) ? "unsaved" : ""}`}>
-      <p className="title-md bold">
+    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm`}>
+      <p className="title-md bold flex-container--between-center">
         {position.name}{" "}
         <i
           onClick={() => {
@@ -106,6 +106,8 @@ const PositionPicker = (props) => {
 
   const [newPositions, setNewPositions] = useState([]);
 
+  let positionsEqual = newPositions.map(item => item.order).toString() == positions.map(item => item.order).toString();
+
   useEffect(() => {
     setNewPositions(positions.sort((a, b) => (a.order===null)-(b.order===null) ||a.order - b.order))
   }, [positions])
@@ -127,20 +129,27 @@ const PositionPicker = (props) => {
   return (
     <div className="dashboard__block">
       <div className="dashboard__block-title-container">
-        <p className="dashboard__block-title">Positions</p>
-        <i
-          onClick={() => {
-            setOpen(true);
-            setUpdate(false);
-            setType("Position");
-          }}
-          className="fas fa-plus-square"
-        ></i>
+        <div className="flex-container--align-center">
+          <p className="dashboard__block-title">Positions</p>
+          <i
+            onClick={() => {
+              setOpen(true);
+              setUpdate(false);
+              setType("Position");
+            }}
+            className="fas fa-plus"
+          ></i>
+        </div>
+        
       </div>
-      <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
-        dispatch(updatePositionIndex(newPositions))
-        toast.success("Position orders updated!")
-      }}><i class="fas fa-save"></i> Save Position Order</p>
+      {!positionsEqual && (
+        <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
+          dispatch(updatePositionIndex(newPositions))
+          toast.success("Position orders updated!")
+        }}>
+          <i class="fas fa-save"></i> Save Position Order</p>
+      )}
+      
       {loading.positions && <small class="loading-text">Loading positions...</small>}
       <div className="dashboard__wrapper">
         <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>

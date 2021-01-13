@@ -3,28 +3,16 @@ import CreateShift from "../modals/CreateShift";
 import { useSelector } from "react-redux";
 
 const AddShiftButton = (props) => {
-  const { employee, date, white, limit, template } = props;
-  const [open, setOpen] = useState("");
+  const { employee, date, white, limit, template, setShiftInfo, setOpen, setType } = props;
   return (
     (!limit || employee.id <= limit) && (
       <Fragment>
-        <CreateShift
-          open={open}
-          type="shift"
-          onConfirm={() => {
-            setOpen(false);
-          }}
-          onClose={() => {
-            setOpen(false);
-          }}
-          employee={employee}
-          date={date}
-          template={template}
-        />
         <div class={`flex-container${template && "--center"}`}>
           <p
             onClick={() => {
               setOpen(true);
+              setType("shift");
+              setShiftInfo({employee, date})
             }}
             className={`shift__add${white ? "--white" : ""}`}
           >

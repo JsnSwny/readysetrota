@@ -4,8 +4,16 @@ import { useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import Landing from "../landing/Landing";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ component: Component, modalProps, admin, ...rest }) => {
   let auth = useSelector((state) => state.auth);
+  let user = auth.user;
+  let sites = useSelector((state) => state.employees.sites)
+  let current = useSelector((state) => state.employees.current)
+
+  const isSiteAdmin = (user_id) => {
+    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+  }
+
 
   const { computedMatch } = rest;
   let url = computedMatch.url;
@@ -29,7 +37,19 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             );
           }
         } else {
-          return <Component {...props} />;
+          if(admin) {
+            if(!isSiteAdmin(user.id))  {
+              return (
+                <Redirect
+                  to={{
+                    pathname: "/"
+                  }}
+                />
+              );
+            }
+          }
+            
+          return <Component {...props} {...modalProps} />;
         }
       }}
     />

@@ -4,6 +4,9 @@
   &-md {
     @extend .title;
     font-size: 24px;
+    @include wi-mq(laptop) {
+      font-size: 18px;
+    }
   }
   &-sm {
     @extend .title;
@@ -25,6 +28,9 @@
   &-sm {
     @extend .subtitle;
     font-size: 16px;
+    @include wi-mq(laptop) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -82,6 +88,11 @@
   &:last-child {
     margin: 0 0 0 2px;
   }
+  &__title {
+    @include wi-mq(laptop) {
+      font-size: 14px;
+    }
+  }
 }
 
 .button-layout {
@@ -91,9 +102,6 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .container {
-    width: calc(100vw - 10px);
-  }
   .container-left {
     min-width: 50%;
   }
@@ -106,9 +114,6 @@
 }
 
 @media only screen and (max-width: 1200px) {
-  .container-2 {
-    width: 90%;
-  }
   .btn-4 {
     margin-left: 0;
   }

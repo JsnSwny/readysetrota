@@ -26,7 +26,6 @@ const Availability = (props) => {
     const dispatch = useDispatch();
 
     let availability = useSelector((state) => state.employees.availability);
-    let holidays = useSelector((state) => state.employees.holidays);
     let shifts = useSelector((state) => state.shifts.user_shifts);
     let current = useSelector(
         (state) => state.employees.current
@@ -137,7 +136,7 @@ const Availability = (props) => {
                     </div>
                 ))}
                 </div> */}
-                <p className="dashboard__dates-title">
+                <p className="dashboard__dates-title flex-container--between-center">
                 <span
                     onClick={() => {
                     setAvailabilityMonth(addMonths(availabilityMonth, -1));
@@ -368,7 +367,7 @@ const Availability = (props) => {
                 </div>
             )}
             </div>
-            <HolidayRequest holidays={holidays} admin={admin} />
+            
         </div>
     )
 }

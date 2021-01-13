@@ -13,7 +13,9 @@ import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
 
-const Rota = () => {
+const Rota = (modalProps) => {
+
+  const {setOpen, setType, setUpdate, setShiftInfo} = modalProps;
   const dispatch = useDispatch();
   const [employeesList, setEmployeesList] = useState([]);
   const [filterDate, setFilterDate] = useState("");
@@ -214,7 +216,7 @@ const Rota = () => {
   }
 
   return (
-    <Fragment>
+    <div class="rota">
       <RotaBar
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
@@ -223,58 +225,60 @@ const Rota = () => {
         setTemplate={setTemplate}
         template={template}
       />
-      <Dates
-        filterEmployees={filterEmployees}
-        dates={result}
-        scrollPosition={scrollPosition}
-        template={template}
-      />
-      {isLoading && <Loading />}
-      {current.department != 0 &&
-        (template ? (
-          <ShiftTemplate shifts={shifts_list} result={result} />
-        ) : (
-          <div
-            className={`shiftList container ${filterDate ? "filtered" : ""} ${
-              scrollPosition >= 360 ? " fixed" : ""
-            }`}
-          >
-            {sortEmployees().map((employee, i) => (
-              <div key={employee.id} className="rota__container">
-                <Employee
-                  employee={employee}
-                  current_employee={current_employee}
-                  shifts_list={shifts_list}
-                  user={user}
-                  currentDepartment={current.department}
-                />
-                <div className="container-right">
-                  {result.map((result) => {
-                    const format_date = format(result, "yyyy-MM-dd");
-                    const shifts = getEmployeeShift(employee.id, format_date);
-                    let props = {
-                      format_date,
-                      result,
-                      available: isAvailable(employee.id, format_date),
-                      limit,
-                      employee,
-                      showAvailabilities,
-                      filterDate,
-                      admin: isSiteAdmin(user.id)
-                    };
+      <div>
+        <Dates
+          filterEmployees={filterEmployees}
+          dates={result}
+          scrollPosition={scrollPosition}
+          template={template}
+        />
+        {isLoading && <Loading />}
+        {current.department != 0 &&
+          (template ? (
+            <ShiftTemplate shifts={shifts_list} result={result} />
+          ) : (
+            <div
+              className={`shiftList container ${filterDate ? "filtered" : ""} ${
+                scrollPosition >= 360 ? " fixed" : ""
+              }`}
+            >
+              {sortEmployees().map((employee, i) => (
+                <div key={employee.id} className="rota__container">
+                  <Employee
+                    employee={employee}
+                    current_employee={current_employee}
+                    shifts_list={shifts_list}
+                    user={user}
+                    currentDepartment={current.department}
+                  />
+                  <div className="container-right">
+                    {result.map((result) => {
+                      const format_date = format(result, "yyyy-MM-dd");
+                      const shifts = getEmployeeShift(employee.id, format_date);
+                      let props = {
+                        format_date,
+                        result,
+                        available: isAvailable(employee.id, format_date),
+                        limit,
+                        employee,
+                        showAvailabilities,
+                        filterDate,
+                        admin: isSiteAdmin(user.id)
+                      };
 
-                    return shifts.length > 0 ? (
-                      <Shift {...props} shifts={shifts}  />
-                    ) : (
-                      <NoShift {...props} />
-                    );
-                  })}
+                      return shifts.length > 0 ? (
+                        <Shift {...modalProps} {...props} shifts={shifts}  />
+                      ) : (
+                        <NoShift {...modalProps} {...props} />
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ))}
-    </Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+    </div>
   );
 };
 

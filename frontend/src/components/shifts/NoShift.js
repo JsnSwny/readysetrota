@@ -10,9 +10,14 @@ const NoShift = (props) => {
     filterDate,
     limit,
     employee,
-    admin
+    admin,
+    setOpen,
+    setUpdate,
+    setType,
+    setShiftInfo
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
+  let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
   return (
     <div
       key={result}
@@ -27,7 +32,7 @@ const NoShift = (props) => {
       }`}
     >
       {admin && (
-        <AddShiftButton employee={employee} date={format_date} limit={limit} />
+        <AddShiftButton {...modalProps} employee={employee} date={format_date} limit={limit} />
       )}
       {showAvailabilities && (
         <Fragment>

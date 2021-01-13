@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { logout } from "../../actions/auth";
 import NavLink from "./NavLink";
 
-const SideNav = () => {
+const SideNav = ({sidebarOpen, setSidebarOpen}) => {
     const dispatch = useDispatch();
 
     let current = useSelector(
@@ -24,6 +24,7 @@ const SideNav = () => {
         return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
     }
 
+
     useEffect(() => {
         if(user) {
             user.business ?
@@ -31,51 +32,64 @@ const SideNav = () => {
         }
     }, [user]);
 
+    const sidenavProps = {setSidebarOpen, sidebarOpen};
+
     if(!isAuthenticated) {
         return (
-            <div className="sidenav">
-                <div className="sidenav__links">
-                    <NavLink link="/" icon="fas fa-home" title="Home" />
-                    <NavLink link="/login" icon="fas fa-sign-in-alt" title="Login" />
-                    <NavLink link="/register" icon="fas fa-user-plus" title="Register" />
-                    <Link className="sidenav__logo--bottom" to="/">
-                        <img src="/static/media/logo2-01.svg"></img>
-                    </Link>
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+                <i onClick={() => {
+                    setSidebarOpen(!sidebarOpen);
+                }} class={`fas fa-bars`}></i>
+                <div className="sidenav__content">
+                    <div className="sidenav__links">
+                        <NavLink {...sidenavProps} link="/" icon="fas fa-home" title="Home" />
+                        <NavLink {...sidenavProps} link="/login" icon="fas fa-sign-in-alt" title="Login" />
+                        <NavLink {...sidenavProps} link="/register" icon="fas fa-user-plus" title="Register" />
+                        <Link onClick={() => {setSidebarOpen(!sidebarOpen)}} className="sidenav__logo--bottom" to="/">
+                            <img src="/static/media/logo2-01.svg"></img>
+                        </Link>
+                    </div>
                 </div>
             </div>
             
         )
     } else {
         return (
-            <div className="sidenav">
-                <div className="sidenav__profile-pic flex-container--center-vh">
-                    {userName[0]}
-                </div>
-                <p className="sidenav__name">{userName}</p>
-                <div className="sidenav__links">
-                    <NavLink link="/" icon="fas fa-home" title="Dashboard" />
-                    {isSiteAdmin(user.id) && <NavLink link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
-                    <NavLink link="/rota" icon="fas fa-briefcase" title="Rota" />
-
-                    <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}>
-                        <NavLink link="/profile" icon="fas fa-user" title="Profile" />
-                        <div className="sidenav__sublinks">
-                            <div onClick={() => {
-                                    dispatch(logout());
-                                }} 
-                                className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
-                                <div className="sidenav__link-text">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </div>
-                            </div>
-                            <NavLink link="/changepassword" icon="fas fa-lock" title="Change password" />
-                        </div>
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+                <i onClick={() => {
+                    setSidebarOpen(!sidebarOpen);
+                }} class={`fas fa-bars`}></i>
+                <div className="sidenav__content">
+                    <div className="sidenav__profile-pic flex-container--center-vh">
+                        {userName[0]}
                     </div>
-                    {!user.business && <NavLink link="/join" icon="fas fa-user-plus" title="Join" />}
-                    <Link className="sidenav__logo--bottom" to="/">
-                        <img src="/static/media/logo2-01.svg"></img>
-                    </Link>
+                    <p className="sidenav__name">{userName}</p>
+                    <div className="sidenav__links">
+                        <NavLink {...sidenavProps} link="/" icon="fas fa-home" title="Dashboard" />
+                        {isSiteAdmin(user.id) && <NavLink {...sidenavProps} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
+                        <NavLink {...sidenavProps} link="/rota" icon="fas fa-briefcase" title="Rota" />
+
+                        <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}>
+                            <NavLink {...sidenavProps} link="/profile" icon="fas fa-user" title="Profile" />
+                            <div className="sidenav__sublinks">
+                                <div onClick={() => {
+                                        dispatch(logout());
+                                    }} 
+                                    className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
+                                    <div className="sidenav__link-text">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </div>
+                                </div>
+                                <NavLink {...sidenavProps} link="/changepassword" icon="fas fa-lock" title="Change password" />
+                            </div>
+                        </div>
+                        {!user.business && <NavLink {...sidenavProps} link="/join" icon="fas fa-user-plus" title="Join" />}
+                        <Link onClick={() => {setSidebarOpen(!sidebarOpen)}} className="sidenav__logo--bottom" to="/">
+                            <img src="/static/media/logo2-01.svg"></img>
+                        </Link>
+                    </div>
                 </div>
+                
             </div>
         )
     }

@@ -49,11 +49,11 @@ const StaffPicker = (props) => {
   return (
     <div className="dashboard__block">
       <div className="dashboard__block-title-container">
-        <p className="dashboard__block-title">
-          Staff ({business.number_of_employees} / {total_employees})
-        </p>
-
-        <i
+        <div className="flex-container--align-center">
+          <p className="dashboard__block-title">
+            Staff ({business.number_of_employees} / {total_employees})
+          </p>
+          <i
           onClick={() => {
             if (plan == "F" && business.number_of_employees >= 10) {
               toast.warning(
@@ -70,8 +70,12 @@ const StaffPicker = (props) => {
             setUpdate(false);
             setType("Staff");
           }}
-          className="fas fa-plus-square"
+          className="fas fa-plus"
         ></i>
+        </div>
+        
+
+        
       </div>
       {loading.employees && <small class="loading-text">Loading staff...</small>}
       <div className="flex-container--wrap">
@@ -88,7 +92,7 @@ const StaffPicker = (props) => {
       <div className="dashboard__wrapper">
         {sortEmployees().map((item) => (
           <div key={item.id} className="dashboard__item--sm">
-            <div className={`title-md bold ${isSiteAdmin(item.user) ? "admin" : ""}`}>
+            <div className={`title-md bold flex-container--between-center ${isSiteAdmin(item.user) ? "admin" : ""}`}>
               <Link to={`/profile/${item.id}`}>
                 {item.first_name} <strong>{item.last_name}</strong>
               </Link>

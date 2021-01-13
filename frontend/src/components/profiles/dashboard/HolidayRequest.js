@@ -10,7 +10,7 @@ const HolidayRequest = (props) => {
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [filteredHolidays, setFilteredHolidays] = useState(holidays);
 
   const [filter, setFilter] = useState(admin ? "Unmarked" : "All");
@@ -37,10 +37,10 @@ const HolidayRequest = (props) => {
   );
 
   return (
-    <div className="dashboard__block--half">
+    <div className="dashboard__block">
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">
-          {admin ? "Review" : "Your"} Holiday Requests
+          {admin ? "" : "Your"} Holiday Requests
         </p>
       </div>
       <div className="flex-container--wrap">

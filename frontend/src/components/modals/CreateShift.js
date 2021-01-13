@@ -15,6 +15,7 @@ const CreateShift = (props) => {
     shiftSwap,
     update,
     template,
+    sidebarOpen
   } = props;
 
   const staffTypes = [
@@ -32,7 +33,7 @@ const CreateShift = (props) => {
           employee={employee}
           date={date}
           onClose={onClose}
-          shift={shift}
+          shift={update}
           template={template}
         />
       );
@@ -50,8 +51,8 @@ const CreateShift = (props) => {
 
   return (
     open && (
-      <div className="modal">
-        <div className="shiftModal__container">{getModal()}</div>
+      <div className={`modal App ${sidebarOpen ? "open" : ""}`}>
+        <div className="modal__container">{getModal()}</div>
       </div>
     )
   );

@@ -18,6 +18,7 @@ import HolidayRequest from "./dashboard/HolidayRequest";
 import { Link } from "react-router-dom";
 import { cancelSubscription, getCustomer } from "../../actions/payments";
 import { parseISO, format } from "date-fns";
+import Overview from "./dashboard/Overview";
 
 const BusinessProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -164,7 +165,7 @@ const BusinessProfile = (props) => {
             </Link>
           )}
         </div> */}
-        <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
+        {/* <SitePicker setOpen={setOpen} setUpdate={setUpdate} setType={setType} />
         <DepartmentPicker admin={true} />
         {current.department != 0 && (
           <PositionPicker
@@ -179,7 +180,9 @@ const BusinessProfile = (props) => {
           setUpdate={setUpdate}
           setType={setType}
           />
-        )}
+        )} */}
+
+        {/* <Overview /> */}
           
         {business.plan != "F" && (
           <HolidayRequest holidays={holidays} admin={true} />

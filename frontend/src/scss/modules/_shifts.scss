@@ -1,6 +1,14 @@
 .dates {
   height: 100px;
   position: relative;
+  &.container {
+    margin-top: 50px;
+  }
+  .item-block {
+    @include wi-mq(mobile) {
+      margin: 0;
+    }
+  }
   &.fixed {
     position: sticky;
     top: 120px;
@@ -16,6 +24,9 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
+    @include wi-mq(mobile) {
+      display: none;
+    }
   }
   .btn-1 {
     max-width: 200px;
@@ -105,7 +116,7 @@
   }
   &__mobile {
     width: 100%;
-    z-index: 10;
+    z-index: 5;
     pointer-events: none;
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -135,6 +146,10 @@
       align-items: center;
       pointer-events: auto;
       flex-direction: column;
+      @include wi-mq(laptop) {
+        height: 100px;
+        max-width: 160px;
+      }
       &.disabled {
         pointer-events: none;
         &:hover {
@@ -147,11 +162,18 @@
       }
       p {
         margin-top: 10px;
+        @include wi-mq(laptop) {
+          font-size: 14px;
+          margin-top: 5px;
+        }
       }
     }
     i {
       font-size: 36px;
       z-index: 15;
+      @include wi-mq(laptop) {
+        font-size: 24px;
+      }
     }
   }
 }
@@ -173,8 +195,8 @@
   &__name {
     font-size: 16px;
     transition: 0.2s ease-in-out color;
-    &:hover {
-      color: #ad408e;
+    @include wi-mq(laptop) {
+      font-size: 12px;
     }
     &-container {
       display: flex;
@@ -187,6 +209,9 @@
   }
   &__hours {
     font-size: 12px;
+    @include wi-mq(laptop) {
+      font-size: 10px;
+    }
   }
   &__surname {
     font-weight: bold;
@@ -218,6 +243,10 @@
       }
     }
   }
+}
+
+.rota {
+  min-height: 100vh;
 }
 
 .rota__container {
@@ -315,13 +344,18 @@
     &.edit {
       .shift__time {
         cursor: pointer;
-        transition: 0.2s ease-in color;
-        &:hover {
-          color: #202020;
-          .shift__info {
-            color: #202020;
-          }
-        }
+        // transition: 0.2s ease-in color;
+        // &:hover {
+        //   color: #202020;
+        //   .shift__info {
+        //     color: #202020;
+        //   }
+        // }
+      }
+    }
+    .fa-times {
+      @include wi-mq(laptop) {
+        font-size: 12px;
       }
     }
     .fa-exchange-alt {
@@ -335,13 +369,19 @@
   &__time {
     font-size: 16px;
     margin-right: 10px;
+    @include wi-mq(laptop) {
+      font-size: 12px;
+    }
   }
   &__info {
     font-weight: normal;
     font-size: 14px;
     color: rgb(243, 243, 243);
-    word-wrap: break-word;
+    word-break: keep-all;
     transition: 0.2s ease-in-out color;
+    @include wi-mq(laptop) {
+      font-size: 10px;
+    }
     i {
       margin-right: 5px;
     }
@@ -390,6 +430,11 @@
   .dates {
     &.fixed {
       top: 0;
+      @include wi-mq(mobile) {
+        top: 40px;
+      }
+      
+      
     }
     &__pickerWrapper {
       width: 80%;
@@ -404,8 +449,8 @@
     }
     &__mobile {
       position: fixed;
-      left: 0;
-      right: 0;
+      // left: 0;
+      // right: 0;
       bottom: 0;
       &.fixed {
         top: auto;

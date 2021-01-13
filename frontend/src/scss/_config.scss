@@ -12,6 +12,7 @@ $red: #d05b5b;
 $yellow: #e9a659;
 $blue: #222735;
 $gray: #202020;
+$light-gray: rgb(233, 233, 233);
 $border: rgb(235, 235, 235);
 $purple: rgb(153, 61, 192);
 
@@ -38,6 +39,22 @@ $breakpoints: (
   }
 }
 
+@mixin sidenav_size($prop) {
+  #{$prop}: 300px;
+  @include wi-mq(laptop) {
+    #{$prop}: 200px;
+  }
+  @include wi-mq(tablet) {
+    #{$prop}: 50%;
+  }
+  @include wi-mq(mobile) {
+    #{$prop}: 100%;
+  }
+}
+
+
+
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -45,10 +62,16 @@ $breakpoints: (
   word-wrap: break-word;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: $base-font-family;
   background-color: #f4f4f4;
-  height: 100%;
+  // height: 100%;
+  // width: 100%;
+  overflow-x: hidden;
 }
 
 button {

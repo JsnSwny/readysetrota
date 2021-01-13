@@ -1,17 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDepartment } from "../../../actions/employees";
-import CreateShift from "../../modals/CreateShift";
+
 import { toast } from "react-toastify";
 
 
 const DepartmentPicker = (props) => {
   const dispatch = useDispatch();
-  const { admin } = props
 
-  const [open, setOpen] = useState(false);
-  const [type, setType] = useState("");
-  const [update, setUpdate] = useState(false);
+  const { setOpen, setUpdate, setType, admin } = props;
 
   let departments = useSelector((state) => state.employees.departments);
   let current = useSelector((state) => state.employees.current);
@@ -25,37 +22,28 @@ const DepartmentPicker = (props) => {
 
   return (
     <Fragment>
-      <CreateShift
-        open={open}
-        type={type}
-        onConfirm={() => {
-          setOpen(false);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        update={update}
-      />
         <div className="dashboard__block">
           <div className="dashboard__block-title-container">
+            <div className="flex-container--align-center">
             <p className="dashboard__block-title">Departments</p>
-            {admin && (
-              <i
-                onClick={() => {
-                  if (plan == "F" && departments.length >= 1) {
-                    toast.warning(
-                      "Upgrade to premium to unlock unlimited departments"
-                    );
-                    return false;
-                  }
+              {admin && (
+                <i
+                  onClick={() => {
+                    if (plan == "F" && departments.length >= 1) {
+                      toast.warning(
+                        "Upgrade to premium to unlock unlimited departments"
+                      );
+                      return false;
+                    }
 
-                  setOpen(true);
-                  setType("Department");
-                  setUpdate(false);
-                }}
-                className="fas fa-plus-square"
-              ></i>
-            )}
+                    setOpen(true);
+                    setType("Department");
+                    setUpdate(false);
+                  }}
+                  className="fas fa-plus"
+                ></i>
+              )}
+            </div>
           </div>
           
           {loading.departments && <small class="loading-text">Loading departments...</small>}
@@ -69,7 +57,7 @@ const DepartmentPicker = (props) => {
                   (current.department == item.id || current.department == 0) && "current"
                 }`}
               >
-                <div className="title-md bold">
+                <div className="title-md bold flex-container--between-center">
                   <p>{item.name}{" "}</p>
                   <div className="flex">
                     {admin && (

@@ -15,7 +15,7 @@ const Dates = (props) => {
         <div className="container-right">
           {dates.map((date) => (
             <div key={date} className="item-block dates__date">
-              <p>
+              <p class="item-block__title">
                 {format(date, "ccc do MMM").split(" ")[0]}
                 <br></br>
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}

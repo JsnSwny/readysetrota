@@ -12,29 +12,18 @@ const Shift = (props) => {
     limit,
     admin,
     employee,
+    setOpen,
+    setUpdate,
+    setType,
+    setShiftInfo
   } = props;
 
-  const [shift, setShift] = useState(false);
   const [shiftDate, setShiftDate] = useState("");
-  const [type, setType] = useState(false);
-  const [open, setOpen] = useState(false);
+
+  let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
 
   return (
     <Fragment>
-      <CreateShift
-        open={open}
-        type={type}
-        onConfirm={() => {
-          setOpen(false);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        employee={employee}
-        date={shiftDate}
-        shift={shift}
-      />
-
       <div
         key={result}
         className={`item-block shift__shift ${
@@ -45,11 +34,12 @@ const Shift = (props) => {
       >
         {admin && (
           <AddShiftButton
-          employee={employee}
-          date={format_date}
-          white={true}
-          limit={limit}
-        />
+            employee={employee}
+            date={format_date}
+            white={true}
+            limit={limit}
+            {...modalProps}
+          />
         )}
         
         {shifts.map((shift) => (
@@ -62,12 +52,13 @@ const Shift = (props) => {
                   if (admin) {
                     setOpen(true);
                     setType("shift");
-                    setShift(shift);
+                    setUpdate(shift);
+                    setShiftInfo({employee, date: shiftDate})
                   }
                 }}
                 className={`shift__wrapper ${admin ? "edit" : ""}`}
               >
-                <div className="flex-container">
+                <div className="flex-container--align-center">
                   <p className="shift__time">
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>

@@ -65,7 +65,7 @@ const Employee = (props) => {
             </p>
           </Link>
 
-          {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />}
+          {/* {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />} */}
         </div>
         
         <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>

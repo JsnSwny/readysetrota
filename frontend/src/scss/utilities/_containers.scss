@@ -1,12 +1,19 @@
 .container {
-  width: calc(100vw - 340px);
+  width: 100%;
+  padding: 0 10px;
   margin: 0 auto;
+  @include wi-mq(mobile) {
+    padding: 0 5px;
+  }
 }
 
 .container-left {
   width: 20%;
   min-width: 150px;
   max-width: 300px;
+  @include wi-mq(laptop) {
+    width: 15%;
+  }
 }
 
 .container-right {
@@ -82,6 +89,16 @@
   }
   &--center-vh {
     @extend .flex-container;
+    justify-content: center;
+    align-items: center;
+  }
+  &--align-center {
+    @extend .flex-container;
+    align-items: center;
+  }
+  &--column-center {
+    @extend .flex-container;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
