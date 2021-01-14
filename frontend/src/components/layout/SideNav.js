@@ -74,21 +74,26 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                         {isSiteAdmin(user.id) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" />
 
-                        <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}>
-                            <NavLink toggleNav={toggleNav} link="/profile" icon="fas fa-user" title="Profile" />
-                            <div className="sidenav__sublinks">
-                                <div onClick={() => {
-                                        dispatch(logout());
-                                    }} 
-                                    className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
-                                    <div className="sidenav__link-text">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </div>
+                        {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
+                        <div className={`sidenav__link-container`}>
+                            <div className="sidenav__link">
+                                <div className="sidenav__link-text">
+                                    <i class='fas fa-cogs'></i> Settings
                                 </div>
+                            </div>
+                            <div className="sidenav__sublinks">
                                 <NavLink toggleNav={toggleNav} link="/changepassword" icon="fas fa-lock" title="Change password" />
                             </div>
                         </div>
                         {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
+                        <div onClick={() => {
+                                dispatch(logout());
+                            }} 
+                            className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
+                            <div className="sidenav__link-text">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </div>
+                        </div>
                         <Link onClick={() => {toggleNav()}} className="sidenav__logo--bottom" to="/">
                             <img src="/static/media/logo2-01.svg"></img>
                         </Link>

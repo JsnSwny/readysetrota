@@ -21,6 +21,10 @@ const StaffPicker = (props) => {
   let departments = useSelector((state) => state.employees.departments)
   let positions = useSelector((state) => state.employees.positions)
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   const isSiteAdmin = (user_id) => {
     return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
   }
@@ -124,6 +128,8 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
+            <p className="subtitle-sm">{item.wage_type == "H" ? "Hourly" : "Salary"}</p>
+            <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
           </div>
         ))}
       </div>

@@ -86,7 +86,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     uuid = serializers.SerializerMethodField()
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability',)
+        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type')
     def get_uuid(self, obj):
         user = None
         request = self.context.get("request")

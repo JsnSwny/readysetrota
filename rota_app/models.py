@@ -68,6 +68,16 @@ class Employee(models.Model):
     owner = models.ForeignKey(User, related_name="employees", on_delete=models.CASCADE, blank=True)
     default_availability = JSONField(default=default_availability)
     business = models.ForeignKey(Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
+    wage = models.DecimalField(max_digits=12, decimal_places=2)
+    WAGE_TYPES = [
+        ("H", 'Hourly'),
+        ("S", 'Salary'),
+    ]
+    wage_type = models.CharField(
+        max_length=1,
+        choices=WAGE_TYPES,
+        default="H",
+    )
 
 class Shift(models.Model):
     employee = models.ForeignKey(Employee, related_name="shifts", on_delete=models.CASCADE, null=True, blank=True)

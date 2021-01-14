@@ -156,6 +156,9 @@
       background-color: lighten($blue, 10%);
       padding: 10px 0;
       margin-left: 10%;
+      &-text {
+        font-size: 12px;
+      }
     }
   }
   &__link-container {

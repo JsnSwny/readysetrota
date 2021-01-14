@@ -14,14 +14,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.5s ease transform, 0.5s ease margin-left;;
+  transition: 0.5s ease transform, 0.5s ease margin-left;
   &__container {
+    max-height: 80%;
+    overflow: auto;
     width: 60%;
-    @include wi-mq(mobile) {
+    @include wi-mq(tablet) {
       width: 90%;
+    }
+    @include wi-mq(mobile) {
       margin-top: -60px;
-      max-height: 80%;
-      overflow: auto;
     }
     background-color: white;
     z-index: 9999;

@@ -202,7 +202,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (di
       dispatch(resetErrors());
     })
 
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err.response));
 };
 
 // Add Employee

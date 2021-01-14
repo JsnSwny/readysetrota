@@ -41,6 +41,8 @@ const AddStaff = (props) => {
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [wage, setWage] = useState(0.00);
+  const [wageType, setWageType] = useState("")
   const [position, setPosition] = useState([]);
   const [siteAdmin, setSiteAdmin] = useState(false);
   const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
@@ -64,6 +66,8 @@ const AddStaff = (props) => {
         setFirstName(update.first_name);
         setLastName(update.last_name);
         setPosition(update.position.map((item) => item));
+        setWage(update.wage);
+        setWageType(update.wage_type);
         setSiteAdmin(isSiteAdmin(update.user))
       }
     }
@@ -75,6 +79,8 @@ const AddStaff = (props) => {
       const employee = {
         first_name: firstName,
         last_name: lastName,
+        wage: wage,
+        wage_type: wageType,
         position_id: position.map(pos => pos.id),
         business_id: current.business,
         default_availability: {
@@ -207,6 +213,38 @@ const AddStaff = (props) => {
                 name="last_name "
                 onChange={(e) => setLastName(e.target.value)}
                 value={lastName}
+              ></input>
+              <p className="error">{errors.name}</p>
+            </div>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Wage Type:</label>
+              <div className="flex-container--wrap">
+                <span
+                    className={`btn-toggle--sm ${wageType == "H" && "active"}`}
+                    onClick={() => {
+                      setWageType("H");
+                    }}
+                  >
+                    Hourly
+                </span>
+                <span
+                    className={`btn-toggle--sm ${wageType == "S" && "active"}`}
+                    onClick={() => {
+                      setWageType("S");
+                    }}
+                  >
+                    Salary
+                </span>
+              </div>
+            </div>
+            <div className="staffForm__control">
+              <label className="staffForm__label">Wage:</label>
+              <input
+                className="staffForm__input"
+                type="number"
+                name="wage"
+                onChange={(e) => setWage(e.target.value)}
+                value={wage}
               ></input>
               <p className="error">{errors.name}</p>
             </div>
