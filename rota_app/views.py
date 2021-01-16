@@ -7,7 +7,7 @@ from django.db.models import Count
 from .serializers import ShiftSerializer
 from operator import attrgetter
 from itertools import groupby
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time, date
 from django.core.mail import send_mail, send_mass_mail
 from django_xhtml2pdf.utils import generate_pdf
 from django.http import HttpResponse, FileResponse, JsonResponse
@@ -99,6 +99,73 @@ class Publish(APIView):
 
         ids = (o.id for o in all_shifts)
         return Response(ids)
+
+import json
+
+def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, user_id=False):
+    hours = 0
+    wage = 0
+    for i in shifts:
+        current_date = date.today()
+        start = datetime.combine(current_date, i.start_time)
+        end_time = datetime.strptime(i.end_time, '%H:%M')
+        end = datetime.combine(current_date, end_time.time())
+        shift_length = round((end - start).total_seconds() / 3600, 2)
+        hours += shift_length
+
+        if i.employee.wage_type == "H":
+            wage += float(i.employee.wage) * shift_length
+
+    employees = []
+        
+    if user_id:
+        employees = Employee.objects.filter(user__id=user_id)
+    if site_id:
+        employees = Employee.objects.filter(position__department__site=site_id)
+
+    for i in employees:
+        if i.wage_type == "S":
+            wage += float(i.wage/365) * float(days_difference.days)
+
+    return hours, wage
+
+class GetStats(APIView):
+    def get(self, request):
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        stat_type = request.query_params.get('stat_type')
+
+        start_date = datetime.strptime(start_date, '%d/%m/%Y')
+        end_date = datetime.strptime(end_date, '%d/%m/%Y')
+
+        days_difference = (end_date - start_date) + timedelta(days=1)
+        
+        before_range_date = start_date - days_difference
+
+        site_id = False
+        user_id = False
+
+        if stat_type == "business":
+            current_filter = request.query_params.get('currentFilter')
+            id = request.query_params.get('id')
+            if current_filter == "business":
+                shifts = Shift.objects.filter(department__site__business=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department__site__business=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+            if current_filter == "site":
+                shifts = Shift.objects.filter(department__site=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department__site=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+            if current_filter == "department":
+                shifts = Shift.objects.filter(department=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+
+        else:
+            user_id = request.query_params.get('user_id')
+            shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__user__id=user_id)
+            before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
+
+
+        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, site_id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, site_id, user_id)[1]}}
+        return HttpResponse( json.dumps( data ) )
 
 
 class ExportShifts(APIView):

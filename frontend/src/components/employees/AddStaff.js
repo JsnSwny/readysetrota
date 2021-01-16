@@ -245,6 +245,7 @@ const AddStaff = (props) => {
                 name="wage"
                 onChange={(e) => setWage(e.target.value)}
                 value={wage}
+                step="0.01"
               ></input>
               <p className="error">{errors.name}</p>
             </div>

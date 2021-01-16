@@ -267,7 +267,6 @@ class SiteViewSet(viewsets.ModelViewSet):
             
     def destroy(self, request, *args, **kwargs):
         departments = Department.objects.filter(site=self.get_object().id)
-        print(departments)
         for i in departments:
             positions = Position.objects.filter(department=i.id)
             for j in positions:

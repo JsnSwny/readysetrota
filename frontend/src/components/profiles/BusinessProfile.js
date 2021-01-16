@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { cancelSubscription, getCustomer } from "../../actions/payments";
 import { parseISO, format } from "date-fns";
 import Overview from "./dashboard/Overview";
+import Stats from "./dashboard/stats/Stats";
 
 const BusinessProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -28,6 +29,7 @@ const BusinessProfile = (props) => {
     (state) => state.employees.current
   );
 
+  
   let loading = useSelector((state) => state.loading);
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
@@ -56,8 +58,8 @@ const BusinessProfile = (props) => {
       dispatch(getPositions());
     }
   }, [current.department]);
-
   let user = useSelector((state) => state.auth.user);
+
   return (
     <Fragment>
       {/* <div className="dashboard__header">
@@ -183,7 +185,7 @@ const BusinessProfile = (props) => {
         )} */}
 
         {/* <Overview /> */}
-          
+        <Stats type="business" />
         {business.plan != "F" && (
           <HolidayRequest holidays={holidays} admin={true} />
         )}

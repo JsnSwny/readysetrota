@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage
+from rota_app.views import CheckUUID, GetPopularTimes, Publish, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path('cancel/', Cancel.as_view(), name='cancel'),
     path('sendmessage/', sendMessage.as_view(), name='sendMessage'),
     path('webhook/', webhook, name='webhook'),
+    path('stats/', GetStats.as_view(), name='stats'),
     
     
     

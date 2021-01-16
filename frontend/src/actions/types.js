@@ -61,3 +61,5 @@ export const GET_SUBSCRIPTION = "GET_SUBSCRIPTION";
 export const SEND_MESSAGE = "SEND_MESSAGE";
 
 export const RESET_LOADING = "RESET_LOADING";
+
+export const GET_STATS = "GET_STATS";

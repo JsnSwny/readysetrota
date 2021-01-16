@@ -33,6 +33,8 @@ import TermsAndConditions from "./landing/TermsAndConditions";
 import StaffManagement from "./profiles/StaffManagement";
 import CreateShift from "./modals/CreateShift";
 
+import AdminPanel from "./profiles/dashboard/AdminPanel";
+
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
@@ -91,6 +93,7 @@ const App = () => {
             <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />
             <PrivateRoute admin={true} path="/staff-management" exact component={StaffManagement} modalProps={modalProps} />
+            <PrivateRoute admin={true} path="/admin-panel" exact component={AdminPanel} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/privacy" component={PrivacyPolicy} />
@@ -98,7 +101,6 @@ const App = () => {
             <PrivateRoute path="/changepassword" component={ChangePassword} />
             <PrivateRoute path="/profile/:id" component={StaffProfile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
-
             <PrivateRoute path="/premium" component={Plans} />
           </Switch>
         </div>

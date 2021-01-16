@@ -70,7 +70,12 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                     </div>
                     <p className="sidenav__name">{userName}</p>
                     <div className="sidenav__links">
-                        <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" />
+                        <div className={`sidenav__link-container`}>
+                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" />
+                            <div className="sidenav__sublinks">
+                            {isSiteAdmin(user.id) && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
+                            </div>
+                        </div>
                         {isSiteAdmin(user.id) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" />
 
@@ -83,9 +88,10 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                             </div>
                             <div className="sidenav__sublinks">
                                 <NavLink toggleNav={toggleNav} link="/changepassword" icon="fas fa-lock" title="Change password" />
+                                {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
                             </div>
                         </div>
-                        {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
+                        
                         <div onClick={() => {
                                 dispatch(logout());
                             }} 

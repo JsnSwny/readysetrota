@@ -9,22 +9,19 @@ import {
   getHolidays,
   getSites
 } from "../../actions/employees";
-import { resetLoading } from "../../actions/loading";
 import { useParams, Redirect } from "react-router-dom";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
-import PositionPicker from "./dashboard/PositionPicker";
-import StaffPicker from "./dashboard/StaffPicker";
-import SitePicker from "./dashboard/SitePicker"
 import Availability from "./Availability";
 import HolidayRequest from "./dashboard/HolidayRequest";
 import UpcomingShifts from "./UpcomingShifts";
+import Stats from "./dashboard/stats/Stats";
+import SitePicker from "./dashboard/SitePicker";
 
 const StaffProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
 
   let user = useSelector((state) => state.auth.user);
-  let business = useSelector((state) => state.auth.business);
   let { id: id_param } = useParams();
   let employees = useSelector((state) => state.employees.employees);
   let sites = useSelector((state) => state.employees.sites)
@@ -93,7 +90,8 @@ const StaffProfile = (props) => {
 
   return (   
     <div class="dashboard container-2">
-      <SitePicker {...props} />
+      <Stats type="staff" />
+      <SitePicker />
       <DepartmentPicker />
       {current.department != 0 && currentEmployee && (
         <Fragment>

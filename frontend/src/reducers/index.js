@@ -6,6 +6,7 @@ import responsive from "./responsive";
 import errors from "./errors";
 import payments from "./payments";
 import loading from "./loading";
+import stats from "./stats";
 
 const appReducer = combineReducers({
   shifts,
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
   errors,
   payments,
   loading,
+  stats
 });
 
 const rootReducer = (state, action) => {
