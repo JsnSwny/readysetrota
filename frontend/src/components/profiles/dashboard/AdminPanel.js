@@ -9,6 +9,8 @@ import {
 } from "../../../actions/employees";
 import HolidayRequest from "./HolidayRequest";
 import Stats from "./stats/Stats";
+import SitePicker from "./SitePicker";
+import DepartmentPicker from "./DepartmentPicker";
 
 const AdminPanel = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -47,6 +49,8 @@ const AdminPanel = (props) => {
 
   return (
       <div className="dashboard container-2">
+        <SitePicker {...props} />
+        <DepartmentPicker {...props} />
         <Stats type="business" />
         {business.plan != "F" && (
           <HolidayRequest holidays={holidays} admin={true} />

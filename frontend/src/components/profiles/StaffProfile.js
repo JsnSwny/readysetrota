@@ -90,9 +90,9 @@ const StaffProfile = (props) => {
 
   return (   
     <div class="dashboard container-2">
+      <SitePicker {...props} />
+      <DepartmentPicker {...props} />
       <Stats type="staff" />
-      <SitePicker />
-      <DepartmentPicker />
       {current.department != 0 && currentEmployee && (
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />
