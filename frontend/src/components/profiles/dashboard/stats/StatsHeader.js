@@ -39,10 +39,10 @@ const StatsHeader = ({setStartDate, setEndDate, startDate, endDate, setBeforeDat
                 <div className="dashboard__picker">
                     {type == "business" && (
                         <Fragment>
-                            <p onClick={() => setPickerOpen(!pickerOpen)} className="dashboard__picker-selected">{currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)} ({current[currentFilter]}) <i class="fas fa-sort-down"></i></p>
+                            <p onClick={() => setPickerOpen(!pickerOpen)} className="dashboard__picker-selected">{currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)} <i class="fas fa-sort-down"></i></p>
                         
                             <div className={`dashboard__dropper ${pickerOpen ? "open" : ""}`}>
-                                <p className={`${currentFilter == "business" ? "active" : ""}`} onClick={() => setCurrentFilter("business")}>Business</p>
+                                {user.business && <p className={`${currentFilter == "business" ? "active" : ""}`} onClick={() => setCurrentFilter("business")}>Business</p>}
                                 <p className={`${currentFilter == "site" ? "active" : ""}`} onClick={() => setCurrentFilter("site")}>Site</p>
                                 <p className={`${currentFilter == "department" ? "active" : ""}`} onClick={() => setCurrentFilter("department")}>Department</p>
                             </div>
