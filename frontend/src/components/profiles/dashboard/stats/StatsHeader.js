@@ -9,6 +9,7 @@ const StatsHeader = ({setStartDate, setEndDate, startDate, endDate, setBeforeDat
 
     let current = useSelector((state) => state.employees.current)
     const [pickerOpen, setPickerOpen] = useState(false);
+    let user = useSelector((state) => state.auth.user);
 
     return (
         <div className="dashboard__block--banner">
