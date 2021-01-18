@@ -82,16 +82,19 @@ const StaffPicker = (props) => {
         
       </div>
       {loading.employees && <small class="loading-text">Loading staff...</small>}
-      <div className="flex-container--wrap">
-        <span onClick={() => {
-          setStaffSort("alphabetical")
-          localStorage.setItem("staff_sort", "alphabetical")
-        }} className={`btn-toggle--sm ${staffSort == "alphabetical" ? "active" : ""}`}>Sort Alphabetically</span>
-        <span onClick={() => {
-          setStaffSort("position")
-          localStorage.setItem("staff_sort", "position")
-        }} className={`btn-toggle--sm ${staffSort == "position" ? "active" : ""}`}>Sort by Position</span>
-      </div>
+      {employees.length > 0 && (
+        <div className="flex-container--wrap">
+          <span onClick={() => {
+            setStaffSort("alphabetical")
+            localStorage.setItem("staff_sort", "alphabetical")
+          }} className={`btn-toggle--sm ${staffSort == "alphabetical" ? "active" : ""}`}>Sort Alphabetically</span>
+          <span onClick={() => {
+            setStaffSort("position")
+            localStorage.setItem("staff_sort", "position")
+          }} className={`btn-toggle--sm ${staffSort == "position" ? "active" : ""}`}>Sort by Position</span>
+        </div>
+      )}
+      
 
       <div className="dashboard__wrapper">
         {sortEmployees().map((item) => (

@@ -5,7 +5,7 @@ import StatsItem from "./StatsItem";
 import { addDays, format, subDays, differenceInDays } from "date-fns";
 import { getStats } from "../../../../actions/stats";
 
-const Stats = ({type}) => {
+const Stats = ({type, employee}) => {
     let stats = useSelector((state) => state.stats.stats);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(addDays(new Date(), 7));
@@ -15,7 +15,7 @@ const Stats = ({type}) => {
 
     const [currentFilter, setCurrentFilter] = useState("business")
 
-    let id = type == "business" ? current[currentFilter] : user.id;
+    let id = type == "business" ? current[currentFilter] : employee ? employee : user.id;
 
     const dateProps = {startDate, setStartDate, endDate, setEndDate}
 

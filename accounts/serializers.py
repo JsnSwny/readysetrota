@@ -128,10 +128,8 @@ class RegisterSerializer(serializers.ModelSerializer):
                 business = Business(owner=user, name=validated_data['businessName'])
                 business.save()
                 profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
-                site = Site(business=business, name="Default Site")
+                site = Site(business=business, name="My First Site")
                 site.save()
-                department = Department(business=business, site=site, name="Default Department", owner=user)
-                department.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
             profile.save()

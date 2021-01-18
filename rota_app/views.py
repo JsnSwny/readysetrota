@@ -160,11 +160,14 @@ class GetStats(APIView):
                 shifts = Shift.objects.filter(department=id, date__range=[start_date, end_date])
                 before_shifts = Shift.objects.filter(department=id, date__range=[before_range_date, start_date - timedelta(days=1)])
 
-        else:
+        elif stat_type == "staff":
             user_id = request.query_params.get('user_id')
             shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__user__id=user_id)
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
-
+        elif stat_type == "staff_profile":
+            employee_id = request.query_params.get('user_id')
+            shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
+            before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, site_id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, site_id, user_id)[1]}}
         return HttpResponse( json.dumps( data ) )

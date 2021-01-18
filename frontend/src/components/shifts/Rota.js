@@ -33,6 +33,7 @@ const Rota = (modalProps) => {
   let date = useSelector((state) => state.shifts.date);
   let availability = useSelector((state) => state.employees.availability);
   let positions = useSelector((state) => state.employees.positions)
+  let loading = useSelector((state) => state.loading);
 
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
@@ -44,7 +45,7 @@ const Rota = (modalProps) => {
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
   const isSiteAdmin = (user_id) => {
-    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
   }
 
   // Update Shifts
@@ -213,6 +214,11 @@ const Rota = (modalProps) => {
       return employeesList;
     }
     
+  }
+
+  if(!loading.employees && employees.length == 0) {
+    toast.warning("You do not currently have any employees to manage in this department")
+    return <Redirect to="/staff-management" />
   }
 
   return (

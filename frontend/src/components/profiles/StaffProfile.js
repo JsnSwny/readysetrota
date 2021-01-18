@@ -26,21 +26,22 @@ const StaffProfile = (props) => {
   let employees = useSelector((state) => state.employees.employees);
   let sites = useSelector((state) => state.employees.sites)
   let plan = useSelector((state) => state.employees.business.plan);
+  let departments = useSelector((state) => state.employees.departments)
   let current = useSelector(
     (state) => state.employees.current
   );
     
   const isSiteAdmin = (user_id) => {
-    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
   }
 
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
-
+  let loading = useSelector((state) => state.loading)
   let holidays = useSelector((state) => state.employees.holidays);
   
-  let employee = (id_param && employees.find((item) => item.id == employee_id)) ||user.employee.find((employee) =>
+  let employee = (id_param && employees.find((item) => item.id == employee_id)) || user.employee.find((employee) =>
     employee.position.some((item) => item.department.id == current.department)
   );
 
@@ -83,6 +84,10 @@ const StaffProfile = (props) => {
     }
   }, [employee])
 
+  if(!loading.departments && departments.length == 0) {
+    return <Redirect to="/join" />
+  }
+
 
   if (!isSiteAdmin(user.id) && id_param) {
     return <Redirect to="" />;
@@ -90,9 +95,14 @@ const StaffProfile = (props) => {
 
   return (   
     <div class="dashboard container-2">
-      <SitePicker {...props} />
-      <DepartmentPicker {...props} />
-      <Stats type="staff" />
+      {!id_param && (
+        <Fragment>
+          <SitePicker {...props} />
+          <DepartmentPicker {...props} />
+        </Fragment>
+      )}
+      
+      <Stats type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
       {current.department != 0 && currentEmployee && (
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />

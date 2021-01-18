@@ -15,6 +15,8 @@ import SitePicker from "./dashboard/SitePicker";
 const StaffManagement = (props) => {
   const dispatch = useDispatch();
 
+  let positions = useSelector((state) => state.employees.positions);
+  let departments = useSelector((state) => state.employees.departments);
   let current = useSelector(
     (state) => state.employees.current
   );
@@ -41,12 +43,12 @@ const StaffManagement = (props) => {
 
   return (
     <div className="dashboard container-2">
-      <SitePicker {...props} />
+      <SitePicker {...props} admin={true} />
       <DepartmentPicker {...props} admin={true} />
       {current.department != 0 && (
         <Fragment>
-          <PositionPicker {...props}/>
-          <StaffPicker {...props}/>
+            <PositionPicker {...props}/>
+            <StaffPicker {...props}/>
         </Fragment>
       )}
     </div>

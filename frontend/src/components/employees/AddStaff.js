@@ -27,6 +27,7 @@ const AddStaff = (props) => {
   let departments = useSelector((state) => state.employees.departments);
   let employees = useSelector((state) => state.employees.employees);
   let sites = useSelector(state => state.employees.sites)
+  let user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch();
   useEffect(() => {
     if (form == "Staff") {
@@ -49,7 +50,7 @@ const AddStaff = (props) => {
 
 
   const isSiteAdmin = (user_id) => {
-    return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
+    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
   }
 
   const [admins, setAdmins] = useState([]);

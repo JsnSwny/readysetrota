@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
 const SitePicker = (props) => {
-  const { setOpen, setUpdate, setType } = props;
+  const { setOpen, setUpdate, setType, admin } = props;
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
@@ -18,7 +18,7 @@ const SitePicker = (props) => {
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
         <p className="dashboard__block-title">Sites</p>
-          {user.business && (
+          {admin && (
             <i
             onClick={() => {
               if (plan == "F" && sites.length >= 1) {
@@ -70,7 +70,7 @@ const SitePicker = (props) => {
             <p className="title-md bold flex-container--between-center">
               {item.name}{" "}
               <div className="flex">
-                {user.business && (
+                {admin && (
                   <i
                   onClick={() => {
                     setOpen(true);

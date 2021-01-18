@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 import {
   getEmployees,
   getDepartments,
@@ -11,6 +12,7 @@ import HolidayRequest from "./HolidayRequest";
 import Stats from "./stats/Stats";
 import SitePicker from "./SitePicker";
 import DepartmentPicker from "./DepartmentPicker";
+import { toast } from "react-toastify";
 
 const AdminPanel = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -20,9 +22,11 @@ const AdminPanel = (props) => {
     (state) => state.employees.current
   );
 
+  let loading = useSelector((state) => state.loading);
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
   let sites = useSelector((state) => state.employees.sites);
+  let departments = useSelector((state) => state.employees.departments)
 
 //   useEffect(() => {
 //     dispatch(getCustomer(user.profile.stripe_id));
@@ -45,7 +49,12 @@ const AdminPanel = (props) => {
       dispatch(getPositions());
     }
   }, [current.department]);
-  let user = useSelector((state) => state.auth.user);
+  if(!loading.departments && departments.length == 0) {
+        toast.warning(
+            "You must create a department before you can manage staff"
+        );
+      return <Redirect to="/staff-management" />
+  }
 
   return (
       <div className="dashboard container-2">

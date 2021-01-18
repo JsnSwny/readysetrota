@@ -22,7 +22,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
     const [userName, setUserName] = useState("");
 
     const isSiteAdmin = (user_id) => {
-        return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
+        return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
     }
 
 
@@ -76,7 +76,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen}) => {
                             {isSiteAdmin(user.id) && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
                             </div>
                         </div>
-                        {isSiteAdmin(user.id) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
+                        {isSiteAdmin(user) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" />
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}

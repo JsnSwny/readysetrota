@@ -22,7 +22,7 @@ const Plans = () => {
     "pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV"
   );
 
-  let loading = useSelector((state) => state.loading.loading);
+  let loading = useSelector((state) => state.loading);
   let errors = useSelector((state) => state.errors.msg);
   let user = useSelector((state) => state.auth.user);
   let subscription = useSelector((state) => state.payments.subscription);

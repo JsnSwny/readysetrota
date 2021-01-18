@@ -215,6 +215,7 @@ export default function (state = initialState, action) {
       };
     case LOGOUT_SUCCESS:
       localStorage.setItem("current_department", 0);
+      localStorage.setItem("current_site", 0);
       return {
         ...state,
         current: {

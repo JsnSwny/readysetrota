@@ -11,8 +11,8 @@ const PrivateRoute = ({ component: Component, modalProps, admin, ...rest }) => {
   let current = useSelector((state) => state.employees.current)
 
   const isSiteAdmin = (user_id) => {
-    return sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id) || user.business) : false;
-  }
+    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
+}
 
 
   const { computedMatch } = rest;
