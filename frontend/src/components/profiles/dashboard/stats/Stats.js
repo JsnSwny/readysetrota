@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import StatsHeader from "./StatsHeader";
 import StatsItem from "./StatsItem";
-import { addDays, format, subDays, differenceInDays } from "date-fns";
+import { addDays, format, subDays, differenceInDays, startOfWeek, endOfWeek } from "date-fns";
 import { getStats } from "../../../../actions/stats";
 
 const Stats = ({type, employee}) => {
     let stats = useSelector((state) => state.stats.stats);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(addDays(new Date(), 7));
+    const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 } ));
+    const [endDate, setEndDate] = useState(addDays(new Date(), 6));
     let current = useSelector((state) => state.employees.current)
     let user = useSelector((state) => state.auth.user)
     const dispatch = useDispatch();

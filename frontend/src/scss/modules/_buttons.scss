@@ -131,6 +131,9 @@
       font-size: 16px;
       margin: 5px 0;
       margin-right: 10px;
+      @include wi-mq(laptop) {
+        font-size: 14px;
+      }
     }
     @include wi-mq(mobile) {
       padding: 5px 10px;
