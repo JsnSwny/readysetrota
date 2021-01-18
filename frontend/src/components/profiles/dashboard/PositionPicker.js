@@ -106,7 +106,7 @@ const PositionPicker = (props) => {
 
   const [newPositions, setNewPositions] = useState([]);
 
-  let positionsEqual = newPositions.map(item => item.order).toString() == positions.map(item => item.order).toString();
+  let positionsEqual = positions.some(item => item.order == null) ? false : newPositions.map(item => item.order).toString() == positions.map(item => item.order).toString();
 
   useEffect(() => {
     setNewPositions(positions.sort((a, b) => (a.order===null)-(b.order===null) ||a.order - b.order))
@@ -142,6 +142,8 @@ const PositionPicker = (props) => {
         </div>
         
       </div>
+      {console.log(positions)}
+      {console.log(newPositions)}
       {!positionsEqual && (
         <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
           dispatch(updatePositionIndex(newPositions))
