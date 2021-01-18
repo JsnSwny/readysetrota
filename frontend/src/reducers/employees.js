@@ -324,6 +324,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: [...state.departments, action.payload],
+        positions: [],
+        employees: [],
         current: {
           ...state.current,
           department: action.payload.id
