@@ -32,7 +32,7 @@ const NoShift = (props) => {
       }`}
     >
       {admin && (
-        <AddShiftButton {...modalProps} employee={employee} date={format_date} limit={limit} />
+        <AddShiftButton {...modalProps} setUpdate={setUpdate} employee={employee} date={format_date} limit={limit} />
       )}
       {showAvailabilities && (
         <Fragment>

@@ -38,6 +38,7 @@ const Shift = (props) => {
             date={format_date}
             white={true}
             limit={limit}
+            setUpdate={setUpdate}
             {...modalProps}
           />
         )}
