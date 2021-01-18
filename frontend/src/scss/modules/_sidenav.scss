@@ -31,7 +31,7 @@
     left: calc(-50% + 50px);
   }
   @include wi-mq(mobile) {
-    left: calc(-100% + 50px);
+    left: calc(-100%);
     background: transparent;
     box-shadow: none;
     -webkit-box-shadow: none;
