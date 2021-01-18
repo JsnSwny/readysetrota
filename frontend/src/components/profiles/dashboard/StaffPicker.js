@@ -36,7 +36,7 @@ const StaffPicker = (props) => {
   const [staffSort, setStaffSort] = useState(localStorage.getItem("staff_sort") ? localStorage.getItem("staff_sort") : "alphabetical");
 
   const sortEmployees = () => {
-    if(positions.length > 0) {
+    if(positions.length > 0 && employees.length > 0) {
       switch(staffSort) {
         case "position":
           return employees.sort((a,b) => positions.find(pos => pos.id == a.position.find(item => item.department.id == current.department).id).order - positions.find(pos => pos.id == b.position.find(item => item.department.id == current.department).id).order)
