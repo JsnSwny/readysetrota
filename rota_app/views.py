@@ -229,7 +229,8 @@ class Charge(APIView):
                 unit_amount=request.data['charge'],
                 currency="gbp",
                 recurring={"interval": request.data['period']},
-                product="prod_Hzpy6ipUG3MsR3",
+                product="prod_HwsJxT2Z3YkyAt"
+                # product="prod_Hzpy6ipUG3MsR3",
             )
 
             subscription = stripe.Subscription.create(
@@ -266,7 +267,7 @@ class getCustomer(APIView):
         # data = serializers.serialize('json', [obj,])
             return JsonResponse(obj)
         else:
-            return Response(True)
+            return Response(False)
 
 
 class Cancel(APIView):
@@ -276,6 +277,7 @@ class Cancel(APIView):
         stripe.api_key = STRIPE_SECRET_KEY
 
         customer = stripe.Customer.retrieve(request.data['customer_id'])
+        print(customer)
         for i in customer['subscriptions']['data']:
             cancellation = stripe.Subscription.modify(
                 i.id,

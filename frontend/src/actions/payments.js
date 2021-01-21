@@ -5,6 +5,7 @@ import {
   LOAD_FINISH,
   SUBSCRIPTION_CANCELLED,
   GET_SUBSCRIPTION,
+  CHARGE_START
 } from "./types";
 import { tokenConfig } from "./auth";
 import axios from "axios";
@@ -12,6 +13,9 @@ import { loadUser } from "./auth";
 import { getErrors, resetErrors } from "./errors";
 
 export const sendCharge = (obj) => (dispatch, getState) => {
+  dispatch({
+    type: CHARGE_START,
+  });
   axios
     .post(`charge/`, {
       token: obj.token,
@@ -23,9 +27,6 @@ export const sendCharge = (obj) => (dispatch, getState) => {
     })
     .then((res) => {
       if (res.data.error) {
-        dispatch({
-          type: LOAD_FINISH,
-        });
         dispatch(getErrors({ payment: res.data.error }, 1));
         return false;
       }
@@ -33,10 +34,7 @@ export const sendCharge = (obj) => (dispatch, getState) => {
         type: CHARGE_COMPLETE,
         employees: obj.total_employees,
       });
-      dispatch({
-        type: LOAD_FINISH,
-      });
-      // dispatch(getCustomer(obj.customer_id));
+      dispatch(getCustomer(obj.customer_id));
       dispatch(loadUser());
     })
     .catch((err) => console.log(err.response));
@@ -60,6 +58,7 @@ export const cancelSubscription = (customer_id) => (dispatch, getState) => {
 
 export const getCustomer = (customer_id) => (dispatch, getState) => {
   axios.post(`getCustomer/`, { customer_id: customer_id }).then((res) => {
+    console.log(res.data)
     dispatch({
       type: GET_SUBSCRIPTION,
       payload: res.data,

@@ -34,6 +34,9 @@ import StaffManagement from "./profiles/StaffManagement";
 import CreateShift from "./modals/CreateShift";
 
 import AdminPanel from "./profiles/dashboard/AdminPanel";
+import Checkout from "./accounts/Checkout";
+
+import Confirm from "./layout/Confirm"
 
 const App = () => {
   useEffect(() => {
@@ -48,6 +51,10 @@ const App = () => {
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
   
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [onConfirm, setOnConfirm] = useState(false);
+  const [message, setMessage] = useState(false);
+  
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
 
 
@@ -56,6 +63,12 @@ const App = () => {
     setUpdate,
     setType,
     setShiftInfo
+  }
+
+  const confirmProps = {
+    setConfirmOpen,
+    setOnConfirm,
+    setMessage
   }
 
   return (
@@ -75,7 +88,9 @@ const App = () => {
           sidebarOpen={sidebarOpen}
           {...shiftInfo}
         />
-        <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Confirm open={confirmOpen} onConfirm={onConfirm} onClose={() => {
+          setConfirmOpen(!confirmOpen)}} message={message} />
+        <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} confirmProps={confirmProps} />
         <div className="sidenav__bar">
           <i onClick={() => {
               setSidebarOpen(!sidebarOpen);
@@ -102,6 +117,7 @@ const App = () => {
             <PrivateRoute path="/profile/:id" component={StaffProfile} />
             <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
             <PrivateRoute path="/premium" component={Plans} />
+            <PrivateRoute path="/checkout" component={Checkout} />
           </Switch>
         </div>
       </Router>

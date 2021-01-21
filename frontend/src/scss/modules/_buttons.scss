@@ -88,6 +88,42 @@
       background-color: #963cbd;
     }
   }
+  &-6 {
+    @extend .btn;
+    border: 2px white solid;
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+    border-radius: 10px;
+    padding: 5px 15px;
+    transition: 0.3s ease color, 0.3s ease background-color;
+    &.active {
+      background-color: white;
+      color: black;
+      font-weight: bold;
+    }
+    &:hover {
+      color: black;
+      background-color: white;
+    }
+    &--lg {
+      @extend .btn-6;
+      min-width: 300px;
+      padding: 10px 0;
+      display: block;
+      margin: 0 auto;
+    }
+    &--stretch {
+      @extend .btn-6;
+      flex: 1;
+      width: 100%;
+      padding: 10px 0;
+    }
+    &.processing {
+      border: 2px $light-gray solid;
+      pointer-events: none;
+    }
+  }
   &-modal {
     @extend .btn;
     padding: 10px 0;

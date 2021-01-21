@@ -1,0 +1,62 @@
+.premium {
+    margin-top: -20px;
+    a {
+        flex: 1;
+        margin-right: 10px;
+        width: 100%;
+    }
+    @include wi-mq(tablet) {
+        margin: 70px auto;
+        width: 90%;
+    }
+    &__title {
+        font-size: 48px;
+    }
+    &__subtitle {
+        font-size: 18px;
+        margin-top: 10px;
+        text-align: center;
+    }
+    &__form {
+        @extend .form;
+        margin-top: 40px;
+        max-width: 650px;
+        background: linear-gradient(90deg, lighten($blue, 10%), lighten($blue, 20%));
+        color: white;
+        border-radius: 30px;
+        -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+        -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+        @include wi-mq(tablet) {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+    &__container {
+        &::after {
+            content: "";
+            background-image: url('/static/media/background-shifts.png');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+          }
+    }
+    &__details {
+        text-align: left;
+        p {
+            margin: 10px 0;
+        }
+    }
+    .btn-6--lg {
+        margin-top: 50px;
+        i {
+            margin-left: 5px;
+        }
+    }
+}

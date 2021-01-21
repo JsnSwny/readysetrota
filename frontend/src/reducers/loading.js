@@ -1,4 +1,4 @@
-import { LOAD_START, LOAD_FINISH, SET_DEPARTMENT, SET_SITE, GET_DEPARTMENTS, GET_POSITIONS, GET_EMPLOYEES, GET_SITES, RESET_LOADING } from "../actions/types";
+import { LOAD_START, LOAD_FINISH, SET_DEPARTMENT, SET_SITE, GET_DEPARTMENTS, GET_POSITIONS, GET_EMPLOYEES, GET_SITES, RESET_LOADING, CHARGE_START, CHARGE_COMPLETE } from "../actions/types";
 
 const initialState = {
   any: false,
@@ -6,6 +6,7 @@ const initialState = {
   departments: true,
   positions: true,
   employees: true,
+  charge: false
 };
 
 export default function (state = initialState, action) {
@@ -57,6 +58,16 @@ export default function (state = initialState, action) {
         departments: state.departments != false && action.payload.length != 0,
         positions: state.positions != false && action.payload.length != 0,
         employees: state.employees != false && action.payload.length != 0
+      }
+    case CHARGE_START:
+      return {
+        ...state,
+        charge: true
+      }
+    case CHARGE_COMPLETE:
+      return {
+        ...state,
+        charge: false
       }
     case RESET_LOADING:
       return {

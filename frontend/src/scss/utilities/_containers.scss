@@ -112,4 +112,11 @@
     flex-direction: column;
     height: 100%;
   }
+  &--column-center {
+    @extend .flex-container;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
 }

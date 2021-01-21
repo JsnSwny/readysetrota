@@ -21,6 +21,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         subscription: action.payload,
+        charge_success: false,
       };
     case SUBSCRIPTION_CANCELLED:
       return {

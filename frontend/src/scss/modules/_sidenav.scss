@@ -172,6 +172,16 @@
         color: #fff;
       }
     }
+    &.disabled {
+      a {
+        pointer-events: none;
+      }
+      .sidenav__link {
+        background-color: darken($blue, 3%);
+        
+        color: rgb(151, 151, 151);
+      }
+    }
     &:hover {
       .sidenav__sublinks {
         max-height: 700px;
