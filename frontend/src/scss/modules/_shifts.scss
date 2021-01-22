@@ -286,11 +286,9 @@
   &__text {
     text-transform: capitalize;
 
-    justify-self: center;
-    align-self: center;
     color: white;
     @include wi-mq(laptop) {
-      font-size: 14px;
+      font-size: 12px;
     }
   }
   &__shift {
@@ -401,7 +399,6 @@
   &__shift-noshift {
     @extend .shift__shift;
     background: #e0e0e0;
-    justify-content: center;
   }
   &__add {
     cursor: pointer;
