@@ -13,7 +13,7 @@ const Stats = ({type, employee}) => {
     let user = useSelector((state) => state.auth.user)
     const dispatch = useDispatch();
 
-    const [currentFilter, setCurrentFilter] = useState("sites")
+    const [currentFilter, setCurrentFilter] = useState("site")
 
     let id = type == "business" ? current[currentFilter] : employee ? employee : user.id;
 

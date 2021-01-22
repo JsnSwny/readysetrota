@@ -67,7 +67,7 @@ const Employee = (props) => {
           {/* {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />} */}
         </div>
         
-        <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>
+        <p className="employee__hours">{getAllShifts(employee.id)} Hours {user.business && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
       </div>
   );
 };
