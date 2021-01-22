@@ -18,13 +18,15 @@ const UpcomingShifts = (props) => {
     const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
 
     let business = useSelector((state) => state.auth.business);
+
+    let published_shifts = currentShifts.filter((item) => item.published)
     
 
     return (
         <div className="dashboard__block">
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
-              {currentShifts.filter((item) => item.published).length > 0 && (
+              {published_shifts.length > 0 && (
                 <a
                   className="btn-4"
                   target="_blank"
@@ -34,7 +36,7 @@ const UpcomingShifts = (props) => {
                 </a>
               )}
             </div>
-            {currentShifts.length > 0 ? (
+            {published_shifts.length > 0 ? (
               <div className="dashboard__block-container">
                 <div className="dashboard__table-heading table">
                   <p className="short">Date</p>
@@ -44,7 +46,7 @@ const UpcomingShifts = (props) => {
                   <p className="short">Business</p>
                 </div>
 
-                {currentShifts.map((item) => (
+                {published_shifts.map((item) => (
                   <Fragment key={item.id}>
                     {!item.published && !business ? (
                       ""
@@ -88,7 +90,7 @@ const UpcomingShifts = (props) => {
 
             <Pagination
               itemsPerPage={shiftsPerPage}
-              totalItems={shifts.length}
+              totalItems={published_shifts.length}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
             />

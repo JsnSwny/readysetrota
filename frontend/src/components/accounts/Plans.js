@@ -7,7 +7,6 @@ import Loading from "../common/Loading";
 import { getCustomer } from "../../actions/payments";
 // import { getDepartments } from "../../actions/employees";
 import { Link } from "react-router-dom";
-import Header from "../layout/Header"
 
 const Plans = () => {
   const dispatch = useDispatch();

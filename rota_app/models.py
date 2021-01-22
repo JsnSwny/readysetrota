@@ -89,6 +89,7 @@ class Shift(models.Model):
     published = models.BooleanField(default=False)
     owner = models.ForeignKey(User, related_name="shifts", on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
+    positions = models.ManyToManyField(Position, related_name="shift_positions", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
     

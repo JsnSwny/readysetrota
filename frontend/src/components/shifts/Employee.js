@@ -37,9 +37,8 @@ const Employee = (props) => {
   };
 
   return (
-    <div className="container-left">
       <div
-        className={`employee__wrapper ${
+        className={`employee__wrapper container-left ${
           !user.business &&
           current_employee &&
           current_employee.id == employee.id
@@ -70,7 +69,6 @@ const Employee = (props) => {
         
         <p className="employee__hours">{getAllShifts(employee.id)} Hours</p>
       </div>
-    </div>
   );
 };
 

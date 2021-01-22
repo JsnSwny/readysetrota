@@ -80,7 +80,7 @@
   margin: 0 2px;
   display: flex;
   flex-direction: column;
-  height: 100px;
+  height: 100%;
   align-self: flex-start;
   &:first-child {
     margin: 0 2px 0 4px;
@@ -100,7 +100,7 @@
   justify-content: flex-end;
   align-items: center;
   margin-top: -20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 600px) {
