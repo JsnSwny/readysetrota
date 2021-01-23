@@ -12,8 +12,6 @@ const RotaBar = (props) => {
     showAvailabilities,
     setShowAvailabilities,
     scrollPosition,
-    setTemplate,
-    template,
   } = props;
 
   // Selectors
@@ -87,23 +85,6 @@ const RotaBar = (props) => {
               <i className="fas fa-arrow-left"></i>
               <p>{formatDate(date, -dateRange - 1, true)}</p>
             </div>
-
-            {/* TEMPLATE VIEW */}
-            {/* <div
-              onClick={() => {
-                setTemplate(!template);
-              }}
-              className="dates__mobile-item"
-            >
-              <i
-                className={`${
-                  template ? "fas fa-calendar-check" : "fas fa-calendar-times"
-                }`}
-              ></i>
-              <p>Template View</p>
-            </div> */}
-
-            {/* EXPORT SHIFTS */}
             {(current_employee || isSiteAdmin(user.id)) && (
               <a
                 className={`dates__mobile-item ${

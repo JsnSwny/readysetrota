@@ -52,7 +52,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
             <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
                 <i onClick={() => {
                     setSidebarOpen(!sidebarOpen);
-                }} class={`fas fa-bars`}></i>
+                }} className={`fas fa-bars`}></i>
                 <div className="sidenav__content">
                     <div className="sidenav__links">
                         <NavLink  toggleNav={toggleNav} link="/" icon="fas fa-home" title="Home" />
@@ -72,7 +72,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                 
                 <i onClick={() => {
                     setSidebarOpen(!sidebarOpen);
-                }} class={`fas fa-bars`}></i>
+                }} className={`fas fa-bars`}></i>
                 <div className="sidenav__content">
                     <div className="sidenav__profile-pic flex-container--center-vh">
                         {userName[0]}
@@ -98,7 +98,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         <div className={`sidenav__link-container`}>
                             <div className="sidenav__link">
                                 <div className="sidenav__link-text">
-                                    <i class='fas fa-cogs'></i> Settings
+                                    <i className='fas fa-cogs'></i> Settings
                                 </div>
                             </div>
                             <div className="sidenav__sublinks">
@@ -117,7 +117,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                             
                                         }} className="sidenav__link">
                                             <div className="sidenav__link-text">
-                                                <i class="fas fa-times"></i> Cancel Premium
+                                                <i className="fas fa-times"></i> Cancel Premium
                                             </div>
                                         </div>
                                     </div>
@@ -130,7 +130,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                             }} 
                             className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
                             <div className="sidenav__link-text">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                <i className="fas fa-sign-out-alt"></i> Logout
                             </div>
                         </div>
                         <Link onClick={() => {toggleNav()}} className="sidenav__logo--bottom" to="/">

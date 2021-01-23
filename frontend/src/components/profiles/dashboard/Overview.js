@@ -9,7 +9,7 @@ const Overview = () => {
                     Overview
                 </p>
             </div>
-            <div class="overview flex-container--wrap">
+            <div className="overview flex-container--wrap">
                 <div className="overview__item flex-container--column-center">
                     <h4>Hours</h4>
                     <p>60</p>

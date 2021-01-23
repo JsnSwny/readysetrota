@@ -1,9 +1,12 @@
 import React, { Fragment, useState } from "react";
+import { useDispatch } from "react-redux";
 import { addDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import CreateShift from "../modals/CreateShift";
+import { updateShift } from "../../actions/shifts";
 
 const Shift = (props) => {
+  const dispatch = useDispatch();
   const {
     result,
     shifts,
@@ -15,13 +18,16 @@ const Shift = (props) => {
     setOpen,
     setUpdate,
     setType,
-    setShiftInfo
+    setShiftInfo,
+    current_employee,
+    setConfirmOpen,
+    setOnConfirm,
+    setMessage
   } = props;
 
   const [shiftDate, setShiftDate] = useState("");
 
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
-
   return (
     <Fragment>
       <div
@@ -59,8 +65,18 @@ const Shift = (props) => {
                 }}
                 className={`shift__wrapper ${admin ? "edit" : ""}`}
               >
-                <div className="flex-container--align-center">
-                  <p className="shift__time">
+                <div className="flex-container--align-center" onClick={() => {
+                  if(!employee && !admin) {
+                    setConfirmOpen(true);
+                    setMessage("Are you sure you want to take this shift?")
+                    setOnConfirm(() => () => {
+                      setConfirmOpen(false)
+                      dispatch(updateShift(shift.id, {...shift, employee_id: current_employee.id}))
+                      toast.success("You have accepted this shift")
+                    })
+                  }  
+                    }}>
+                  <p className={`shift__time ${!employee ? "open-shift" : ""}`}>
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>
                 </div>

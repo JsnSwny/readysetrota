@@ -81,7 +81,7 @@ const StaffPicker = (props) => {
 
         
       </div>
-      {loading.employees && <small class="loading-text">Loading staff...</small>}
+      {loading.employees && <small className="loading-text">Loading staff...</small>}
       {employees.length > 0 && (
         <div className="flex-container--wrap">
           <span onClick={() => {
@@ -106,7 +106,7 @@ const StaffPicker = (props) => {
               <div className="flex">
                 {item.user && (
                   <i
-                  class={`fas fa-crown ${isSiteAdmin(item.user) ? "site-admin" : isDepartmentAdmin(item.user) ? "department-admin" : ""}`}></i>
+                  className={`fas fa-crown ${isSiteAdmin(item.user) ? "site-admin" : isDepartmentAdmin(item.user) ? "department-admin" : ""}`}></i>
                 )}
                 
                 {business && !item.user && <CopyUUID employee={item} />}
@@ -117,7 +117,7 @@ const StaffPicker = (props) => {
                     setUpdate(item);
                     setType("Staff");
                   }}
-                  class="fas fa-edit"
+                  className="fas fa-edit"
                 ></i>)}
               </div>
               

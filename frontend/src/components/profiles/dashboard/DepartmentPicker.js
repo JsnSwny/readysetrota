@@ -46,7 +46,7 @@ const DepartmentPicker = (props) => {
             </div>
           </div>
           
-          {loading.departments && <small class="loading-text">Loading departments...</small>}
+          {loading.departments && <small className="loading-text">Loading departments...</small>}
 
           <div className="dashboard__wrapper">
             
@@ -67,7 +67,7 @@ const DepartmentPicker = (props) => {
                         setType("Department");
                         setUpdate(item);
                       }}
-                      class="fas fa-edit"
+                      className="fas fa-edit"
                     ></i>
                     )}
                     
@@ -88,7 +88,7 @@ const DepartmentPicker = (props) => {
                           }
                         }
                       }}
-                      class="fas fa-check-circle"
+                      className="fas fa-check-circle"
                     ></i>
                   </div>
                 </div>

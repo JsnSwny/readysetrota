@@ -1,7 +1,6 @@
 import React from "react";
 import AddShift from "./AddShift";
 import AddStaff from "../employees/AddStaff";
-import ShiftSwapModal from "./ShiftSwapModal";
 
 const CreateShift = (props) => {
   const {
@@ -12,7 +11,6 @@ const CreateShift = (props) => {
     type,
     staffPosition,
     shift,
-    shiftSwap,
     update,
     template,
     sidebarOpen

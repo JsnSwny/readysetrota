@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
+import PositionField from "../employees/PositionField";
 
 const AddShift = (props) => {
   const { date, employee, onClose, shift, template } = props;
@@ -11,6 +12,9 @@ const AddShift = (props) => {
   let current = useSelector(
     (state) => state.employees.current
   );
+  const [position, setPosition] = useState([]);
+  let departments = useSelector((state) => state.employees.departments);
+  let positions = useSelector((state) => state.employees.all_positions);
 
   let employees = useSelector((state) => state.employees.employees);
 
@@ -27,6 +31,7 @@ const AddShift = (props) => {
       setStartTime(shift.start_time);
       setEndTime(shift.end_time);
       setInfo(shift.info);
+      setPosition(shift.positions)
     }
   }, [shift]);
 
@@ -34,20 +39,21 @@ const AddShift = (props) => {
     return (
       shift1.start_time == shift2.start_time &&
       shift1.end_time == shift2.end_time &&
-      shift1.info == shift2.info
+      shift1.info == shift2.info && shift1.positions == shift2.positions
     );
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: employee.id,
+      employee_id: employee ? employee.id : null,
       start_time: startTime,
       end_time: endTime,
       info,
       date: shift ? shift.date : date,
       department_id: current.department,
-      published: false,
+      published: employee ? false : true,
+      position_id: employee ? [] : position.map(pos => pos.id),
     };
     shift
       ? compareShift(shift, shiftObj)
@@ -85,7 +91,8 @@ const AddShift = (props) => {
         Create Shift
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
-        <div className="staffForm__control">
+        {employee && (
+          <div className="staffForm__control">
           <label className="staffForm__label">Employee:</label>
           {employee ? (
             <input
@@ -109,6 +116,8 @@ const AddShift = (props) => {
             </select>
           )}
         </div>
+        )}
+        
         <div className="staffForm__times">
           <div className="staffForm__control">
             <label className="staffForm__label">Start Time:</label>
@@ -173,6 +182,13 @@ const AddShift = (props) => {
             </p>
           ))}
         </div>
+        {!employee && (
+          <div className="staffForm__control">
+            <label className="staffForm__label">Position(s):</label>
+            <PositionField many={true} departments={departments} position={position} setPosition={setPosition} positions={positions} />
+        </div>
+        )}
+        
 
         <div className="staffForm__control">
           <label className="staffForm__label">Info:</label>

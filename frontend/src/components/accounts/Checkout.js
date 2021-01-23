@@ -19,7 +19,6 @@ const Checkout = (props) => {
         dispatch(getCustomer(user.profile.stripe_id));
       }, []);
 
-    console.log(employeesAmount, amountPerMonth, period)
     const stripePromise = loadStripe(
         "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
       );

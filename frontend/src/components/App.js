@@ -74,7 +74,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <ToastContainer position="bottom-center" />
+        <ToastContainer position="bottom-center" autoClose={2500} />
         <CreateShift
           open={open}
           type={type}
@@ -94,7 +94,7 @@ const App = () => {
         <div className="sidenav__bar">
           <i onClick={() => {
               setSidebarOpen(!sidebarOpen);
-            }} class={`fas fa-bars`}></i>
+            }} className={`fas fa-bars`}></i>
         </div>
         <div className={`App ${sidebarOpen ? "open" : ""}`}>
           
@@ -105,7 +105,7 @@ const App = () => {
               component={Home}
               user_only_pass={true}
             />
-            <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} />
+            <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} confirmProps={confirmProps} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />
             <PrivateRoute admin={true} path="/staff-management" exact component={StaffManagement} modalProps={modalProps} />
             <PrivateRoute admin={true} path="/admin-panel" exact component={AdminPanel} />

@@ -8,7 +8,7 @@ const NavLink = (props) => {
             <Link onClick={() => {toggleNav()}} to={link}>
                 <div className="sidenav__link">
                     <div className="sidenav__link-text">
-                        <i class={icon}></i> {title}
+                        <i className={icon}></i> {title}
                     </div>
                 </div>
             </Link>

@@ -12,7 +12,7 @@ import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker";
 
-const StaffManagement = (props) => {
+const StaffManagement = ({modalProps}) => {
   const dispatch = useDispatch();
 
   let positions = useSelector((state) => state.employees.positions);
@@ -43,12 +43,12 @@ const StaffManagement = (props) => {
 
   return (
     <div className="dashboard container-2">
-      <SitePicker {...props} admin={true} />
-      <DepartmentPicker {...props} admin={true} />
+      <SitePicker {...modalProps} admin={true} />
+      <DepartmentPicker {...modalProps} admin={true} />
       {current.department != 0 && (
         <Fragment>
-            <PositionPicker {...props}/>
-            <StaffPicker {...props}/>
+            <PositionPicker {...modalProps}/>
+            <StaffPicker {...modalProps}/>
         </Fragment>
       )}
     </div>

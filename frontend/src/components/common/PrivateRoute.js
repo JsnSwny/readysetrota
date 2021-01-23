@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import Landing from "../landing/Landing";
 
-const PrivateRoute = ({ component: Component, modalProps, admin, ...rest }) => {
+const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, ...rest }) => {
   let auth = useSelector((state) => state.auth);
   let user = auth.user;
   let sites = useSelector((state) => state.employees.sites)
@@ -49,7 +49,7 @@ const PrivateRoute = ({ component: Component, modalProps, admin, ...rest }) => {
             }
           }
             
-          return <Component {...props} {...modalProps} />;
+          return <Component {...props} modalProps={modalProps} confirmProps={confirmProps} />;
         }
       }}
     />

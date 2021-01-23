@@ -57,7 +57,7 @@ const SitePicker = (props) => {
           </Link>
         </Fragment>
       )}
-      {loading.sites && <small class="loading-text">Loading sites...</small>}
+      {loading.sites && <small className="loading-text">Loading sites...</small>}
       
       <div className="dashboard__wrapper">
         {sites.map((item) => (
@@ -77,7 +77,7 @@ const SitePicker = (props) => {
                     setUpdate(item);
                     setType("Site");
                   }}
-                  class="fas fa-edit"
+                  className="fas fa-edit"
                 ></i>
                 )}
                 
@@ -87,7 +87,7 @@ const SitePicker = (props) => {
                       dispatch(setSite(item.id));
                     }  
                   }}
-                  class="fas fa-check-circle"
+                  className="fas fa-check-circle"
                 ></i>
               </div>
             </p>

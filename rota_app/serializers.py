@@ -111,17 +111,18 @@ class ShiftListSerializer(serializers.ModelSerializer):
         return str(obj.start_time)[0:5]
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department', 'positions')
         depth = 1
 
 class ShiftSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     employee = EmployeeSerializer(read_only=True)
+    position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='positions', write_only=True, many=True, required=False)
 
-    employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
+    employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True, required=False, allow_null=True)
 
     department = DepartmentSerializer(read_only=True)
-    department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True)
+    department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True, required=False)
     
     class Meta:
         model = Shift

@@ -12,10 +12,10 @@ import ShiftTemplate from "./ShiftTemplate";
 import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
+import OpenShifts from "./OpenShifts";
 
-const Rota = (modalProps) => {
+const Rota = ({modalProps, confirmProps}) => {
 
-  const {setOpen, setType, setUpdate, setShiftInfo} = modalProps;
   const dispatch = useDispatch();
   const [employeesList, setEmployeesList] = useState([]);
   const [filterDate, setFilterDate] = useState("");
@@ -216,13 +216,16 @@ const Rota = (modalProps) => {
     
   }
 
+
   if(!loading.employees && employees.length == 0) {
     toast.warning("You do not currently have any employees to manage in this department")
     return <Redirect to="/staff-management" />
   }
 
+  let openShifts = !user.business && shifts_list.filter(item => item.employee == null && item.positions.some(pos => current_employee.position.map(empPos => empPos.id).includes(pos.id)));
+
   return (
-    <div class="rota">
+    <div className="rota">
       <RotaBar
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
@@ -248,6 +251,10 @@ const Rota = (modalProps) => {
                 scrollPosition >= 360 ? " fixed" : ""
               }`}
             >
+              {(openShifts.length > 0 || isSiteAdmin(user.id)) && (
+                <OpenShifts current_employee={current_employee} modalProps={modalProps} confirmProps={confirmProps} result={result} shifts={isSiteAdmin(user.id) ? shifts_list.filter(item => item.employee == null) : openShifts} />
+              )
+              }
               {sortEmployees().map((employee, i) => (
                 <div key={employee.id} className="rota__container">
                   <Employee

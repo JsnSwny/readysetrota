@@ -77,7 +77,7 @@ const MovableItem = ({position, props, index, movePosition}) => {
             setUpdate(position);
             setType("Position");
           }}
-          class="fas fa-edit"
+          className="fas fa-edit"
         ></i>
       </p>
       <p className="subtitle-sm" style={{ flex: "0" }}>
@@ -139,20 +139,17 @@ const PositionPicker = (props) => {
             }}
             className="fas fa-plus"
           ></i>
-        </div>
-        
+        </div>   
       </div>
-      {console.log(positions)}
-      {console.log(newPositions)}
       {!positionsEqual && (
         <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
           dispatch(updatePositionIndex(newPositions))
           toast.success("Position orders updated!")
         }}>
-          <i class="fas fa-save"></i> Save Position Order</p>
+          <i className="fas fa-save"></i> Save Position Order</p>
       )}
       
-      {loading.positions && <small class="loading-text">Loading positions...</small>}
+      {loading.positions && <small className="loading-text">Loading positions...</small>}
       <div className="dashboard__wrapper">
         <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
           {newPositions.map((item, i) => (

@@ -16,7 +16,7 @@ const StatsHeader = ({setStartDate, setEndDate, startDate, endDate, setBeforeDat
             <div className="dashboard__block--banner-container">
                 <p className="dashboard__block-title">Stats</p>
                 <div className="flex-container--nowidth">
-                <i onClick={setBeforeDate} class="fas fa-chevron-left"></i>
+                <i onClick={setBeforeDate} className="fas fa-chevron-left"></i>
                 <DatePicker
                     selected={startDate}
                     onChange={date => setStartDate(date)}
@@ -34,13 +34,13 @@ const StatsHeader = ({setStartDate, setEndDate, startDate, endDate, setBeforeDat
                     minDate={startDate}
                     dateFormat="dd/MM/yyyy"
                 />
-                    <i onClick={setAfterDate} class="fas fa-chevron-right"></i>
+                    <i onClick={setAfterDate} className="fas fa-chevron-right"></i>
                 </div>
     
                 <div className="dashboard__picker">
                     {type == "business" && (
                         <Fragment>
-                            <p onClick={() => setPickerOpen(!pickerOpen)} className="dashboard__picker-selected">{currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)} <i class="fas fa-sort-down"></i></p>
+                            <p onClick={() => setPickerOpen(!pickerOpen)} className="dashboard__picker-selected">{currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)} <i className="fas fa-sort-down"></i></p>
                         
                             <div className={`dashboard__dropper ${pickerOpen ? "open" : ""}`}>
                                 {user.business && <p className={`${currentFilter == "business" ? "active" : ""}`} onClick={() => setCurrentFilter("business")}>Business</p>}

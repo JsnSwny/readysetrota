@@ -111,7 +111,7 @@ const Plans = () => {
                     employeesAmount,
                     period
                   }
-              }}><span className="btn-6--lg">Checkout <i class="fas fa-shopping-cart"></i></span></Link>
+              }}><span className="btn-6--lg">Checkout <i className="fas fa-shopping-cart"></i></span></Link>
             </div>
             
             {/* <div className="form">

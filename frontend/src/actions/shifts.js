@@ -72,7 +72,7 @@ export const addShift = (shift) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {});
+    .catch((err) => {console.log(err.response)});
 };
 
 export const updateShift = (id, shift) => (dispatch, getState) => {
@@ -88,6 +88,7 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     })
 
     .catch((err) => {
+      console.log(err.response)
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };

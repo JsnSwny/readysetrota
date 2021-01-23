@@ -256,6 +256,12 @@
   display: flex;
   margin: 4px 0;
   min-height: 75px;
+  &.open-shifts {
+    margin-bottom: 20px;
+    .employee__name {
+      font-weight: bold;
+    }
+  }
 }
 
 .shiftList {
@@ -379,6 +385,9 @@
   &__time {
     font-size: 16px;
     margin-right: 10px;
+    &.open-shift {
+      cursor: pointer;
+    }
     @include wi-mq(laptop) {
       font-size: 12px;
     }

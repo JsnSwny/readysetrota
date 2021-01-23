@@ -7,7 +7,7 @@ const AddShiftButton = (props) => {
   return (
     (!limit || employee.id <= limit) && (
       <Fragment>
-        <div class={`flex-container`}>
+        <div className={`flex-container`}>
           <p
             onClick={() => {
               setOpen(true);

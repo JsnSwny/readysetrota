@@ -8,7 +8,7 @@ import { getStats } from "../../../../actions/stats";
 const Stats = ({type, employee}) => {
     let stats = useSelector((state) => state.stats.stats);
     const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 } ));
-    const [endDate, setEndDate] = useState(addDays(new Date(), 6));
+    const [endDate, setEndDate] = useState(addDays(startDate, 6));
     let current = useSelector((state) => state.employees.current)
     let user = useSelector((state) => state.auth.user)
     const dispatch = useDispatch();

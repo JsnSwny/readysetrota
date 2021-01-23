@@ -94,7 +94,7 @@ const StaffProfile = (props) => {
   }
 
   return (   
-    <div class="dashboard container-2">
+    <div className="dashboard container-2">
       {!id_param && (
         <Fragment>
           <SitePicker {...props} />
