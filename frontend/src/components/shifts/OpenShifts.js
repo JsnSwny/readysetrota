@@ -7,9 +7,7 @@ import NoShift from "./NoShift";
 const OpenShifts = ({current_employee, result, modalProps, shifts, confirmProps}) => {
     let sites = useSelector((state) => state.employees.sites);
     let current = useSelector((state) => state.employees.current)
-    const isSiteAdmin = (user_id) => {
-        return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-      }
+    let siteAdmin = useSelector((state) => state.employees.site_admin);
 
     let user = useSelector((state) => state.auth.user);
     return (
@@ -31,7 +29,7 @@ const OpenShifts = ({current_employee, result, modalProps, shifts, confirmProps}
                         format_date,
                         result,
                         available: "unselected",
-                        admin: isSiteAdmin(user.id)
+                        admin: siteAdmin
                     };
 
                     if(shifts.filter(item => item.date == format_date).length > 0) {

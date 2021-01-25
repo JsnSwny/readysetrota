@@ -44,9 +44,7 @@ const Rota = ({modalProps, confirmProps}) => {
   let width = useSelector((state) => state.responsive.width);
   let parsedDate = parseISO(date, "dd-MM-yyyy");
 
-  const isSiteAdmin = (user_id) => {
-    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-  }
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
@@ -142,7 +140,7 @@ const Rota = ({modalProps, confirmProps}) => {
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
       return obj.employee && obj.employee.id === employee && obj.date === date
-        ? isSiteAdmin(user.id)
+        ? siteAdmin
           ? !obj.published || obj.published
           : obj.published
         : "";
@@ -223,7 +221,7 @@ const Rota = ({modalProps, confirmProps}) => {
   }
 
   let openShifts = !user.business && shifts_list.filter(item => item.employee == null && item.positions.some(pos => current_employee.position.map(empPos => empPos.id).includes(pos.id)));
-  if(!isSiteAdmin(user.id)) {
+  if(!siteAdmin) {
     let employeeShifts = shifts_list.filter(item => item.employee &&  item.employee.id == current_employee.id)
     // console.log(employeeShifts)
     // openShifts.filter()
@@ -256,8 +254,8 @@ const Rota = ({modalProps, confirmProps}) => {
                 scrollPosition >= 360 ? " fixed" : ""
               }`}
             >
-              {(openShifts.length > 0 || isSiteAdmin(user.id)) && (
-                <OpenShifts current_employee={current_employee} modalProps={modalProps} confirmProps={confirmProps} result={result} shifts={isSiteAdmin(user.id) ? shifts_list.filter(item => item.employee == null) : openShifts} />
+              {(openShifts.length > 0 || siteAdmin) && (
+                <OpenShifts current_employee={current_employee} modalProps={modalProps} confirmProps={confirmProps} result={result} shifts={siteAdmin ? shifts_list.filter(item => item.employee == null) : openShifts} />
               )
               }
               {sortEmployees().map((employee, i) => (
@@ -281,7 +279,7 @@ const Rota = ({modalProps, confirmProps}) => {
                         employee,
                         showAvailabilities,
                         filterDate,
-                        admin: isSiteAdmin(user.id)
+                        admin: siteAdmin
                       };
 
                       return shifts.length > 0 ? (

@@ -31,9 +31,7 @@ const StaffProfile = (props) => {
     (state) => state.employees.current
   );
     
-  const isSiteAdmin = (user_id) => {
-    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-  }
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
 
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
@@ -60,7 +58,7 @@ const StaffProfile = (props) => {
 
   useEffect(() => {
     if(current.site > 0) {
-      if(isSiteAdmin(user.id)) {
+      if(siteAdmin) {
         dispatch(getHolidays(current.site));
       }
     }
@@ -89,7 +87,7 @@ const StaffProfile = (props) => {
   }
 
 
-  if (!isSiteAdmin(user.id) && id_param) {
+  if (!siteAdmin && id_param) {
     return <Redirect to="" />;
   }
 
@@ -107,7 +105,7 @@ const StaffProfile = (props) => {
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />
           
-          <HolidayRequest holidays={holidays} admin={isSiteAdmin(user.id)} />
+          <HolidayRequest holidays={holidays} admin={siteAdmin} />
           {plan == "P" && <Availability employee={currentEmployee} />}
         </Fragment>
       )}

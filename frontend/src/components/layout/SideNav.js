@@ -29,9 +29,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
 
     const [userName, setUserName] = useState("");
 
-    const isSiteAdmin = (user_id) => {
-        return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-    }
+    let siteAdmin = useSelector((state) => state.employees.site_admin);
 
     useEffect(() => {
         if(user) {
@@ -91,10 +89,10 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         <div className={`sidenav__link-container`}>
                             <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} />
                             <div className="sidenav__sublinks">
-                            {isSiteAdmin(user.id) && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
+                            {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
                             </div>
                         </div>
-                        {isSiteAdmin(user.id) && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
+                        {siteAdmin && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} />
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}

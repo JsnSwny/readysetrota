@@ -6,13 +6,7 @@ import Landing from "../landing/Landing";
 
 const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, ...rest }) => {
   let auth = useSelector((state) => state.auth);
-  let user = auth.user;
-  let sites = useSelector((state) => state.employees.sites)
-  let current = useSelector((state) => state.employees.current)
-
-  const isSiteAdmin = (user_id) => {
-    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-}
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
 
 
   const { computedMatch } = rest;
@@ -38,7 +32,7 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
           }
         } else {
           if(admin) {
-            if(!isSiteAdmin(user.id))  {
+            if(!siteAdmin)  {
               return (
                 <Redirect
                   to={{

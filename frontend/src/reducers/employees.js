@@ -50,6 +50,7 @@ const initialState = {
       : 0,  },
   uuid_success: false,
   business: { plan: "F" },
+  site_admin: false
 };
 
 export default function (state = initialState, action) {
@@ -66,13 +67,19 @@ export default function (state = initialState, action) {
         holidays: action.payload,
       };
     case GET_SITES:
+    let current_site = state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site;
+  
+    const isSiteAdmin = (user) => {
+        return user.business ? true : action.payload.find(site => site.id == current_site) ? (action.payload.find(site => site.id == current_site).admins.includes(user.id)) : false;
+      }
       return {
         ...state,
         sites: action.payload,
         current: {
           ...state.current,
-          site: state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site
-        }
+          site: current_site
+        },
+        site_admin: isSiteAdmin(action.user)
       };
 
     case ADD_SITE:
@@ -158,6 +165,14 @@ export default function (state = initialState, action) {
         ),
       };
     case GET_EMPLOYEES:
+      // let emp = action.payload;
+      if(!state.site_admin) {
+        action.payload.forEach((item => {
+          delete item.wage_type;
+          delete item.wage;
+        }))
+      }
+      
       return {
         ...state,
         employees: action.payload,

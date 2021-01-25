@@ -41,11 +41,13 @@ import { tokenConfig } from "./auth";
 export const getSites = () => (dispatch, getState) => {
   let current_site = getState().employees.current.site
   let current_department = getState().employees.current.department
+  let user = getState().auth.user
 
   axios.get(`/api/sites/?current_department=${current_department}&current_site=${current_site}`, tokenConfig(getState)).then((res) => {
     dispatch({
       type: GET_SITES,
       payload: res.data,
+      user: user
     });
     dispatch({
       type: SET_BUSINESS,
