@@ -231,8 +231,8 @@ class Charge(APIView):
                 unit_amount=request.data['charge'],
                 currency="gbp",
                 recurring={"interval": request.data['period']},
-                product="prod_HwsJxT2Z3YkyAt"
-                # product="prod_Hzpy6ipUG3MsR3",
+                # product="prod_HwsJxT2Z3YkyAt"
+                product="prod_Hzpy6ipUG3MsR3",
             )
 
             subscription = stripe.Subscription.create(

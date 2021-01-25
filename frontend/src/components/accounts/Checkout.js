@@ -19,9 +19,12 @@ const Checkout = (props) => {
         dispatch(getCustomer(user.profile.stripe_id));
       }, []);
 
+    // const stripePromise = loadStripe(
+    //     "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
+    //   );
     const stripePromise = loadStripe(
-        "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
-      );
+    "pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV"
+    );
     return (
         <div className="premium__container">
             {loading.charge && <Loading />}

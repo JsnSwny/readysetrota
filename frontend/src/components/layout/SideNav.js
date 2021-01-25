@@ -37,7 +37,10 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
         if(user) {
             user.business ?
                 setUserName(user.business.name) : setUserName(`${user.email}`);
-            dispatch(getCustomer(user.profile.stripe_id))
+            if(user.profile) {
+                dispatch(getCustomer(user.profile.stripe_id))
+            }
+            
         }
     }, [user]);
 
@@ -104,7 +107,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                             <div className="sidenav__sublinks">
                                 <NavLink toggleNav={toggleNav} link="/changepassword" icon="fas fa-lock" title="Change password" />
                                 {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
-                                {subscription && !subscription.cancel_at_period_end && (
+                                {subscription && !subscription.cancel_at_period_end && user.profile && (
                                     <div className={`sidenav__link-container`}>
                                         <div onClick={() => {
                                             setConfirmOpen(true);
@@ -124,7 +127,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                 )}
                             </div>
                         </div>
-                        {user.business && <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" disabled={user.business.plan == "P"} />}
+                        {user.business && user.profile && <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" disabled={user.business.plan == "P"} />}
                         <div onClick={() => {
                                 dispatch(logout());
                             }} 
