@@ -109,7 +109,7 @@
     margin-top: 30px;
   }
   &__links {
-    margin: 60px 0;
+    margin: 30px 0;
     margin-bottom: -3px;
     &--bottom {
       position: absolute;
@@ -120,13 +120,13 @@
   }
   &__link {
     background-color: lighten($blue, 10%);
-    padding: 35px 0;
+    padding: 25px 0;
     cursor: pointer;
     color: rgb(212, 212, 212);
     transition: 0.2s color ease-in-out, 0.2s background-color ease-in-out;
     margin-bottom: 3px;
     @include wi-mq(laptop) {
-      padding: 20px 0;
+      padding: 15px 0;
     }
     &:hover {
       color: #fff;
@@ -135,20 +135,20 @@
     &-text {
       width: 80%;
       margin: 0 auto;
-      font-size: 18px;
+      font-size: 16px;
       display: flex;
       align-items: center;
       @include wi-mq(laptop) {
-        font-size: 14px;
+        font-size: 12px;
         width: 85%;
       }
     }
     i {
       width: 45px;
-      font-size: 24px;
+      font-size: 18px;
       @include wi-mq(laptop) {
         width: 35px;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
   }

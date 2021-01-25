@@ -36,11 +36,11 @@ const OpenShifts = ({current_employee, result, modalProps, shifts, confirmProps}
 
                     if(shifts.filter(item => item.date == format_date).length > 0) {
                         return (
-                            <Shift current_employee={current_employee} {...modalProps} {...confirmProps} {...props} shifts={shifts.filter(item => item.date == format_date)} />
+                            <Shift key={result} current_employee={current_employee} {...modalProps} {...confirmProps} {...props} shifts={shifts.filter(item => item.date == format_date)} />
                         )
                     } else {
                         return (
-                            <NoShift {...modalProps} {...props} />
+                            <NoShift key={result} {...modalProps} {...props} />
                         )
                     }
                     

@@ -66,9 +66,9 @@ const Landing = () => {
           <h2 className="landing__section-title">how it works</h2>
           <iframe
             src="https://www.youtube.com/embed/vLT36DLVaSo"
-            frameborder="0"
+            frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
+            allowFullScreen
           ></iframe>
         </div>
       </section>

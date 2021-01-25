@@ -58,10 +58,9 @@ export const cancelSubscription = (customer_id) => (dispatch, getState) => {
 
 export const getCustomer = (customer_id) => (dispatch, getState) => {
   axios.post(`getCustomer/`, { customer_id: customer_id }).then((res) => {
-    console.log(res.data)
     dispatch({
       type: GET_SUBSCRIPTION,
       payload: res.data,
     });
-  });
+  }).catch(err => console.log(err.response));
 };

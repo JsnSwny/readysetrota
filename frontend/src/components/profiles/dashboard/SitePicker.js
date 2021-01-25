@@ -67,7 +67,7 @@ const SitePicker = (props) => {
               (current.site == item.id || current.site == 0) && "current"
             }`}
           >
-            <p className="title-md bold flex-container--between-center">
+            <div className="title-md bold flex-container--between-center">
               {item.name}{" "}
               <div className="flex">
                 {admin && (
@@ -80,8 +80,8 @@ const SitePicker = (props) => {
                   className="fas fa-edit"
                 ></i>
                 )}
-                
-                <i
+                {current.site != item.id && (
+                  <i
                   onClick={() => {
                     if(current.site != item.id) {
                       dispatch(setSite(item.id));
@@ -89,8 +89,10 @@ const SitePicker = (props) => {
                   }}
                   className="fas fa-check-circle"
                 ></i>
+                )}
+                
               </div>
-            </p>
+            </div>
           </div>
         ))}
       </div>

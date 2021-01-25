@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
@@ -131,8 +131,14 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
-            <p className="subtitle-sm">{item.wage_type == "H" ? "Hourly" : "Salary"}</p>
-            <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+            {["H", "S"].includes(item.wage_type) && (
+              <Fragment>
+                <p className="subtitle-sm">{item.wage_type == "H" ? "Hourly" : "Salary"}</p>
+                <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+              </Fragment>
+            )}
+            
+            
           </div>
         ))}
       </div>

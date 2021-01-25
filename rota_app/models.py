@@ -72,11 +72,12 @@ class Employee(models.Model):
     WAGE_TYPES = [
         ("H", 'Hourly'),
         ("S", 'Salary'),
+        ("N", 'None')
     ]
     wage_type = models.CharField(
         max_length=1,
         choices=WAGE_TYPES,
-        default="H",
+        default="N",
     )
 
 class Shift(models.Model):

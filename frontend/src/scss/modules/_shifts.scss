@@ -2,7 +2,7 @@
   position: relative;
   &.container {
     @include wi-mq(mobile) {
-      margin-top: 0;
+      margin-top: 20px;
     }
   }
   .item-block {
@@ -445,9 +445,6 @@
     }
   }
   .employee {
-    &__name {
-      font-size: 14px;
-    }
     &__wrapper {
       padding: 0 10px;
     }
@@ -493,7 +490,6 @@
       &-item {
         max-width: none;
         flex: 1;
-        height: 100%;
         border-right: none;
         &:not(:last-child) {
           border-right: $border 3px solid;

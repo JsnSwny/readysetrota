@@ -46,6 +46,7 @@ const HolidayRequest = (props) => {
       <div className="flex-container--wrap">
         {filters.map((item) => (
           <span
+            key={item}
             className={`btn-toggle--sm ${filter == item && "active"}`}
             onClick={() => {
               setFilter(item);
@@ -65,7 +66,7 @@ const HolidayRequest = (props) => {
             {currentHolidays.map(
               (item) =>
                 item.name == "holiday" && (
-                  <div
+                  <div key={item.id}
                     className={`dashboard__holiday ${
                       item.approved
                         ? "approved"

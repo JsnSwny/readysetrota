@@ -4,6 +4,7 @@ import { addDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import CreateShift from "../modals/CreateShift";
 import { updateShift } from "../../actions/shifts";
+import { toast } from "react-toastify";
 
 const Shift = (props) => {
   const dispatch = useDispatch();

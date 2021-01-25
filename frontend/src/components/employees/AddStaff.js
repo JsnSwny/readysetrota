@@ -43,7 +43,7 @@ const AddStaff = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [wage, setWage] = useState(0.00);
-  const [wageType, setWageType] = useState("")
+  const [wageType, setWageType] = useState("N")
   const [position, setPosition] = useState([]);
   const [siteAdmin, setSiteAdmin] = useState(false);
   const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
@@ -203,6 +203,7 @@ const AddStaff = (props) => {
                 onChange={(e) => setFirstName(e.target.value)}
                 autoFocus
                 value={firstName}
+                required
               ></input>
               <p className="error">{errors.name}</p>
             </div>
@@ -214,12 +215,21 @@ const AddStaff = (props) => {
                 name="last_name "
                 onChange={(e) => setLastName(e.target.value)}
                 value={lastName}
+                required
               ></input>
               <p className="error">{errors.name}</p>
             </div>
             <div className="staffForm__control">
               <label className="staffForm__label">Wage Type:</label>
               <div className="flex-container--wrap">
+                <span
+                    className={`btn-toggle--sm ${wageType == "N" && "active"}`}
+                    onClick={() => {
+                      setWageType("N");
+                    }}
+                  >
+                    None
+                </span>
                 <span
                     className={`btn-toggle--sm ${wageType == "H" && "active"}`}
                     onClick={() => {
@@ -238,8 +248,9 @@ const AddStaff = (props) => {
                 </span>
               </div>
             </div>
-            <div className="staffForm__control">
-              <label className="staffForm__label">Wage:</label>
+            {["S", "H"].includes(wageType) && (
+              <div className="staffForm__control">
+              <label className="staffForm__label">{wageType == "H" ? "Hourly Rate" : "Salary"}:</label>
               <input
                 className="staffForm__input"
                 type="number"
@@ -250,6 +261,8 @@ const AddStaff = (props) => {
               ></input>
               <p className="error">{errors.name}</p>
             </div>
+            )}
+            
             <div className="staffForm__control">
               <label className="staffForm__label">Position(s):</label>
               <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
@@ -282,6 +295,7 @@ const AddStaff = (props) => {
                 onChange={(e) => setName(e.target.value)}
                 value={name}
                 autoFocus
+                required
               ></input>
               <p className="error">{errors.name}</p>
             </div>

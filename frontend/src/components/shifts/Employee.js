@@ -2,7 +2,6 @@ import React from "react";
 import { parse, differenceInMinutes, addDays } from "date-fns";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CopyUUID from "../common/CopyUUID";
 
 const Employee = (props) => {
   const {
@@ -12,13 +11,6 @@ const Employee = (props) => {
     currentDepartment,
     current_employee,
   } = props;
-
-  let current = useSelector((state) => state.employees.current)
-  let sites = useSelector((state) => state.employees.sites);
-
-  const isSiteAdmin = (user_id) => {
-    return user.business ? true : sites.find(site => site.id == current.site) ? (sites.find(site => site.id == current.site).admins.includes(user_id)) : false;
-  }
 
   const getAllShifts = (employee) => {
     let hours = 0;
@@ -54,7 +46,6 @@ const Employee = (props) => {
               )
           )}
         </p>
-        {/* <p className="employee__hours">{employee.position.find(item => item.department.id == currentDepartment).name}</p> */}
         <div className="employee__name-container">
         
           <Link to={`/profile/${employee.id}`}>
@@ -63,11 +54,9 @@ const Employee = (props) => {
               <span className="employee__surname"> {employee.last_name}</span>
             </p>
           </Link>
-
-          {/* {isSiteAdmin(user.id) && !employee.user && <CopyUUID employee={employee} />} */}
         </div>
         
-        <p className="employee__hours">{getAllShifts(employee.id)} Hours {user.business && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
+        <p className="employee__hours">{getAllShifts(employee.id)} Hours {user.business && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
       </div>
   );
 };

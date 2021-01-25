@@ -155,7 +155,7 @@ const Rota = ({modalProps, confirmProps}) => {
       return true;
     }
     let employeesOnDay = shifts_list.filter((obj) => {
-      return obj.date == date;
+      return obj.date == date && obj.employee;
     });
     let newEmployees = [];
     employeesOnDay.map((obj) => {
@@ -223,6 +223,11 @@ const Rota = ({modalProps, confirmProps}) => {
   }
 
   let openShifts = !user.business && shifts_list.filter(item => item.employee == null && item.positions.some(pos => current_employee.position.map(empPos => empPos.id).includes(pos.id)));
+  if(!isSiteAdmin(user.id)) {
+    let employeeShifts = shifts_list.filter(item => item.employee &&  item.employee.id == current_employee.id)
+    // console.log(employeeShifts)
+    // openShifts.filter()
+  }
 
   return (
     <div className="rota">
@@ -280,9 +285,9 @@ const Rota = ({modalProps, confirmProps}) => {
                       };
 
                       return shifts.length > 0 ? (
-                        <Shift {...modalProps} {...props} shifts={shifts}  />
+                        <Shift key={result} {...modalProps} {...props} shifts={shifts}  />
                       ) : (
-                        <NoShift {...modalProps} {...props} />
+                        <NoShift key={result} {...modalProps} {...props} />
                       );
                     })}
                   </div>

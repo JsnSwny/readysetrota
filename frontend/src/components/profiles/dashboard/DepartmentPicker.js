@@ -71,7 +71,8 @@ const DepartmentPicker = (props) => {
                     ></i>
                     )}
                     
-                    <i
+                    {current.department != item.id && (
+                      <i
                       onClick={() => {
                         if (
                           plan == "F" &&
@@ -90,6 +91,8 @@ const DepartmentPicker = (props) => {
                       }}
                       className="fas fa-check-circle"
                     ></i>
+                    )}
+                    
                   </div>
                 </div>
                 <p className="subtitle-sm" style={{ flex: "0" }}>

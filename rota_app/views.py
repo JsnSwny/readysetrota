@@ -258,7 +258,10 @@ class getCustomer(APIView):
 
     def post(self, request, format=None):
         stripe.api_key = STRIPE_SECRET_KEY
-        customer = stripe.Customer.retrieve(request.data['customer_id'])
+        try:
+            customer = stripe.Customer.retrieve(request.data['customer_id'])
+        except stripe.error.InvalidRequestError as e:
+            return Response(False)
 
         subscriptions = stripe.Subscription.list(
             customer=request.data['customer_id'])['data']
