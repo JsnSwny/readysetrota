@@ -28,6 +28,8 @@ const Employee = (props) => {
     return hours;
   };
 
+  let site_admin = useSelector((state) => state.employees.site_admin);
+
   return (
       <div
         className={`employee__wrapper container-left ${
@@ -56,7 +58,7 @@ const Employee = (props) => {
           </Link>
         </div>
         
-        <p className="employee__hours">{getAllShifts(employee.id)} Hours {user.business && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
+        <p className="employee__hours">{getAllShifts(employee.id)} Hours {site_admin && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
       </div>
   );
 };

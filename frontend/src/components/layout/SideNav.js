@@ -88,7 +88,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                     )}
                     <div className="sidenav__links">
                         <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
-                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} dropdown={true} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
+                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
                             <div className="sidenav__sublinks">
                             {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
                             </div>

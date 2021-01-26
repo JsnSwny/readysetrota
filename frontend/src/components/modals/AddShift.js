@@ -39,7 +39,7 @@ const AddShift = (props) => {
     return (
       shift1.start_time == shift2.start_time &&
       shift1.end_time == shift2.end_time &&
-      shift1.info == shift2.info && shift1.positions == shift2.positions
+      shift1.info == shift2.info && (shift2.position_id.length > 0 ? shift1.positions == shift2.positions : true)
     );
   };
 
