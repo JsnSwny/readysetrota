@@ -108,7 +108,8 @@ class Shift(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.wage:
-            self.wage = self.employee.wage
+            if self.employee:
+                self.wage = self.employee.wage
         super(Shift, self).save(*args, **kwargs)
 
 
