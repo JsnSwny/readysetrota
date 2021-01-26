@@ -88,7 +88,7 @@ const AddShift = (props) => {
   return (
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center", color: "black" }}>
-        Create Shift
+        {shift ? "Update Shift" : "Create Shift"}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
         {employee && (
