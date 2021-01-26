@@ -58,6 +58,7 @@ class PositionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+
 class BasicPositionSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Position

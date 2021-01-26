@@ -89,14 +89,22 @@ const Rota = ({modalProps, confirmProps}) => {
     widthUpdate();
   }, [width]);
 
+  useEffect(() => {
+    if(sites.length == 0) {
+      dispatch(getSites());
+    }
+    if(current.site > 0) {
+      dispatch(getDepartments());
+    }
+  }, [current.site]);
+
   const firstUpdateDepartment = useRef(true);
   useEffect(() => {
-    if(current.site > 0 && current.department > 0) {
+    if(current.department > 0 && current.site > 0) {
       dispatch(getEmployees());
-      dispatch(getSites());
-      dispatch(getDepartments());
+      dispatch(getPositions(true));
       dispatch(getPositions());
-  
+      dispatch(getPopularTimes());
       dispatch(getPopularTimes());
       if (firstUpdateDepartment.current) {
         widthUpdate();
@@ -105,7 +113,6 @@ const Rota = ({modalProps, confirmProps}) => {
   
       updateShifts(start_date, end_date);
     }
-    
   }, [current.department, current.site]);
 
   useEffect(() => {
