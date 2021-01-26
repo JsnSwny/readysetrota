@@ -28,6 +28,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
     const location = useLocation();
 
     const [userName, setUserName] = useState("");
+    const [navOpen, setNavOpen] = useState("")
 
     let siteAdmin = useSelector((state) => state.employees.site_admin);
 
@@ -86,8 +87,8 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         </Fragment>
                     )}
                     <div className="sidenav__links">
-                        <div className={`sidenav__link-container`}>
-                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} />
+                        <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
+                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} dropdown={true} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
                             <div className="sidenav__sublinks">
                             {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
                             </div>
@@ -96,12 +97,19 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} />
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
-                        <div className={`sidenav__link-container`}>
-                            <div className="sidenav__link">
-                                <div className="sidenav__link-text">
-                                    <i className='fas fa-cogs'></i> Settings
+                        <div className={`sidenav__link-container ${navOpen == 'settings' ? "open" : ""}`}>
+                            
+                                <div className="sidenav__link">
+                                <div className="no-link">
+                                    <div className="sidenav__link-text">
+                                        <i className='fas fa-cogs'></i> Settings
+                                    </div>
+                                    </div>
+                                    <i onClick={() => setNavOpen(`${navOpen != "settings" ? "settings": ""}`)} className="fas fa-chevron-down"></i>
+
                                 </div>
-                            </div>
+                            
+                            
                             <div className="sidenav__sublinks">
                                 <NavLink toggleNav={toggleNav} link="/changepassword" icon="fas fa-lock" title="Change password" />
                                 {!user.business && <NavLink toggleNav={toggleNav} link="/join" icon="fas fa-user-plus" title="Join" />}
@@ -129,7 +137,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         <div onClick={() => {
                                 dispatch(logout());
                             }} 
-                            className={`sidenav__link ${location.pathname == "/logout" ? "current" : ""}`}>
+                            className={`sidenav__link no-link ${location.pathname == "/logout" ? "current" : ""}`}>
                             <div className="sidenav__link-text">
                                 <i className="fas fa-sign-out-alt"></i> Logout
                             </div>
