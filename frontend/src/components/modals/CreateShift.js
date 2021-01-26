@@ -50,7 +50,8 @@ const CreateShift = (props) => {
   return (
     open && (
       <div className={`modal App ${sidebarOpen ? "open" : ""}`}>
-        <div className="modal__container">{getModal()}</div>
+        
+        <div className="modal__container"><i class="fas fa-times modal__close" onClick={() => onClose()}></i>{getModal()}</div>
       </div>
     )
   );

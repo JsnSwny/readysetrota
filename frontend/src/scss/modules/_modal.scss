@@ -1,4 +1,17 @@
 .modal {
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.5s ease transform;
+    &:hover {
+      color: $pink;
+      transform: rotate(90deg);
+    }
+    
+  }
   position: fixed;
   background-color: rgba(0, 0, 0, 0.6);
   left: 0;
@@ -16,6 +29,7 @@
   align-items: center;
   transition: 0.5s ease transform, 0.5s ease margin-left;
   &__container {
+    position: relative;
     max-height: 80%;
     overflow: auto;
     width: 60%;
