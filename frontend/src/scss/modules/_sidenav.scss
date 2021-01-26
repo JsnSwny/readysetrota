@@ -201,7 +201,7 @@
         max-height: 700px;
       }
     }
-    @include wi-mq(not-mobile) {
+    @include wi-mq(not-tablet) {
       
       &:hover {
         .sidenav__sublinks {

@@ -115,15 +115,14 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             
             hours += shift_length
 
-            if i.employee.wage_type == "H":
-                wage += float(i.employee.wage) * shift_length
+            wage += float(i.wage) * shift_length
 
     employees = []
         
-    if user_id:
-        employees = Employee.objects.filter(user__id=user_id)
-    if site_id:
-        employees = Employee.objects.filter(position__department__site=site_id)
+    # if user_id:
+    #     employees = Employee.objects.filter(user__id=user_id)
+    # if site_id:
+    #     employees = Employee.objects.filter(position__department__site=site_id)
 
     for i in employees:
         if i.wage_type == "S":

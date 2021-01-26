@@ -80,6 +80,14 @@ class Employee(models.Model):
         default="N",
     )
 
+    def save(self, *args, **kwargs):
+        shifts = Shift.objects.filter(date__gte=datetime.now(), employee__id=self.id)
+        for i in shifts:
+            i.wage = self.wage
+            i.save()
+
+        super(Employee, self).save(*args, **kwargs)
+
 class Shift(models.Model):
     employee = models.ForeignKey(Employee, related_name="shifts", on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField()
@@ -93,9 +101,16 @@ class Shift(models.Model):
     positions = models.ManyToManyField(Position, related_name="shift_positions", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
+    wage = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'
+
+    def save(self, *args, **kwargs):
+        if not self.wage:
+            self.wage = self.employee.wage
+        super(Shift, self).save(*args, **kwargs)
+
 
 class ShiftSwap(models.Model):
     swap_from = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="swap_from")
