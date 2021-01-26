@@ -69,7 +69,7 @@ export default function (state = initialState, action) {
     case GET_SITES:
     let current_site = state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site;
   
-    const isSiteAdmin = (user) => {
+    let isSiteAdminGet = (user) => {
         return user.business ? true : action.payload.find(site => site.id == current_site) ? (action.payload.find(site => site.id == current_site).admins.includes(user.id)) : false;
       }
       return {
@@ -79,7 +79,7 @@ export default function (state = initialState, action) {
           ...state.current,
           site: current_site
         },
-        site_admin: isSiteAdmin(action.user)
+        site_admin: isSiteAdminGet(action.user)
       };
 
     case ADD_SITE:
@@ -120,6 +120,9 @@ export default function (state = initialState, action) {
       return newState;
     case SET_SITE:
       localStorage.setItem("current_site", action.payload);
+      let isSiteAdmin = (user) => {
+        return user.business ? true : state.sites.find(site => site.id == action.payload) ? (state.sites.find(site => site.id == action.payload).admins.includes(user.id)) : false;
+      }
       return {
         ...state,
         current: {
@@ -128,7 +131,7 @@ export default function (state = initialState, action) {
           department: 0,
           business: state.sites.find(item => item.id == action.payload).business.id
         },
-        
+        site_admin: isSiteAdmin(action.user),
         departments: [],
         employees: [],
         positions: []

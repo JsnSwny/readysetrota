@@ -98,6 +98,7 @@ export const deleteSite = (id) => (dispatch, getState) => {
 
 export const setSite = (id) => (dispatch, getState) => {
   let isLoading = Object.keys(getState().loading).some(k => getState().loading[k]);
+  let user = getState().auth.user
   if(isLoading) {
     return false;
   }
@@ -105,6 +106,7 @@ export const setSite = (id) => (dispatch, getState) => {
   dispatch({
     type: SET_SITE,
     payload: id,
+    user: user
   });
 };
 
