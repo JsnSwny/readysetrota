@@ -47,6 +47,7 @@ const AddStaff = (props) => {
   const [position, setPosition] = useState([]);
   const [siteAdmin, setSiteAdmin] = useState(false);
   const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
+  const updateFormTitles = {"Staff": "Update Employee", "Department": "Update Department", "Position": "Update Position", "Site": "Update Site", "BusinessName": "Update your business name"}
 
 
   const isSiteAdmin = (user_id) => {
@@ -189,7 +190,7 @@ const AddStaff = (props) => {
   return (
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center" }}>
-        {formTitles[form]}
+        {update ? updateFormTitles[form] : formTitles[form]}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
         {form === "Staff" ? (
