@@ -43,12 +43,13 @@ const AdminPanel = (props) => {
   }, [current.site]);
 
   useEffect(() => {
-    if(current.department > 0) {
+    if(current.department > 0 && current.site > 0) {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
     }
-  }, [current.department]);
+  }, [current.department, current.site]);
+
   if(!loading.departments && departments.length == 0) {
         toast.warning(
             "You must create a department before you can manage staff"

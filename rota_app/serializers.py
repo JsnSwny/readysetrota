@@ -65,12 +65,9 @@ class BasicPositionSerializer(serializers.ModelSerializer):
         depth = 1
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    # shifts = EmployeeShiftSerializer(read_only=True, many=True)
     position = PositionSerializer(read_only=True, many=True)
     default_availability = serializers.JSONField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='position', write_only=True, many=True)
-    # owner = UserSerializer(read_only=True)
-    # user = UserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     class Meta:
@@ -79,6 +76,15 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
+    position = BasicPositionSerializer(read_only=True, many=True)
+    business = BusinessSerializer(read_only=True)
+    default_availability = serializers.JSONField()
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    class Meta:
+        model = Employee
+        fields = ('id', 'first_name', 'last_name', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability',)
+
+class AdminEmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()

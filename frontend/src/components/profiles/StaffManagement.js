@@ -34,12 +34,12 @@ const StaffManagement = ({modalProps}) => {
   }, [current.site]);
 
   useEffect(() => {
-    if(current.department > 0) {
+    if(current.department > 0 && current.site > 0) {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
     }
-  }, [current.department]);
+  }, [current.department, current.site]);
 
   return (
     <div className="dashboard container-2">

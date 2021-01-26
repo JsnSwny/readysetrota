@@ -53,6 +53,9 @@ export const getSites = () => (dispatch, getState) => {
       type: SET_BUSINESS,
       payload: res.data.length > 0 ? res.data[0].business : 0,
     });
+    dispatch({
+      type: UUID_RESET,
+    });
   });
 };
 
@@ -122,6 +125,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 
 export const getEmployees = () => (dispatch, getState) => {
   let current = getState().employees.current;
+  let site_admin = getState().employees.site_admin;
   let query = '';
 
   if(current.site > 0) {
@@ -130,12 +134,9 @@ export const getEmployees = () => (dispatch, getState) => {
   if(current.department > 0) {
     query += `&position__department=${current.department}`
   }
-  if(current.site == 0 && current.department == 0) {
-    query += `&business=${current.business}`
-  }
   axios
     .get(
-      `/api/employeelist/?${query}&ordering=first_name`,
+      `/api/employeelist${site_admin ? "admin" : ""}/?${query}&ordering=first_name`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -228,6 +229,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 // Get Positions
 export const getPositions = (all = false) => (dispatch, getState) => {
   let current = getState().employees.current;
+  let site_admin = getState().employees.site_admin;
 
   let query = '';
   if(current.site > 0) {
@@ -236,12 +238,9 @@ export const getPositions = (all = false) => (dispatch, getState) => {
   if(current.department > 0) {
     query += `&department=${current.department}`
   }
-  if(current.site == 0 && current.department == 0) {
-    query += `&business=${current.business}`
-  }
   axios
     .get(
-      `/api/positions/${
+      `/api/positionslist/${
         all
           ? `?department__site=${current.site}`
           : `?${query}`

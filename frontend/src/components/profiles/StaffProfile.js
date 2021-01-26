@@ -65,12 +65,12 @@ const StaffProfile = (props) => {
   }, [sites]);
 
   useEffect(() => {
-    if(current.department > 0) {
+    if(current.department > 0 && current.site > 0) {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
     }
-  }, [current.department]);
+  }, [current.department, current.site]);
 
   useEffect(() => {
     if(typeof(employee) !== 'undefined') {
@@ -82,11 +82,6 @@ const StaffProfile = (props) => {
     }
   }, [employee])
 
-  if(!loading.departments && departments.length == 0) {
-    return <Redirect to="/join" />
-  }
-
-
   if (!siteAdmin && id_param) {
     return <Redirect to="" />;
   }
@@ -96,11 +91,15 @@ const StaffProfile = (props) => {
       {!id_param && (
         <Fragment>
           <SitePicker {...props} />
-          <DepartmentPicker {...props} />
+          {current.site != 0 && (
+            <DepartmentPicker {...props} />
+          )}
+          
         </Fragment>
       )}
-      
-      <Stats type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
+      {current.site != 0 && (
+        <Fragment>
+          <Stats type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
       {current.department != 0 && currentEmployee && (
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />
@@ -109,6 +108,9 @@ const StaffProfile = (props) => {
           {plan == "P" && <Availability employee={currentEmployee} />}
         </Fragment>
       )}
+        </Fragment>
+      )}
+      
     </div>
   );
 };

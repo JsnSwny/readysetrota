@@ -1,6 +1,9 @@
 from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability, Site
 from rest_framework import viewsets, permissions
-from .serializers import ShiftSerializer, EmployeeSerializer, PositionSerializer, DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, ShiftListSerializer, EmployeeListSerializer, SiteSerializer
+from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer, 
+DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, 
+ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
+BasicPositionSerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -113,6 +116,9 @@ class EmployeeListViewSet(viewsets.ModelViewSet):
     filter_class = EmployeeFilter
     ordering_fields = ('first_name',)
 
+class AdminEmployeeListViewSet(EmployeeListViewSet, viewsets.ModelViewSet):
+    serializer_class = AdminEmployeeListSerializer
+
 class PositionFilter(django_filters.FilterSet):
     department = django_filters.NumberFilter()
     department__business = django_filters.NumberFilter()
@@ -147,6 +153,9 @@ class PositionViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = PositionFilter
     queryset = Position.objects.all()
+
+class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
+    serializer_class = BasicPositionSerializer
 
 class DepartmentFilter(django_filters.FilterSet):
     site__id = django_filters.NumberFilter()

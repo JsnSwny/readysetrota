@@ -91,19 +91,22 @@ const Rota = ({modalProps, confirmProps}) => {
 
   const firstUpdateDepartment = useRef(true);
   useEffect(() => {
-    dispatch(getEmployees());
-    dispatch(getSites());
-    dispatch(getDepartments());
-    dispatch(getPositions());
-
-    dispatch(getPopularTimes());
-    if (firstUpdateDepartment.current) {
-      widthUpdate();
-      return;
+    if(current.site > 0 && current.department > 0) {
+      dispatch(getEmployees());
+      dispatch(getSites());
+      dispatch(getDepartments());
+      dispatch(getPositions());
+  
+      dispatch(getPopularTimes());
+      if (firstUpdateDepartment.current) {
+        widthUpdate();
+        return;
+      }
+  
+      updateShifts(start_date, end_date);
     }
-
-    updateShifts(start_date, end_date);
-  }, [current.department]);
+    
+  }, [current.department, current.site]);
 
   useEffect(() => {
     if (user && !user.business && current_employee) {
