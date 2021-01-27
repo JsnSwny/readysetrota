@@ -21,7 +21,7 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
   }, [auth])
 
 
-  if(admin && loading.sites) {
+  if(auth && auth.isAuthenticated && admin && loading.sites) {
     return false;
   }
 
