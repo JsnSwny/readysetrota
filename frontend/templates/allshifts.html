@@ -38,10 +38,11 @@
     <table>
       <thead>
         <tr>
-          <th><h2>{{ date|date:"l jS F" }}</h2></th>
+          <th><h3>{{ date|date:"l jS F" }}</h3></th>
           <th>Name</th>
           <th>Start Time</th>
           <th>End Time</th>
+          <th>Info</th>
         </tr>
       </thead>
       {% current_time date all_shifts as the_time %} {% for shift in the_time %}
@@ -54,6 +55,11 @@
           </td>
           <td>{{ shift.start_time|time:"H:i" }}</td>
           <td>{{ shift.end_time }}</td>
+          {% if shift.info|length %}
+            <td>{{ shift.info }}</td>
+          {% else %}
+            <td>N/A</td>
+          {% endif %}
         </tr>
       </tbody>
 

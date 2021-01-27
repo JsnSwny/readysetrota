@@ -111,11 +111,14 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             start = datetime.combine(current_date, i.start_time)
             end_time = datetime.strptime(i.end_time, '%H:%M')
             end = datetime.combine(current_date, end_time.time())
+            if (end < start):
+                end = end + timedelta(days=1)
+
             shift_length = round((end - start).total_seconds() / 3600, 2)
-            
             hours += shift_length
 
-            wage += float(i.wage) * shift_length
+            if(i.wage):
+                wage += float(i.wage) * shift_length
 
     employees = []
         
