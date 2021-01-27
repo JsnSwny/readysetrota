@@ -92,6 +92,7 @@ export const deleteSite = (id) => (dispatch, getState) => {
         type: DELETE_SITE,
         payload: id,
       });
+      dispatch(getSites())
     })
     .catch((error) => {console.log(error)});
 };
@@ -172,6 +173,7 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
       });
       // Remove later and update number of employees through reducer
       dispatch(getDepartments());
+      dispatch(getSites())
     })
     .catch((error) => {});
 };
@@ -225,6 +227,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 
       // Remove later and update number of employees through reducer
       dispatch(getDepartments());
+      dispatch(getSites())
     })
     .catch((err) => console.log(err.response));
 };
@@ -273,7 +276,8 @@ export const deletePosition = (id) => (dispatch, getState) => {
         type: DELETE_POSITION,
         payload: id,
       });
-      dispatch(getEmployees());
+      dispatch(getSites());
+      dispatch(getDepartments());
     })
     .catch((error) => {});
 };
@@ -354,6 +358,7 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
+      dispatch(getSites())
     })
     .catch((error) => {console.log(error.response)});
 };

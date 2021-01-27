@@ -11,6 +11,8 @@ import { getCustomer } from "../../actions/payments";
 const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
     const dispatch = useDispatch();
 
+
+    let business = useSelector((state) => state.employees.business);
     const { setConfirmOpen, setOnConfirm, setMessage } = confirmProps;
 
     let current = useSelector(
@@ -83,12 +85,12 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                     {user.business && (
                         <Fragment>
                             <small className="flex-container--center">Plan: {user.business.plan == "F" ? "Free" : "Premium"}</small>
-                            <small className="flex-container--center">Employees: {user.business.number_of_employees}/{user.business.total_employees}</small>
+                            <small className="flex-container--center">Employees: {business.number_of_employees}/{business.total_employees}</small>
                         </Fragment>
                     )}
                     <div className="sidenav__links">
                         <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
-                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" disabled={departments.length == 0} dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
+                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
                             <div className="sidenav__sublinks">
                             {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
                             </div>

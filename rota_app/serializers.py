@@ -157,7 +157,13 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     business = BusinessSerializer(required=False)
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
+    
     class Meta:
         model = Site
-        fields = ('id', 'name', 'business', 'business_id', 'admins',)
+        fields = ('id', 'name', 'business', 'business_id', 'admins', 'number_of_employees',)
         depth: 1
+
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(position__department__site=obj.id).distinct()
+        return len(employees)

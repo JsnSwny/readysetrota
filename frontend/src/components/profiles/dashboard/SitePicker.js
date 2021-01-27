@@ -93,6 +93,10 @@ const SitePicker = (props) => {
                 
               </div>
             </div>
+            <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
+                {item.number_of_employees}{" "}
+                {item.number_of_employees == 1 ? "employee" : "employees"}
+              </p>
           </div>
         ))}
       </div>

@@ -96,8 +96,6 @@ const AddStaff = (props) => {
         }
       };
 
-      console.log(employee)
-
       if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
         if (update) {
           dispatch(updateEmployee(update, employee, siteAdmin, current_site));

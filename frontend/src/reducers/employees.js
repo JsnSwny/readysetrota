@@ -104,6 +104,9 @@ export default function (state = initialState, action) {
       };
     case DELETE_SITE:
       let newSites = state.sites.filter((site) => site.id !== action.payload);
+
+      let deleted_site = state.sites.find((item) => item.id == action.payload)
+
       newState = {
         ...state,
         sites: newSites,
@@ -111,8 +114,10 @@ export default function (state = initialState, action) {
           ...state.current,
           site: newSites.length > 0 && action.payload == state.current.site ? newSites[0].id : state.current.site
         },
-        postions: [],
-        employees: []
+        business: {
+          ...state.business,
+          number_of_employees: state.business.number_of_employees - deleted_site.number_of_employees
+        }
       }
 
       localStorage.setItem("current_site", newState.current.site);
@@ -255,6 +260,8 @@ export default function (state = initialState, action) {
         positions: [],       
       };
     case ADD_EMPLOYEE:
+      let foundIndex = state.sites.findIndex(item => item.id == action.payload.position[0].department.site.id)
+      state.sites[foundIndex].number_of_employees++;
       if (
         action.payload.position.some(
           (item) => item.department.id == parseInt(action.current_dep)
@@ -288,10 +295,6 @@ export default function (state = initialState, action) {
         employees: state.employees.filter(
           (employee) => employee.id !== action.payload
         ),
-        business: {
-          ...state.business,
-          number_of_employees: state.business.number_of_employees - 1,
-        },
       };
     case DELETE_POSITION:
       return {
@@ -302,12 +305,13 @@ export default function (state = initialState, action) {
         all_positions: state.all_positions.filter(
           (position) => position.id !== action.payload
         ),
+        employees: state.employees.filter(employees => !employees.position.some(position => position.id == action.payload)),
       };
     case DELETE_DEPARTMENT:
+
       let newDepartments = state.departments.filter(
         (department) => department.id !== action.payload
       );
-      let deleted_employees = state.employees.filter(item => item.position.some(pos => pos.department.id == action.payload));
       newState = {
         ...state,
         departments: newDepartments,
@@ -315,10 +319,6 @@ export default function (state = initialState, action) {
           ...state.current,
           department: newDepartments.length > 0 && action.payload == state.current.department ? newDepartments[0].id : state.current.department
         },
-        business: {
-          ...state.business,
-          number_of_employees: state.business.number_of_employees - deleted_employees.length
-        }
       }
 
       localStorage.setItem("current_department", newState.current.department);
