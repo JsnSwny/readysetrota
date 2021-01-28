@@ -351,7 +351,7 @@ const AddStaff = (props) => {
                 e.preventDefault();
                 if (update) {
                   setConfirmOpen(true);
-                  setMessage(`Are you sure you want to delete this ${form}`)
+                  setMessage(`Are you sure you want to delete this ${form.toLowerCase()}?`)
 
                   if (form == "Department") {
                     setOnConfirm(() => () => {
