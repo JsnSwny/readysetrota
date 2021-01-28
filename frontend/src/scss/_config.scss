@@ -83,10 +83,6 @@ button {
   }
 }
 
-input, select, option {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  }
-
-  select::-ms-expand { display: block; }
+*{
+  -webkit-appearance: menulist;
+ }
