@@ -19,6 +19,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import { loadUser } from "../actions/auth";
 import Home from "./profiles/Home";
 import { setWidth } from "../actions/responsive";
+import { resetErrors } from "../actions/errors";
 
 import ChangePassword from "./accounts/ChangePassword";
 import StaffProfile from "./profiles/StaffProfile";
@@ -83,6 +84,7 @@ const App = () => {
           }}
           onClose={() => {
             setOpen(false);
+            store.dispatch(resetErrors());
           }}
           update={update}
           sidebarOpen={sidebarOpen}

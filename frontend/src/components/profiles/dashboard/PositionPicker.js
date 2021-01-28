@@ -140,6 +140,7 @@ const PositionPicker = (props) => {
             className="fas fa-plus"
           ></i>
         </div>   
+        <small class="helper-text">* Click and drag positions to reorder</small>
       </div>
       {!positionsEqual && (
         <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {

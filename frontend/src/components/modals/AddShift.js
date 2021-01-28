@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addShift, deleteShift, updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 import PositionField from "../employees/PositionField";
+import { getErrors } from "../../actions/errors";
 
 const AddShift = (props) => {
   const { date, employee, onClose, shift, template } = props;
@@ -15,12 +16,13 @@ const AddShift = (props) => {
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
-
   let employees = useSelector((state) => state.employees.employees);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
+
+  let error_obj = {};
 
   const dispatch = useDispatch();
 
@@ -55,20 +57,25 @@ const AddShift = (props) => {
       published: employee ? false : true,
       position_id: employee ? [] : position.map(pos => pos.id),
     };
-    shift
-      ? compareShift(shift, shiftObj)
-        ? ""
-        : dispatch(updateShift(shift.id, shiftObj))
-      : dispatch(addShift(shiftObj));
-    if (startTime && endTime) {
-      setStartTime("");
-      setEndTime("");
-      setInfo("");
-      onClose();
-      updating
-        ? toast.success("Shift updated!")
-        : toast.success("Shift added!");
-    }
+    error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
+      dispatch(getErrors(error_obj, 400));
+
+      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
+        shift
+          ? compareShift(shift, shiftObj)
+            ? ""
+            : dispatch(updateShift(shift.id, shiftObj))
+          : dispatch(addShift(shiftObj));
+
+          setStartTime("");
+          setEndTime("");
+          setInfo("");
+          onClose();
+          updating
+            ? toast.success("Shift updated!")
+            : toast.success("Shift added!");
+        
+      }
   };
 
   const deleteShiftByID = (id) => {
@@ -136,12 +143,7 @@ const AddShift = (props) => {
                 </option>
               ))}
             </select>
-            {errors.start_time &&
-            errors.start_time[0].includes("Time has wrong format") ? (
-              <p className="error">This field may not be blank.</p>
-            ) : (
-              <p className="error">{errors.start_time}</p>
-            )}
+            <p className="error">{errors.start_time}</p>
           </div>
           <div className="staffForm__control">
             <label className="staffForm__label">End Time:</label>

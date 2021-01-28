@@ -462,7 +462,7 @@
     &.fixed {
       top: 0;
       @include wi-mq(mobile) {
-        top: 40px;
+        top: 60px;
       }
       
       

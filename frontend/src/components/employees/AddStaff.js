@@ -18,6 +18,7 @@ import {
 } from "../../actions/employees";
 import PositionField from "./PositionField"
 import { toast } from "react-toastify";
+import { getErrors } from "../../actions/errors";
 
 const AddStaff = (props) => {
   const { onClose, form, staffPosition, update } = props;
@@ -38,7 +39,6 @@ const AddStaff = (props) => {
   let current = useSelector((state) => state.employees.current);
 
   let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
-
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -48,7 +48,7 @@ const AddStaff = (props) => {
   const [siteAdmin, setSiteAdmin] = useState(false);
   const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
   const updateFormTitles = {"Staff": "Update Employee", "Department": "Update Department", "Position": "Update Position", "Site": "Update Site", "BusinessName": "Update your business name"}
-
+  let error_obj = {}
 
   const isSiteAdmin = (user_id) => {
     return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
@@ -96,7 +96,10 @@ const AddStaff = (props) => {
         }
       };
 
-      if (firstName.length > 0 && lastName.length > 0 && position.length > 0) {
+      error_obj = {first_name: firstName.length > 0 ? true : "This field is required", last_name: lastName.length > 0 ? true : "This field is required", positions: position.length > 0 ? true : "This field is required"}
+      dispatch(getErrors(error_obj, 400));
+
+      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
         if (update) {
           dispatch(updateEmployee(update, employee, siteAdmin, current_site));
           
@@ -112,76 +115,83 @@ const AddStaff = (props) => {
         setSiteAdmin(false);
         onClose();
       }
-    } else if (form == "Department") {
-      if (update) {
-        dispatch(
-          updateDepartment(update.id, {
-            name,
-            business_id: current.business,
-            site_id: current.site,
-            admins_id: admins,
-          })
-        );
-        toast.success("Department updated!");
-      } else {
-        dispatch(
-          addDepartment({
-            name,
-            business_id: current.business,
-            site_id: current.site,
-          })
-        );
-        toast.success("Department added!");
+    } else {
+      error_obj = {name: name.length > 0 ? true : "This field is required"}
+      dispatch(getErrors(error_obj, 400));
+      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
+        if (form == "Department") {
+          
+        if (update) {
+          dispatch(
+            updateDepartment(update.id, {
+              name,
+              business_id: current.business,
+              site_id: current.site,
+              admins_id: admins,
+            })
+          );
+          toast.success("Department updated!");
+        } else {
+          dispatch(
+            addDepartment({
+              name,
+              business_id: current.business,
+              site_id: current.site,
+            })
+          );
+          toast.success("Department added!");
+        }
+        setName("");
+        onClose();
+      } else if (form == "Position") {
+        if (update) {
+          dispatch(
+            updatePosition(update.id, {
+              name,
+              department_id: current.department,
+              business_id: current.business,
+            })
+          );
+          toast.success("Position updated!");
+        } else {
+          dispatch(
+            addPosition({
+              name,
+              department_id: parseInt(current.department),
+              business_id: current.business,
+            })
+          );
+          toast.success("Position added!");
+        }
+        setName("");
+        onClose();
+      } else if (form == "Site") {
+        if (update) {
+          dispatch(
+            updateSite(update.id, {
+              name,
+              business_id: current.business,
+            })
+          );
+          toast.success("Site updated!");
+        } else {
+          dispatch(
+            addSite({
+              name,
+              business_id: current.business,
+            })
+          );
+          toast.success("Site added!");
+        }
+        setName("");
+        onClose();
+      } else if (form == "BusinessName") {
+        dispatch(updateBusinessName(update.id, { name }));
+        toast.success("Business name updated!");
+        setName("");
+        onClose();
       }
-      setName("");
-      onClose();
-    } else if (form == "Position") {
-      if (update) {
-        dispatch(
-          updatePosition(update.id, {
-            name,
-            department_id: current.department,
-            business_id: current.business,
-          })
-        );
-        toast.success("Position updated!");
-      } else {
-        dispatch(
-          addPosition({
-            name,
-            department_id: parseInt(current.department),
-            business_id: current.business,
-          })
-        );
-        toast.success("Position added!");
-      }
-      setName("");
-      onClose();
-    } else if (form == "Site") {
-      if (update) {
-        dispatch(
-          updateSite(update.id, {
-            name,
-            business_id: current.business,
-          })
-        );
-        toast.success("Site updated!");
-      } else {
-        dispatch(
-          addSite({
-            name,
-            business_id: current.business,
-          })
-        );
-        toast.success("Site added!");
-      }
-      setName("");
-      onClose();
-    } else if (form == "BusinessName") {
-      dispatch(updateBusinessName(update.id, { name }));
-      toast.success("Business name updated!");
-      setName("");
-      onClose();
+    }
     }
   };
 
@@ -204,9 +214,8 @@ const AddStaff = (props) => {
                 onChange={(e) => setFirstName(e.target.value)}
                 autoFocus
                 value={firstName}
-                required
               ></input>
-              <p className="error">{errors.name}</p>
+              <p className="error">{errors.first_name}</p>
             </div>
             <div className="staffForm__control">
               <label className="staffForm__label">Last Name:</label>
@@ -216,9 +225,8 @@ const AddStaff = (props) => {
                 name="last_name "
                 onChange={(e) => setLastName(e.target.value)}
                 value={lastName}
-                required
               ></input>
-              <p className="error">{errors.name}</p>
+              <p className="error">{errors.last_name}</p>
             </div>
             <div className="staffForm__control">
               <label className="staffForm__label">Wage Type:</label>
@@ -260,14 +268,13 @@ const AddStaff = (props) => {
                 value={wage}
                 step="0.01"
               ></input>
-              <p className="error">{errors.name}</p>
             </div>
             )}
             
             <div className="staffForm__control">
               <label className="staffForm__label">Position(s):</label>
               <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
-              <p className="error">{errors.position_id}</p>
+              <p className="error">{errors.positions}</p>
             </div>
             {update && update.user && (
               <div className="staffForm__control">
@@ -280,7 +287,6 @@ const AddStaff = (props) => {
                 }}
                 checked={siteAdmin}
               ></input>
-              <p className="error">{errors.name}</p>
             </div>
             )}
             
@@ -296,7 +302,6 @@ const AddStaff = (props) => {
                 onChange={(e) => setName(e.target.value)}
                 value={name}
                 autoFocus
-                required
               ></input>
               <p className="error">{errors.name}</p>
             </div>
