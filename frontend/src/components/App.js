@@ -89,6 +89,7 @@ const App = () => {
           update={update}
           sidebarOpen={sidebarOpen}
           {...shiftInfo}
+          confirmProps={confirmProps}
         />
         <Confirm open={confirmOpen} onConfirm={onConfirm} onClose={() => {
           setConfirmOpen(!confirmOpen)}} message={message} />

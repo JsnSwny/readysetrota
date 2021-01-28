@@ -21,7 +21,9 @@ import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 
 const AddStaff = (props) => {
-  const { onClose, form, staffPosition, update } = props;
+  const { onClose, form, staffPosition, update, confirmProps } = props;
+
+  const { setConfirmOpen, setOnConfirm, setMessage } = confirmProps;
 
   let positions = useSelector((state) => state.employees.all_positions);
   let errors = useSelector((state) => state.errors.msg);
@@ -350,18 +352,35 @@ const AddStaff = (props) => {
               onClick={(e) => {
                 e.preventDefault();
                 if (update) {
+                  setConfirmOpen(true);
+                  setMessage(`Are you sure you want to delete this ${form}`)
+
                   if (form == "Department") {
-                    dispatch(deleteDepartment(update.id));
+                    setOnConfirm(() => () => {
+                        setConfirmOpen(false)
+                        dispatch(deleteDepartment(update.id));
+                    })
                   } else if (form == "Position") {
-                    dispatch(deletePosition(update.id));
+                    setOnConfirm(() => () => {
+                      setConfirmOpen(false)
+                      dispatch(deletePosition(update.id));
+                  })
+                    
                   } else if (form == "Staff") {
-                    dispatch(deleteEmployee(update.id));
+                    setOnConfirm(() => () => {
+                      setConfirmOpen(false)
+                      dispatch(deleteEmployee(update.id));
+                  })
+                    
                   } else if (form == "Site") {
                     if(sites.length == 1) {
                       toast.warning("You cannot delete this site!");
                       return false;
                     }
-                    dispatch(deleteSite(update.id));
+                    setOnConfirm(() => () => {
+                      setConfirmOpen(false)
+                      dispatch(deleteSite(update.id));
+                    })
                   }
                 }
                 onClose();

@@ -13,8 +13,11 @@ const CreateShift = (props) => {
     shift,
     update,
     template,
-    sidebarOpen
+    sidebarOpen,
+    confirmProps
   } = props;
+
+
 
   const staffTypes = [
     "Staff",
@@ -23,6 +26,7 @@ const CreateShift = (props) => {
     "BusinessName",
     "Site",
   ];
+  
 
   const getModal = () => {
     if (type == "shift") {
@@ -42,6 +46,7 @@ const CreateShift = (props) => {
           form={type}
           staffPosition={staffPosition}
           update={update}
+          confirmProps={confirmProps}
         />
       );
     }
