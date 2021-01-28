@@ -21,6 +21,7 @@ const AddShift = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
+  const [openEmployee, setOpenEmployee] = useState("");
 
   let error_obj = {};
 
@@ -41,14 +42,14 @@ const AddShift = (props) => {
     return (
       shift1.start_time == shift2.start_time &&
       shift1.end_time == shift2.end_time &&
-      shift1.info == shift2.info && (shift2.position_id.length > 0 ? shift1.positions == shift2.positions : true)
+      shift1.info == shift2.info && shift1.employee_id == shift2.employee_id && (shift2.position_id.length > 0 ? shift1.positions == shift2.positions : true)
     );
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: employee ? employee.id : null,
+      employee_id: employee ? employee.id : openEmployee ? openEmployee : null,
       start_time: startTime,
       end_time: endTime,
       info,
@@ -57,6 +58,7 @@ const AddShift = (props) => {
       published: employee ? false : true,
       position_id: employee ? [] : position.map(pos => pos.id),
     };
+      console.log(shiftObj)
       error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
       dispatch(getErrors(error_obj, 400));
 
@@ -98,7 +100,6 @@ const AddShift = (props) => {
         {shift ? "Update Shift" : "Create Shift"}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
-        {employee && (
           <div className="staffForm__control">
           <label className="staffForm__label">Employee:</label>
           {employee ? (
@@ -111,9 +112,9 @@ const AddShift = (props) => {
               disabled
             />
           ) : (
-            <select value="" className="staffForm__input">
-              <option value="" disabled>
-                Select an Employee
+            <select value={openEmployee} onChange={(e) => setOpenEmployee(e.target.value)} className="staffForm__input">
+              <option value="">
+                All Staff
               </option>
               {employees.map((employee) => (
                 <option value={employee.id}>
@@ -123,7 +124,6 @@ const AddShift = (props) => {
             </select>
           )}
         </div>
-        )}
         
         <div className="staffForm__times">
           <div className="staffForm__control">
