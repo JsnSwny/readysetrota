@@ -22,6 +22,7 @@ const AddShift = (props) => {
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
   const [openEmployee, setOpenEmployee] = useState("");
+  const [shiftEmployee, setShiftEmployee] = useState(employee.id);
 
   let error_obj = {};
 
@@ -49,16 +50,15 @@ const AddShift = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: employee ? employee.id : openEmployee ? openEmployee : null,
+      employee_id: shiftEmployee ? shiftEmployee : openEmployee ? openEmployee : null,
       start_time: startTime,
       end_time: endTime,
       info,
       date: shift ? shift.date : date,
       department_id: current.department,
-      published: employee ? false : true,
-      position_id: employee ? [] : position.map(pos => pos.id),
+      published: (shiftEmployee || openEmployee) ? false : true,
+      position_id: shiftEmployee ? [] : position.map(pos => pos.id),
     };
-      console.log(shiftObj)
       error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
       dispatch(getErrors(error_obj, 400));
 
@@ -103,14 +103,13 @@ const AddShift = (props) => {
           <div className="staffForm__control">
           <label className="staffForm__label">Employee:</label>
           {employee ? (
-            <input
-              className="staffForm__input"
-              type="text"
-              name="employee"
-              onChange={(e) => setEmployee(e.target.value)}
-              value={`${employee.first_name} ${employee.last_name}`}
-              disabled
-            />
+            <select value={shiftEmployee} onChange={(e) => setShiftEmployee(e.target.value)} className="staffForm__input">
+              {employees.map((employee) => (
+                <option value={employee.id}>
+                  {employee.first_name} {employee.last_name}
+                </option>
+              ))}
+            </select>
           ) : (
             <select value={openEmployee} onChange={(e) => setOpenEmployee(e.target.value)} className="staffForm__input">
               <option value="">
