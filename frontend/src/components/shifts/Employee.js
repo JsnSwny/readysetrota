@@ -52,7 +52,7 @@ const Employee = (props) => {
         
           <Link to={`/profile/${employee.id}`}>
             <p className="employee__name">
-              {employee.first_name}
+              {employee.first_name}{" "}
               <span className="employee__surname"> {employee.last_name}</span>
             </p>
           </Link>
