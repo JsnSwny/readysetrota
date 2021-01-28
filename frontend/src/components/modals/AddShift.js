@@ -57,7 +57,7 @@ const AddShift = (props) => {
       published: employee ? false : true,
       position_id: employee ? [] : position.map(pos => pos.id),
     };
-    error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
+      error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
       dispatch(getErrors(error_obj, 400));
 
       if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {

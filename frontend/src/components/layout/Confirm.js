@@ -1,11 +1,11 @@
 import React from "react";
 
 const Confirm = (props) => {
-  const { open, onConfirm, onClose, message } = props;
+  const { open, onConfirm, onClose, message, sidebarOpen } = props;
 
   return (
     open && (
-      <div className="modal">
+      <div className={`modal App ${sidebarOpen ? "open" : ""}`}>
         <div className="modal__container">
           <div className="modal__message">
             <p>{message}</p>

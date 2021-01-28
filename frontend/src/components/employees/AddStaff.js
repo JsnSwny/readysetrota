@@ -97,8 +97,7 @@ const AddStaff = (props) => {
           6: { name: "unselected", start_time: null, end_time: null },
         }
       };
-
-      error_obj = {first_name: firstName.length > 0 ? true : "This field is required", last_name: lastName.length > 0 ? true : "This field is required", positions: position.length > 0 ? true : "This field is required"}
+      error_obj = {first_name: firstName.length > 0 ? true : "This field is required", last_name: lastName.length > 0 ? true : "This field is required", positions: position.length > 0 ? true : positions.length > 0 ? "This field is required" : "You don't have any positions"}
       dispatch(getErrors(error_obj, 400));
 
       if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {

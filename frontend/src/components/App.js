@@ -92,7 +92,7 @@ const App = () => {
           confirmProps={confirmProps}
         />
         <Confirm open={confirmOpen} onConfirm={onConfirm} onClose={() => {
-          setConfirmOpen(!confirmOpen)}} message={message} />
+          setConfirmOpen(!confirmOpen)}} message={message} sidebarOpen={sidebarOpen} />
         <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} confirmProps={confirmProps} />
         <div className="sidenav__bar">
           <i onClick={() => {
