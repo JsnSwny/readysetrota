@@ -7,6 +7,9 @@ import NavLink from "./NavLink";
 import { cancelSubscription } from "../../actions/payments";
 import { toast } from "react-toastify";
 import { getCustomer } from "../../actions/payments";
+import NavPicker from "./NavPicker";
+
+import { setDepartment, setSite } from "../../actions/employees";
 
 const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
     const dispatch = useDispatch();
@@ -89,6 +92,11 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         </Fragment>
                     )}
                     <div className="sidenav__links">
+                        <div className="sidenav__pickers">
+                            <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Sites" items={sites} current={current.site} action={setSite} />
+                            <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Departments" items={departments} current={current.department} action={setDepartment} />
+                        </div>
+
                         <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
                             <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
                             <div className="sidenav__sublinks">
@@ -101,7 +109,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
                         <div className={`sidenav__link-container ${navOpen == 'settings' ? "open" : ""}`}>
                             
-                                <div className="sidenav__link">
+                            <div className="sidenav__link">
                                 <div className="no-link">
                                     <div className="sidenav__link-text">
                                         <i className='fas fa-cogs'></i> Settings
@@ -135,7 +143,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                 )}
                             </div>
                         </div>
-                        {user.business && user.profile && <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" disabled={user.business.plan == "P"} />}
+                        {user.business && user.profile && user.business.plan != "P" && <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" />}
                         <div onClick={() => {
                                 dispatch(logout());
                             }} 

@@ -59,8 +59,6 @@ const AdminPanel = (props) => {
 
   return (
       <div className="dashboard container-2">
-        <SitePicker {...props} />
-        <DepartmentPicker {...props} />
         <Stats type="business" />
         {business.plan != "F" && (
           <HolidayRequest holidays={holidays} admin={true} />

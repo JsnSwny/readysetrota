@@ -202,11 +202,6 @@ const Rota = ({modalProps, confirmProps}) => {
     };
   }, []);
 
-  if (current.department == 0) {
-    toast.warning("You must select a department to view the rota");
-    return <Redirect to="/" />;
-  }
-
   const [staffSort, setStaffSort] = useState(localStorage.getItem("staff_sort") ? localStorage.getItem("staff_sort") : "alphabetical");
 
   const sortEmployees = () => {
@@ -224,6 +219,9 @@ const Rota = ({modalProps, confirmProps}) => {
     
   }
 
+  if(loading.employees) {
+    return <Loading />;
+  }
 
   if(!loading.employees && employees.length == 0) {
     toast.warning("You do not currently have any employees to manage in this department")
