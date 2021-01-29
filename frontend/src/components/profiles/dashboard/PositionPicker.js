@@ -141,7 +141,7 @@ const PositionPicker = (props) => {
           ></i>
         </div>   
       </div>
-      <small class="helper-text">* Click and drag positions to reorder</small>
+      <small className="helper-text">* Click and drag positions to reorder</small>
       {!positionsEqual && (
         <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
           dispatch(updatePositionIndex(newPositions))

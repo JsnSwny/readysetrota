@@ -13,7 +13,7 @@ const NavLink = (props) => {
                     </div>
                 
             </Link>
-            {dropdown && <i onClick={dropdownAction} class="fas fa-chevron-down"></i>}
+            {dropdown && <i onClick={dropdownAction} className="fas fa-chevron-down"></i>}
             </div>
             
         </div>

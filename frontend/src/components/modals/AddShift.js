@@ -105,7 +105,7 @@ const AddShift = (props) => {
           {employee ? (
             <select value={shiftEmployee} onChange={(e) => setShiftEmployee(e.target.value)} className="staffForm__input">
               {employees.map((employee) => (
-                <option value={employee.id}>
+                <option key={employee.id} value={employee.id}>
                   {employee.first_name} {employee.last_name}
                 </option>
               ))}

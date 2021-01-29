@@ -9,7 +9,7 @@ const NavPicker = ({items, current, name, action, navOpen, setNavOpen}) => {
             <div className="sidenav__link">
                 <div className="no-link">
                     <div className="sidenav__link-text">
-                        <i class="fas fa-sitemap"></i> 
+                        <i className="fas fa-sitemap"></i> 
                         <div>
                             <p>{name}</p>
                             <small>{items.length > 0 && (items.find(item => item.id == current).name)}</small>
@@ -23,7 +23,7 @@ const NavPicker = ({items, current, name, action, navOpen, setNavOpen}) => {
             
             <div className="sidenav__sublinks">
                 {items.map(item => (
-                    <div onClick={() => current != item.id && dispatch(action(item.id))} className={`sidenav__link-container ${current == item.id ? "current" : ""}`}>
+                    <div key={item.id} onClick={() => current != item.id && dispatch(action(item.id))} className={`sidenav__link-container ${current == item.id ? "current" : ""}`}>
                         <div className={`sidenav__link no-link`}>
                             <div className="sidenav__link-text">
                                 {item.name}
