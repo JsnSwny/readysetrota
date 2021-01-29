@@ -259,7 +259,7 @@ const Rota = ({modalProps, confirmProps}) => {
           ) : (
             <div
               className={`shiftList container ${filterDate ? "filtered" : ""} ${
-                scrollPosition >= 360 ? " fixed" : ""
+                scrollPosition >= 250 ? " fixed" : ""
               }`}
             >
               {(openShifts.length > 0 || siteAdmin) && (

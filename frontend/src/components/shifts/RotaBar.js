@@ -67,7 +67,7 @@ const RotaBar = (props) => {
     <div className="button-layout">
       {current.department != 0 && (
         <div
-          className={`dates__mobile ${scrollPosition >= 360 ? " fixed" : ""}`}
+          className={`dates__mobile ${scrollPosition >= 250 ? " fixed" : ""}`}
         >
           {/* UPDATE SHIFTS BACK */}
           <div className="dates__mobile-container">

@@ -7,7 +7,7 @@ const Dates = (props) => {
 
   return (
     <section
-      className={`dates container ${scrollPosition >= 360 ? " fixed" : ""}`}
+      className={`dates container ${scrollPosition >= 250 ? " fixed" : ""}`}
     >
       <div className="dates__container">
         {!template && <div className="container-left"></div>}
