@@ -87,10 +87,12 @@ const StaffProfile = (props) => {
   }
 
   return (   
+    <Fragment>
+    <Stats title="Staff Dashboard" type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
     <div className="dashboard container-2">
       {current.site != 0 && (
         <Fragment>
-          <Stats type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
+          
       {current.department != 0 && currentEmployee && (
         <Fragment>
           <UpcomingShifts employee={currentEmployee} />
@@ -103,6 +105,7 @@ const StaffProfile = (props) => {
       )}
       
     </div>
+    </Fragment>
   );
 };
 

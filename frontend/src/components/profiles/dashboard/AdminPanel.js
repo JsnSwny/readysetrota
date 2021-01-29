@@ -58,12 +58,15 @@ const AdminPanel = (props) => {
   }
 
   return (
-      <div className="dashboard container-2">
-        <Stats type="business" />
-        {business.plan != "F" && (
-          <HolidayRequest holidays={holidays} admin={true} />
-        )}
-      </div>
+      <Fragment>
+        <Stats title="Admin Panel" type="business" />
+        <div className="dashboard container-2">
+          
+          {business.plan != "F" && (
+            <HolidayRequest holidays={holidays} admin={true} />
+          )}
+        </div>
+      </Fragment>
   );
 };
 

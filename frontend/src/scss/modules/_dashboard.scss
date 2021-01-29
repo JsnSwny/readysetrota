@@ -164,34 +164,9 @@
         }
       }
     }
-    .fa-chevron-right, .fa-chevron-left {
-      cursor: pointer;
-      transition: 0.2s ease color;
-      &:hover {
-        color: $pink
-      }
-    }
-    .react-datepicker-wrapper {
-      input {
-        border: none;
-        text-align: center;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.2s ease color;
-        width: 150px;
-        &:focus {
-          outline: none;
-          color: $pink;
-        }
-        &:hover {
-          color: $pink;
-        }
-      }
-    }
     &-title {
       font-weight: bold;
       font-size: 32px;
-      line-height: 0;
       @include wi-mq(laptop) {
         font-size: 24px;
       }
@@ -201,7 +176,7 @@
           width: 100%;
           height: 2px;
           background-color: $light-gray;
-          margin: 20px 0;
+          margin: 10px 0;
           display: block;
         }
       }
@@ -238,30 +213,20 @@
       @extend .dashboard__block;
       width: calc(33.33% - 20px);
       height: 300px;
-      margin-bottom: 40px;
+      margin-bottom: 0;
       @include wi-mq(tablet) {
+        height: 250px;
+        &:not(:last-child) {
+          margin-bottom: 40px;
+        }
         width: calc(50% - 10px);
       }
       @include wi-mq(mobile) {
         width: 100%;
+        &:not(:last-child) {
+          margin-bottom: 20px;
+        }
       }
-    }
-  }
-  &__values {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    h2 {
-      font-size: 48px;
-      font-weight: bold;
-    }
-    h3 {
-      font-size: 24px;
-      color: $pink;
-      cursor: pointer;
-      font-weight: normal;
     }
   }
   &__table {
@@ -284,53 +249,6 @@
     display: flex;
     flex-wrap: wrap;
     margin: 20px -0.25rem;
-  }
-  &__picker {
-    &:hover {
-      .dashboard__dropper {
-        display: block;
-      }
-    }
-    cursor: pointer;
-  }
-  &__dropper {
-    font-size: 16px;
-    position: absolute;
-    top: 55px;
-    right: 25px;
-    background-color: white;
-    -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    z-index: 10;
-    display: none;
-    &.open {
-      display: block;
-    }
-    @include wi-mq(tablet) {
-      top: auto;
-      bottom: -70px;
-      right: auto;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    &:hover {
-      display: block;
-      @include wi-mq(tablet) {
-        display: none;
-      }
-    }
-    p {
-      padding: 5px 10px;
-      transition: 0.2s ease background-color;
-      cursor: pointer;
-      &:hover {
-        background-color: rgb(238, 238, 238);
-      }
-      &.active {
-        color: $pink;
-      }
-    }
   }
   &__item {
     background-color: #ececec;

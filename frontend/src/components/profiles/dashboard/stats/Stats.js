@@ -5,7 +5,7 @@ import StatsItem from "./StatsItem";
 import { addDays, format, subDays, differenceInDays, startOfWeek, endOfWeek } from "date-fns";
 import { getStats } from "../../../../actions/stats";
 
-const Stats = ({type, employee}) => {
+const Stats = ({type, employee, title}) => {
     let stats = useSelector((state) => state.stats.stats);
     const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 } ));
     const [endDate, setEndDate] = useState(addDays(startDate, 6));
@@ -50,14 +50,14 @@ const Stats = ({type, employee}) => {
     }
 
     return (
-        <Fragment>
-            <StatsHeader setCurrentFilter={setCurrentFilter} currentFilter={currentFilter} setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} type={type} {...dateProps} />
+        <div className="stats">
+            <StatsHeader title={title} setCurrentFilter={setCurrentFilter} currentFilter={currentFilter} setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} type={type} {...dateProps} />
             <div className="flex-container--between">
-            <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title="Shifts" value={stats.shifts.current} difference={getDif(stats.shifts.current, stats.shifts.before)} />
-            <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title="Hours Worked" value={stats.hours.current} difference={getDif(stats.hours.current, stats.hours.before)} decimal={2} />
-            <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title={type == "business" ? "Estimated Outcome" : "Estimated Pay"} value={stats.wage.current} money={true} difference={getDif(stats.wage.current, stats.wage.before)} decimal={2}/>
+                <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title="Shifts" value={stats.shifts.current} difference={getDif(stats.shifts.current, stats.shifts.before)} />
+                <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title="Hours Worked" value={stats.hours.current} difference={getDif(stats.hours.current, stats.hours.before)} decimal={2} />
+                <StatsItem setBeforeDate={setBeforeDate} setAfterDate={setAfterDate} title={type == "business" ? "Estimated Outcome" : "Estimated Pay"} value={stats.wage.current} money={true} difference={getDif(stats.wage.current, stats.wage.before)} decimal={2}/>
             </div>
-        </Fragment>
+        </div>
     )
 }
 
