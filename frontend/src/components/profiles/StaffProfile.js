@@ -88,15 +88,6 @@ const StaffProfile = (props) => {
 
   return (   
     <div className="dashboard container-2">
-      {!id_param && (
-        <Fragment>
-          <SitePicker {...props} />
-          {current.site != 0 && (
-            <DepartmentPicker {...props} />
-          )}
-          
-        </Fragment>
-      )}
       {current.site != 0 && (
         <Fragment>
           <Stats type={id_param ? "staff_profile" : "staff"} employee={id_param ? employee_id : false} />
