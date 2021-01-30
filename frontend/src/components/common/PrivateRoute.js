@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import Landing from "../landing/Landing";
 import { getSites } from "../../actions/employees"
+import EnterID from "./EnterID";
 
 const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, ...rest }) => {
   const dispatch = useDispatch();
@@ -58,7 +59,11 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
               );
             }
           }
-            
+          if(!loading.sites && !auth.user.business && sites.length == 0) {
+            return (
+              <EnterID />
+            );
+          }
           return <Component {...props} modalProps={modalProps} confirmProps={confirmProps} />;
         }
       }}
