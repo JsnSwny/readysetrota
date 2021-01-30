@@ -93,7 +93,7 @@ const RotaBar = (props) => {
                     ? `/exportall?start_date=${date}&end_date=${format(
                         addDays(parseISO(date), 6),
                         "yyyy-MM-dd"
-                      )}&uuid=${current.department.uuid}`
+                      )}&id=${current.department}`
                     : ""
                 }`}
                 target={`${published_shifts.length > 0 ? "_blank" : ""}`}
