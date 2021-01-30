@@ -19,7 +19,7 @@ class Business(models.Model):
         choices=PLANS,
         default="F",
     )
-    total_employees = models.IntegerField(default=5)
+    total_employees = models.IntegerField(default=15)
     subscription_cancellation = models.DateField(null=True, blank=True)
 
 class Site(models.Model):

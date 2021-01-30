@@ -338,7 +338,7 @@ def webhook(request):
         user = UserProfile.objects.filter(stripe_id=customer).first().user
         business = Business.objects.filter(owner=user).first()
         business.plan = "F"
-        business.total_employees = 10
+        business.total_employees = 15
         business.subscription_cancellation = None
         business.save()
 

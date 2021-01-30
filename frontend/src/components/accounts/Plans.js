@@ -30,7 +30,7 @@ const Plans = () => {
   }, []);
 
   useEffect(() => {
-    setAmountPerMonth(((employeesAmount - 10) / 5) * 2 + 10);
+    setAmountPerMonth(((employeesAmount - 10) / 5) * 3 + 6);
   }, [employeesAmount]);
 
   return (
@@ -81,7 +81,7 @@ const Plans = () => {
                   id="points"
                   name="points"
                   min="10"
-                  max="100"
+                  max="250"
                   step="5"
                   className="slider"
                   onChange={(e) => {

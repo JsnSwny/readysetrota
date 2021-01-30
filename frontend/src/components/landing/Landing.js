@@ -6,7 +6,7 @@ import Loading from "../common/Loading";
 import { toast } from "react-toastify";
 
 const Landing = () => {
-  const [employees, setEmployees] = useState(5);
+  const [employees, setEmployees] = useState(10);
   const [amountPerMonth, setAmountPerMonth] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ const Landing = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setAmountPerMonth(((employees - 10) / 5) * 2 + 10);
+    setAmountPerMonth(((employees - 10) / 5) * 3 + 6);
   }, [employees]);
 
   const handleSubmit = (e) => {
@@ -144,8 +144,8 @@ const Landing = () => {
               type="range"
               id="points"
               name="points"
-              min="5"
-              max="100"
+              min="10"
+              max="250"
               step="5"
               className="slider"
               onChange={(e) => {
