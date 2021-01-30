@@ -12,7 +12,7 @@ const NavPicker = ({items, current, name, action, navOpen, setNavOpen}) => {
                         <i className="fas fa-sitemap"></i> 
                         <div>
                             <p>{name}</p>
-                            <small>{items.length > 0 && (items.find(item => item.id == current).name)}</small>
+                            <small>{items.length > 0 && items.find(item => item.id == current) && (items.find(item => item.id == current).name)}</small>
                         </div>
                     </div>
                     </div>
