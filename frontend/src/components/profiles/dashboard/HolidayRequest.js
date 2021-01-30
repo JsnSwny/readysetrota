@@ -58,7 +58,7 @@ const HolidayRequest = (props) => {
       </div>
       <div className="dashboard__block-container-lg">
         {!filteredHolidays.length > 0 ? (
-          <p className="dashboard__text">
+          <p className="dashboard__text helper-text">
             There are no holidays of type "{filter}" to display.
           </p>
         ) : (

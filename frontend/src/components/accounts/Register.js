@@ -3,13 +3,21 @@ import { Link, Redirect } from "react-router-dom";
 import { register } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 
-const Register = () => {
+const Register = (props) => {
+  let path = false;
+  if(props.location.state) {
+    path = props.location.state.path.url;
+    if(!path.includes("/join")) {
+      path = false;
+    }
+  }
+  
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState(`${path ? "User" : "Business"}`);
   let errors = useSelector((state) => state.errors.msg);
   const dispatch = useDispatch();
   const onSubmit = (e) => {
@@ -26,14 +34,19 @@ const Register = () => {
   };
 
   if (useSelector((state) => state.auth.isAuthenticated)) {
-    return <Redirect to="/" />;
+    if(path) {
+      return <Redirect to={path} />;
+    } else {
+      return <Redirect to="/" />;
+    }
   } else {
     return (
       <div className="login">
         <div className="login__box">
           <div className="login__left login__part">
             <form onSubmit={onSubmit}>
-              <div className="form-group">
+              {!path && (
+                <div className="form-group">
                 <label>What role are you?</label>
                 <div className="flex-container">
                   <span
@@ -46,7 +59,7 @@ const Register = () => {
                   >
                     Employee
                   </span>
-                  <span
+                    <span
                     className={`form-control ${
                       role == "Business" ? "active" : ""
                     } btn-toggle`}
@@ -56,9 +69,12 @@ const Register = () => {
                   >
                     Business
                   </span>
+                  
                 </div>
                 <p className="error">{errors.role}</p>
               </div>
+              )}
+              
               {role == "Business" && (
                 <div className="form-group">
                   <label>Business Name</label>

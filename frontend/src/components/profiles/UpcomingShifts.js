@@ -83,7 +83,7 @@ const UpcomingShifts = (props) => {
                 ))}
               </div>
             ) : (
-              <p className="dashboard__text">
+              <p className="dashboard__text helper-text">
                 You currently have no upcoming shifts.
               </p>
             )}

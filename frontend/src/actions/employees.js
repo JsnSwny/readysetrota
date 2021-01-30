@@ -377,7 +377,7 @@ export const getDepartments = () => (dispatch, getState) => {
         type: GET_DEPARTMENTS,
         payload: res.data,
       });
-    });
+    }).catch(err => console.log(err.response));
 };
 
 // Get Department

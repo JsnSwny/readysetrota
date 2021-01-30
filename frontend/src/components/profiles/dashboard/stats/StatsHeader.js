@@ -11,7 +11,6 @@ const StatsHeader = ({setStartDate, title, setEndDate, startDate, endDate, setBe
     let user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
-        console.log("test")
         setPickerOpen(false);
     }, [currentFilter])
 

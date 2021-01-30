@@ -231,7 +231,6 @@ const Rota = ({modalProps, confirmProps}) => {
   let openShifts = !user.business && shifts_list.filter(item => item.employee == null && item.positions.some(pos => current_employee.position.map(empPos => empPos.id).includes(pos.id)));
   if(!siteAdmin) {
     let employeeShifts = shifts_list.filter(item => item.employee &&  item.employee.id == current_employee.id)
-    // console.log(employeeShifts)
     // openShifts.filter()
   }
 
