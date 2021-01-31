@@ -22,7 +22,7 @@ const AddShift = (props) => {
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
   const [openEmployee, setOpenEmployee] = useState("");
-  const [shiftEmployee, setShiftEmployee] = useState(employee.id);
+  const [shiftEmployee, setShiftEmployee] = useState(employee ? employee.id : "");
 
   let error_obj = {};
 
