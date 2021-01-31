@@ -139,16 +139,16 @@ const PositionPicker = (props) => {
             }}
             className="fas fa-plus"
           ></i>
+          {!positionsEqual && (
+              <i onClick={() => {
+              dispatch(updatePositionIndex(newPositions))
+              toast.success("Position orders updated!")
+            }} className="fas fa-save"></i>
+          )}
         </div>   
       </div>
-      <small className="helper-text">* Click and drag positions to reorder</small>
-      {!positionsEqual && (
-        <p className="subtitle-sm" style={{cursor:"pointer"}} onClick={() => {
-          dispatch(updatePositionIndex(newPositions))
-          toast.success("Position orders updated!")
-        }}>
-          <i className="fas fa-save"></i> Save Position Order</p>
-      )}
+      <small className="helper-text"><i class="fas fa-info-circle"></i> Click and drag positions to reorder, click the save icon to save changes.</small>
+      
       
       {loading.positions && <small className="loading-text">Loading positions...</small>}
       <div className="dashboard__wrapper">

@@ -83,6 +83,7 @@ const StaffPicker = (props) => {
 
         
       </div>
+      <small className="helper-text"><i class="fas fa-info-circle"></i> Click the clipboard icon to copy the employee's unique ID which you can send to them to sign up.</small>
       {loading.employees && <small className="loading-text">Loading staff...</small>}
       {employees.length > 0 && (
         <div className="flex-container--wrap">
