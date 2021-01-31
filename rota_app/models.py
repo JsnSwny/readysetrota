@@ -12,6 +12,7 @@ class Business(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name="business")
     PLANS = [
         ("F", 'Free'),
+        ("T", 'Trial'),
         ("P", 'Premium'),
     ]
     plan = models.CharField(

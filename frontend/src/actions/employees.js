@@ -40,7 +40,7 @@ import { tokenConfig } from "./auth";
 
 export const startTrial = (id) => (dispatch, getState) => {
   axios
-    .put(`/api/business/${id}/`, {trial_end: format(addDays(new Date(), 30), "yyyy-MM-dd"), plan: "P", total_employees: 30}, tokenConfig(getState))
+    .put(`/api/business/${id}/`, {trial_end: format(addDays(new Date(), 30), "yyyy-MM-dd"), plan: "T", total_employees: 30}, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_BUSINESS,
@@ -84,7 +84,7 @@ export const getSites = () => (dispatch, getState) => {
       type: SET_BUSINESS,
       payload: res.data.length > 0 ? business : 0,
     });
-    if(business && business.plan == "P" && parseISO(business.trial_end) < new Date()) {
+    if(business && business.plan == "T" && parseISO(business.trial_end) < new Date()) {
       dispatch(endTrial(business.id));
     }
     dispatch({

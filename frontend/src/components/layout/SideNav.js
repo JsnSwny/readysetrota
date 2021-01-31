@@ -24,6 +24,8 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
         (state) => state.employees.current
     );
 
+    const plans = {"F": "Free", "T": "Premium Trial", "P": "Premium"};
+
     let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     let sites = useSelector((state) => state.employees.sites);
     let user = useSelector((state) => state.auth.user);
@@ -89,7 +91,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                     <p className="sidenav__name">{userName}</p>
                     {user.business && (
                         <Fragment>
-                            <small className="flex-container--center">Plan: {user.business.plan == "F" ? "Free" : parseISO(user.business.trial_end) >= new Date() ? "Premium Trial" : "Premium"}</small>
+                            <small className="flex-container--center">Plan: {plans[user.business.plan]}</small>
                             <small className="flex-container--center">Employees: {business.number_of_employees}/{business.total_employees}</small>
                         </Fragment>
                     )}
@@ -112,7 +114,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                         )}
                         
                         {siteAdmin && <NavLink toggleNav={toggleNav} link={`${business.plan == "F" ? "/" : "/staff-management"}`} icon="fas fa-users-cog" title="Staff Management" />}
-                        <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} />
+                        <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} disabledMessage="You need to create employees to manage the rota" />
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
                         <div className={`sidenav__link-container ${navOpen == 'settings' ? "open" : ""}`}>

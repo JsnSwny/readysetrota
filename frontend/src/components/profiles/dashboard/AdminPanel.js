@@ -50,12 +50,6 @@ const AdminPanel = (props) => {
     }
   }, [current.department, current.site]);
 
-  if(!loading.departments && departments.length == 0) {
-        toast.warning(
-            "You must create a department before you can manage staff"
-        );
-      return <Redirect to="/staff-management" />
-  }
 
   return (
       <Fragment>

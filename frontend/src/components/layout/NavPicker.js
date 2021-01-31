@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify"; 
 
 const NavPicker = ({items, current, name, action, navOpen, setNavOpen}) => {
 
@@ -23,7 +24,7 @@ const NavPicker = ({items, current, name, action, navOpen, setNavOpen}) => {
             
             <div className="sidenav__sublinks">
                 {items.map(item => (
-                    <div key={item.id} onClick={() => current != item.id && dispatch(action(item.id))} className={`sidenav__link-container ${current == item.id ? "current" : ""}`}>
+                    <div key={item.id} onClick={() => current != item.id ? dispatch(action(item.id)) : toast.warning(`You are already on this ${name.slice(0, -1).toLowerCase()}`)} className={`sidenav__link-container ${current == item.id ? "current" : ""}`}>
                         <div className={`sidenav__link no-link`}>
                             <div className="sidenav__link-text">
                                 {item.name}

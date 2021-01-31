@@ -98,7 +98,7 @@ const StaffProfile = (props) => {
           <UpcomingShifts employee={currentEmployee} />
           
           <HolidayRequest holidays={holidays} admin={siteAdmin} />
-          {plan == "P" && <Availability employee={currentEmployee} />}
+          {plan != "F" && <Availability employee={currentEmployee} />}
         </Fragment>
       )}
         </Fragment>

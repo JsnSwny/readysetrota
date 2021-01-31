@@ -39,6 +39,14 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
           if (url == "/") {
             return <Landing />;
           } else {
+            if(url.includes("/join")) {
+              return <Redirect
+              to={{
+                pathname: "/register",
+                state: { path: {url: url} },
+              }}
+            />
+            }
             return (
               <Redirect
                 to={{
