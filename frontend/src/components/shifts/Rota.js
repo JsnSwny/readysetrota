@@ -261,7 +261,7 @@ const Rota = ({modalProps, confirmProps}) => {
                 scrollPosition >= 250 ? " fixed" : ""
               }`}
             >
-              {(openShifts.length > 0 || siteAdmin) && (
+              {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
                 <OpenShifts current_employee={current_employee} modalProps={modalProps} confirmProps={confirmProps} result={result} shifts={siteAdmin ? shifts_list.filter(item => item.employee == null) : openShifts} />
               )
               }

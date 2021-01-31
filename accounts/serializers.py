@@ -26,7 +26,7 @@ class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Business
-        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees',)
+        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees', 'trial_end',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()
@@ -130,6 +130,8 @@ class RegisterSerializer(serializers.ModelSerializer):
                 profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
                 site = Site(business=business, name="My First Site")
                 site.save()
+                department = Department(owner=user, business=business, site=site, name="My First Department")
+                department.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
             profile.save()

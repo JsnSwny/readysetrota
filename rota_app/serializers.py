@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
+    name = serializers.CharField(required=False)
     class Meta:
         model = Business
-        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees',)
+        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees', 'trial_end',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()

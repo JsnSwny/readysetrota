@@ -13,6 +13,7 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
   let siteAdmin = useSelector((state) => state.employees.site_admin);
   let sites = useSelector((state) => state.employees.sites);
   let loading = useSelector((state) => state.loading)
+  let business = useSelector((state) => state.employees.business)
 
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const PrivateRoute = ({ component: Component, modalProps, confirmProps, admin, .
   }, [auth])
 
 
-  if(auth && auth.isAuthenticated && admin && loading.sites) {
+  if(auth && auth.isAuthenticated && loading.sites) {
     return false;
   }
 

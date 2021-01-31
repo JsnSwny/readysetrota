@@ -7,9 +7,11 @@ import NavLink from "./NavLink";
 import { cancelSubscription } from "../../actions/payments";
 import { toast } from "react-toastify";
 import { getCustomer } from "../../actions/payments";
+import { startTrial } from "../../actions/employees";
 import NavPicker from "./NavPicker";
 
 import { setDepartment, setSite } from "../../actions/employees";
+import { fromUnixTime, parseISO } from "date-fns";
 
 const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
     const dispatch = useDispatch();
@@ -87,23 +89,29 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                     <p className="sidenav__name">{userName}</p>
                     {user.business && (
                         <Fragment>
-                            <small className="flex-container--center">Plan: {user.business.plan == "F" ? "Free" : "Premium"}</small>
+                            <small className="flex-container--center">Plan: {user.business.plan == "F" ? "Free" : parseISO(user.business.trial_end) >= new Date() ? "Premium Trial" : "Premium"}</small>
                             <small className="flex-container--center">Employees: {business.number_of_employees}/{business.total_employees}</small>
                         </Fragment>
                     )}
                     <div className="sidenav__links">
-                        <div className="sidenav__pickers">
-                            <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Sites" items={sites} current={current.site} action={setSite} />
-                            <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Departments" items={departments} current={current.department} action={setDepartment} />
-                        </div>
-
-                        <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
-                            <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
-                            <div className="sidenav__sublinks">
-                            {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
+                        {business.plan != "F" && (
+                            <div className="sidenav__pickers">
+                                <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Sites" items={sites} current={current.site} action={setSite} />
+                                <NavPicker navOpen={navOpen} setNavOpen={setNavOpen} name="Departments" items={departments} current={current.department} action={setDepartment} />
                             </div>
-                        </div>
-                        {siteAdmin && <NavLink toggleNav={toggleNav} link="/staff-management" icon="fas fa-users-cog" title="Staff Management" />}
+                        )}
+                        
+
+                        {business.plan != "F" && (
+                            <div className={`sidenav__link-container ${navOpen == 'dashboard' ? "open" : ""}`}>
+                                <NavLink toggleNav={toggleNav} link="/" icon="fas fa-home" title="Dashboard" dropdown={siteAdmin && !user.business} dropdownAction={() => setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)} />
+                                <div className="sidenav__sublinks">
+                                {siteAdmin && !user.business && <NavLink toggleNav={toggleNav} link="/admin-panel" icon="fas fa-user-shield" title="Admin Panel" />}
+                                </div>
+                            </div>
+                        )}
+                        
+                        {siteAdmin && <NavLink toggleNav={toggleNav} link={`${business.plan == "F" ? "/" : "/staff-management"}`} icon="fas fa-users-cog" title="Staff Management" />}
                         <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} />
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
@@ -143,7 +151,28 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                 )}
                             </div>
                         </div>
-                        {user.business && user.profile && user.business.plan != "P" && <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" />}
+
+                        {user.business && !user.business.trial_end && 
+                        <div className={`sidenav__link-container`}>
+                            <div onClick={() => {
+                                setConfirmOpen(true);
+                                setMessage("Are you sure you want to start your 30 day free trial?")
+                                setOnConfirm(() => () => {
+                                    setConfirmOpen(false)
+                                    dispatch(startTrial(user.business.id));
+                                    toast.success("Your free premium trial has been activated")
+                                })
+                                
+                            }} className="sidenav__link no-link">
+                                <div className="sidenav__link-text">
+                                    <i className="fas fas fa-gem"></i> Start Premium Free Trial
+                                </div>
+                            </div>
+                        </div>}
+                        
+                        {user.business && user.profile && user.business.plan != "P" && user.business.trial_end &&
+                            <NavLink toggleNav={toggleNav} link="/premium" icon="fas fa-gem" title="Premium" />
+                        }
                         <div onClick={() => {
                                 dispatch(logout());
                             }} 

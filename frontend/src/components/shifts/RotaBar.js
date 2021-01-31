@@ -17,7 +17,7 @@ const RotaBar = (props) => {
   // Selectors
   let width = useSelector((state) => state.responsive.width);
   let date = useSelector((state) => state.shifts.date);
-  let business = useSelector((state) => state.auth.business);
+  let business = useSelector((state) => state.employees.business);
   let shifts = useSelector((state) => state.shifts.shifts);
   let published_shifts = shifts.filter((item) => item.published);
   let current = useSelector(
@@ -104,7 +104,7 @@ const RotaBar = (props) => {
             )}
 
             {/* AVAILABILITIES */}
-            {siteAdmin && (
+            {siteAdmin && business.plan != "F" && (
               <div
                 onClick={() => {
                   setShowAvailabilities(!showAvailabilities);

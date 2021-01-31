@@ -34,9 +34,39 @@ import {
 import { getErrors, resetErrors } from "./errors";
 import { loadUser } from "./auth";
 
-import { format } from "date-fns";
+import { format, addDays, parseISO } from "date-fns";
 
 import { tokenConfig } from "./auth";
+
+export const startTrial = (id) => (dispatch, getState) => {
+  axios
+    .put(`/api/business/${id}/`, {trial_end: format(addDays(new Date(), 30), "yyyy-MM-dd"), plan: "P", total_employees: 30}, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_BUSINESS,
+        payload: res.data,
+      });
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+}
+
+export const endTrial = (id) => (dispatch, getState) => {
+  axios
+    .put(`/api/business/${id}/`, {plan: "F", total_employees: 15}, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_BUSINESS,
+        payload: res.data,
+      });
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+}
 
 export const getSites = () => (dispatch, getState) => {
   let current_site = getState().employees.current.site
@@ -49,10 +79,14 @@ export const getSites = () => (dispatch, getState) => {
       payload: res.data,
       user: user
     });
+    let business = res.data[0].business;
     dispatch({
       type: SET_BUSINESS,
-      payload: res.data.length > 0 ? res.data[0].business : 0,
+      payload: res.data.length > 0 ? business : 0,
     });
+    if(business && business.plan == "P" && parseISO(business.trial_end) < new Date()) {
+      dispatch(endTrial(business.id));
+    }
     dispatch({
       type: UUID_RESET,
     });

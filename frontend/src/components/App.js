@@ -107,6 +107,7 @@ const App = () => {
               exact
               component={Home}
               user_only_pass={true}
+              modalProps={modalProps}
             />
             <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} confirmProps={confirmProps} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />

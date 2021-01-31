@@ -20,6 +20,7 @@ class Business(models.Model):
         default="F",
     )
     total_employees = models.IntegerField(default=15)
+    trial_end = models.DateField(null=True, blank=True)
     subscription_cancellation = models.DateField(null=True, blank=True)
 
 class Site(models.Model):
