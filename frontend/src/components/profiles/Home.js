@@ -8,7 +8,7 @@ import StaffManagement from "./StaffManagement";
 const Home = (props) => {
   let user = useSelector((state) => state.auth.user);
   const { modalProps } = props;
-  if(user.business.plan == "F") {
+  if(user.business && user.business.plan == "F") {
     return <StaffManagement modalProps={modalProps} />
   }
   if(user.business) {
