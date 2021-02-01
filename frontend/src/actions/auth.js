@@ -115,6 +115,8 @@ export const register = ({
   email,
   role,
   businessName,
+  first_name,
+  last_name
 }) => (dispatch) => {
   // Headers
   const config = {
@@ -131,6 +133,8 @@ export const register = ({
     email,
     role,
     businessName,
+    first_name,
+    last_name
   });
 
   axios
@@ -142,6 +146,7 @@ export const register = ({
       });
     })
     .catch((err) => {
+      console.log(err.response)
       dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: REGISTER_FAIL,

@@ -44,7 +44,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
     useEffect(() => {
         if(user) {
             user.business ?
-                setUserName(user.business.name) : setUserName(`${user.email}`);
+                setUserName(user.business.name) : setUserName(`${user.first_name} ${user.last_name}`);
             if(user.profile) {
                 dispatch(getCustomer(user.profile.stripe_id))
             }
@@ -86,7 +86,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                 }} className={`fas fa-bars`}></i>
                 <div className="sidenav__content">
                     <div className="sidenav__profile-pic flex-container--center-vh">
-                        {userName[0]}
+                        {user.business ? user.business.name[0] : `${user.first_name[0]}${user.last_name[0]}`}
                     </div>
                     <p className="sidenav__name">{userName}</p>
                     {user.business && (

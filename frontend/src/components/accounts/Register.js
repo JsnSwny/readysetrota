@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { register } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,8 @@ const Register = (props) => {
   
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [businessName, setBusinessName] = useState("");
@@ -30,6 +32,8 @@ const Register = (props) => {
       email,
       role,
       businessName,
+      first_name: firstName,
+      last_name: lastName
     };
     dispatch(register(newUser));
   };
@@ -90,6 +94,36 @@ const Register = (props) => {
                   />
                   <p className="error">{errors.businessName}</p>
                 </div>
+              )}
+              {role == "User" && (
+                <Fragment>
+                  <div className="form-group">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    className="form-control input-1"
+                    name="business_name"
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                    }}
+                    value={firstName}
+                  />
+                  <p className="error">{errors.first_name}</p>
+                </div>
+                <div className="form-group">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    className="form-control input-1"
+                    name="business_name"
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                    }}
+                    value={lastName}
+                  />
+                  <p className="error">{errors.last_name}</p>
+                </div>
+                </Fragment>
               )}
 
               <div className="form-group">

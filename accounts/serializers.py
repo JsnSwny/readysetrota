@@ -82,7 +82,7 @@ class UserSerializer(serializers.ModelSerializer):
          
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
         depth = 3
 
 
@@ -91,10 +91,12 @@ class RegisterSerializer(serializers.ModelSerializer):
     role = serializers.CharField(write_only=True)
     businessName = serializers.CharField(write_only=True, required=False, allow_blank=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password2', 'role', 'businessName')
+        fields = ('id', 'username', 'email', 'password', 'password2', 'role', 'businessName', 'first_name', 'last_name',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -116,7 +118,9 @@ class RegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'username': 'A user with that username already exists.'})
             
             user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
-            
+            user.first_name = validated_data['first_name']
+            user.last_name = validated_data['last_name']
+            user.save()
             if validated_data['role'] == "Business":
                 my_group = Group.objects.get(name='Business') 
                 my_group.user_set.add(user) 
