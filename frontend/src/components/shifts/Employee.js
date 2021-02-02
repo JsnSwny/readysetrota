@@ -7,25 +7,13 @@ const Employee = (props) => {
   const {
     employee,
     user,
-    shifts_list,
+    shifts,
     currentDepartment,
     current_employee,
   } = props;
 
-  const getAllShifts = (employee) => {
-    let hours = 0;
-    let shifts = shifts_list.filter(
-      (obj) => obj.employee && obj.employee.id === employee
-    );
-    for (let i = 0; i < shifts.length; i++) {
-      let start = parse(shifts[i].start_time, "HH:mm", new Date());
-      let end = parse(shifts[i].end_time, "HH:mm", new Date());
-      if (end < start) {
-        end = addDays(end, 1);
-      }
-      if (end != "Invalid Date") hours += differenceInMinutes(end, start) / 60;
-    }
-    return hours;
+  const getHours = (employee) => {
+    return shifts.map(item => item.employee && item.employee.id == employee && item.length).reduce((a, b) => a + b, 0.00);
   };
 
   let site_admin = useSelector((state) => state.employees.site_admin);
@@ -58,7 +46,7 @@ const Employee = (props) => {
           </Link>
         </div>
         
-        <p className="employee__hours">{getAllShifts(employee.id)} Hours {site_admin && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getAllShifts(employee.id)})`)}</p>
+        <p className="employee__hours">{getHours(employee.id)} Hours {site_admin && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getHours(employee.id)})`)}</p>
       </div>
   );
 };

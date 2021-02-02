@@ -61,9 +61,9 @@ const StaffPicker = (props) => {
           </p>
           <i
           onClick={() => {
-            if (plan == "F" && business.number_of_employees >= 10) {
+            if (plan == "F" && business.number_of_employees >= 15) {
               toast.warning(
-                "Upgrade to premium to create more than 10 employees"
+                "Upgrade to premium to create more than 15 employees"
               );
               return false;
             } else if (business.number_of_employees >= total_employees) {

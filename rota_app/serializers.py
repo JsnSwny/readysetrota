@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability, Site
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta, time, date
 
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
@@ -115,11 +116,22 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftListSerializer(serializers.ModelSerializer):
     department = BasicDepartmentSerializer(read_only=True)
     start_time = serializers.SerializerMethodField()
+    length = serializers.SerializerMethodField()
     def get_start_time(self, obj):
         return str(obj.start_time)[0:5]
+    def get_length(self, obj):
+        if obj.end_time != "Finish":
+            current_date = date.today()
+            start = datetime.combine(current_date, obj.start_time)
+            end_time = datetime.strptime(obj.end_time, '%H:%M')
+            end = datetime.combine(current_date, end_time.time())
+            if (end < start):
+                end = end + timedelta(days=1)
+            shift_length = round((end - start).total_seconds() / 3600, 2)
+            return shift_length
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department', 'positions')
+        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'seen', 'department', 'positions', 'wage', 'length',)
         depth = 1
 
 class ShiftSerializer(serializers.ModelSerializer):
@@ -131,7 +143,17 @@ class ShiftSerializer(serializers.ModelSerializer):
 
     department = DepartmentSerializer(read_only=True)
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True, required=False)
-    
+    length = serializers.SerializerMethodField()
+    def get_length(self, obj):
+        if obj.end_time != "Finish":
+            current_date = date.today()
+            start = datetime.combine(current_date, obj.start_time)
+            end_time = datetime.strptime(obj.end_time, '%H:%M')
+            end = datetime.combine(current_date, end_time.time())
+            if (end < start):
+                end = end + timedelta(days=1)
+            shift_length = round((end - start).total_seconds() / 3600, 2)
+            return shift_length
     class Meta:
         model = Shift
         fields = '__all__'

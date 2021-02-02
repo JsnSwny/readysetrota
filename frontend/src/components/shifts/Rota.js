@@ -250,6 +250,7 @@ const Rota = ({modalProps, confirmProps}) => {
           dates={result}
           scrollPosition={scrollPosition}
           template={template}
+          shifts={shifts_list}
         />
         {isLoading && <Loading />}
         {current.department != 0 &&
@@ -270,7 +271,7 @@ const Rota = ({modalProps, confirmProps}) => {
                   <Employee
                     employee={employee}
                     current_employee={current_employee}
-                    shifts_list={shifts_list}
+                    shifts={shifts_list}
                     user={user}
                     currentDepartment={current.department}
                   />
