@@ -133,8 +133,8 @@ export const register = ({
     email,
     role,
     businessName,
-    first_name,
-    last_name
+    first_name: first_name ? first_name : businessName,
+    last_name: last_name ? last_name : businessName
   });
 
   axios
