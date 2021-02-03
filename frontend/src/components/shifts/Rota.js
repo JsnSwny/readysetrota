@@ -162,6 +162,7 @@ const Rota = ({modalProps, confirmProps}) => {
   };
 
   const isAvailable = (employee, date) => {
+    console.log(employees)
     let available = availability.filter(
       (item) => item.employee.id == employee && item.date == date
     )[0];
@@ -202,9 +203,9 @@ const Rota = ({modalProps, confirmProps}) => {
     
   }
 
-  // if(loading.employees) {
-  //   return <Loading />;
-  // }
+  if(loading.employees) {
+    return <Loading />;
+  }
 
   if(!loading.employees && employees.length == 0) {
     toast.warning("You do not currently have any employees to manage in this department")
