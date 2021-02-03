@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 const Register = (props) => {
   let path = false;
   if(props.location.state) {
-    console.log(props.location.state)
     path = props.location.state.path.url;
     if(!path.includes("/join")) {
       path = false;

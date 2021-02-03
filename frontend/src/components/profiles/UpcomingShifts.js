@@ -17,6 +17,8 @@ const UpcomingShifts = (props) => {
     const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
     const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
 
+    let departments = useSelector((state) => state.employees.departments);
+
     let business = useSelector((state) => state.auth.business);
 
     let published_shifts = currentShifts.filter((item) => item.published)
@@ -73,9 +75,9 @@ const UpcomingShifts = (props) => {
                         <p className={`long ${item.info ? "" : "info"}`}>
                           {item.info ? item.info : "N/A"}
                         </p>
-                        <p className="short extra">{item.department.name}</p>
+                        <p className="short extra">{departments.find(dep => dep.id == item.department).name}</p>
                         <p className="short extra">
-                          {item.department.business.name}
+                          {departments.find(dep => dep.id == item.department).business.name}
                         </p>
                       </div>
                     )}

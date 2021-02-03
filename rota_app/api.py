@@ -1,7 +1,7 @@
-from .models import Shift, Employee, Position, Department, ShiftSwap, Business, Availability, Site
+from .models import Shift, Employee, Position, Department, Business, Availability, Site
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer, 
-DepartmentSerializer, ShiftSwapSerializer, BusinessSerializer, AvailabilitySerializer, 
+DepartmentSerializer, BusinessSerializer, AvailabilitySerializer, 
 ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
 BasicPositionSerializer)
 from datetime import date
@@ -199,44 +199,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         if business.plan == "F" and len(departments) >= 1:
             return False
         serializer.save(owner=self.request.user)
-
-
-    
-
-
-class ShiftSwapFilter(django_filters.FilterSet):
-
-    q = django_filters.CharFilter(method='filter_q')
-
-    def filter_q(self, qs, name, value):
-        return qs.filter(
-            Q(swap_to__employee__id=value) | Q(swap_from__employee__id=value)
-        )
-
-    class Meta:
-        model = ShiftSwap
-        fields = ['q']
-
-class ShiftSwapViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = ShiftSwapSerializer
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = ShiftSwapFilter
-    
-    def perform_create(self, serializer):
-        shift_from = Shift.objects.filter(id=self.request.data['shift_from']).first()
-        shift_to = Shift.objects.filter(id=self.request.data['shift_to']).first()
-        
-        swap_from = shift_from.employee.user
-        swap_to = shift_to.employee.user
-
-        serializer.save(swap_from=swap_from, swap_to=swap_to, shift_from=shift_from, shift_to=shift_to)
-
-    queryset = ShiftSwap.objects.all()
-
-
 
 class AvailabilityFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()

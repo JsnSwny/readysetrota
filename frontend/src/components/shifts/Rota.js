@@ -15,36 +15,32 @@ import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
 
 const Rota = ({modalProps, confirmProps}) => {
-
   const dispatch = useDispatch();
-  const [employeesList, setEmployeesList] = useState([]);
-  const [filterDate, setFilterDate] = useState("");
-  const [currentDevice, setCurrentDevice] = useState("");
-  const [shiftSwap, setShiftSwap] = useState({});
-  const [showAvailabilities, setShowAvailabilities] = useState(false);
-  const [template, setTemplate] = useState(false);
-  const [limit, setLimit] = useState("");
-  const [scrollPosition, setScrollPosition] = useState(0);
 
+  // State Selectors
   let user = useSelector((state) => state.auth.user);
-  let sites = useSelector((state) => state.employees.sites)
   let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
   let availability = useSelector((state) => state.employees.availability);
   let positions = useSelector((state) => state.employees.positions)
   let loading = useSelector((state) => state.loading);
-
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
-
   let current = useSelector((state) => state.employees.current);
-
   let width = useSelector((state) => state.responsive.width);
-  let parsedDate = parseISO(date, "dd-MM-yyyy");
-
   let siteAdmin = useSelector((state) => state.employees.site_admin);
+
+  // Use State
+  const [employeesList, setEmployeesList] = useState(employees);
+  const [filterDate, setFilterDate] = useState("");
+  const [currentDevice, setCurrentDevice] = useState("");
+  const [showAvailabilities, setShowAvailabilities] = useState(false);
+  const [template, setTemplate] = useState(false);
+  const [limit, setLimit] = useState("");
+  const [scrollPosition, setScrollPosition] = useState(0);
+  
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
@@ -60,26 +56,28 @@ const Rota = ({modalProps, confirmProps}) => {
     )[0];
   }
 
-  const widthUpdate = () => {
+  // Update shifts based on width
+  const widthUpdate = (force=false) => {
     let currentDate = format(new Date(), "yyyy-MM-dd");
     if (width > 1200) {
-      if (currentDevice != "Desktop") {
-        updateShifts(date, format(addDays(parsedDate, 6), "yyyy-MM-dd"));
+      if (currentDevice != "Desktop" || force) {
+        updateShifts(date, format(addDays(parseISO(date, "dd-MM-yyyy"), 6), "yyyy-MM-dd"));
         setCurrentDevice("Desktop");
       }
     } else if (width > 600) {
-      if (currentDevice != "Tablet") {
+      if (currentDevice != "Tablet" || force) {
         updateShifts(currentDate, format(addDays(new Date(), 2), "yyyy-MM-dd"));
         setCurrentDevice("Tablet");
       }
     } else {
-      if (currentDevice != "Mobile") {
+      if (currentDevice != "Mobile" || force) {
         updateShifts(currentDate, currentDate);
         setCurrentDevice("Mobile");
       }
     }
   };
 
+  // Width initial update
   const firstUpdateWidth = useRef(true);
   useEffect(() => {
     if (firstUpdateWidth.current) {
@@ -89,32 +87,15 @@ const Rota = ({modalProps, confirmProps}) => {
     widthUpdate();
   }, [width]);
 
-  useEffect(() => {
-    if(sites.length == 0) {
-      dispatch(getSites());
-    }
-    if(current.site > 0) {
-      dispatch(getDepartments());
-    }
-  }, [current.site]);
-
-  const firstUpdateDepartment = useRef(true);
+  // Update Shifts and Popular Times
   useEffect(() => {
     if(current.department > 0 && current.site > 0) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
       dispatch(getPopularTimes());
-      dispatch(getPopularTimes());
-      if (firstUpdateDepartment.current) {
-        widthUpdate();
-        return;
-      }
-  
-      updateShifts(start_date, end_date);
+      widthUpdate(true);
     }
   }, [current.department, current.site]);
 
+  // Initialise employee list
   useEffect(() => {
     if (user && !user.business && current_employee) {
       if (employees.length > 0) {
@@ -136,20 +117,22 @@ const Rota = ({modalProps, confirmProps}) => {
     }
   }, [employees]);
 
+  // Filter employees after shift update
   useEffect(() => {
     if (filterDate) {
       filterEmployees(filterDate, true);
     }
   }, [shifts_list]);
 
+  // Date range
   var result = eachDayOfInterval({
     start: parseISO(date),
     end: parseISO(enddate),
   });
-
+  
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
-      return obj.employee && obj.employee.id === employee && obj.date === date
+      return obj.employee === employee && obj.date === date
         ? siteAdmin
           ? !obj.published || obj.published
           : obj.published
@@ -168,7 +151,7 @@ const Rota = ({modalProps, confirmProps}) => {
     let newEmployees = [];
     employeesOnDay.map((obj) => {
       !newEmployees.some((item) => item.id === obj.employee.id) &&
-        newEmployees.push(obj.employee);
+        newEmployees.push(employees.find(item => item.id == obj.employee.id));
     });
     employees.map((obj) => {
       !newEmployees.some((item) => item.id === obj.id) &&
@@ -219,9 +202,9 @@ const Rota = ({modalProps, confirmProps}) => {
     
   }
 
-  if(loading.employees) {
-    return <Loading />;
-  }
+  // if(loading.employees) {
+  //   return <Loading />;
+  // }
 
   if(!loading.employees && employees.length == 0) {
     toast.warning("You do not currently have any employees to manage in this department")
@@ -252,7 +235,7 @@ const Rota = ({modalProps, confirmProps}) => {
           template={template}
           shifts={shifts_list}
         />
-        {isLoading && <Loading />}
+        {/* {isLoading && <Loading />} */}
         {current.department != 0 &&
           (template ? (
             <ShiftTemplate shifts={shifts_list} result={result} />

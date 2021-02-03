@@ -48,29 +48,12 @@ const StaffProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    if(sites.length == 0) {
-      dispatch(getSites());
-    }
-    if(current.site > 0) {
-      dispatch(getDepartments());
-    }
-  }, [current.site]);
-
-  useEffect(() => {
     if(current.site > 0) {
       if(siteAdmin) {
         dispatch(getHolidays(current.site));
       }
     }
   }, [sites]);
-
-  useEffect(() => {
-    if(current.department > 0 && current.site > 0) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
-    }
-  }, [current.department, current.site]);
 
   useEffect(() => {
     if(typeof(employee) !== 'undefined') {

@@ -32,24 +32,6 @@ const AdminPanel = (props) => {
 //     dispatch(getCustomer(user.profile.stripe_id));
 //   }, []);
 
-  useEffect(() => {
-    if(sites.length == 0) {
-      dispatch(getSites());
-    }
-    if(current.site > 0) {
-      dispatch(getDepartments());
-      dispatch(getHolidays(current.site));
-    }
-  }, [current.site]);
-
-  useEffect(() => {
-    if(current.department > 0 && current.site > 0) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
-    }
-  }, [current.department, current.site]);
-
 
   return (
       <Fragment>
