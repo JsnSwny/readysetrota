@@ -150,8 +150,8 @@ const Rota = ({modalProps, confirmProps}) => {
     });
     let newEmployees = [];
     employeesOnDay.map((obj) => {
-      !newEmployees.some((item) => item.id === obj.employee.id) &&
-        newEmployees.push(employees.find(item => item.id == obj.employee.id));
+      !newEmployees.some((item) => item.id === obj.employee) &&
+        newEmployees.push(employees.find(item => item.id == obj.employee));
     });
     employees.map((obj) => {
       !newEmployees.some((item) => item.id === obj.id) &&
