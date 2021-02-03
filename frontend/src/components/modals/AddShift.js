@@ -35,7 +35,7 @@ const AddShift = (props) => {
       setStartTime(shift.start_time);
       setEndTime(shift.end_time);
       setInfo(shift.info);
-      setPosition(shift.positions)
+      setPosition(shift.positions.map(item => positions.find(pos => pos.id == item)))
     }
   }, [shift]);
 
@@ -43,7 +43,7 @@ const AddShift = (props) => {
     return (
       shift1.start_time == shift2.start_time &&
       shift1.end_time == shift2.end_time &&
-      shift1.info == shift2.info && shift1.employee_id == shift2.employee_id && (shift2.position_id.length > 0 ? shift1.positions == shift2.positions : true)
+      shift1.info == shift2.info && shift1.employee_id == shift2.employee_id && ((shift2.position_id.length > 0 || shift1.positions.length > 0) ? shift1.positions == shift2.positions : true)
     );
   };
 
@@ -186,7 +186,7 @@ const AddShift = (props) => {
         {!employee && (
           <div className="staffForm__control">
             <label className="staffForm__label">Position(s):</label>
-            <PositionField many={true} departments={departments} position={position} setPosition={setPosition} positions={positions} />
+            <PositionField many={true} shift={shift} departments={departments} position={position} setPosition={setPosition} positions={positions} />
         </div>
         )}
         

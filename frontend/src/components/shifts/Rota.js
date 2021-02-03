@@ -162,7 +162,6 @@ const Rota = ({modalProps, confirmProps}) => {
   };
 
   const isAvailable = (employee, date) => {
-    console.log(employees)
     let available = availability.filter(
       (item) => item.employee.id == employee && item.date == date
     )[0];

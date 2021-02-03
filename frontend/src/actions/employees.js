@@ -171,6 +171,7 @@ export const getEmployees = () => (dispatch, getState) => {
   if(current.department > 0) {
     query += `&position__department=${current.department}`
   }
+  console.log(site_admin)
   axios
     .get(
       `/api/employeelist${site_admin ? "admin" : ""}/?${query}&ordering=first_name`,

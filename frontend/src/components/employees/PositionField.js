@@ -1,8 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
 const PositionField = (props) => {
-    const { departments, position, positions, setPosition, many } = props;
-
+    const { departments, position, positions, setPosition, many, shift } = props;
+    
     return (
         departments.map(dep => 
             positions.filter(pos => pos.department.id == dep.id).length > 0 &&

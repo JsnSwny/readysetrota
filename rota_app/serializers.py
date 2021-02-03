@@ -127,6 +127,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True, required=False, allow_null=True)
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True, required=False)
     length = serializers.SerializerMethodField()
+    position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='positions', write_only=True, many=True, required=False)
     def get_length(self, obj):
         if obj.end_time != "Finish":
             current_date = date.today()
@@ -139,7 +140,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'positions', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'positions', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 

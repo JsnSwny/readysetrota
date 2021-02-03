@@ -57,6 +57,7 @@ const Main = () => {
         (state) => state.employees.current
     );
     let business = useSelector((state) => state.employees.business)
+    let loading = useSelector((state) => state.loading);
 
     let sites = useSelector((state) => state.employees.sites);
 
@@ -71,12 +72,12 @@ const Main = () => {
     }, [current.site]);
 
     useEffect(() => {
-        if(current.department > 0 && current.site > 0) {
+        if(!loading.departments && !loading.sites) {
             dispatch(getEmployees());
             dispatch(getPositions(true));
             dispatch(getPositions());
         }
-    }, [current.department, current.site]);
+    }, [departments, sites]);
 
     const modalProps = {
         setOpen,
