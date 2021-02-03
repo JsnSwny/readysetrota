@@ -1,0 +1,21 @@
+.error-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+    flex-direction: column;
+    h1 {
+        color: red;
+    }
+    details {
+        margin-top: 10px;
+    }
+    summary {
+        &:focus {
+            outline: none;
+        }
+        cursor: pointer;
+    }
+}

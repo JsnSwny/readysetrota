@@ -144,7 +144,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                                 toast.success("Your premium subscription has been cancelled")
                                             })
                                             
-                                        }} className="sidenav__link">
+                                        }} className="sidenav__link no-link">
                                             <div className="sidenav__link-text">
                                                 <i className="fas fa-times"></i> Cancel Premium
                                             </div>

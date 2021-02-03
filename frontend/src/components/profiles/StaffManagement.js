@@ -23,12 +23,13 @@ const StaffManagement = ({modalProps}) => {
   let business = useSelector((state) => state.employees.business)
 
   let sites = useSelector((state) => state.employees.sites);
+  let user = useSelector((state) => state.auth.user);
 
   return (
     <div className="dashboard container-2">
       {business.plan != "F" && (
         <Fragment>
-          <SitePicker {...modalProps} admin={true} />
+          <SitePicker {...modalProps} admin={user.business ? true : false} />
           <DepartmentPicker {...modalProps} admin={true} />
         </Fragment>
       )}

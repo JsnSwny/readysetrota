@@ -22,7 +22,10 @@ const UpcomingShifts = (props) => {
     let business = useSelector((state) => state.auth.business);
 
     let published_shifts = currentShifts.filter((item) => item.published)
-    
+
+    if(!shifts.some(item => departments.some(dep => dep.id == item.department))) {
+      return false;
+    }
 
     return (
         <div className="dashboard__block">

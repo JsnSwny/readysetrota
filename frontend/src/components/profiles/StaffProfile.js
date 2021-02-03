@@ -65,6 +65,10 @@ const StaffProfile = (props) => {
     }
   }, [employee])
 
+  if(siteAdmin && !employees.some(item => item.id == id_param)) {
+    return <Redirect to="" />;
+  }
+
   if (!siteAdmin && id_param) {
     return <Redirect to="" />;
   }

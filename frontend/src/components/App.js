@@ -8,6 +8,7 @@ import { loadUser } from "../actions/auth";
 import "../css/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import { setWidth } from "../actions/responsive";
+import ErrorBoundary from "./ErrorBoundary"
 
 const App = () => {
   useEffect(() => {
@@ -19,7 +20,9 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <Main />
+      <ErrorBoundary>
+        <Main />
+      </ErrorBoundary>
     </Provider>
   );
 };

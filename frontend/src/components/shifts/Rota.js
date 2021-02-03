@@ -235,7 +235,7 @@ const Rota = ({modalProps, confirmProps}) => {
           template={template}
           shifts={shifts_list}
         />
-        {/* {isLoading && <Loading />} */}
+        {isLoading && <Loading />}
         {current.department != 0 &&
           (template ? (
             <ShiftTemplate shifts={shifts_list} result={result} />
