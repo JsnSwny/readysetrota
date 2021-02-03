@@ -139,12 +139,13 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'positions', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length',)
 
 
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField(read_only=True)
+
     def get_start_time(self, obj):
         if obj.start_time:
             return str(obj.start_time)[0:5]
