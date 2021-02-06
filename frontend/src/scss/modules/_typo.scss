@@ -31,3 +31,12 @@
         }
     }
 }
+
+.link {
+    color: $pink;
+    transition: 0.2s ease color;
+    &:hover {
+        color: black;
+        text-decoration: underline;
+    }
+}

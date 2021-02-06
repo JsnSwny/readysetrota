@@ -1,17 +1,22 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { format, parseISO } from "date-fns";
 import { updateAvailability } from "../../../actions/employees";
 import { useDispatch } from "react-redux";
 import Pagination from "../../common/Pagination";
+import { Link } from "react-router-dom";
 
 const HolidayRequest = (props) => {
-  const { holidays, admin } = props;
+  const { admin } = props;
 
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  let holidays = useSelector((state) => state.employees.holidays);
   const [filteredHolidays, setFilteredHolidays] = useState(holidays);
+
+  
 
   const [filter, setFilter] = useState(admin ? "Unmarked" : "All");
 
@@ -37,13 +42,13 @@ const HolidayRequest = (props) => {
   );
 
   return (
-    <div className="dashboard__block">
+    <div className={`dashboard__block${admin ? "" : "--half"}`}>
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">
           {admin ? "" : "Your"} Holiday Requests
         </p>
       </div>
-      <div className="flex-container--wrap">
+      {/* <div className="flex-container--wrap">
         {filters.map((item) => (
           <span
             key={item}
@@ -55,64 +60,32 @@ const HolidayRequest = (props) => {
             {item}
           </span>
         ))}
-      </div>
-      <div className="dashboard__block-container-lg">
-        {!filteredHolidays.length > 0 ? (
-          <p className="dashboard__text helper-text">
-            There are no holidays of type "{filter}" to display.
-          </p>
-        ) : (
-          <Fragment>
-            {currentHolidays.map(
-              (item) =>
-                item.name == "holiday" && (
-                  <div key={item.id}
-                    className={`dashboard__holiday ${
-                      item.approved
-                        ? "approved"
-                        : item.approved != null && "not-approved"
-                    }`}
-                  >
-                    <p>
-                      {item.employee.full_name} -{" "}
-                      {format(parseISO(item.date), "dd MMMM yyyy")} (
-                      {item.site.name})
-                    </p>
-                    {admin && (
-                      <Fragment>
-                        <i
-                          onClick={() => {
-                            let obj = {
-                              name: item.name,
-                              employee_id: item.employee.id,
-                              date: item.date,
-                              approved: true,
-                              site_id: item.site.id,
-                            };
-                            dispatch(updateAvailability(item.id, obj));
-                          }}
-                          className="fas fa-check-circle"
-                        ></i>
-                        <i
-                          onClick={() => {
-                            let obj = {
-                              name: item.name,
-                              employee_id: item.employee.id,
-                              date: item.date,
-                              approved: false,
-                              site_id: item.site.id,
-                            };
-                            dispatch(updateAvailability(item.id, obj));
-                          }}
-                          className="fas fa-times-circle"
-                        ></i>
-                      </Fragment>
-                    )}
-                  </div>
-                )
-            )}
-          </Fragment>
-        )}
+      </div> */}
+      {admin && (
+        <Fragment>
+          <p>You have {holidays.filter(item => item.approved == null).length} unmarked holidays to review.</p>
+          <Link className="link" to="/list/holidays">View all holiday requests</Link>
+        </Fragment>
+      )}
+      
+      <div className="list dash">
+      <table>
+          <tr>
+              {admin && <th>Employee</th>}
+              <th>Date</th>
+              <th>Approved</th>
+              {admin && <th>Requested</th>}
+          </tr>
+          {currentHolidays.map(item => (
+                  <tr>
+                  {admin && <td>{item.employee.full_name}</td>}
+                  <td>{format(parseISO(item.date), "cccc do MMMM yyyy")}</td>
+                  <td>{item.approved == null ? "Unmarked" : item.approved ? "Approved" : "Not Approved"}</td>
+                  {admin && <td>{format(parseISO(item.updated_at), "cccc do MMMM yyyy")}</td>}
+              </tr>
+          ))}
+          
+      </table>
       </div>
       <Pagination
         itemsPerPage={itemsPerPage}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import HolidayRequest from "./dashboard/HolidayRequest";
+import DropButton from "../lists/DropButton";
 import {
     updateAvailability,
     addAvailability,
@@ -63,79 +64,21 @@ const Availability = (props) => {
         );
       }, [availabilityMonth]);
 
+      const resetAction = {name: 'Reset', action: () => setCurrentSelector("unselected")};
+      const availableAction = {name: 'Available', action: () => setCurrentSelector("available")};
+      const partialAction = {name: 'Partial', action: () => setCurrentSelector("partial")};
+      const unavailableAction = {name: 'Unavailable', action: () => setCurrentSelector("unavailable")};
+      const holidayAction = {name: 'Holiday', action: () => setCurrentSelector("holiday")};
+
+      const actionNames = {"unselected": "Reset", "available": "Available", "partial": "Partial", "unavailable": "Unavailable", "holiday": "Holiday"}
+
     return (
-        <div className="dashboard__block--half-container">
             <div className="dashboard__block--half">
             <div className="dashboard__block-title-container">
                 <p className="dashboard__block-title">Availability</p>
             </div>
-
+            <DropButton title={actionNames[currentSelector]} actions={[resetAction, availableAction, partialAction, unavailableAction, holidayAction]} />
             <div className="dashboard__block-container">
-                {/* <h4
-                style={{
-                    textAlign: "center",
-                    marginTop: "20px",
-                    marginBottom: "20px",
-                }}
-                >
-                Default Availability
-                </h4>
-                <div
-                className="dashboard__dates"
-                style={{ marginBottom: "60px" }}
-                >
-                {[...Array(7)].map((e, i) => (
-                    <div key={i} className="dashboard__dates-item">
-                    <p
-                        onClick={() => {
-                        if (
-                            currentSelector == "partial" &&
-                            !(startTime && endTime)
-                        ) {
-                            toast.warning(
-                            "You must set a start and end time when creating a partial availability!"
-                            );
-                        } else if (currentSelector == "holiday") {
-                            toast.warning(
-                            "You can't set a holiday as a default availability!"
-                            );
-                        } else {
-                            let temp_availability =
-                            employee.default_availability;
-                            temp_availability[i] = {
-                            name: currentSelector,
-                            start_time:
-                                currentSelector == "partial" && startTime
-                                ? startTime.substr(0, 5)
-                                : null,
-                            end_time:
-                                currentSelector == "partial" && endTime
-                                ? endTime
-                                : null,
-                            };
-
-                            let obj = {
-                            default_availability: temp_availability,
-                            };
-                            dispatch(
-                            updateEmployee(employee.id, {
-                                ...employee,
-                                obj,
-                                position_id: employee.position.map(
-                                (item) => item.id
-                                ),
-                                business_id: employee.business.id,
-                            })
-                            );
-                        }
-                        }}
-                        className={`${currentSelector} current-${employee.default_availability[i].name}`}
-                    >
-                        {days[i + 1]}
-                    </p>
-                    </div>
-                ))}
-                </div> */}
                 <p className="dashboard__dates-title flex-container--between-center">
                 <span
                     onClick={() => {
@@ -261,68 +204,6 @@ const Availability = (props) => {
                 })}
                 </div>
             </div>
-            <div className="dashboard__dates-colours">
-                <span
-                onClick={() => {
-                    setCurrentSelector("unselected");
-                    toast.info("Reset Selected", { autoClose: 2000 });
-                }}
-                className={`dashboard__dates-colours-item gray ${
-                    currentSelector == "unselected" ? "current" : ""
-                } `}
-                ></span>
-                <span
-                onClick={() => {
-                    setCurrentSelector("available");
-                    toast.info("Available Selected", { autoClose: 2000 });
-                }}
-                className={`dashboard__dates-colours-item green ${
-                    currentSelector == "available" ? "current" : ""
-                } `}
-                ></span>
-                <span
-                onClick={() => {
-                    setCurrentSelector("partial");
-                    toast.info("Partially Available Selected", {
-                    autoClose: 2000,
-                    });
-                }}
-                className={`dashboard__dates-colours-item yellow ${
-                    currentSelector == "partial" ? "current" : ""
-                } `}
-                ></span>
-                <span
-                onClick={() => {
-                    setCurrentSelector("unavailable");
-                    toast.info("Unavailable Selected", { autoClose: 2000 });
-                }}
-                className={`dashboard__dates-colours-item red ${
-                    currentSelector == "unavailable" ? "current" : ""
-                } `}
-                ></span>
-                <span
-                onClick={() => {
-                    setCurrentSelector("holiday");
-                    toast.info("Holiday Selected", { autoClose: 2000 });
-                }}
-                className={`dashboard__dates-colours-item blue ${
-                    currentSelector == "holiday" ? "current" : ""
-                } `}
-                ></span>
-            </div>
-            <div className="dashboard__dates-colours">
-                <span className="dashboard__dates-colours-text">Reset</span>
-                <span className="dashboard__dates-colours-text">
-                Available
-                </span>
-                <span className="dashboard__dates-colours-text">
-                Partially Available
-                </span>
-                <span className="dashboard__dates-colours-text">
-                Unavailable
-                </span>
-                <span className="dashboard__dates-colours-text">Holiday</span>
-            </div>
             {currentSelector == "partial" && (
                 <div className="dashboard__dates-times">
                 <div className="staffForm__times">
@@ -368,7 +249,6 @@ const Availability = (props) => {
             )}
             </div>
             
-        </div>
     )
 }
 

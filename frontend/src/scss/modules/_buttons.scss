@@ -124,6 +124,10 @@
       pointer-events: none;
     }
   }
+  &-7 {
+    @extend .btn;
+    color: black;
+  }
   &-modal {
     @extend .btn;
     padding: 10px 0;
@@ -203,6 +207,7 @@
     &__items {
       display: none;
       width: 90%;
+      z-index: 20;
       margin: 0 auto;
       position: absolute;
       top: 100%;

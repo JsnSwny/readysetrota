@@ -50,7 +50,7 @@ export const batchDeleteShifts = (shifts) => (dispatch, getState) => {
 }
 
 // Get Bookings
-export const getShifts = (startdate, enddate, list=false) => (dispatch, getState) => {
+export const getShifts = (startdate, enddate, list=false, user=false, id="") => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
@@ -58,7 +58,7 @@ export const getShifts = (startdate, enddate, list=false) => (dispatch, getState
     .get(
       `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
         getState().employees.current.department
-      }&ordering=date,start_time`,
+      }${user ? `&employee__user__id=${id}` : `&employee=${id}`}&ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {

@@ -28,9 +28,9 @@ const AdminPanel = (props) => {
   let sites = useSelector((state) => state.employees.sites);
   let departments = useSelector((state) => state.employees.departments)
 
-//   useEffect(() => {
-//     dispatch(getCustomer(user.profile.stripe_id));
-//   }, []);
+  useEffect(() => {
+    dispatch(getHolidays(current.site));
+  }, []);
 
 
   return (

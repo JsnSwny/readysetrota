@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getShiftsByID } from "../../actions/shifts";
+import { getShifts } from "../../actions/shifts";
 import {
   getEmployees,
   getAvailability,
@@ -16,6 +16,7 @@ import HolidayRequest from "./dashboard/HolidayRequest";
 import UpcomingShifts from "./UpcomingShifts";
 import Stats from "./dashboard/stats/Stats";
 import SitePicker from "./dashboard/SitePicker";
+import { format } from "date-fns";
 
 const StaffProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -46,12 +47,12 @@ const StaffProfile = (props) => {
   );
 
   useEffect(() => {
-    dispatch(getShiftsByID(employee_id, user.id == employee_id));
+    dispatch(getShifts(format(new Date(), "yyyy-MM-dd"), "", true, user.id == employee_id, employee_id));
   }, []);
 
   useEffect(() => {
     if(current.site > 0) {
-      if(siteAdmin) {
+      if(siteAdmin && !id_param) {
         dispatch(getHolidays(current.site));
       }
     }
@@ -84,10 +85,12 @@ const StaffProfile = (props) => {
           
       {current.department != 0 && currentEmployee && (
         <Fragment>
-          <UpcomingShifts employee={currentEmployee} />
-          
-          <HolidayRequest holidays={holidays} admin={siteAdmin} />
+          <UpcomingShifts employee={currentEmployee} admin={siteAdmin && id_param} />
+          <div className="flex-container--between">
           {plan != "F" && <Availability employee={currentEmployee} />}
+          <HolidayRequest holidays={holidays} admin={siteAdmin && !id_param} />
+          
+          </div>
         </Fragment>
       )}
         </Fragment>

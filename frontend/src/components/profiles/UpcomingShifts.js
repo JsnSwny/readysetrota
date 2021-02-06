@@ -8,8 +8,8 @@ import {
 import Pagination from "../common/Pagination";
 
 const UpcomingShifts = (props) => {
-    let shifts = useSelector((state) => state.shifts.user_shifts);
-    const { employee } = props;
+    let shifts = useSelector((state) => state.shifts.shifts);
+    const { employee, admin } = props;
 
     const [currentPage, setCurrentPage] = useState(1);
     const [shiftsPerPage, setShiftsPerPage] = useState(5);
@@ -19,6 +19,8 @@ const UpcomingShifts = (props) => {
 
     let departments = useSelector((state) => state.employees.departments);
 
+    let width = useSelector((state) => state.responsive.width)
+
     let business = useSelector((state) => state.auth.business);
 
     let published_shifts = currentShifts.filter((item) => item.published)
@@ -27,66 +29,51 @@ const UpcomingShifts = (props) => {
       return false;
     }
 
+    const toMinutes = (val) => {
+      let n = new Date(0,0);
+      n.setMinutes(+val * 60);
+      return n.getMinutes() > 0 ? `${n.getMinutes()}mins` : "";
+  }
+
     return (
         <div className="dashboard__block">
             <div className="dashboard__block-title-container">
               <p className="dashboard__block-title">Upcoming Shifts</p>
               {published_shifts.length > 0 && (
                 <a
-                  className="btn-4"
+                  className="btn-7"
                   target="_blank"
                   href={`/export?id=${employee && employee.id}`}
                 >
-                  Export Shifts as PDF
+                  <i class="fas fa-file-export"></i> Export Shifts
                 </a>
               )}
             </div>
             {published_shifts.length > 0 ? (
-              <div className="dashboard__block-container">
-                <div className="dashboard__table-heading table">
-                  <p className="short">Date</p>
-                  <p className="short">Time</p>
-                  <p className="long">Info</p>
-                  <p className="short">Department</p>
-                  <p className="short">Business</p>
-                </div>
-
-                {published_shifts.map((item) => (
-                  <Fragment key={item.id}>
-                    {!item.published && !business ? (
-                      ""
-                    ) : (
-                      <div
-                        className={`dashboard__table-row table ${
-                          !item.published ? "unpublished" : ""
-                        }`}
-                      >
-                        <p className="short">
-                          <span className="block">
-                            {format(parseISO(item.date, "dd-MM-yyyy"), "EEEE ")}
-                          </span>
-                          <span>
-                            {format(
-                              parseISO(item.date, "dd-MM-yyyy"),
-                              "MMMM d yyyy"
-                            )}
-                          </span>
-                        </p>
-                        <p className="short">
-                          {item.start_time} - {item.end_time}
-                        </p>
-                        <p className={`long ${item.info ? "" : "info"}`}>
-                          {item.info ? item.info : "N/A"}
-                        </p>
-                        <p className="short extra">{departments.find(dep => dep.id == item.department).name}</p>
-                        <p className="short extra">
-                          {departments.find(dep => dep.id == item.department).business.name}
-                        </p>
-                      </div>
-                    )}
-                  </Fragment>
-                ))}
-              </div>
+              <div className="list dash">
+                <table>
+                  <tr>
+                      <th>Date</th>
+                      <th>Start time</th>
+                      <th>End time</th>
+                      <th className="no-mobile">Length</th>
+                      <th className="no-mobile">Pay</th>
+                      {admin && <th>Employee</th>}
+                      {admin && <th>Published</th>}
+                  </tr>
+                  {published_shifts.map(item => (
+                      <tr>
+                          <td>{format(parseISO(item.date), `${width < 1000 ? "ccc do MMM yyyy" : "cccc do MMMM yyyy"}`)}</td>
+                          <td>{item.start_time}</td>
+                          <td>{item.end_time}</td>
+                          <td className="no-mobile">{parseInt(item.length) > 0 ? `${parseInt(item.length)}hrs` : ""} {toMinutes(item.length)}</td>
+                          <td className="no-mobile">£{item.length * item.wage}</td>
+                          {admin && <td>{item.employee ? item.employee.full_name : "Open Shift"}</td>}
+                          {admin && <td>{item.published ? "Published" : "Not Published"}</td>}
+                      </tr>
+                  ))} 
+              </table>
+            </div>
             ) : (
               <p className="dashboard__text helper-text">
                 You currently have no upcoming shifts.
@@ -95,7 +82,7 @@ const UpcomingShifts = (props) => {
 
             <Pagination
               itemsPerPage={shiftsPerPage}
-              totalItems={published_shifts.length}
+              totalItems={shifts.length}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
             />

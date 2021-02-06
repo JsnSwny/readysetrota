@@ -70,6 +70,7 @@ export default function (state = initialState, action) {
     let current_site = state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site;
   
     let isSiteAdminGet = (user) => {
+      console.log(user.business)
         return user.business ? true : action.payload.find(site => site.id == current_site) ? (action.payload.find(site => site.id == current_site).admins.includes(user.id)) : false;
       }
       return {

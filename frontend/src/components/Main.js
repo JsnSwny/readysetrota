@@ -58,10 +58,12 @@ const Main = () => {
     let current = useSelector(
         (state) => state.employees.current
     );
+    let siteAdmin = useSelector((state) => state.employees.site_admin)
     let business = useSelector((state) => state.employees.business)
     let loading = useSelector((state) => state.loading);
 
     let sites = useSelector((state) => state.employees.sites);
+
 
     useEffect(() => {
         if(sites.length == 0) {
@@ -69,9 +71,19 @@ const Main = () => {
         }
         if(current.site > 0) {
             dispatch(getDepartments());
-            dispatch(getHolidays(current.site));
+            if(siteAdmin) {
+              dispatch(getHolidays(current.site));
+            }
+            
         }
     }, [current.site]);
+
+    useEffect(() => {
+      console.log(siteAdmin)
+      if(siteAdmin) {
+        dispatch(getHolidays(current.site));
+      }
+  }, [sites]);
 
     useEffect(() => {
         if(!loading.departments && !loading.sites) {
