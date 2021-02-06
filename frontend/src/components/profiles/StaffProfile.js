@@ -88,7 +88,7 @@ const StaffProfile = (props) => {
           <UpcomingShifts employee={currentEmployee} admin={siteAdmin && id_param} />
           <div className="flex-container--between">
           {plan != "F" && <Availability employee={currentEmployee} />}
-          <HolidayRequest holidays={holidays} admin={siteAdmin && !id_param} />
+          <HolidayRequest holidays={holidays} admin={(user.business && !id_param) || (siteAdmin && id_param)} />
           
           </div>
         </Fragment>
