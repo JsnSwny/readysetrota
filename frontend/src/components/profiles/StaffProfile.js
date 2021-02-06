@@ -21,6 +21,8 @@ const StaffProfile = (props) => {
   const { setOpen, setUpdate, setType } = props;
   const dispatch = useDispatch();
 
+  console.log("staff profile")
+
   let user = useSelector((state) => state.auth.user);
   let { id: id_param } = useParams();
   let employees = useSelector((state) => state.employees.employees);
@@ -65,9 +67,9 @@ const StaffProfile = (props) => {
     }
   }, [employee])
 
-  if(siteAdmin && !employees.some(item => item.id == id_param)) {
-    return <Redirect to="" />;
-  }
+  // if(siteAdmin && !employees.some(item => item.id == employee_id)) {
+  //   return <Redirect to="" />;
+  // }
 
   if (!siteAdmin && id_param) {
     return <Redirect to="" />;
