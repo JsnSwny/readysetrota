@@ -13,6 +13,8 @@ import store from "../store";
 import Rota from "./shifts/Rota";
 import ShiftTemplate from "./shifts/ShiftTemplate";
 
+import List from "./lists/List";
+
 import Register from "./accounts/Register";
 import Login from "./accounts/Login";
 
@@ -127,6 +129,8 @@ const Main = () => {
               user_only_pass={true}
               modalProps={modalProps}
             />
+            <PrivateRoute path="/list/:type" admin={true} exact component={List} modalProps={modalProps} confirmProps={confirmProps} />
+
             <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} confirmProps={confirmProps} />
             <PrivateRoute path="/template" exact component={ShiftTemplate} />
             <PrivateRoute admin={true} path="/staff-management" exact component={StaffManagement} modalProps={modalProps} />

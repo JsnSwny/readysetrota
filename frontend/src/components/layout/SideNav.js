@@ -112,9 +112,25 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                 </div>
                             </div>
                         )}
+                        {siteAdmin && (
+                            <div className={`sidenav__link-container ${navOpen == 'staff-management' ? "open" : ""}`}>
+                                <NavLink dropdown={true} toggleNav={toggleNav} dropdownAction={() => setNavOpen(`${navOpen != "staff-management" ? "staff-management" : ""}`)}  link={`${business.plan == "F" ? "/" : "/staff-management"}`} icon="fas fa-users-cog" title="Staff Management" />
+                                <div className="sidenav__sublinks">
+                                    <NavLink toggleNav={toggleNav} link="/list/employees" icon="fas fa-list" title="Employees" />
+                                    <NavLink toggleNav={toggleNav} link="/list/holidays" icon="fas fa-list" title="Holidays" />
+                                </div>
+                        </div>
+                        )}
                         
-                        {siteAdmin && <NavLink toggleNav={toggleNav} link={`${business.plan == "F" ? "/" : "/staff-management"}`} icon="fas fa-users-cog" title="Staff Management" />}
-                        <NavLink toggleNav={toggleNav}  link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} disabledMessage="You need to create employees to manage the rota" />
+                        
+                        {siteAdmin ? (
+                            <div className={`sidenav__link-container ${navOpen == 'rota' ? "open" : ""}`}>
+                                <NavLink dropdown={true} toggleNav={toggleNav} dropdownAction={() => setNavOpen(`${navOpen != "rota" ? "rota" : ""}`)}   link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} disabledMessage="You need to create employees to manage the rota" />
+                                <div className="sidenav__sublinks">
+                                    <NavLink toggleNav={toggleNav} link="/list/shifts" icon="fas fa-list" title="Shifts" />
+                                </div>
+                            </div>
+                        ) : (<NavLink toggleNav={toggleNav} link="/rota" icon="fas fa-briefcase" title="Rota" disabled={employees.length == 0} disabledMessage="You need to create employees to manage the rota" />)}
 
                         {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
                         <div className={`sidenav__link-container ${navOpen == 'settings' ? "open" : ""}`}>

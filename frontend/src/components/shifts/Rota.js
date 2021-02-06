@@ -132,7 +132,7 @@ const Rota = ({modalProps, confirmProps}) => {
   
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
-      return obj.employee === employee && obj.date === date
+      return obj.employee && obj.employee.id === employee && obj.date === date
         ? siteAdmin
           ? !obj.published || obj.published
           : obj.published
@@ -146,12 +146,12 @@ const Rota = ({modalProps, confirmProps}) => {
       return true;
     }
     let employeesOnDay = shifts_list.filter((obj) => {
-      return obj.date == date && obj.employee;
+      return obj.date == date && obj.employee && obj.employee.id;
     });
     let newEmployees = [];
     employeesOnDay.map((obj) => {
-      !newEmployees.some((item) => item.id === obj.employee) &&
-        newEmployees.push(employees.find(item => item.id == obj.employee));
+      !newEmployees.some((item) => item.id === obj.employee.id) &&
+        newEmployees.push(employees.find(item => item.id == obj.employee.id));
     });
     employees.map((obj) => {
       !newEmployees.some((item) => item.id === obj.id) &&

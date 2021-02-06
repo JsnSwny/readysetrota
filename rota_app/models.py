@@ -133,6 +133,8 @@ class Availability(models.Model):
     employee = models.ForeignKey(Employee, related_name="availability", on_delete=models.CASCADE)
     approved = models.BooleanField(null=True, blank=True)
     site = models.ForeignKey(Site, related_name="availability_site", on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f'{self.date} - {self.name} - {self.employee}'
 

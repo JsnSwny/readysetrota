@@ -57,11 +57,12 @@ export default function (state = initialState, action) {
         isLoading: true,
       };
     case GET_ALL_SHIFTS:
+      console.log(action.list)
       return {
         ...state,
         shifts: action.payload,
-        date: action.date,
-        end_date: action.enddate,
+        date: !action.list ? action.date : state.date,
+        end_date: !action.list ? action.enddate : state.end_date,
         isLoading: false,
       };
 

@@ -83,9 +83,15 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    full_name = serializers.SerializerMethodField()
+    
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability',)
+        fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability',)
+    def get_full_name(self, obj):
+        if obj.first_name:
+            return f'{obj.first_name} {obj.last_name}'
+        return 'Open Shift'
 
 class AdminEmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
@@ -93,9 +99,12 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     uuid = serializers.SerializerMethodField()
+    full_name = serializers.SerializerMethodField()
+    def get_full_name(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type')
+        fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner', 'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type')
     def get_uuid(self, obj):
         user = None
         request = self.context.get("request")
@@ -113,14 +122,10 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         depth = 1
 
-class ShiftEmployeeSerializer(EmployeeListSerializer):
-    position = BasicPositionSerializer(read_only=True, many=True)
-    business = BusinessSerializer(read_only=True)
-    default_availability = serializers.JSONField()
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id',)
+        fields = ('id', 'full_name')
 
 
 class ShiftListSerializer(serializers.ModelSerializer):
@@ -128,6 +133,8 @@ class ShiftListSerializer(serializers.ModelSerializer):
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), source='department', write_only=True, required=False)
     length = serializers.SerializerMethodField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(), source='positions', write_only=True, many=True, required=False)
+    employee = ShiftEmployeeSerializer(read_only=True)
+
     def get_length(self, obj):
         if obj.end_time != "Finish":
             current_date = date.today()
@@ -146,14 +153,15 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField(read_only=True)
-
     def get_start_time(self, obj):
         if obj.start_time:
             return str(obj.start_time)[0:5]
 
 class AvailabilitySerializer(serializers.ModelSerializer):
-    employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), source='employee', write_only=True)
-    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
+    employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), required=False, source='employee', write_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), required=False, source='site', write_only=True)
+    employee = ShiftEmployeeSerializer(read_only=True)
+
     class Meta:
         model = Availability
         fields = '__all__'

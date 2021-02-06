@@ -18,8 +18,39 @@ import { tokenConfig } from "./auth";
 import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
+export const batchPublish = (shifts, val) => (dispatch, getState) => {
+  axios.all(
+    shifts.map(item => axios.put(`/api/shifts/${item.id}/`, {...item, published: val}))
+  )
+  .then(responseArr => {
+    for(let i=0; i<shifts.length; i++) {
+      dispatch({
+        type: UPDATE_SHIFT,
+        payload: { ...responseArr[i].data, published: val },
+      });
+    }
+    
+  }).catch(err => console.log(err.response));
+}
+
+export const batchDeleteShifts = (shifts) => (dispatch, getState) => {
+  axios.all(
+    shifts.map(item => axios.delete(`/api/shifts/${item.id}/`))
+  )
+  .then(responseArr => {
+    for(let i=0; i<shifts.length; i++) {
+      console.log(responseArr[i])
+      dispatch({
+        type: DELETE_SHIFT,
+        payload: shifts[i].id,
+      });
+    }
+    
+  }).catch(err => console.log(err.response));
+}
+
 // Get Bookings
-export const getShifts = (startdate, enddate) => (dispatch, getState) => {
+export const getShifts = (startdate, enddate, list=false) => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
@@ -36,9 +67,10 @@ export const getShifts = (startdate, enddate) => (dispatch, getState) => {
         payload: res.data,
         date: startdate,
         enddate: enddate,
+        list
       });
     })
-    .catch();
+    .catch(err => console.log(err.response));
 };
 
 // Get Bookings

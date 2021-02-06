@@ -38,6 +38,21 @@ import { format, addDays, parseISO } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
+export const batchApprove = (holidays, val) => (dispatch, getState) => {
+  axios.all(
+    holidays.map(item => axios.put(`/api/availability/${item.id}/`, {...item, approved: val}))
+  )
+  .then(responseArr => {
+    for(let i=0; i<holidays.length; i++) {
+      dispatch({
+        type: UPDATE_AVAILABILITY,
+        payload: { ...responseArr[i].data, approved: val },
+      });
+    }
+    
+  }).catch(err => console.log(err.response));
+}
+
 export const startTrial = (id) => (dispatch, getState) => {
   axios
     .put(`/api/business/${id}/`, {trial_end: format(addDays(new Date(), 30), "yyyy-MM-dd"), plan: "T", total_employees: 30}, tokenConfig(getState))
@@ -482,7 +497,7 @@ export const getAllAvailability = (site, startdate, enddate) => (
     });
 };
 
-export const getHolidays = (site, user = false) => (dispatch, getState) => {
+export const getHolidays = (site, user = false, filter="") => (dispatch, getState) => {
   axios
     .get(
       `/api/availability/${
@@ -490,7 +505,7 @@ export const getHolidays = (site, user = false) => (dispatch, getState) => {
       }&date_after=${format(
         new Date(),
         "yyyy-MM-dd"
-      )}&name=holiday&ordering=date`,
+      )}&name=holiday&${filter == null ? `unmarked=True` : `approved=${filter}`}&ordering=date`,
       tokenConfig(getState)
     )
     .then((res) => {

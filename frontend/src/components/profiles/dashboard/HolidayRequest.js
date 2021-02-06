@@ -74,7 +74,7 @@ const HolidayRequest = (props) => {
                     }`}
                   >
                     <p>
-                      {item.employee.first_name} {item.employee.last_name} -{" "}
+                      {item.employee.full_name} -{" "}
                       {format(parseISO(item.date), "dd MMMM yyyy")} (
                       {item.site.name})
                     </p>
