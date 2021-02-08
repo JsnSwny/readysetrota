@@ -187,7 +187,7 @@ const Rota = ({modalProps, confirmProps}) => {
 
   const sortEmployees = () => {
     if(positions.length > 0 && filterDate == "") {
-      switch(staffSort) {
+      switch(staffSort) { 
         case "position":
           return employeesList.sort((a,b) => positions.find(pos => pos.id == a.position.find(item => item.department.id == current.department).id).order - positions.find(pos => pos.id == b.position.find(item => item.department.id == current.department).id).order)
           
