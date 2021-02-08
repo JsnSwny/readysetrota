@@ -9,7 +9,7 @@ const DropButton = ({title, color, actions}) => {
             </div>
             <div className="btn-drop__items">
                 {actions.map((item) => (
-                    <div onClick={item.action} className="btn-drop__item">
+                    <div onClick={item.action} className={`btn-drop__item`}>
                         {item.name}
                     </div>
                 ))}

@@ -68,25 +68,28 @@ const HolidayRequest = (props) => {
         </Fragment>
       )}
       
-      <div className="list dash">
-      <table>
-          <tr>
-              {admin && <th>Employee</th>}
-              <th>Date</th>
-              <th>Approved</th>
-              {admin && <th>Requested</th>}
-          </tr>
-          {currentHolidays.map(item => (
-                  <tr>
-                  {admin && <td>{item.employee.full_name}</td>}
-                  <td>{format(parseISO(item.date), "cccc do MMMM yyyy")}</td>
-                  <td>{item.approved == null ? "Unmarked" : item.approved ? "Approved" : "Not Approved"}</td>
-                  {admin && <td>{format(parseISO(item.updated_at), "cccc do MMMM yyyy")}</td>}
-              </tr>
-          ))}
-          
-      </table>
-      </div>
+      {currentHolidays.length > 0 && (
+        <div className="list dash">
+          <table>
+            <tr>
+                {admin && <th>Employee</th>}
+                <th>Date</th>
+                <th>Approved</th>
+                {admin && <th>Requested</th>}
+            </tr>
+            {currentHolidays.map(item => (
+                    <tr>
+                    {admin && <td>{item.employee.full_name}</td>}
+                    <td>{format(parseISO(item.date), "cccc do MMMM yyyy")}</td>
+                    <td>{item.approved == null ? "Unmarked" : item.approved ? "Approved" : "Not Approved"}</td>
+                    {admin && <td>{format(parseISO(item.updated_at), "cccc do MMMM yyyy")}</td>}
+                </tr>
+            ))}
+            
+          </table>
+        </div>
+      ) }
+      
       <Pagination
         itemsPerPage={itemsPerPage}
         totalItems={filteredHolidays.length}

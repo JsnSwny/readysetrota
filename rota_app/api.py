@@ -19,6 +19,7 @@ from django.db.models import F, Case, When, Q
 class ShiftFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
     department = django_filters.NumberFilter(distinct=True)
+    open_shift = django_filters.BooleanFilter(field_name='employee', lookup_expr='isnull')
     class Meta:
         model = Shift
         fields = ['date', 'employee', 'department', 'employee__user__id']

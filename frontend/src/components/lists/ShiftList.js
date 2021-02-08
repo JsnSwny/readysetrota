@@ -5,6 +5,7 @@ import { format, parseISO } from "date-fns";
 import { batchPublish, batchDeleteShifts } from "../../actions/shifts";
 import DropButton from "./DropButton";
 import { toast } from "react-toastify";
+import TableHeaders from "./TableHeaders";
 
 const ShiftList = ({listProps}) => {
     const dispatch = useDispatch();
@@ -33,16 +34,7 @@ const ShiftList = ({listProps}) => {
         <Fragment>
             <DropButton title="Actions" actions={[publishAction, unpublishAction, deleteAction]} />
             <table>
-                <tr>
-                    <th><input checked={selectAll} onClick={() => !selectAll ? (setSelected(shifts), setSelectAll(!selectAll)) : (setSelected([]), setSelectAll(!selectAll))} type="checkbox"></input></th>
-                    <th>Date</th>
-                    <th>Start time</th>
-                    <th>End time</th>
-                    <th className="no-mobile">Length</th>
-                    <th className="no-mobile">Cost</th>
-                    <th>Employee</th>
-                    <th>Published</th>
-                </tr>
+                <TableHeaders items={shifts} titles={[{name: 'Date'}, {name: 'Start Time'}, {name: 'End Time'}, {name: 'Length', nomobile: true}, {name: 'Cost', nomobile: true}, {name: 'Employee'}, {name: 'Published'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
                 {shifts.map(item => (
                     <tr className={`${selected.some(sel => sel.id == item.id) ? "selected": ""}`}>
                         <td><input checked={selected.some(sel => sel.id == item.id)} onClick={() => selected.some(sel => sel.id == item.id) ? 

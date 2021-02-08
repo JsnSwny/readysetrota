@@ -28,7 +28,10 @@ const List = () => {
 
     const filter = (message, action) => {
         toast.success(message)
-        dispatch(action)
+        setSelected([])
+        setSelectAll(false);
+        action();
+        
     }
 
     const listProps = {action, selected, setSelected, selectAll, setSelectAll, filter};

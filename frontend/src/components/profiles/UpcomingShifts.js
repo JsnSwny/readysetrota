@@ -8,8 +8,7 @@ import {
 import Pagination from "../common/Pagination";
 
 const UpcomingShifts = (props) => {
-    let shifts = useSelector((state) => state.shifts.shifts);
-    const { employee, admin } = props;
+    const { employee, admin, shifts, title, allow_export } = props;
 
     const [currentPage, setCurrentPage] = useState(1);
     const [shiftsPerPage, setShiftsPerPage] = useState(5);
@@ -38,8 +37,8 @@ const UpcomingShifts = (props) => {
     return (
         <div className="dashboard__block">
             <div className="dashboard__block-title-container">
-              <p className="dashboard__block-title">Upcoming Shifts</p>
-              {published_shifts.length > 0 && (
+              <p className="dashboard__block-title">{title}</p>
+              {published_shifts.length > 0 && allow_export && (
                 <a
                   className="btn-7"
                   target="_blank"

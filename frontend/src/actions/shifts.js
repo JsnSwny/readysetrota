@@ -13,6 +13,7 @@ import {
   PUBLISHED_SHIFTS,
   SWAP_SHIFTS,
   GET_SWAP_REQUESTS,
+  GET_OPEN_SHIFTS
 } from "./types";
 import { tokenConfig } from "./auth";
 import { format } from "date-fns";
@@ -72,6 +73,24 @@ export const getShifts = (startdate, enddate, list=false, user=false, id="") => 
     })
     .catch(err => console.log(err.response));
 };
+
+export const getOpenShifts = (startdate) => (dispatch, getState) => {
+  console.log("OPEN SHIFTS")
+  axios
+    .get(
+      `/api/shiftlist/?date_after=${startdate}&department=${
+        getState().employees.current.department
+      }&open_shift=true&ordering=date,start_time`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_OPEN_SHIFTS,
+        payload: res.data,
+      });
+    })
+    .catch(err => console.log(err.response));
+}
 
 // Get Bookings
 export const getShiftsByID = (id, user) => (dispatch, getState) => {
