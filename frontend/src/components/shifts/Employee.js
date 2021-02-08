@@ -13,7 +13,7 @@ const Employee = (props) => {
   } = props;
 
   const getHours = (employee) => {
-    return shifts.map(item => item.employee && item.employee == employee && item.length).reduce((a, b) => a + b, 0.00);
+    return shifts.map(item => item.employee && item.employee.id == employee && item.length).reduce((a, b) => a + b, 0.00);
   };
 
   let site_admin = useSelector((state) => state.employees.site_admin);

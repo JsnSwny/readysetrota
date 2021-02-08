@@ -40,7 +40,6 @@ export const batchDeleteShifts = (shifts) => (dispatch, getState) => {
   )
   .then(responseArr => {
     for(let i=0; i<shifts.length; i++) {
-      console.log(responseArr[i])
       dispatch({
         type: DELETE_SHIFT,
         payload: shifts[i].id,
@@ -75,7 +74,6 @@ export const getShifts = (startdate, enddate, list=false, user=false, id="") => 
 };
 
 export const getOpenShifts = (startdate) => (dispatch, getState) => {
-  console.log("OPEN SHIFTS")
   axios
     .get(
       `/api/shiftlist/?date_after=${startdate}&department=${

@@ -51,9 +51,7 @@ const Rota = ({modalProps, confirmProps}) => {
   // Set Current Employee
   let current_employee = null;
   if (user.employee) {
-    current_employee = user.employee.filter((employee) =>
-      employee.position.some((item) => item.department.id == current.department)
-    )[0];
+    current_employee = employees.find(item => item.user == user.id);
   }
 
   // Update shifts based on width

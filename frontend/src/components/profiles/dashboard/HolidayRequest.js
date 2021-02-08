@@ -48,19 +48,6 @@ const HolidayRequest = (props) => {
           {admin ? "" : "Your"} Holiday Requests
         </p>
       </div>
-      {/* <div className="flex-container--wrap">
-        {filters.map((item) => (
-          <span
-            key={item}
-            className={`btn-toggle--sm ${filter == item && "active"}`}
-            onClick={() => {
-              setFilter(item);
-            }}
-          >
-            {item}
-          </span>
-        ))}
-      </div> */}
       {admin && (
         <Fragment>
           <p>You have {holidays.filter(item => item.approved == null).length} unmarked holidays to review.</p>

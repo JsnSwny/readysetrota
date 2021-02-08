@@ -79,7 +79,6 @@ const Main = () => {
     }, [current.site]);
 
     useEffect(() => {
-      console.log(siteAdmin)
       if(siteAdmin) {
         dispatch(getHolidays(current.site));
       }
