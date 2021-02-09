@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { batchApprove, getHolidays } from "../../actions/employees";
 import DropButton from "./DropButton";
 import { format, parseISO } from "date-fns";
@@ -9,14 +9,20 @@ const HolidayList = ({listProps}) => {
 
     const {action, selected, setSelected, selectAll, setSelectAll, filter} = listProps;
 
+    let current = useSelector((state) => state.employees.current);
     let holidays = useSelector((state) => state.employees.holidays)
     const [filterHolidays, setFilterHolidays] = useState(holidays);
+    
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setFilterHolidays(holidays);
     }, [holidays])
 
-    let current = useSelector((state) => state.employees.current);
+    useEffect(() => {
+        dispatch(getHolidays(current.site));
+    }, [])
 
     const approveAction = {name: 'Approve', action: () => action('Holiday Approved', batchApprove(selected, true))};
     const unapproveAction = {name: 'Unapprove', action: () => action('Holiday Unapproved', batchApprove(selected, false))}

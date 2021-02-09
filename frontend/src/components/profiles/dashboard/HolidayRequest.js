@@ -16,7 +16,6 @@ const HolidayRequest = (props) => {
   let holidays = useSelector((state) => state.employees.holidays);
   const [filteredHolidays, setFilteredHolidays] = useState(holidays);
 
-  
 
   const [filter, setFilter] = useState(admin ? "Unmarked" : "All");
 
@@ -54,6 +53,8 @@ const HolidayRequest = (props) => {
           <Link className="link" to="/list/holidays">View all holiday requests</Link>
         </Fragment>
       )}
+
+      {console.log(currentHolidays)}
       
       {currentHolidays.length > 0 && (
         <div className="list dash">
