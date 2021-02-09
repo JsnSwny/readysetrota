@@ -23,6 +23,7 @@ const AddShift = (props) => {
   const [info, setInfo] = useState("");
   const [openEmployee, setOpenEmployee] = useState("");
   const [shiftEmployee, setShiftEmployee] = useState(employee ? employee.id : "");
+  const [breakLength, setBreakLength] = useState(0);
 
   let error_obj = {};
 
@@ -55,6 +56,7 @@ const AddShift = (props) => {
       end_time: endTime,
       info,
       date: shift ? shift.date : date,
+      break_length: breakLength,
       department_id: current.department,
       published: (shiftEmployee || openEmployee) ? false : true,
       position_id: shiftEmployee ? [] : position.map(pos => pos.id),
@@ -83,6 +85,9 @@ const AddShift = (props) => {
   const deleteShiftByID = (id) => {
     dispatch(deleteShift(id));
   };
+
+  const breaks = [{title: "No break", val: 0}, {title: "15 minutes", val: 15}, {title: "30 minutes", val: 30}, {title: "45 minutes", val: 45},
+  {title: "1 hour", val: 60}, {title: "1hr 15mins", val: 75}, {title: "1hr 30mins", val: 90}, {title: "1hr 45mins", val: 105}, {title: "2 hours", val: 120}]
 
   let minutes = ["00", "15", "30", "45"];
   let hours = [];
@@ -182,6 +187,13 @@ const AddShift = (props) => {
               {item.start_time} - {item.end_time}
             </p>
           ))}
+        </div>
+        <div className="staffForm__control">
+          <label className="staffForm__label">Break:</label>
+          <select onChange={(e) => setBreakLength(e.target.value)} className="staffForm__input" value={breakLength}>
+            {breaks.map(item => <option on value={item.val}>{item.title}</option>)}
+          </select>
+
         </div>
         {!employee && (
           <div className="staffForm__control">

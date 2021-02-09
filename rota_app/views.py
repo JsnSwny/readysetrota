@@ -63,7 +63,7 @@ class GetPopularTimes(APIView):
 class Publish(APIView):
     def get(self, request):
         all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False).exclude(employee__isnull=True)
+            owner=self.request.user, published=False, department=request.query_params.get('department_id')).exclude(employee__isnull=True)
 
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
@@ -115,10 +115,10 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
                 end = end + timedelta(days=1)
 
             shift_length = round((end - start).total_seconds() / 3600, 2)
-            hours += shift_length
-
+            
+            hours += shift_length - (i.break_length / 60)
             if(i.wage):
-                wage += float(i.wage) * shift_length
+                wage += float(i.wage) * (shift_length - (i.break_length / 60))
 
     employees = []
         

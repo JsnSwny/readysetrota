@@ -104,7 +104,8 @@ class Shift(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
     wage = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    
+    break_length = models.IntegerField(default=0)
+
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'
 

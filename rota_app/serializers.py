@@ -144,10 +144,10 @@ class ShiftListSerializer(serializers.ModelSerializer):
             if (end < start):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
-            return shift_length
+            return shift_length - (obj.break_length / 60)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'positions', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'published', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 

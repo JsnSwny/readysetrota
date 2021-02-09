@@ -178,7 +178,7 @@ export const publish = () => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
-  axios.get(`/api-view/publish`, tokenConfig(getState)).then((res) => {
+  axios.get(`/api-view/publish/?department_id=${getState().employees.current.department}`, tokenConfig(getState)).then((res) => {
     dispatch({
       type: PUBLISHED_SHIFTS,
       payload: res.data,

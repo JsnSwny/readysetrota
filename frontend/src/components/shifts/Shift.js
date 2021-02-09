@@ -81,6 +81,7 @@ const Shift = (props) => {
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>
                 </div>
+                {shift.break_length > 0 && <p className="shift__info">Break: {shift.break_length} minutes</p>}
                 {shift.info && (
                   <p className="shift__info">
                     <i className="fas fa-info-circle"></i>

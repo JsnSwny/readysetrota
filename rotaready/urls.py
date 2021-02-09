@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-view/checkuuid', CheckUUID.as_view(), name='checkuuid'),
     path('api-view/getpopulartimes', GetPopularTimes.as_view(), name='getpopulartimes'),
-    path('api-view/publish', Publish.as_view(), name='publish'),
+    path('api-view/publish/', Publish.as_view(), name='publish'),
     path('export', ExportShifts.as_view(), name='export'),
     path('exportall', ExportAllShifts.as_view(), name='exportall'),
     path('api/', include('rota_app.urls')),
