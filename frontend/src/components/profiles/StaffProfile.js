@@ -91,7 +91,7 @@ const StaffProfile = (props) => {
           <UpcomingShifts allow_export={true} title="Upcoming Shifts" shifts={shifts} employee={currentEmployee} admin={siteAdmin && id_param} />
           <div className="flex-container--between">
           {plan != "F" && <Availability employee={currentEmployee} />}
-          <HolidayRequest holidays={(siteAdmin && id_param) ? holidays.filter(item => item.employee.id == id_param) : holidays} admin={(siteAdmin && !id_param)} />
+          <HolidayRequest holidays={(siteAdmin && id_param) ? holidays.filter(item => item.employee.id == id_param) : holidays} admin={false} />
           
           </div>
         </Fragment>
