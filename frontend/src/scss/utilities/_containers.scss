@@ -119,4 +119,9 @@
     align-items: center;
     min-height: 100vh;
   }
+  &.mobile {
+    @include wi-mq(tablet) {
+      flex-direction: column;
+    }
+  }
 }
