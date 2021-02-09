@@ -53,9 +53,7 @@ const HolidayRequest = (props) => {
           <Link className="link" to="/list/holidays">View all holiday requests</Link>
         </Fragment>
       )}
-
-      {console.log(currentHolidays)}
-      
+      {currentHolidays.length == 0 && <p>No holidays to display</p>}
       {currentHolidays.length > 0 && (
         <div className="list dash">
           <table>

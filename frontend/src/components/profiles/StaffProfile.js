@@ -52,13 +52,6 @@ const StaffProfile = (props) => {
     dispatch(getOpenShifts(format(new Date(), "yyyy-MM-dd")));
   }, []);
 
-  useEffect(() => {
-    if(current.site > 0) {
-      if(siteAdmin && !id_param) {
-        dispatch(getHolidays(current.site));
-      }
-    }
-  }, [sites]);
 
   useEffect(() => {
     if(typeof(employee) !== 'undefined') {
@@ -89,7 +82,7 @@ const StaffProfile = (props) => {
         <Fragment>
           <UpcomingShifts title="Open Shifts" shifts={openShifts} employee={currentEmployee} admin={siteAdmin && id_param} />
           <UpcomingShifts allow_export={true} title="Upcoming Shifts" shifts={shifts} employee={currentEmployee} admin={siteAdmin && id_param} />
-          <div className="flex-container--between">
+          <div className="flex-container--between-start">
           {plan != "F" && <Availability employee={currentEmployee} />}
           <HolidayRequest holidays={(siteAdmin && id_param) ? holidays.filter(item => item.employee.id == id_param) : holidays} admin={false} />
           

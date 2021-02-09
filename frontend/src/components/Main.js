@@ -70,19 +70,9 @@ const Main = () => {
             dispatch(getSites());
         }
         if(current.site > 0) {
-            dispatch(getDepartments());
-            if(siteAdmin) {
-              dispatch(getHolidays(current.site));
-            }
-            
+            dispatch(getDepartments());         
         }
     }, [current.site]);
-
-    useEffect(() => {
-      if(siteAdmin) {
-        dispatch(getHolidays(current.site));
-      }
-  }, [sites]);
 
     useEffect(() => {
         if(!loading.departments && !loading.sites) {
