@@ -118,6 +118,7 @@ const SideNav = ({sidebarOpen, setSidebarOpen, confirmProps}) => {
                                 <div className="sidenav__sublinks">
                                     <NavLink toggleNav={toggleNav} link="/list/employees" icon="fas fa-list" title="Employees" />
                                     <NavLink toggleNav={toggleNav} link="/list/holidays" icon="fas fa-list" title="Holidays" />
+                                    <NavLink toggleNav={toggleNav} link="/list/absences" icon="fas fa-list" title="Absences" />
                                 </div>
                         </div>
                         )}

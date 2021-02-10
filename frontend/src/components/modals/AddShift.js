@@ -24,6 +24,7 @@ const AddShift = (props) => {
   const [openEmployee, setOpenEmployee] = useState("");
   const [shiftEmployee, setShiftEmployee] = useState(employee ? employee.id : "");
   const [breakLength, setBreakLength] = useState(0);
+  const [absence, setAbsence] = useState("None");
 
   let error_obj = {};
 
@@ -37,13 +38,15 @@ const AddShift = (props) => {
       setEndTime(shift.end_time);
       setInfo(shift.info);
       setPosition(shift.positions.map(item => positions.find(pos => pos.id == item)))
+      setBreakLength(shift.break_length);
+      setAbsence(shift.absence);
     }
   }, [shift]);
 
   const compareShift = (shift1, shift2) => {
     return (
       shift1.start_time == shift2.start_time &&
-      shift1.end_time == shift2.end_time &&
+      shift1.end_time == shift2.end_time && shift1.absence == shift2.absence,
       shift1.info == shift2.info && shift1.employee_id == shift2.employee_id && ((shift2.position_id.length > 0 || shift1.positions.length > 0) ? shift1.positions == shift2.positions : true)
     );
   };
@@ -57,6 +60,7 @@ const AddShift = (props) => {
       info,
       date: shift ? shift.date : date,
       break_length: breakLength,
+      absence: absence,
       department_id: current.department,
       published: (shiftEmployee || openEmployee) ? false : true,
       position_id: shiftEmployee ? [] : position.map(pos => pos.id),
@@ -89,6 +93,7 @@ const AddShift = (props) => {
   const breaks = [{title: "No break", val: 0}, {title: "15 minutes", val: 15}, {title: "30 minutes", val: 30}, {title: "45 minutes", val: 45},
   {title: "1 hour", val: 60}, {title: "1hr 15mins", val: 75}, {title: "1hr 30mins", val: 90}, {title: "1hr 45mins", val: 105}, {title: "2 hours", val: 120}]
 
+  const absences = ["None", "Authorised", "Unauthorised", "Compassionate", "Other"];
   let minutes = ["00", "15", "30", "45"];
   let hours = [];
   for (let i = 0; i < 24; i++) {
@@ -191,10 +196,18 @@ const AddShift = (props) => {
         <div className="staffForm__control">
           <label className="staffForm__label">Break:</label>
           <select onChange={(e) => setBreakLength(e.target.value)} className="staffForm__input" value={breakLength}>
-            {breaks.map(item => <option on value={item.val}>{item.title}</option>)}
+            {breaks.map(item => <option value={item.val}>{item.title}</option>)}
           </select>
 
         </div>
+        {shift && (
+          <div className="staffForm__control">
+            <label className="staffForm__label">Absence:</label>
+            <select onChange={(e) => setAbsence(e.target.value)} className="staffForm__input" value={absence}>
+              {absences.map(item => <option value={item}>{item}</option>)}
+            </select>
+          </div>
+        )}
         {!employee && (
           <div className="staffForm__control">
             <label className="staffForm__label">Position(s):</label>

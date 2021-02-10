@@ -11,7 +11,7 @@ const EmployeeList = ({listProps}) => {
 
     return (
         <table>
-            <TableHeaders items={employees} titles={[{name: 'First name'}, {name: 'Last name'}, {name: 'Positions'}, {name: 'Departments' }, {name: 'Wage'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
+            <TableHeaders check={true} items={employees} titles={[{name: 'First name'}, {name: 'Last name'}, {name: 'Positions'}, {name: 'Departments' }, {name: 'Wage'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
             {employees.map(item => (
                     <tr onClick={() => selected.some(sel => sel.id == item.id) ? 
                             setSelected(selected.filter(sel => sel.id != item.id)) : 

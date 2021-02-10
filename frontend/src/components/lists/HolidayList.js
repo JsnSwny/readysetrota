@@ -37,7 +37,7 @@ const HolidayList = ({listProps}) => {
             <DropButton title="Actions" actions={[approveAction, unapproveAction]} />
             <DropButton title="Filters" actions={[allFilter, approvedFilter, unapprovedFilter, unmarkedFilter]} />
             <table>
-            <TableHeaders items={filterHolidays} titles={ [{name: 'Employee'}, {name: 'Date'}, {name: 'Approved'}, {name: 'Requested' }]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
+            <TableHeaders check={true} items={filterHolidays} titles={ [{name: 'Employee'}, {name: 'Date'}, {name: 'Approved'}, {name: 'Requested' }]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
                 {filterHolidays.map(item => (
                         <tr onClick={() => selected.some(sel => sel.id == item.id) ? 
                             setSelected(selected.filter(sel => sel.id != item.id)) : 

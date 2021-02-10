@@ -105,6 +105,18 @@ class Shift(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     wage = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     break_length = models.IntegerField(default=0)
+    ABSENCE_TYPES = [
+        ("Authorised", 'Authorised'),
+        ("Unauthorised", 'Unauthorised'),
+        ("Compassionate", 'Compassionate'),
+        ("Other", 'Other'),
+        ("None", 'None')
+    ]
+    absence = models.CharField(
+        max_length=14,
+        choices=ABSENCE_TYPES,
+        default="None",
+    )
 
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'

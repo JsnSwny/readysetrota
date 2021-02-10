@@ -90,6 +90,24 @@ export const getOpenShifts = (startdate) => (dispatch, getState) => {
     .catch(err => console.log(err.response));
 }
 
+export const getAbsences = (startdate, site) => (dispatch, getState) => {
+  axios
+    .get(
+      `/api/shiftlist/?date_after=${startdate}&department=${
+        getState().employees.current.department
+      }&absence__not=None&ordering=date,start_time`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_SHIFTS,
+        payload: res.data,
+        list: true
+      });
+    })
+    .catch(err => console.log(err.response));
+}
+
 // Get Bookings
 export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios

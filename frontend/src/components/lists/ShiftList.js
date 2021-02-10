@@ -34,7 +34,7 @@ const ShiftList = ({listProps}) => {
         <Fragment>
             <DropButton title="Actions" actions={[publishAction, unpublishAction, deleteAction]} />
             <table>
-                <TableHeaders items={shifts} titles={[{name: 'Date'}, {name: 'Start Time'}, {name: 'End Time'}, {name: 'Length', nomobile: true}, {name: 'Cost', nomobile: true}, {name: 'Employee'}, {name: 'Published'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
+                <TableHeaders check={true} items={shifts} titles={[{name: 'Date'}, {name: 'Start Time'}, {name: 'End Time'}, {name: 'Length', nomobile: true}, {name: 'Cost', nomobile: true}, {name: 'Employee'}, {name: 'Published'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
                 {shifts.map(item => (
                     <tr className={`${selected.some(sel => sel.id == item.id) ? "selected": ""}`}>
                         <td><input checked={selected.some(sel => sel.id == item.id)} onClick={() => selected.some(sel => sel.id == item.id) ? 
