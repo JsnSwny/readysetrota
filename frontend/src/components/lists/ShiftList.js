@@ -34,7 +34,7 @@ const ShiftList = ({listProps}) => {
         <Fragment>
             <DropButton title="Actions" actions={[publishAction, unpublishAction, deleteAction]} />
             <table>
-                <TableHeaders check={true} items={shifts} titles={[{name: 'Date'}, {name: 'Start Time'}, {name: 'End Time'}, {name: 'Length', nomobile: true}, {name: 'Cost', nomobile: true}, {name: 'Employee'}, {name: 'Published'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
+                <TableHeaders check={true} items={shifts} titles={[{name: 'Date'}, {name: 'Start Time'}, {name: 'End Time'}, {name: 'Length', nomobile: true}, {name: 'Break', nomobile: true}, {name: 'Cost', nomobile: true}, {name: 'Employee'}, {name: 'Published'}]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
                 {shifts.map(item => (
                     <tr className={`${selected.some(sel => sel.id == item.id) ? "selected": ""}`}>
                         <td><input checked={selected.some(sel => sel.id == item.id)} onClick={() => selected.some(sel => sel.id == item.id) ? 
@@ -44,7 +44,8 @@ const ShiftList = ({listProps}) => {
                         <td>{item.start_time}</td>
                         <td>{item.end_time}</td>
                         <td className="no-mobile">{parseInt(item.length) > 0 ? `${parseInt(item.length)}hrs` : ""} {toMinutes(item.length)}</td>
-                        <td className="no-mobile">£{item.length * item.wage}</td>
+                        <td className="no-mobile">{item.break_length}mins</td>
+                        <td className="no-mobile">{item.employee ? item.employee.wage_type == "H" ? `£${item.length * item.wage}` : "Salary" : ""}</td>
                         <td>{item.employee ? item.employee.full_name : "Open Shift"}</td>
                         <td>{item.published ? "Published" : "Not Published"}</td>
                     </tr>

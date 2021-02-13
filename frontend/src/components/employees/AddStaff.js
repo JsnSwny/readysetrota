@@ -101,7 +101,7 @@ const AddStaff = (props) => {
 
       if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
         if (update) {
-          dispatch(updateEmployee(update, employee, siteAdmin, current_site));
+          dispatch(updateEmployee(update.id, employee, siteAdmin, current_site));
           
           toast.success("Employee updated!");
         } else {

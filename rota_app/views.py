@@ -117,16 +117,21 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             shift_length = round((end - start).total_seconds() / 3600, 2)
             
             hours += shift_length - (i.break_length / 60)
-            if(i.wage):
+            if(i.employee.wage_type == "H"):
                 wage += float(i.wage) * (shift_length - (i.break_length / 60))
 
-    employees = []
-        
-    # if user_id:
-    #     employees = Employee.objects.filter(user__id=user_id)
-    # if site_id:
-    #     employees = Employee.objects.filter(position__department__site=site_id)
 
+    employees = []
+
+    print(site_id)
+    print(user_id)
+        
+    if user_id:
+        employees = Employee.objects.filter(user__id=user_id)
+    if site_id:
+        employees = Employee.objects.filter(position__department__site=site_id)
+
+    print(employees)
     for i in employees:
         if i.wage_type == "S":
             wage += float(i.wage/365) * float(days_difference.days)
@@ -146,7 +151,7 @@ class GetStats(APIView):
         
         before_range_date = start_date - days_difference
 
-        site_id = False
+        id = False
         user_id = False
 
         if stat_type == "business":
@@ -173,7 +178,7 @@ class GetStats(APIView):
 
         shifts = shifts.exclude(employee__isnull=True)
         before_shifts = before_shifts.exclude(employee__isnull=True)
-        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, site_id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, site_id, user_id)[1]}}
+        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
         return HttpResponse( json.dumps( data ) )
 
 

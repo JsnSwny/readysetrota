@@ -219,7 +219,9 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     filter_class = AvailabilityFilter
     filter_fields = {'approved': ['isnull']}
     ordering_fields = ('date',)
-    queryset = Availability.objects.all()
+    queryset = Availability.objects.all().distinct()
+
+    
 
 class SiteFilter(django_filters.FilterSet):
     class Meta:

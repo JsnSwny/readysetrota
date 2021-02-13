@@ -124,7 +124,10 @@ class Shift(models.Model):
     def save(self, *args, **kwargs):
         if not self.wage:
             if self.employee:
-                self.wage = self.employee.wage
+                if self.employee.wage_type == "H":
+                    self.wage = self.employee.wage
+                else:
+                    self.wage = self.employee.wage/365
         super(Shift, self).save(*args, **kwargs)
 
 
@@ -149,7 +152,7 @@ class Availability(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return f'{self.date} - {self.name} - {self.employee}'
+        return f'{self.id}. {self.date} - {self.name} - {self.employee}'
 
 
 

@@ -44,22 +44,24 @@ const HolidayRequest = (props) => {
     <div className={`dashboard__block${admin ? "" : "--half"}`}>
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">
-          {admin ? "" : "Your"} Holiday Requests
+          {admin ? "" : "Your"} Availability Requests
         </p>
       </div>
       {admin && (
         <Fragment>
-          <p>You have {holidays.filter(item => item.approved == null).length} unmarked holidays to review.</p>
-          <Link className="link" to="/list/holidays">View all holiday requests</Link>
+          {console.log(holidays.filter(item => item.approved == null))}
+          <p>You have {holidays.filter(item => item.approved == null).length} unmarked availabilities to review.</p>
+          <Link className="link" to="/list/holidays">View all availability requests</Link>
         </Fragment>
       )}
-      {currentHolidays.length == 0 && <p>No holidays to display</p>}
+      {currentHolidays.length == 0 && <p>No availabilities to display</p>}
       {currentHolidays.length > 0 && (
         <div className="list dash">
           <table>
             <tr>
                 {admin && <th>Employee</th>}
                 <th>Date</th>
+                <th>Type</th>
                 <th>Approved</th>
                 {admin && <th>Requested</th>}
             </tr>
@@ -67,6 +69,7 @@ const HolidayRequest = (props) => {
                     <tr>
                     {admin && <td>{item.employee.full_name}</td>}
                     <td>{format(parseISO(item.date), "cccc do MMMM yyyy")}</td>
+                    <td>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</td>
                     <td>{item.approved == null ? "Unmarked" : item.approved ? "Approved" : "Not Approved"}</td>
                     {admin && <td>{format(parseISO(item.updated_at), "cccc do MMMM yyyy")}</td>}
                 </tr>

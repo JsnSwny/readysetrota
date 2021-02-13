@@ -10,11 +10,21 @@ const Employee = (props) => {
     shifts,
     currentDepartment,
     current_employee,
+    result,
   } = props;
 
   const getHours = (employee) => {
     return shifts.map(item => item.employee && item.employee.id == employee && item.length).reduce((a, b) => a + b, 0.00);
   };
+
+  const getWage = (type, wage, hours) => {
+    if(type == "H") {
+      return wage * hours;
+    } 
+    else if (type == "S") {
+      return ((wage / 365) * result.length).toFixed(2);
+    }
+  }
 
   let site_admin = useSelector((state) => state.employees.site_admin);
 
@@ -46,7 +56,7 @@ const Employee = (props) => {
           </Link>
         </div>
         
-        <p className="employee__hours">{getHours(employee.id)} Hours {site_admin && ["H", "S"].includes(employee.wage_type) && (`(£${employee.wage * getHours(employee.id)})`)}</p>
+        <p className="employee__hours">{getHours(employee.id)} Hours {site_admin && ["H", "S"].includes(employee.wage_type) && `(£${getWage(employee.wage_type, employee.wage, getHours(employee.id))})`}</p>
       </div>
   );
 };

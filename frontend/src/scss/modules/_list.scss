@@ -78,7 +78,19 @@
         // &:not(:last-child) {
         //     border-bottom: 1.5px rgb(189, 189, 189) solid;
         // }
-        
+        td {
+            &.green {
+                color: green;
+            }
+            &.orange {
+                color: orange;
+                font-weight: bold;
+            }
+            &.red {
+                color: red;
+                font-weight: bold;
+            }
+        }
         th {
             color: rgb(116, 116, 116);
             text-transform: uppercase;

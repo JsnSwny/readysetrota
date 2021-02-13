@@ -18,6 +18,14 @@ const NoShift = (props) => {
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
+  let showAdd = true;
+  if(available) {
+    if(available.name == "holiday" || available.name == "unavailable") {
+      if(available.approved == true) {
+        showAdd = false;
+      }
+    }
+  }
   return (
     <div
       key={result}
@@ -31,7 +39,7 @@ const NoShift = (props) => {
         result <= addDays(new Date(), -1) ? "date-before" : ""
       }`}
     >
-      {admin && (
+      {showAdd && admin && (
         <AddShiftButton {...modalProps} setUpdate={setUpdate} employee={employee} date={format_date} limit={limit} />
       )}
       {showAvailabilities && (
@@ -40,6 +48,9 @@ const NoShift = (props) => {
             {available.name != "unselected" && available.name}
           </p>
           {available.name == "holiday" && available.approved != true && (
+            <p className="shift__text">Not Approved</p>
+          )}
+          {available.name == "unavailable" && available.approved != true && (
             <p className="shift__text">Not Approved</p>
           )}
           {available.start_time && (

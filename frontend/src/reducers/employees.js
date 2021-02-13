@@ -146,7 +146,7 @@ export default function (state = initialState, action) {
         ...state,
         availability: [...state.availability, action.payload],
         holidays:
-          action.payload.name == "holiday"
+          (action.payload.name == "holiday" || action.payload.name == "unavailable")
             ? [...state.holidays, action.payload]
             : state.holidays,
       };
@@ -158,7 +158,7 @@ export default function (state = initialState, action) {
         ),
         holidays: state.holidays.map((item) =>
           item.id === action.payload.id
-            ? action.payload.name == "holiday" && action.payload
+            ? (action.payload.name == "holiday" || action.payload.name == "unavailable") && action.payload
             : item
         ),
       };

@@ -229,8 +229,10 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
 
 export const updateEmployee = (update, employee, siteAdmin, current_site) => (dispatch, getState) => {
   let current = getState().employees.current;
+  console.log(update)
+  console.log(employee)
   axios
-    .put(`/api/employees/${update.id}/`, employee, tokenConfig(getState))
+    .put(`/api/employees/${update}/`, employee, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_EMPLOYEE,
@@ -509,10 +511,22 @@ export const getHolidays = (site, user = false, filter="") => (dispatch, getStat
       tokenConfig(getState)
     )
     .then((res) => {
-      dispatch({
-        type: GET_HOLIDAYS,
-        payload: res.data,
-      });
+      axios
+        .get(
+          `/api/availability/${
+            user ? `?employee__id=${user}` : `?employee__position__department__site=${site}`
+          }&date_after=${format(
+            new Date(),
+            "yyyy-MM-dd"
+          )}&name=unavailable&${filter == null ? `unmarked=True` : `approved=${filter}`}&ordering=date`,
+          tokenConfig(getState)
+        )
+        .then((res2) => {
+          dispatch({
+            type: GET_HOLIDAYS,
+            payload: res.data.concat(res2.data),
+          });
+        });
     }).catch(err => console.log(err.response));
 };
 

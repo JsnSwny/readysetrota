@@ -40,10 +40,12 @@ const StaffProfile = (props) => {
   let loading = useSelector((state) => state.loading)
   let holidays = useSelector((state) => state.employees.holidays);
   
-  let employee = (id_param && employees.find((item) => item.id == employee_id)) || user.employee.find((employee) =>
-    employee.position.some((item) => item.department.id == current.department)
+  let employee = (id_param && employees.find((item) => item.id == employee_id)) || employees.find((employee) =>
+    employee.user == user.id
   );
 
+
+  console.log()
     let openShifts = useSelector((state) => state.shifts.open_shifts);
     let shifts = useSelector((state) => state.shifts.shifts)
 

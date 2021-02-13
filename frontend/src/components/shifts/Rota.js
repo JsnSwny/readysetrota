@@ -255,6 +255,7 @@ const Rota = ({modalProps, confirmProps}) => {
                     shifts={shifts_list}
                     user={user}
                     currentDepartment={current.department}
+                    result={result}
                   />
                   <div className="container-right">
                     {result.map((result) => {

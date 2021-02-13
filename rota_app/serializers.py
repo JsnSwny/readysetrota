@@ -3,6 +3,7 @@ from .models import Shift, Employee, Position, Department, Business, Availabilit
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
+from django.db.models import Q
 
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
@@ -125,7 +126,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'full_name')
+        fields = ('id', 'full_name', 'wage', 'wage_type',)
 
 
 class ShiftListSerializer(serializers.ModelSerializer):
@@ -171,12 +172,20 @@ class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
     business = BusinessSerializer(required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
-    
+    unpublished_shifts = serializers.SerializerMethodField(read_only=True)
+    unmarked_holidays = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Site
-        fields = ('id', 'name', 'business', 'business_id', 'admins', 'number_of_employees',)
+        fields = ('id', 'name', 'business', 'business_id', 'admins', 'number_of_employees', 'unpublished_shifts', 'unmarked_holidays',)
         depth: 1
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(position__department__site=obj.id).distinct()
         return len(employees)
+    def get_unpublished_shifts(self, obj):
+        shifts = Shift.objects.filter(department__site=obj.id, published=False)
+        return len(shifts)
+    def get_unmarked_holidays(self, obj):
+        holidays = Availability.objects.filter(Q(name="holiday") | Q(name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
+        return len(holidays)

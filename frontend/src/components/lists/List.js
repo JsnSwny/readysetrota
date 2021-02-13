@@ -6,11 +6,12 @@ import EmployeeList from "./EmployeeList";
 import HolidayList from "./HolidayList";
 import { toast } from "react-toastify";
 import AbsenceList from "./AbsenceList";
+import SiteOverviewList from "./SiteOverviewList";
 
 const List = () => {
     const dispatch = useDispatch();
     const { type } = useParams();
-    const titles = {"shifts": "Shift List", "employees": "Employees List", "holidays": "Holidays List", "absences": "Absence List"}
+    const titles = {"shifts": "Shift List", "employees": "Employees List", "holidays": "Holidays List", "absences": "Absence List", "siteOverview": "Site Overview"}
     
     
     const [selected, setSelected] = useState([]);
@@ -38,7 +39,8 @@ const List = () => {
     const listProps = {action, selected, setSelected, selectAll, setSelectAll, filter};
 
     const component = {"shifts": <ShiftList listProps={listProps} />, "employees": <EmployeeList listProps={listProps} />, 
-    "holidays": <HolidayList listProps={listProps} />, "absences": <AbsenceList listProps={listProps} />}
+    "holidays": <HolidayList listProps={listProps} />, "absences": <AbsenceList listProps={listProps} />,
+    "siteOverview": <SiteOverviewList listProps={listProps} />}
 
     return (
         <div className="list">

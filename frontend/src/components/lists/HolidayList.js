@@ -37,13 +37,14 @@ const HolidayList = ({listProps}) => {
             <DropButton title="Actions" actions={[approveAction, unapproveAction]} />
             <DropButton title="Filters" actions={[allFilter, approvedFilter, unapprovedFilter, unmarkedFilter]} />
             <table>
-            <TableHeaders check={true} items={filterHolidays} titles={ [{name: 'Employee'}, {name: 'Date'}, {name: 'Approved'}, {name: 'Requested' }]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
-                {filterHolidays.map(item => (
+            <TableHeaders check={true} items={filterHolidays} titles={ [{name: 'Employee'}, {name: "Type"}, {name: 'Date'}, {name: 'Approved'}, {name: 'Requested' }]} selectAll={selectAll} setSelectAll={setSelectAll} setSelected={setSelected} />
+                {filterHolidays.map(item => item && (
                         <tr onClick={() => selected.some(sel => sel.id == item.id) ? 
                             setSelected(selected.filter(sel => sel.id != item.id)) : 
                             setSelected([...selected, item])} className={`${selected.some(sel => sel.id == item.id) ? "selected": ""}`}>
                         <td><input checked={selected.some(sel => sel.id == item.id)} type="checkbox"></input></td>
                         <td>{item.employee.full_name}</td>
+                        <td>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</td>
                         <td>{format(parseISO(item.date), "cccc do MMMM yyyy")}</td>
                         <td>{item.approved == null ? "Unmarked" : item.approved ? "Approved" : "Not Approved"}</td>
                         <td>{format(parseISO(item.updated_at), "cccc do MMMM yyyy")}</td>
