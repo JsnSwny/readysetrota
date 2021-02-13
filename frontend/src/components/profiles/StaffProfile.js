@@ -43,9 +43,7 @@ const StaffProfile = (props) => {
   let employee = (id_param && employees.find((item) => item.id == employee_id)) || employees.find((employee) =>
     employee.user == user.id
   );
-
-
-  console.log()
+  
     let openShifts = useSelector((state) => state.shifts.open_shifts);
     let shifts = useSelector((state) => state.shifts.shifts)
 
