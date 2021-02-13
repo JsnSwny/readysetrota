@@ -1,0 +1,116 @@
+import React, { useEffect, Fragment, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import PersonalDetails from "./PersonalDetails";
+import Positions from "./Positions";
+import { updateEmployee, addEmployee } from "../../actions/employees"
+import { toast } from "react-toastify";
+
+const EmployeeProfileModal = (props) => {
+    const { onClose, form, staffPosition, update, confirmProps } = props;
+    const { setConfirmOpen, setOnConfirm, setMessage } = confirmProps;
+
+    const dispatch = useDispatch();
+    let positions = useSelector((state) => state.employees.all_positions);
+    let sites = useSelector(state => state.employees.sites)
+    // const dispatch = useDispatch();
+    // useEffect(() => {
+    //     if (form == "Staff") {
+    //     staffPosition && setPosition(staffPosition.toString());
+    //     }
+    // }, []);
+    let current = useSelector((state) => state.employees.current);
+
+    let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
+
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [wage, setWage] = useState(0.00);
+    const [wageType, setWageType] = useState("N")
+    const [position, setPosition] = useState([]);
+    const [siteAdmin, setSiteAdmin] = useState(false);
+    let error_obj = {}
+
+    const isSiteAdmin = (user_id) => {
+        return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
+      }
+
+    const [currentTab, setCurrentTab] = useState("Personal Details");
+    
+
+    useEffect(() => {
+        if (update) {
+            setFirstName(update.first_name);
+            setLastName(update.last_name);
+            setPosition(update.position.map((item) => item));
+            setWage(update.wage);
+            setWageType(update.wage_type);
+            setSiteAdmin(isSiteAdmin(update.user))
+        }
+      }, [update]);
+
+    const personalDetailsProps = {firstName, setFirstName, lastName, setLastName, wage, setWage, wageType, setWageType};
+    const positionsProps = {position, setPosition};
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        const employee = {
+        first_name: firstName,
+        last_name: lastName,
+        wage: wage,
+        wage_type: wageType,
+        position_id: position.map(pos => pos.id),
+        business_id: current.business,
+        default_availability: {
+            0: { name: "unselected", start_time: null, end_time: null },
+            1: { name: "unselected", start_time: null, end_time: null },
+            2: { name: "unselected", start_time: null, end_time: null },
+            3: { name: "unselected", start_time: null, end_time: null },
+            4: { name: "unselected", start_time: null, end_time: null },
+            5: { name: "unselected", start_time: null, end_time: null },
+            6: { name: "unselected", start_time: null, end_time: null },
+        }
+        };
+        // error_obj = {first_name: firstName.length > 0 ? true : "This field is required", last_name: lastName.length > 0 ? true : "This field is required", positions: position.length > 0 ? true : positions.length > 0 ? "This field is required" : "You don't have any positions"}
+        // dispatch(getErrors(error_obj, 400));
+
+        if (update) {
+            dispatch(updateEmployee(update.id, employee, siteAdmin, current_site));
+            toast.success("Employee updated!");
+        } else {
+            dispatch(addEmployee(employee));
+            toast.success("Employee added!");
+        }
+
+        setFirstName("");
+        setLastName("");
+        setPosition("");
+        setSiteAdmin(false);
+        onClose();
+      };
+
+    return (
+        
+        <div className="form">
+            <div className="form__image">{firstName ? `${firstName[0]}${lastName && lastName[0]}` : <i className="fas fa-user"></i>}</div>
+            <p className="form__subheading">Employee Profile</p>
+            <h1 className="form__heading">
+                {firstName ? `${firstName} ${lastName && lastName}` : "Create an Employee"}
+            </h1>
+            <div className="flex-container form__tabs">
+                <button onClick={() => setCurrentTab("Personal Details")} className={`btn-8 ${currentTab == "Personal Details" ? "active" : ""}`}>Personal Details</button>
+                <button onClick={() => setCurrentTab("Positions")} className={`btn-8 ${currentTab == "Positions" ? "active" : ""}`}>Positions</button>
+                <button onClick={() => setCurrentTab("Availability")} className={`btn-8 ${currentTab == "Availability" ? "active" : ""}`}>Availability</button>
+                <button onClick={() => setCurrentTab("Permissions")} className={`btn-8 ${currentTab == "Permissions" ? "active" : ""}`}>Permissions</button>
+            </div>
+            <form onSubmit={onSubmit} className="form__form">
+                {currentTab == "Personal Details" && <PersonalDetails {...personalDetailsProps} />}
+                {currentTab == "Positions" && <Positions {...positionsProps} />}
+                <div>
+                    <button className="form__save" type="submit" value="Save">Save</button>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+export default EmployeeProfileModal;

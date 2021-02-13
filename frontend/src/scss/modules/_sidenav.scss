@@ -8,7 +8,7 @@
 }
 
 .sidenav {
-  @include sidenav_size('width');
+  @include sidenav_size("width");
   background-color: $blue;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
   overflow: auto;
   z-index: 10;
   transition: 0.5s ease left, 0.5s ease background-color;
-  left: -250px;
+  left: -200px;
   @include wi-mq(laptop) {
     left: -150px;
   }
@@ -68,8 +68,6 @@
         font-size: 32px;
       }
     }
-    
-
   }
   &__content {
     opacity: 0;
@@ -126,19 +124,21 @@
     display: flex;
     align-items: center;
     background-color: lighten($blue, 10%);
-    
+
     cursor: pointer;
     color: rgb(212, 212, 212);
     transition: 0.2s color ease-in-out, 0.2s background-color ease-in-out;
     margin-bottom: 3px;
-    a, .no-link, &.no-link {
+    a,
+    .no-link,
+    &.no-link {
       width: 100%;
-      padding: 20px 0;
+      padding: 15px 0;
       @include wi-mq(laptop) {
         padding: 12px 0;
       }
     }
-    
+
     &:hover {
       color: #fff;
       background-color: lighten($blue, 20%);
@@ -146,7 +146,7 @@
     &-text {
       width: 80%;
       margin: 0 auto;
-      font-size: 16px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       @include wi-mq(laptop) {
@@ -156,7 +156,7 @@
     }
     i {
       width: 45px;
-      font-size: 18px;
+      font-size: 14px;
       @include wi-mq(laptop) {
         width: 35px;
         font-size: 16px;
@@ -169,7 +169,7 @@
       a {
         padding: 10px 0;
       }
-      
+
       margin-left: 10%;
       &-text {
         font-size: 12px;
@@ -207,18 +207,16 @@
       }
       .sidenav__link {
         background-color: darken($blue, 3%);
-        
+
         color: rgb(151, 151, 151);
       }
     }
     &.open {
-      
       .sidenav__sublinks {
         max-height: 700px;
       }
     }
     @include wi-mq(not-tablet) {
-      
       &:hover {
         .sidenav__sublinks {
           max-height: 700px;

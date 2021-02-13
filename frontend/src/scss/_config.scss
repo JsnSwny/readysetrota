@@ -42,7 +42,7 @@ $breakpoints: (
 }
 
 @mixin sidenav_size($prop) {
-  #{$prop}: 300px;
+  #{$prop}: 250px;
   @include wi-mq(laptop) {
     #{$prop}: 200px;
   }
@@ -54,9 +54,6 @@ $breakpoints: (
   }
 }
 
-
-
-
 * {
   box-sizing: border-box;
   padding: 0;
@@ -64,7 +61,8 @@ $breakpoints: (
   word-wrap: break-word;
 }
 
-html, body {
+html,
+body {
   min-height: 100%;
 }
 
@@ -78,6 +76,8 @@ body {
 
 button {
   background-color: transparent;
+  border: none;
+  font-family: inherit;
   &:focus {
     outline: none;
   }

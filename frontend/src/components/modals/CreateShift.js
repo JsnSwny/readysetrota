@@ -1,6 +1,7 @@
 import React from "react";
 import AddShift from "./AddShift";
 import AddStaff from "../employees/AddStaff";
+import EmployeeProfileModal from "./EmployeeProfileModal"
 
 const CreateShift = (props) => {
   const {
@@ -26,27 +27,31 @@ const CreateShift = (props) => {
     "BusinessName",
     "Site",
   ];
+
+
+  const modalProps = {onClose, update, confirmProps};
   
 
   const getModal = () => {
-    if (type == "shift") {
+    if (type == "employeeprofile") {
+      return (
+        <EmployeeProfileModal {...modalProps} />
+      )
+    }
+    else if (type == "shift") {
       return (
         <AddShift
           employee={employee}
           date={date}
-          onClose={onClose}
-          shift={update}
-          template={template}
+          {...modalProps}
         />
       );
     } else if (staffTypes.includes(type)) {
       return (
         <AddStaff
-          onClose={onClose}
+          {...modalProps}
           form={type}
           staffPosition={staffPosition}
-          update={update}
-          confirmProps={confirmProps}
         />
       );
     }

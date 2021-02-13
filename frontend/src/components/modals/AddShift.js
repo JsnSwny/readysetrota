@@ -6,8 +6,8 @@ import PositionField from "../employees/PositionField";
 import { getErrors } from "../../actions/errors";
 
 const AddShift = (props) => {
-  const { date, employee, onClose, shift, template } = props;
-  let updating = shift ? true : false;
+  const { date, employee, onClose, update } = props;
+  let updating = update ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
   let current = useSelector(
@@ -33,15 +33,15 @@ const AddShift = (props) => {
   let popular_times = useSelector((state) => state.shifts.popular_times);
 
   useEffect(() => {
-    if (shift) {
-      setStartTime(shift.start_time);
-      setEndTime(shift.end_time);
-      setInfo(shift.info);
-      setPosition(shift.positions.map(item => positions.find(pos => pos.id == item)))
-      setBreakLength(shift.break_length);
-      setAbsence(shift.absence);
+    if (update) {
+      setStartTime(update.start_time);
+      setEndTime(update.end_time);
+      setInfo(update.info);
+      setPosition(update.positions.map(item => positions.find(pos => pos.id == item)))
+      setBreakLength(update.break_length);
+      setAbsence(update.absence);
     }
-  }, [shift]);
+  }, [update]);
 
   const compareShift = (shift1, shift2) => {
     return (
@@ -58,7 +58,7 @@ const AddShift = (props) => {
       start_time: startTime,
       end_time: endTime,
       info,
-      date: shift ? shift.date : date,
+      date: update ? update.date : date,
       break_length: breakLength,
       absence: absence,
       department_id: current.department,
@@ -69,10 +69,10 @@ const AddShift = (props) => {
       dispatch(getErrors(error_obj, 400));
 
       if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
-        shift
-          ? compareShift(shift, shiftObj)
+        update
+          ? compareShift(update, shiftObj)
             ? ""
-            : dispatch(updateShift(shift.id, shiftObj))
+            : dispatch(updateShift(update.id, shiftObj))
           : dispatch(addShift(shiftObj));
 
           setStartTime("");
@@ -107,7 +107,7 @@ const AddShift = (props) => {
   return (
     <div className="staffForm">
       <h1 style={{ fontSize: "28px", textAlign: "center", color: "black" }}>
-        {shift ? "Update Shift" : "Create Shift"}
+        {update ? "Update Shift" : "Create Shift"}
       </h1>
       <form onSubmit={onSubmit} className="staffForm__form">
           <div className="staffForm__control">
@@ -200,7 +200,7 @@ const AddShift = (props) => {
           </select>
 
         </div>
-        {shift && (
+        {update && (
           <div className="staffForm__control">
             <label className="staffForm__label">Absence:</label>
             <select onChange={(e) => setAbsence(e.target.value)} className="staffForm__input" value={absence}>
@@ -211,7 +211,7 @@ const AddShift = (props) => {
         {!employee && (
           <div className="staffForm__control">
             <label className="staffForm__label">Position(s):</label>
-            <PositionField many={true} shift={shift} departments={departments} position={position} setPosition={setPosition} positions={positions} />
+            <PositionField many={true} shift={update} departments={departments} position={position} setPosition={setPosition} positions={positions} />
         </div>
         )}
         
@@ -229,15 +229,15 @@ const AddShift = (props) => {
         </div>
         <div className="staffForm__buttons">
           <button type="submit" className="btn-modal--confirm">
-            {shift ? "Update" : "Create"}
+            {update ? "Update" : "Create"}
           </button>
           <button
             onClick={() => {
-              shift ? deleteShiftByID(shift.id) : onClose();
+              update ? deleteShiftByID(update.id) : onClose();
             }}
             className="btn-modal--cancel"
           >
-            {shift ? "Delete" : "Cancel"}
+            {update ? "Delete" : "Cancel"}
           </button>
         </div>
       </form>

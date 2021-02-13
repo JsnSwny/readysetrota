@@ -72,7 +72,7 @@ const StaffPicker = (props) => {
             }
             setOpen(true);
             setUpdate(false);
-            setType("Staff");
+            setType("employeeprofile");
           }}
           className="fas fa-plus"
         ></i>
@@ -116,7 +116,7 @@ const StaffPicker = (props) => {
                   onClick={() => {
                     setOpen(true);
                     setUpdate(item);
-                    setType("Staff");
+                    setType("employeeprofile");
                   }}
                   className="fas fa-edit"
                 ></i>)}
