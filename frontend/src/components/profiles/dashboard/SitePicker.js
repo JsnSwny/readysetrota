@@ -6,39 +6,35 @@ import { Link } from "react-router-dom";
 
 const SitePicker = (props) => {
   const { setOpen, setUpdate, setType, admin } = props;
+  const dispatch = useDispatch();
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
   let loading = useSelector((state) => state.loading);
   let user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
 
   return (
     <div className="dashboard__block">
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
-        <p className="dashboard__block-title">Sites</p>
+          <p className="dashboard__block-title">Sites</p>
           {admin && (
             <i
-            onClick={() => {
-              if (plan == "F" && sites.length >= 1) {
-                toast.warning(
-                  "Upgrade to premium to unlock unlimited departments"
-                );
-                return false;
-              }
-              setOpen(true);
-              setUpdate(false);
-              setType("Site");
-            }}
-            className="fas fa-plus"
-          ></i>
-          )
-          }
+              onClick={() => {
+                if (plan == "F" && sites.length >= 1) {
+                  toast.warning(
+                    "Upgrade to premium to unlock unlimited departments"
+                  );
+                  return false;
+                }
+                setOpen(true);
+                setUpdate(false);
+                setType("Site");
+              }}
+              className="fas fa-plus"
+            ></i>
+          )}
         </div>
-        
-        
-        
       </div>
       {sites.length == 0 && !user.business && (
         <Fragment>
@@ -57,8 +53,10 @@ const SitePicker = (props) => {
           </Link>
         </Fragment>
       )}
-      {loading.sites && <small className="loading-text">Loading sites...</small>}
-      
+      {loading.sites && (
+        <small className="loading-text">Loading sites...</small>
+      )}
+
       <div className="dashboard__wrapper">
         {sites.map((item) => (
           <div
@@ -72,31 +70,30 @@ const SitePicker = (props) => {
               <div className="flex">
                 {admin && (
                   <i
-                  onClick={() => {
-                    setOpen(true);
-                    setUpdate(item);
-                    setType("Site");
-                  }}
-                  className="fas fa-edit"
-                ></i>
+                    onClick={() => {
+                      setOpen(true);
+                      setUpdate(item);
+                      setType("Site");
+                    }}
+                    className="fas fa-edit"
+                  ></i>
                 )}
                 {current.site != item.id && (
                   <i
-                  onClick={() => {
-                    if(current.site != item.id) {
-                      dispatch(setSite(item.id));
-                    }  
-                  }}
-                  className="fas fa-check-circle"
-                ></i>
+                    onClick={() => {
+                      if (current.site != item.id) {
+                        dispatch(setSite(item.id));
+                      }
+                    }}
+                    className="fas fa-check-circle"
+                  ></i>
                 )}
-                
               </div>
             </div>
             <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
-                {item.number_of_employees}{" "}
-                {item.number_of_employees == 1 ? "employee" : "employees"}
-              </p>
+              {item.number_of_employees}{" "}
+              {item.number_of_employees == 1 ? "employee" : "employees"}
+            </p>
           </div>
         ))}
       </div>

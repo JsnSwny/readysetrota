@@ -11,7 +11,7 @@ import {
   GET_SWAP_REQUESTS,
   SEND_CHARGE,
   CHARGE_COMPLETE,
-  GET_OPEN_SHIFTS
+  GET_OPEN_SHIFTS,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -70,8 +70,8 @@ export default function (state = initialState, action) {
     case GET_OPEN_SHIFTS:
       return {
         ...state,
-        open_shifts: action.payload
-      }
+        open_shifts: action.payload,
+      };
     case GET_SHIFTS_BY_ID:
       return {
         ...state,

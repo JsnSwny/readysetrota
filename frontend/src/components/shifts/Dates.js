@@ -1,20 +1,32 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 
 const Dates = (props) => {
   const { filterEmployees, scrollPosition, template, dates, shifts } = props;
-  let employees = useSelector((state) => state.employees.employees)
+  let employees = useSelector((state) => state.employees.employees);
 
   const getCost = (date) => {
-    let shifts_filtered = shifts.filter(item => item.date == date)
-    let hourly = shifts_filtered.map(item => item.employee && item.employee.wage_type == "H" && +(parseFloat(item.wage * item.length)).toFixed(2)).reduce((a, b) => (a + b), 0.00);
-    let salary = employees.map(item => (item.wage_type == "S" && +(parseFloat(item.wage)/365).toFixed(2))).reduce((a, b) => (a + b), 0.00);    
+    let shifts_filtered = shifts.filter((item) => item.date == date);
+    let hourly = shifts_filtered
+      .map(
+        (item) =>
+          item.employee &&
+          item.employee.wage_type == "H" &&
+          +parseFloat(item.wage * item.length).toFixed(2)
+      )
+      .reduce((a, b) => a + b, 0.0);
+    let salary = employees
+      .map(
+        (item) =>
+          item.wage_type == "S" && +(parseFloat(item.wage) / 365).toFixed(2)
+      )
+      .reduce((a, b) => a + b, 0.0);
     return hourly + salary;
-  }
-  
-  let siteAdmin = useSelector((state) => state.employees.site_admin)
+  };
+
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
 
   return (
     <section
@@ -32,7 +44,9 @@ const Dates = (props) => {
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
-              {siteAdmin && <small>£{getCost(format(date, "yyyy-MM-dd"))}</small>}
+              {siteAdmin && (
+                <small>£{getCost(format(date, "yyyy-MM-dd"))}</small>
+              )}
               {template ? (
                 <AddShiftButton
                   date={format(date, "yyyy-MM-dd")}

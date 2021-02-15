@@ -1,20 +1,13 @@
-import React, { Fragment, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import {
-  getEmployees,
-  getAllAvailability,
-  getSites,
-  getDepartments,
-  getPositions,
-} from "../../actions/employees";
+import { getAllAvailability } from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
 import { toast } from "react-toastify";
 import Employee from "./Employee";
 import { Redirect } from "react-router-dom";
-import ShiftTemplate from "./ShiftTemplate";
 import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
@@ -275,69 +268,66 @@ const Rota = ({ modalProps, confirmProps }) => {
           shifts={shifts_list}
         />
         {isLoading && <Loading />}
-        {current.department != 0 &&
-          (template ? (
-            <ShiftTemplate shifts={shifts_list} result={result} />
-          ) : (
-            <div
-              className={`shiftList container ${filterDate ? "filtered" : ""} ${
-                scrollPosition >= 250 ? " fixed" : ""
-              }`}
-            >
-              {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
-                <OpenShifts
+        {current.department != 0 && (
+          <div
+            className={`shiftList container ${filterDate ? "filtered" : ""} ${
+              scrollPosition >= 250 ? " fixed" : ""
+            }`}
+          >
+            {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
+              <OpenShifts
+                current_employee={current_employee}
+                modalProps={modalProps}
+                confirmProps={confirmProps}
+                result={result}
+                shifts={
+                  siteAdmin
+                    ? shifts_list.filter((item) => item.employee == null)
+                    : openShifts
+                }
+              />
+            )}
+            {sortEmployees().map((employee, i) => (
+              <div key={employee.id} className="rota__container">
+                <Employee
+                  employee={employee}
                   current_employee={current_employee}
-                  modalProps={modalProps}
-                  confirmProps={confirmProps}
+                  shifts={shifts_list}
+                  user={user}
+                  currentDepartment={current.department}
                   result={result}
-                  shifts={
-                    siteAdmin
-                      ? shifts_list.filter((item) => item.employee == null)
-                      : openShifts
-                  }
                 />
-              )}
-              {sortEmployees().map((employee, i) => (
-                <div key={employee.id} className="rota__container">
-                  <Employee
-                    employee={employee}
-                    current_employee={current_employee}
-                    shifts={shifts_list}
-                    user={user}
-                    currentDepartment={current.department}
-                    result={result}
-                  />
-                  <div className="container-right">
-                    {result.map((result) => {
-                      const format_date = format(result, "yyyy-MM-dd");
-                      const shifts = getEmployeeShift(employee.id, format_date);
-                      let props = {
-                        format_date,
-                        result,
-                        available: isAvailable(employee.id, format_date),
-                        limit,
-                        employee,
-                        showAvailabilities,
-                        filterDate,
-                        admin: siteAdmin,
-                      };
+                <div className="container-right">
+                  {result.map((result) => {
+                    const format_date = format(result, "yyyy-MM-dd");
+                    const shifts = getEmployeeShift(employee.id, format_date);
+                    let props = {
+                      format_date,
+                      result,
+                      available: isAvailable(employee.id, format_date),
+                      limit,
+                      employee,
+                      showAvailabilities,
+                      filterDate,
+                      admin: siteAdmin,
+                    };
 
-                      return shifts.length > 0 ? (
-                        <Shift
-                          key={result}
-                          {...modalProps}
-                          {...props}
-                          shifts={shifts}
-                        />
-                      ) : (
-                        <NoShift key={result} {...modalProps} {...props} />
-                      );
-                    })}
-                  </div>
+                    return shifts.length > 0 ? (
+                      <Shift
+                        key={result}
+                        {...modalProps}
+                        {...props}
+                        shifts={shifts}
+                      />
+                    ) : (
+                      <NoShift key={result} {...modalProps} {...props} />
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

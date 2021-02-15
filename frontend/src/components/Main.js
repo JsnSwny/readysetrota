@@ -11,7 +11,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SideNav from "./layout/SideNav";
 import store from "../store";
 import Rota from "./shifts/Rota";
-import ShiftTemplate from "./shifts/ShiftTemplate";
 
 import List from "./lists/List";
 
@@ -40,28 +39,25 @@ import Checkout from "./accounts/Checkout";
 import Confirm from "./layout/Confirm";
 
 const Main = () => {
+  const dispatch = useDispatch();
+
+  // Use state
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
-
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirm, setOnConfirm] = useState(false);
   const [message, setMessage] = useState(false);
-
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
 
-  const dispatch = useDispatch();
-
-  let positions = useSelector((state) => state.employees.positions);
+  // Selectors
   let departments = useSelector((state) => state.employees.departments);
   let current = useSelector((state) => state.employees.current);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
-  let business = useSelector((state) => state.employees.business);
   let loading = useSelector((state) => state.loading);
-
   let sites = useSelector((state) => state.employees.sites);
 
+  // Use effect
   useEffect(() => {
     if (sites.length == 0) {
       dispatch(getSites());
@@ -79,6 +75,7 @@ const Main = () => {
     }
   }, [departments, sites]);
 
+  // Props
   const modalProps = {
     setOpen,
     setUpdate,
@@ -91,6 +88,7 @@ const Main = () => {
     setOnConfirm,
     setMessage,
   };
+
   return (
     <Router>
       <ToastContainer position="bottom-center" autoClose={2500} />
@@ -156,7 +154,6 @@ const Main = () => {
             modalProps={modalProps}
             confirmProps={confirmProps}
           />
-          <PrivateRoute path="/template" exact component={ShiftTemplate} />
           <PrivateRoute
             admin={true}
             path="/staff-management"

@@ -13,44 +13,52 @@ import {
   PUBLISHED_SHIFTS,
   SWAP_SHIFTS,
   GET_SWAP_REQUESTS,
-  GET_OPEN_SHIFTS
+  GET_OPEN_SHIFTS,
 } from "./types";
 import { tokenConfig } from "./auth";
 import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
 export const batchPublish = (shifts, val) => (dispatch, getState) => {
-  axios.all(
-    shifts.map(item => axios.put(`/api/shifts/${item.id}/`, {...item, published: val}))
-  )
-  .then(responseArr => {
-    for(let i=0; i<shifts.length; i++) {
-      dispatch({
-        type: UPDATE_SHIFT,
-        payload: { ...responseArr[i].data, published: val },
-      });
-    }
-    
-  }).catch(err => console.log(err.response));
-}
+  axios
+    .all(
+      shifts.map((item) =>
+        axios.put(`/api/shifts/${item.id}/`, { ...item, published: val })
+      )
+    )
+    .then((responseArr) => {
+      for (let i = 0; i < shifts.length; i++) {
+        dispatch({
+          type: UPDATE_SHIFT,
+          payload: { ...responseArr[i].data, published: val },
+        });
+      }
+    })
+    .catch((err) => console.log(err.response));
+};
 
 export const batchDeleteShifts = (shifts) => (dispatch, getState) => {
-  axios.all(
-    shifts.map(item => axios.delete(`/api/shifts/${item.id}/`))
-  )
-  .then(responseArr => {
-    for(let i=0; i<shifts.length; i++) {
-      dispatch({
-        type: DELETE_SHIFT,
-        payload: shifts[i].id,
-      });
-    }
-    
-  }).catch(err => console.log(err.response));
-}
+  axios
+    .all(shifts.map((item) => axios.delete(`/api/shifts/${item.id}/`)))
+    .then((responseArr) => {
+      for (let i = 0; i < shifts.length; i++) {
+        dispatch({
+          type: DELETE_SHIFT,
+          payload: shifts[i].id,
+        });
+      }
+    })
+    .catch((err) => console.log(err.response));
+};
 
 // Get Bookings
-export const getShifts = (startdate, enddate, list=false, user=false, id="") => (dispatch, getState) => {
+export const getShifts = (
+  startdate,
+  enddate,
+  list = false,
+  user = false,
+  id = ""
+) => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
@@ -58,7 +66,9 @@ export const getShifts = (startdate, enddate, list=false, user=false, id="") => 
     .get(
       `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
         getState().employees.current.department
-      }${user ? `&employee__user__id=${id}` : `&employee=${id}`}&ordering=date,start_time`,
+      }${
+        user ? `&employee__user__id=${id}` : `&employee=${id}`
+      }&ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -67,10 +77,10 @@ export const getShifts = (startdate, enddate, list=false, user=false, id="") => 
         payload: res.data,
         date: startdate,
         enddate: enddate,
-        list
+        list,
       });
     })
-    .catch(err => console.log(err.response));
+    .catch((err) => console.log(err.response));
 };
 
 export const getOpenShifts = (startdate) => (dispatch, getState) => {
@@ -87,8 +97,8 @@ export const getOpenShifts = (startdate) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch(err => console.log(err.response));
-}
+    .catch((err) => console.log(err.response));
+};
 
 export const getAbsences = (startdate, site) => (dispatch, getState) => {
   axios
@@ -102,11 +112,11 @@ export const getAbsences = (startdate, site) => (dispatch, getState) => {
       dispatch({
         type: GET_ALL_SHIFTS,
         payload: res.data,
-        list: true
+        list: true,
       });
     })
-    .catch(err => console.log(err.response));
-}
+    .catch((err) => console.log(err.response));
+};
 
 // Get Bookings
 export const getShiftsByID = (id, user) => (dispatch, getState) => {
@@ -139,7 +149,9 @@ export const addShift = (shift) => (dispatch, getState) => {
       dispatch(resetErrors());
     })
 
-    .catch((err) => {console.log(err.response)});
+    .catch((err) => {
+      console.log(err.response);
+    });
 };
 
 export const updateShift = (id, shift) => (dispatch, getState) => {
@@ -155,7 +167,7 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     })
 
     .catch((err) => {
-      console.log(err.response)
+      console.log(err.response);
       dispatch(getErrors(err.response.data, err.response.status));
     });
 };
@@ -196,12 +208,19 @@ export const publish = () => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
-  axios.get(`/api-view/publish/?department_id=${getState().employees.current.department}`, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: PUBLISHED_SHIFTS,
-      payload: res.data,
+  axios
+    .get(
+      `/api-view/publish/?department_id=${
+        getState().employees.current.department
+      }`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: PUBLISHED_SHIFTS,
+        payload: res.data,
+      });
     });
-  });
 };
 
 // Swap Shifts

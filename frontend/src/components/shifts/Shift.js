@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
-import CreateShift from "../modals/CreateShift";
 import { updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 

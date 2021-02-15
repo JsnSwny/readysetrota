@@ -13,16 +13,10 @@ const Confirm = (props) => {
 
           <div className="modal__buttonsContainer">
             <div className="flex-container--between">
-              <button
-                className="btn-modal--cancel"
-                onClick={onClose}
-              >
+              <button className="btn-modal--cancel" onClick={onClose}>
                 Cancel
               </button>
-              <button
-                className="btn-modal--confirm"
-                onClick={onConfirm}
-              >
+              <button className="btn-modal--confirm" onClick={onConfirm}>
                 Confirm
               </button>
             </div>

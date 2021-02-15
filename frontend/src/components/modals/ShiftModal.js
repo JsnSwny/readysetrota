@@ -6,13 +6,11 @@ import PositionField from "../employees/PositionField";
 import { getErrors } from "../../actions/errors";
 
 const ShiftModal = (props) => {
-    const { date, employee, onClose, update } = props;
+  const { date, employee, onClose, update } = props;
   let updating = update ? true : false;
 
   let errors = useSelector((state) => state.errors.msg);
-  let current = useSelector(
-    (state) => state.employees.current
-  );
+  let current = useSelector((state) => state.employees.current);
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
@@ -22,11 +20,12 @@ const ShiftModal = (props) => {
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
   const [openEmployee, setOpenEmployee] = useState("");
-  const [shiftEmployee, setShiftEmployee] = useState(employee ? employee.id : "");
+  const [shiftEmployee, setShiftEmployee] = useState(
+    employee ? employee.id : ""
+  );
   const [breakLength, setBreakLength] = useState(0);
   const [absence, setAbsence] = useState("None");
   const [currentTab, setCurrentTab] = useState("Employee/Time");
-
 
   let error_obj = {};
 
@@ -39,7 +38,9 @@ const ShiftModal = (props) => {
       setStartTime(update.start_time);
       setEndTime(update.end_time);
       setInfo(update.info);
-      setPosition(update.positions.map(item => positions.find(pos => pos.id == item)))
+      setPosition(
+        update.positions.map((item) => positions.find((pos) => pos.id == item))
+      );
       setBreakLength(update.break_length);
       setAbsence(update.absence);
     }
@@ -48,15 +49,24 @@ const ShiftModal = (props) => {
   const compareShift = (shift1, shift2) => {
     return (
       shift1.start_time == shift2.start_time &&
-      shift1.end_time == shift2.end_time && shift1.absence == shift2.absence,
-      shift1.info == shift2.info && shift1.employee_id == shift2.employee_id && ((shift2.position_id.length > 0 || shift1.positions.length > 0) ? shift1.positions == shift2.positions : true)
+        shift1.end_time == shift2.end_time &&
+        shift1.absence == shift2.absence,
+      shift1.info == shift2.info &&
+        shift1.employee_id == shift2.employee_id &&
+        (shift2.position_id.length > 0 || shift1.positions.length > 0
+          ? shift1.positions == shift2.positions
+          : true)
     );
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: shiftEmployee ? shiftEmployee : openEmployee ? openEmployee : null,
+      employee_id: shiftEmployee
+        ? shiftEmployee
+        : openEmployee
+        ? openEmployee
+        : null,
       start_time: startTime,
       end_time: endTime,
       info,
@@ -64,38 +74,59 @@ const ShiftModal = (props) => {
       break_length: breakLength,
       absence: absence,
       department_id: current.department,
-      published: (shiftEmployee || openEmployee) ? false : true,
-      position_id: shiftEmployee ? [] : position.map(pos => pos.id),
+      published: shiftEmployee || openEmployee ? false : true,
+      position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
-      error_obj = {start_time: startTime != "" ? true : "This field is required", end_time: endTime != "" ? true : "This field is required"}
-      dispatch(getErrors(error_obj, 400));
+    error_obj = {
+      start_time: startTime != "" ? true : "This field is required",
+      end_time: endTime != "" ? true : "This field is required",
+    };
+    dispatch(getErrors(error_obj, 400));
 
-      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
-        update
-          ? compareShift(update, shiftObj)
-            ? ""
-            : dispatch(updateShift(update.id, shiftObj))
-          : dispatch(addShift(shiftObj));
+    if (
+      Object.keys(error_obj).every((k) => {
+        return error_obj[k] == true;
+      })
+    ) {
+      update
+        ? compareShift(update, shiftObj)
+          ? ""
+          : dispatch(updateShift(update.id, shiftObj))
+        : dispatch(addShift(shiftObj));
 
-          setStartTime("");
-          setEndTime("");
-          setInfo("");
-          onClose();
-          updating
-            ? toast.success("Shift updated!")
-            : toast.success("Shift added!");
-        
-      }
+      setStartTime("");
+      setEndTime("");
+      setInfo("");
+      onClose();
+      updating
+        ? toast.success("Shift updated!")
+        : toast.success("Shift added!");
+    }
   };
 
   const deleteShiftByID = (id) => {
     dispatch(deleteShift(id));
   };
 
-  const breaks = [{title: "No break", val: 0}, {title: "15 minutes", val: 15}, {title: "30 minutes", val: 30}, {title: "45 minutes", val: 45},
-  {title: "1 hour", val: 60}, {title: "1hr 15mins", val: 75}, {title: "1hr 30mins", val: 90}, {title: "1hr 45mins", val: 105}, {title: "2 hours", val: 120}]
+  const breaks = [
+    { title: "No break", val: 0 },
+    { title: "15 minutes", val: 15 },
+    { title: "30 minutes", val: 30 },
+    { title: "45 minutes", val: 45 },
+    { title: "1 hour", val: 60 },
+    { title: "1hr 15mins", val: 75 },
+    { title: "1hr 30mins", val: 90 },
+    { title: "1hr 45mins", val: 105 },
+    { title: "2 hours", val: 120 },
+  ];
 
-  const absences = ["None", "Authorised", "Unauthorised", "Compassionate", "Other"];
+  const absences = [
+    "None",
+    "Authorised",
+    "Unauthorised",
+    "Compassionate",
+    "Other",
+  ];
   let minutes = ["00", "15", "30", "45"];
   let hours = [];
   for (let i = 0; i < 24; i++) {
@@ -105,23 +136,44 @@ const ShiftModal = (props) => {
         : minutes.map((minute) => hours.push(i.toString() + ":" + minute))
     );
   }
-    return (
-        <div className="form">
-      <div className="form__image"><i className="fas fa-briefcase"></i></div>
-        <p className="form__subheading">Rota Management</p>
-        <h1 className="form__heading">
-            {update ? "Update Shift" : "Create Shift"}
-        </h1>
-    <div className="flex-container form__tabs">
-            <button onClick={() => setCurrentTab("Employee/Time")} className={`btn-8 ${currentTab == "Employee/Time" ? "active" : ""}`}>Employee/Time</button>
-            <button onClick={() => setCurrentTab("Extra Info")} className={`btn-8 ${currentTab == "Extra Info" ? "active" : ""}`}>Extra Info</button>
-            <button onClick={() => setCurrentTab("Absence")} className={`btn-8 ${currentTab == "Absence" ? "active" : ""}`}>Absence</button>
-        </div>
+  return (
+    <div className="form">
+      <div className="form__image">
+        <i className="fas fa-briefcase"></i>
+      </div>
+      <p className="form__subheading">Rota Management</p>
+      <h1 className="form__heading">
+        {update ? "Update Shift" : "Create Shift"}
+      </h1>
+      <div className="flex-container form__tabs">
+        <button
+          onClick={() => setCurrentTab("Employee/Time")}
+          className={`btn-8 ${currentTab == "Employee/Time" ? "active" : ""}`}
+        >
+          Employee/Time
+        </button>
+        <button
+          onClick={() => setCurrentTab("Extra Info")}
+          className={`btn-8 ${currentTab == "Extra Info" ? "active" : ""}`}
+        >
+          Extra Info
+        </button>
+        <button
+          onClick={() => setCurrentTab("Absence")}
+          className={`btn-8 ${currentTab == "Absence" ? "active" : ""}`}
+        >
+          Absence
+        </button>
+      </div>
       <form onSubmit={onSubmit} className="form__form">
-          <div className="form__control">
+        <div className="form__control">
           <label className="form__label">Employee:</label>
           {employee ? (
-            <select value={shiftEmployee} onChange={(e) => setShiftEmployee(e.target.value)} className="form__input">
+            <select
+              value={shiftEmployee}
+              onChange={(e) => setShiftEmployee(e.target.value)}
+              className="form__input"
+            >
               {employees.map((employee) => (
                 <option key={employee.id} value={employee.id}>
                   {employee.first_name} {employee.last_name}
@@ -129,10 +181,12 @@ const ShiftModal = (props) => {
               ))}
             </select>
           ) : (
-            <select value={openEmployee} onChange={(e) => setOpenEmployee(e.target.value)} className="form__input">
-              <option value="">
-                All Staff
-              </option>
+            <select
+              value={openEmployee}
+              onChange={(e) => setOpenEmployee(e.target.value)}
+              className="form__input"
+            >
+              <option value="">All Staff</option>
               {employees.map((employee) => (
                 <option value={employee.id}>
                   {employee.first_name} {employee.last_name}
@@ -141,7 +195,7 @@ const ShiftModal = (props) => {
             </select>
           )}
         </div>
-        
+
         <div className="flex-container--between form__wrapper">
           <div className="form__control--third">
             <label className="form__label">Start Time:</label>
@@ -164,11 +218,16 @@ const ShiftModal = (props) => {
           </div>
           <div className="form__control--third">
             <label className="form__label">Break:</label>
-            <select onChange={(e) => setBreakLength(e.target.value)} className="form__input" value={breakLength}>
-                {breaks.map(item => <option value={item.val}>{item.title}</option>)}
+            <select
+              onChange={(e) => setBreakLength(e.target.value)}
+              className="form__input"
+              value={breakLength}
+            >
+              {breaks.map((item) => (
+                <option value={item.val}>{item.title}</option>
+              ))}
             </select>
-
-            </div>
+          </div>
           <div className="form__control--third">
             <label className="form__label">End Time:</label>
             <select
@@ -208,16 +267,24 @@ const ShiftModal = (props) => {
             </p>
           ))}
         </div>
-        
-        
+
         {!employee && (
           <div className="form__control">
             <label className="form__label">Position(s):</label>
-            <PositionField many={true} shift={update} departments={departments} position={position} setPosition={setPosition} positions={positions} />
-        </div>
+            <PositionField
+              many={true}
+              shift={update}
+              departments={departments}
+              position={position}
+              setPosition={setPosition}
+              positions={positions}
+            />
+          </div>
         )}
         <div className="staffForm__buttons">
-        <button className="form__save" type="submit">Save</button>
+          <button className="form__save" type="submit">
+            Save
+          </button>
           <button
             onClick={() => {
               update ? deleteShiftByID(update.id) : onClose();
@@ -229,7 +296,7 @@ const ShiftModal = (props) => {
         </div>
       </form>
     </div>
-    )
-}
+  );
+};
 
 export default ShiftModal;

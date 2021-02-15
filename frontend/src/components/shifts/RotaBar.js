@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { format, parseISO, addDays } from "date-fns";
 import { publish } from "../../actions/shifts";
@@ -22,9 +22,8 @@ const RotaBar = (props) => {
   let published_shifts = shifts.filter((item) => item.published);
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
-  let sites = useSelector((state) => state.employees.sites);
-
   let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let employees = useSelector((state) => state.employees.employees);
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -34,9 +33,12 @@ const RotaBar = (props) => {
     return newDate;
   };
 
-  let current_employee = user.employee.filter((employee) =>
-    employee.position.some((item) => item.department.id == current.department)
-  )[0];
+  // Find current employee object
+  let current_employee = null;
+  if (user.employee) {
+    current_employee = employees.find((item) => item.user == user.id);
+  }
+
   let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
 
   // Arrow Key Date Change
