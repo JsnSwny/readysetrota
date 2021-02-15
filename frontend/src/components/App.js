@@ -8,7 +8,7 @@ import { loadUser } from "../actions/auth";
 import "../css/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import { setWidth } from "../actions/responsive";
-import ErrorBoundary from "./ErrorBoundary"
+import ErrorBoundary from "./ErrorBoundary";
 
 const App = () => {
   useEffect(() => {

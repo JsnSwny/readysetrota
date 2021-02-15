@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
+import { useSelector } from "react-redux";
 
 const PersonalDetails = ({firstName, lastName, setFirstName, setLastName, wage, setWage, wageType, setWageType}) => {
+    let errors = useSelector((state) => state.errors.msg);
     return (
         <Fragment>
         <div className="flex-container--between form__wrapper">
             <div className="form__control--half">
-                <label className="form__label">First name:</label>
+                <label className="form__label">First name*</label>
                 <input
                     className="form__input"
                     type="text"
@@ -16,7 +18,7 @@ const PersonalDetails = ({firstName, lastName, setFirstName, setLastName, wage, 
                 ></input>
             </div>
             <div className="form__control--half">
-                <label className="form__label">Last name:</label>
+                <label className="form__label">Last name*</label>
                 <input
                     className="form__input"
                     type="text"
@@ -28,7 +30,7 @@ const PersonalDetails = ({firstName, lastName, setFirstName, setLastName, wage, 
         </div>
         <div className="flex-container--between form__wrapper">
             <div className="form__control--half">
-                <label className="form__label">Wage Type:</label>
+                <label className="form__label">Wage Type</label>
                 <select className="form__input" onChange={(e) => setWageType(e.target.value)}>
                     <option value="N">None</option>
                     <option value="H">Hourly</option>
@@ -36,15 +38,19 @@ const PersonalDetails = ({firstName, lastName, setFirstName, setLastName, wage, 
                 </select>
             </div>
             <div className="form__control--half">
-                <label className="form__label">Wage:</label>
-                <input
-                    className="form__input"
-                    type="number"
-                    name="wage"
-                    onChange={(e) => setWage(e.target.value)}
-                    value={wage}
-                    step="0.01"
-                    />
+                {wageType != "N" && (
+                    <Fragment>
+                    <label className="form__label">Wage</label>
+                    <input
+                        className="form__input"
+                        type="number"
+                        name="wage"
+                        onChange={(e) => setWage(e.target.value)}
+                        value={wage}
+                        step="0.01"
+                        />
+                    </Fragment>
+                )}
             </div>
         </div>
     </Fragment>

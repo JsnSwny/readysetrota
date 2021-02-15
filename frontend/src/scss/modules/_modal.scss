@@ -31,13 +31,14 @@
     position: relative;
     max-height: 80%;
     // overflow: auto;
-    max-width: 850px;
+    max-width: 750px;
     width: 100%;
     @include wi-mq(tablet) {
       max-width: 90%;
     }
     @include wi-mq(mobile) {
       margin-top: -60px;
+      overflow-y: auto;
     }
     background-color: white;
     z-index: 9999;

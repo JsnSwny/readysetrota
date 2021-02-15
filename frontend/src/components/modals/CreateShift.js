@@ -2,6 +2,8 @@ import React from "react";
 import AddShift from "./AddShift";
 import AddStaff from "../employees/AddStaff";
 import EmployeeProfileModal from "./EmployeeProfileModal"
+import StaffManagementModal from "./StaffManagementModal";
+import ShiftModal from "./ShiftModal";
 
 const CreateShift = (props) => {
   const {
@@ -40,19 +42,11 @@ const CreateShift = (props) => {
     }
     else if (type == "shift") {
       return (
-        <AddShift
-          employee={employee}
-          date={date}
-          {...modalProps}
-        />
+        <ShiftModal employee={employee} date={date} {...modalProps} />
       );
     } else if (staffTypes.includes(type)) {
       return (
-        <AddStaff
-          {...modalProps}
-          form={type}
-          staffPosition={staffPosition}
-        />
+        <StaffManagementModal {...modalProps} form={type} title={`Create ${type}`} />
       );
     }
   };

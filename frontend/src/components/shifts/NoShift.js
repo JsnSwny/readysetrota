@@ -26,13 +26,14 @@ const NoShift = (props) => {
       }
     }
   }
+  console.log(available)
   return (
     <div
       key={result}
       className={`item-block shift__shift-noshift ${
         showAvailabilities && available.name
       } ${
-        showAvailabilities && available.name == "holiday" && !available.approved
+        showAvailabilities && (available.name == "holiday" || available.name == "unmarked") && available.approved == null
           ? "not-approved"
           : ""
       } ${filterDate == format_date ? "filtered" : ""} ${
@@ -47,11 +48,11 @@ const NoShift = (props) => {
           <p className={`shift__text`}>
             {available.name != "unselected" && available.name}
           </p>
-          {available.name == "holiday" && available.approved != true && (
-            <p className="shift__text">Not Approved</p>
+          {available.name == "holiday" && available.approved == null && (
+            <p className="shift__text">Unmarked</p>
           )}
-          {available.name == "unavailable" && available.approved != true && (
-            <p className="shift__text">Not Approved</p>
+          {available.name == "unavailable" && available.approved == null && (
+            <p className="shift__text">Unmarked</p>
           )}
           {available.start_time && (
             <p className="shift__text">

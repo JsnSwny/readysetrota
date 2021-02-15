@@ -23,7 +23,7 @@ const Shift = (props) => {
     current_employee,
     setConfirmOpen,
     setOnConfirm,
-    setMessage
+    setMessage,
   } = props;
 
   const [shiftDate, setShiftDate] = useState("");
@@ -49,7 +49,7 @@ const Shift = (props) => {
             {...modalProps}
           />
         )}
-        
+
         {shifts.map((shift) => (
           <Fragment key={shift.id}>
             {!admin && shift.published == false ? (
@@ -61,27 +61,39 @@ const Shift = (props) => {
                     setOpen(true);
                     setType("shift");
                     setUpdate(shift);
-                    setShiftInfo({employee, date: shiftDate})
+                    setShiftInfo({ employee, date: shiftDate });
                   }
                 }}
                 className={`shift__wrapper ${admin ? "edit" : ""}`}
               >
-                <div className="flex-container--align-center" onClick={() => {
-                  if(!employee && !admin) {
-                    setConfirmOpen(true);
-                    setMessage("Are you sure you want to take this shift?")
-                    setOnConfirm(() => () => {
-                      setConfirmOpen(false)
-                      dispatch(updateShift(shift.id, {...shift, employee_id: current_employee.id}))
-                      toast.success("You have accepted this shift")
-                    })
-                  }  
-                    }}>
+                <div
+                  className="flex-container--align-center"
+                  onClick={() => {
+                    if (!employee && !admin) {
+                      setConfirmOpen(true);
+                      setMessage("Are you sure you want to take this shift?");
+                      setOnConfirm(() => () => {
+                        setConfirmOpen(false);
+                        dispatch(
+                          updateShift(shift.id, {
+                            ...shift,
+                            employee_id: current_employee.id,
+                          })
+                        );
+                        toast.success("You have accepted this shift");
+                      });
+                    }
+                  }}
+                >
                   <p className={`shift__time ${!employee ? "open-shift" : ""}`}>
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>
                 </div>
-                {shift.break_length > 0 && <p className="shift__info">Break: {shift.break_length} minutes</p>}
+                {shift.break_length > 0 && (
+                  <p className="shift__info">
+                    Break: {shift.break_length} minutes
+                  </p>
+                )}
                 {shift.info && (
                   <p className="shift__info">
                     <i className="fas fa-info-circle"></i>

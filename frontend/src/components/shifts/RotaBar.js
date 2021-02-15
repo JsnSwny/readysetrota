@@ -20,11 +20,9 @@ const RotaBar = (props) => {
   let business = useSelector((state) => state.employees.business);
   let shifts = useSelector((state) => state.shifts.shifts);
   let published_shifts = shifts.filter((item) => item.published);
-  let current = useSelector(
-    (state) => state.employees.current
-  );
+  let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
-  let sites = useSelector((state) => state.employees.sites)
+  let sites = useSelector((state) => state.employees.sites);
 
   let siteAdmin = useSelector((state) => state.employees.site_admin);
 

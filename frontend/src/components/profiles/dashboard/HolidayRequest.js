@@ -49,7 +49,6 @@ const HolidayRequest = (props) => {
       </div>
       {admin && (
         <Fragment>
-          {console.log(holidays.filter(item => item.approved == null))}
           <p>You have {holidays.filter(item => item.approved == null).length} unmarked availabilities to review.</p>
           <Link className="link" to="/list/holidays">View all availability requests</Link>
         </Fragment>

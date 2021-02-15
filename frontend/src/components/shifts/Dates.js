@@ -9,9 +9,9 @@ const Dates = (props) => {
 
   const getCost = (date) => {
     let shifts_filtered = shifts.filter(item => item.date == date)
-    console.log(shifts_filtered);
     let hourly = shifts_filtered.map(item => item.employee && item.employee.wage_type == "H" && +(parseFloat(item.wage * item.length)).toFixed(2)).reduce((a, b) => (a + b), 0.00);
-    let salary = employees.map(item => (item.wage_type == "S" && shifts_filtered.some(shift => shift.employee.id == item.id)) ? +(parseFloat(item.wage)/365).toFixed(2) : 0).reduce((a, b) => (a + b), 0.00);    return hourly + salary;
+    let salary = employees.map(item => (item.wage_type == "S" && +(parseFloat(item.wage)/365).toFixed(2))).reduce((a, b) => (a + b), 0.00);    
+    return hourly + salary;
   }
   
   let siteAdmin = useSelector((state) => state.employees.site_admin)

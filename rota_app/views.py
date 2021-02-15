@@ -105,6 +105,7 @@ import json
 def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, user_id=False):
     hours = 0
     wage = 0
+    print("RUNNING")
     for i in shifts:
         if i.end_time != "Finish":
             current_date = date.today()
@@ -123,18 +124,16 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
 
     employees = []
 
-    print(site_id)
-    print(user_id)
-        
     if user_id:
-        employees = Employee.objects.filter(user__id=user_id)
+        employees = Employee.objects.filter(user__id=user_id).distinct()
     if site_id:
-        employees = Employee.objects.filter(position__department__site=site_id)
-
-    print(employees)
+        employees = Employee.objects.filter(position__department__site=site_id).distinct()
     for i in employees:
         if i.wage_type == "S":
+            print(float(i.wage/365))
+            print(days_difference.days)
             wage += float(i.wage/365) * float(days_difference.days)
+        
 
     return hours, wage
 

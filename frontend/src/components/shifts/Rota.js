@@ -1,7 +1,13 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getEmployees, getAllAvailability, getSites, getDepartments, getPositions } from "../../actions/employees";
+import {
+  getEmployees,
+  getAllAvailability,
+  getSites,
+  getDepartments,
+  getPositions,
+} from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -14,7 +20,7 @@ import NoShift from "./NoShift";
 import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
 
-const Rota = ({modalProps, confirmProps}) => {
+const Rota = ({ modalProps, confirmProps }) => {
   const dispatch = useDispatch();
 
   // State Selectors
@@ -23,7 +29,7 @@ const Rota = ({modalProps, confirmProps}) => {
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
   let availability = useSelector((state) => state.employees.availability);
-  let positions = useSelector((state) => state.employees.positions)
+  let positions = useSelector((state) => state.employees.positions);
   let loading = useSelector((state) => state.loading);
   let enddate = useSelector((state) => state.shifts.end_date);
   let shifts_list = useSelector((state) => state.shifts.shifts);
@@ -40,7 +46,6 @@ const Rota = ({modalProps, confirmProps}) => {
   const [template, setTemplate] = useState(false);
   const [limit, setLimit] = useState("");
   const [scrollPosition, setScrollPosition] = useState(0);
-  
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
@@ -51,15 +56,18 @@ const Rota = ({modalProps, confirmProps}) => {
   // Set Current Employee
   let current_employee = null;
   if (user.employee) {
-    current_employee = employees.find(item => item.user == user.id);
+    current_employee = employees.find((item) => item.user == user.id);
   }
 
   // Update shifts based on width
-  const widthUpdate = (force=false) => {
+  const widthUpdate = (force = false) => {
     let currentDate = format(new Date(), "yyyy-MM-dd");
     if (width > 1200) {
       if (currentDevice != "Desktop" || force) {
-        updateShifts(date, format(addDays(parseISO(date, "dd-MM-yyyy"), 6), "yyyy-MM-dd"));
+        updateShifts(
+          date,
+          format(addDays(parseISO(date, "dd-MM-yyyy"), 6), "yyyy-MM-dd")
+        );
         setCurrentDevice("Desktop");
       }
     } else if (width > 600) {
@@ -87,7 +95,7 @@ const Rota = ({modalProps, confirmProps}) => {
 
   // Update Shifts and Popular Times
   useEffect(() => {
-    if(current.department > 0 && current.site > 0) {
+    if (current.department > 0 && current.site > 0) {
       dispatch(getPopularTimes());
       widthUpdate(true);
     }
@@ -127,7 +135,7 @@ const Rota = ({modalProps, confirmProps}) => {
     start: parseISO(date),
     end: parseISO(enddate),
   });
-  
+
   var getEmployeeShift = (employee, date) =>
     shifts_list.filter((obj) => {
       return obj.employee && obj.employee.id === employee && obj.date === date
@@ -149,7 +157,7 @@ const Rota = ({modalProps, confirmProps}) => {
     let newEmployees = [];
     employeesOnDay.map((obj) => {
       !newEmployees.some((item) => item.id === obj.employee.id) &&
-        newEmployees.push(employees.find(item => item.id == obj.employee.id));
+        newEmployees.push(employees.find((item) => item.id == obj.employee.id));
     });
     employees.map((obj) => {
       !newEmployees.some((item) => item.id === obj.id) &&
@@ -183,35 +191,68 @@ const Rota = ({modalProps, confirmProps}) => {
     };
   }, []);
 
-  const [staffSort, setStaffSort] = useState(localStorage.getItem("staff_sort") ? localStorage.getItem("staff_sort") : "alphabetical");
+  const [staffSort, setStaffSort] = useState(
+    localStorage.getItem("staff_sort")
+      ? localStorage.getItem("staff_sort")
+      : "alphabetical"
+  );
 
   const sortEmployees = () => {
-    if(positions.length > 0 && filterDate == "") {
-      switch(staffSort) { 
+    if (positions.length > 0 && filterDate == "") {
+      switch (staffSort) {
         case "position":
-          return employeesList.sort((a,b) => positions.find(pos => pos.id == a.position.find(item => item.department.id == current.department).id).order - positions.find(pos => pos.id == b.position.find(item => item.department.id == current.department).id).order)
-          
+          return employeesList.sort(
+            (a, b) =>
+              positions.find(
+                (pos) =>
+                  pos.id ==
+                  a.position.find(
+                    (item) => item.department.id == current.department
+                  ).id
+              ).order -
+              positions.find(
+                (pos) =>
+                  pos.id ==
+                  b.position.find(
+                    (item) => item.department.id == current.department
+                  ).id
+              ).order
+          );
+
         default:
-          return employeesList.sort((a,b) => a.first_name.localeCompare(b.first_name));
+          return employeesList.sort((a, b) =>
+            a.first_name.localeCompare(b.first_name)
+          );
       }
     } else {
       return employeesList;
     }
-    
-  }
+  };
 
-  if(loading.employees) {
+  if (loading.employees) {
     return <Loading />;
   }
 
-  if(!loading.employees && employees.length == 0) {
-    toast.warning("You do not currently have any employees to manage in this department")
-    return <Redirect to="/staff-management" />
+  if (!loading.employees && employees.length == 0) {
+    toast.warning(
+      "You do not currently have any employees to manage in this department"
+    );
+    return <Redirect to="/staff-management" />;
   }
 
-  let openShifts = !user.business && shifts_list.filter(item => item.employee == null && item.positions.some(pos => current_employee.position.map(empPos => empPos.id).includes(pos.id)));
-  if(!siteAdmin) {
-    let employeeShifts = shifts_list.filter(item => item.employee &&  item.employee.id == current_employee.id)
+  let openShifts =
+    !user.business &&
+    shifts_list.filter(
+      (item) =>
+        item.employee == null &&
+        item.positions.some((pos) =>
+          current_employee.position.map((empPos) => empPos.id).includes(pos.id)
+        )
+    );
+  if (!siteAdmin) {
+    let employeeShifts = shifts_list.filter(
+      (item) => item.employee && item.employee.id == current_employee.id
+    );
     // openShifts.filter()
   }
 
@@ -244,9 +285,18 @@ const Rota = ({modalProps, confirmProps}) => {
               }`}
             >
               {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
-                <OpenShifts current_employee={current_employee} modalProps={modalProps} confirmProps={confirmProps} result={result} shifts={siteAdmin ? shifts_list.filter(item => item.employee == null) : openShifts} />
-              )
-              }
+                <OpenShifts
+                  current_employee={current_employee}
+                  modalProps={modalProps}
+                  confirmProps={confirmProps}
+                  result={result}
+                  shifts={
+                    siteAdmin
+                      ? shifts_list.filter((item) => item.employee == null)
+                      : openShifts
+                  }
+                />
+              )}
               {sortEmployees().map((employee, i) => (
                 <div key={employee.id} className="rota__container">
                   <Employee
@@ -269,11 +319,16 @@ const Rota = ({modalProps, confirmProps}) => {
                         employee,
                         showAvailabilities,
                         filterDate,
-                        admin: siteAdmin
+                        admin: siteAdmin,
                       };
 
                       return shifts.length > 0 ? (
-                        <Shift key={result} {...modalProps} {...props} shifts={shifts}  />
+                        <Shift
+                          key={result}
+                          {...modalProps}
+                          {...props}
+                          shifts={shifts}
+                        />
                       ) : (
                         <NoShift key={result} {...modalProps} {...props} />
                       );
@@ -283,7 +338,7 @@ const Rota = ({modalProps, confirmProps}) => {
               ))}
             </div>
           ))}
-        </div>
+      </div>
     </div>
   );
 };

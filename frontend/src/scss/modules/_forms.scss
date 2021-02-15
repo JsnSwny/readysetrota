@@ -40,9 +40,15 @@
 // }
 
 .form {
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
   padding: 40px 0;
+  @include wi-mq(mobile) {
+    width: 90%;
+  }
+  // &__actions {
+  //   margin: 0 -10px;
+  // }
   &__form {
     display: flex;
     flex-wrap: wrap;
@@ -53,6 +59,12 @@
     text-align: center;
     font-weight: normal;
     margin-bottom: 20px;
+    @include wi-mq(tablet) {
+      font-size: 32px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 28px;
+    }
   }
   &__image {
     position: absolute;
@@ -71,6 +83,14 @@
     justify-content: center;
     align-items: center;
     color: white;
+    @include wi-mq(mobile) {
+      position: static;
+      margin: 0 auto;
+      transform: translateX(0);
+      width: 125px;
+      height: 125px;
+      font-size: 60px;
+    }
   }
   &__subheading {
     margin-top: 60px;
@@ -78,16 +98,52 @@
     color: #727272;
     text-align: center;
     line-height: 0.5;
+    @include wi-mq(tablet) {
+      font-size: 14px;
+    }
+    @include wi-mq(mobile) {
+      margin-top: 20px;
+    }
   }
   &__control {
     width: 100%;
+    margin-bottom: 10px;
     &--half {
+      @extend .form__control;
       width: 48.5%;
+      @include wi-mq(mobile) {
+        width: 100%;
+      }
+    }
+    &--third {
+      &:nth-child(2) {
+        @include wi-mq(tablet) {
+          order: 3;
+        }
+      }
+      @extend .form__control;
+      width: calc(33.33% - 10px);
+      @include wi-mq(tablet) {
+        width: calc(50% - 10px)
+        
+      }
+      @include wi-mq(mobile) {
+        width: 100%;
+      }
     }
   }
   .btn-8 {
     max-width: 25%;
     width: 100%;
+    @include wi-mq(tablet) {
+      max-width: calc(50% - 10px);
+    }
+    @include wi-mq(mobile) {
+      font-size: 14px;
+    }
+    @include wi-mq(stamp) {
+      max-width: 100%;
+    }
   }
   &__input {
     display: block;
@@ -111,29 +167,40 @@
     display: block;
     margin: 5px 0;
   }
-  &__wrapper {
-    &:not(:last-child) {
-      margin-bottom: 20px;
-    }
-  }
   &__save {
     background-color: $green;
     width: 200px;
     border: none;
     border-radius: 10px;
     color: white;
-    margin: 0 auto;
     display: block;
     padding: 10px 0;
     margin-top: 50px;
     cursor: pointer;
     font-size: 16px;
     transition: 0.2s ease background-color;
+    width: calc(50% - 30px);
+    @include wi-mq(mobile) {
+      font-size: 14px;
+      
+    }
     &:hover {
       background-color: darken($green, 10%);
     }
   }
+  &__delete {
+    @extend .form__save;
+    background-color: $red;
+    &:hover {
+      background-color: darken($red, 10%)
+    }
+
+  }
   &__tabs {
     margin-bottom: 15px;
+    @include wi-mq(tablet) {
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
   }
 }

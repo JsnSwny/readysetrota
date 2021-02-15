@@ -39,8 +39,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
     admins_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='admins', write_only=True, many=True, required=False)
     owner = BasicUserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
-    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True, required=False)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True, required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Department
