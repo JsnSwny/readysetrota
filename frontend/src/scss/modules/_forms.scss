@@ -46,9 +46,6 @@
   @include wi-mq(mobile) {
     width: 90%;
   }
-  // &__actions {
-  //   margin: 0 -10px;
-  // }
   &__form {
     display: flex;
     flex-wrap: wrap;
@@ -83,7 +80,7 @@
     justify-content: center;
     align-items: center;
     color: white;
-    @include wi-mq(mobile) {
+    @include wi-mq(tablet) {
       position: static;
       margin: 0 auto;
       transform: translateX(0);
@@ -100,8 +97,6 @@
     line-height: 0.5;
     @include wi-mq(tablet) {
       font-size: 14px;
-    }
-    @include wi-mq(mobile) {
       margin-top: 20px;
     }
   }
@@ -124,8 +119,7 @@
       @extend .form__control;
       width: calc(33.33% - 10px);
       @include wi-mq(tablet) {
-        width: calc(50% - 10px)
-        
+        width: calc(50% - 10px);
       }
       @include wi-mq(mobile) {
         width: 100%;
@@ -133,7 +127,7 @@
     }
   }
   .btn-8 {
-    max-width: 25%;
+    max-width: calc(25% - 10px);
     width: 100%;
     @include wi-mq(tablet) {
       max-width: calc(50% - 10px);
@@ -182,7 +176,6 @@
     width: calc(50% - 30px);
     @include wi-mq(mobile) {
       font-size: 14px;
-      
     }
     &:hover {
       background-color: darken($green, 10%);
@@ -192,9 +185,8 @@
     @extend .form__save;
     background-color: $red;
     &:hover {
-      background-color: darken($red, 10%)
+      background-color: darken($red, 10%);
     }
-
   }
   &__tabs {
     margin-bottom: 15px;

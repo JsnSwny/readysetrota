@@ -10,7 +10,7 @@ const ExtraInfo = ({ info, setInfo }) => {
         name="info"
         onChange={(e) => setInfo(e.target.value)}
         value={info}
-        rows="2"
+        rows="4"
       ></textarea>
     </div>
   );

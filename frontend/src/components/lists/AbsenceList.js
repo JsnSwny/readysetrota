@@ -38,6 +38,7 @@ const AbsenceList = ({ listProps }) => {
           { name: "Start Time" },
           { name: "End Time" },
           { name: "Absence" },
+          { name: "Info", nomobile: true },
           { name: "Length", nomobile: true },
           { name: "Employee" },
         ]}
@@ -60,6 +61,7 @@ const AbsenceList = ({ listProps }) => {
           <td>{item.start_time}</td>
           <td>{item.end_time}</td>
           <td>{item.absence}</td>
+          <td>{item.absence_info}</td>
           <td className="no-mobile">
             {parseInt(item.length) > 0 ? `${parseInt(item.length)}hrs` : ""}{" "}
             {toMinutes(item.length)}

@@ -63,7 +63,8 @@ class GetPopularTimes(APIView):
 class Publish(APIView):
     def get(self, request):
         all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False, department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+            owner=self.request.user, published=False, date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
 
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
@@ -76,7 +77,6 @@ class Publish(APIView):
         today_date = datetime.now().strftime("%d/%m/%Y")
         connection.open()
         for idx, val in enumerate(shifts_unique):
-
             employee = shifts_unique[idx][0].employee
             if employee.user:
                 shifts = Shift.objects.filter(
@@ -87,7 +87,6 @@ class Publish(APIView):
                     "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
                 mail_item.attach_alternative(html_message, "text/html")
                 email.append(mail_item)
-
         connection.send_messages(email)
         connection.close()
 
@@ -105,7 +104,6 @@ import json
 def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, user_id=False):
     hours = 0
     wage = 0
-    print("RUNNING")
     for i in shifts:
         if i.end_time != "Finish":
             current_date = date.today()
@@ -175,7 +173,7 @@ class GetStats(APIView):
             shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
-        shifts = shifts.exclude(employee__isnull=True)
+        shifts = shifts.filter(absence="None").exclude(employee__isnull=True)
         before_shifts = before_shifts.exclude(employee__isnull=True)
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
         return HttpResponse( json.dumps( data ) )

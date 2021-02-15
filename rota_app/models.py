@@ -117,6 +117,7 @@ class Shift(models.Model):
         choices=ABSENCE_TYPES,
         default="None",
     )
+    absence_info = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'

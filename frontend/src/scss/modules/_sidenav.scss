@@ -20,7 +20,9 @@
   box-shadow: 5px 1px 5px 0px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 5px 1px 5px 0px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 5px 1px 5px 0px rgba(0, 0, 0, 0.3);
-  overflow: auto;
+  @include wi-mq(tablet) {
+    overflow: auto;
+  }
   z-index: 10;
   transition: 0.5s ease left, 0.5s ease background-color;
   left: -200px;
@@ -164,13 +166,28 @@
     }
   }
   &__sublinks {
+    @include wi-mq(not-tablet) {
+      position: absolute;
+      top: 0;
+      left: 200px;
+      width: 200px;
+      z-index: 10;
+      background-color: white;
+      -webkit-box-shadow: 5px 5px 6px -1px rgba(0, 0, 0, 0.55);
+      box-shadow: 5px 5px 6px -1px rgba(0, 0, 0, 0.55);
+    }
     .sidenav__link {
-      background-color: lighten($blue, 10%);
+      background-color: rgb(37, 37, 37);
       a {
         padding: 10px 0;
       }
+      @include wi-mq(not-tablet) {
+        margin-bottom: 0;
+      }
+      @include wi-mq(tablet) {
+        margin-left: 10%;
+      }
 
-      margin-left: 10%;
       &-text {
         font-size: 12px;
       }
@@ -180,6 +197,7 @@
     margin-bottom: 20px;
   }
   &__link-container {
+    position: relative;
     &.pink {
       .sidenav__link {
         background-color: darken($blue, 5%);
@@ -224,7 +242,7 @@
       }
     }
     .sidenav__sublinks {
-      transition: 0.5s ease max-height;
+      // transition: 0.5s ease max-height;
       overflow: hidden;
       max-height: 0;
     }

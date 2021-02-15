@@ -20,7 +20,6 @@ const EmployeeProfileModal = (props) => {
   //     staffPosition && setPosition(staffPosition.toString());
   //     }
   // }, []);
-  let errors = useSelector((state) => state.errors.msg);
   let current = useSelector((state) => state.employees.current);
 
   let current_site = sites.find((item) => item.id == current.site)
@@ -128,6 +127,8 @@ const EmployeeProfileModal = (props) => {
       setPosition("");
       setSiteAdmin(false);
       onClose();
+    } else {
+      toast.warn("Form incomplete, check for errors");
     }
   };
 
@@ -183,15 +184,6 @@ const EmployeeProfileModal = (props) => {
         {currentTab == "Positions" && <Positions {...positionsProps} />}
         {currentTab == "Availability" && (
           <DefaultAvailability {...availabilityProps} />
-        )}
-        {errors.first_name && errors.first_name != true && (
-          <p className="error">{errors.first_name}</p>
-        )}
-        {errors.last_name && errors.last_name != true && (
-          <p className="error">{errors.last_name}</p>
-        )}
-        {errors.positions && errors.positions != true && (
-          <p className="error">{errors.positions}</p>
         )}
         <div className="flex-container--between form__actions">
           <button

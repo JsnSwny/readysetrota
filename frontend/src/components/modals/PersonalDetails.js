@@ -11,6 +11,7 @@ const PersonalDetails = ({
   wageType,
   setWageType,
 }) => {
+  let errors = useSelector((state) => state.errors.msg);
   return (
     <Fragment>
       <div className="flex-container--between form__wrapper">
@@ -24,6 +25,7 @@ const PersonalDetails = ({
             autoFocus
             value={firstName}
           ></input>
+          <p className="error">{errors.first_name}</p>
         </div>
         <div className="form__control--half">
           <label className="form__label">Last name*</label>
@@ -34,6 +36,7 @@ const PersonalDetails = ({
             onChange={(e) => setLastName(e.target.value)}
             value={lastName}
           ></input>
+          <p className="error">{errors.last_name}</p>
         </div>
       </div>
       <div className="flex-container--between form__wrapper">

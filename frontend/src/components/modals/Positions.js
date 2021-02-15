@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import PositionField from "../employees/PositionField";
 
-const Positions = ({ position, setPosition }) => {
+const Positions = ({ position, setPosition, many = false, shift = false }) => {
   let positions = useSelector((state) => state.employees.all_positions);
   let departments = useSelector((state) => state.employees.departments);
   return (
@@ -15,6 +15,8 @@ const Positions = ({ position, setPosition }) => {
         position={position}
         setPosition={setPosition}
         positions={positions}
+        many={many}
+        shift={shift}
       />
     </div>
   );

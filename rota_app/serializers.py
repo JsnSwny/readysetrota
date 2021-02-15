@@ -148,7 +148,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length - (obj.break_length / 60)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'published', 'absence', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'published', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 
