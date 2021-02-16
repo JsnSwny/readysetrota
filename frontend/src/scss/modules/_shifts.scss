@@ -345,7 +345,7 @@
     &.unavailable {
       background-color: $red;
     }
-    &.not-approved {
+    &.unmarked {
       background-color: $red !important;
     }
     &.hidden {
