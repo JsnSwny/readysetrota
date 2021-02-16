@@ -14,25 +14,28 @@ const NoShift = (props) => {
     setOpen,
     setUpdate,
     setType,
-    setShiftInfo
+    setShiftInfo,
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
   let showAdd = true;
-  if(available) {
-    if(available.name == "holiday" || available.name == "unavailable") {
-      if(available.approved == true) {
+  if (available) {
+    if (available.name == "holiday" || available.name == "unavailable") {
+      if (available.approved == true) {
         showAdd = false;
       }
     }
   }
+
   return (
     <div
       key={result}
       className={`item-block shift__shift-noshift ${
         showAvailabilities && available.name
       } ${
-        showAvailabilities && available.name == "holiday" && !available.approved
+        showAvailabilities &&
+        (available.name == "holiday" || available.name == "unmarked") &&
+        available.approved == null
           ? "not-approved"
           : ""
       } ${filterDate == format_date ? "filtered" : ""} ${
@@ -40,18 +43,24 @@ const NoShift = (props) => {
       }`}
     >
       {showAdd && admin && (
-        <AddShiftButton {...modalProps} setUpdate={setUpdate} employee={employee} date={format_date} limit={limit} />
+        <AddShiftButton
+          {...modalProps}
+          setUpdate={setUpdate}
+          employee={employee}
+          date={format_date}
+          limit={limit}
+        />
       )}
       {showAvailabilities && (
         <Fragment>
           <p className={`shift__text`}>
             {available.name != "unselected" && available.name}
           </p>
-          {available.name == "holiday" && available.approved != true && (
-            <p className="shift__text">Not Approved</p>
+          {available.name == "holiday" && available.approved == null && (
+            <p className="shift__text">Unmarked</p>
           )}
-          {available.name == "unavailable" && available.approved != true && (
-            <p className="shift__text">Not Approved</p>
+          {available.name == "unavailable" && available.approved == null && (
+            <p className="shift__text">Unmarked</p>
           )}
           {available.start_time && (
             <p className="shift__text">

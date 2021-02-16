@@ -1,16 +1,14 @@
 import {
-  SEND_CHARGE,
   CHARGE_COMPLETE,
   LOAD_START,
   LOAD_FINISH,
   SUBSCRIPTION_CANCELLED,
   GET_SUBSCRIPTION,
-  CHARGE_START
+  CHARGE_START,
 } from "./types";
-import { tokenConfig } from "./auth";
 import axios from "axios";
 import { loadUser } from "./auth";
-import { getErrors, resetErrors } from "./errors";
+import { getErrors } from "./errors";
 
 export const sendCharge = (obj) => (dispatch, getState) => {
   dispatch({
@@ -57,10 +55,13 @@ export const cancelSubscription = (customer_id) => (dispatch, getState) => {
 };
 
 export const getCustomer = (customer_id) => (dispatch, getState) => {
-  axios.post(`getCustomer/`, { customer_id: customer_id }).then((res) => {
-    dispatch({
-      type: GET_SUBSCRIPTION,
-      payload: res.data,
-    });
-  }).catch(err => console.log(err.response));
+  axios
+    .post(`getCustomer/`, { customer_id: customer_id })
+    .then((res) => {
+      dispatch({
+        type: GET_SUBSCRIPTION,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err.response));
 };

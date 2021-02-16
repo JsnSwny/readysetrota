@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { format, parseISO, addDays } from "date-fns";
-import { publish } from "../../actions/shifts";
+import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 
 const RotaBar = (props) => {
   const dispatch = useDispatch();
@@ -20,13 +20,10 @@ const RotaBar = (props) => {
   let business = useSelector((state) => state.employees.business);
   let shifts = useSelector((state) => state.shifts.shifts);
   let published_shifts = shifts.filter((item) => item.published);
-  let current = useSelector(
-    (state) => state.employees.current
-  );
+  let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
-  let sites = useSelector((state) => state.employees.sites)
-
   let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let employees = useSelector((state) => state.employees.employees);
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -36,9 +33,12 @@ const RotaBar = (props) => {
     return newDate;
   };
 
-  let current_employee = user.employee.filter((employee) =>
-    employee.position.some((item) => item.department.id == current.department)
-  )[0];
+  // Find current employee object
+  let current_employee = null;
+  if (user.employee) {
+    current_employee = employees.find((item) => item.user == user.id);
+  }
+
   let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
 
   // Arrow Key Date Change
@@ -119,7 +119,38 @@ const RotaBar = (props) => {
                 <p>Availabilities</p>
               </div>
             )}
-
+            {/* SEND APPROVAL SHIFTS */}
+            {user.business && (
+              <div
+                onClick={() => {
+                  dispatch(approveShifts());
+                }}
+                className={`dates__mobile-item ${
+                  !shifts.some((item) => item.stage == "Approval")
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                <i className="fas fa-paper-plane"></i>
+                <p>Approve Shifts</p>
+              </div>
+            )}
+            {/* SEND APPROVAL SHIFTS */}
+            {siteAdmin && !user.business && (
+              <div
+                onClick={() => {
+                  dispatch(sendForApproval());
+                }}
+                className={`dates__mobile-item ${
+                  !shifts.some((item) => item.stage == "Creation")
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                <i className="fas fa-paper-plane"></i>
+                <p>Send for Approval</p>
+              </div>
+            )}
             {/* PUBLISH SHIFTS */}
             {siteAdmin && (
               <div
@@ -127,7 +158,13 @@ const RotaBar = (props) => {
                   dispatch(publish());
                 }}
                 className={`dates__mobile-item ${
-                  !shifts.some((item) => !item.published) ? "disabled" : ""
+                  !user.business
+                    ? !shifts.some((item) => item.stage == "Unpublished")
+                      ? "disabled"
+                      : ""
+                    : !shifts.some((item) => item.stage != "Published")
+                    ? "disabled"
+                    : ""
                 }`}
               >
                 <i className="fas fa-check"></i>

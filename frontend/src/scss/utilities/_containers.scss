@@ -67,6 +67,12 @@
     align-items: center;
     flex-wrap: wrap;
   }
+  &--around-center-wrap {
+    @extend .flex-container;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   &--between-start {
     @extend .flex-container;
     justify-content: space-between;

@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addEmployee,
-  getPositions,
   addDepartment,
   addPosition,
   updateDepartment,
@@ -16,7 +15,7 @@ import {
   updateSite,
   deleteSite,
 } from "../../actions/employees";
-import PositionField from "./PositionField"
+import PositionField from "./PositionField";
 import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 
@@ -29,8 +28,8 @@ const AddStaff = (props) => {
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
   let employees = useSelector((state) => state.employees.employees);
-  let sites = useSelector(state => state.employees.sites)
-  let user = useSelector((state) => state.auth.user)
+  let sites = useSelector((state) => state.employees.sites);
+  let user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   useEffect(() => {
     if (form == "Staff") {
@@ -39,21 +38,37 @@ const AddStaff = (props) => {
   }, []);
   let current = useSelector((state) => state.employees.current);
 
-  let current_site = sites.find(item => item.id == current.site) ? sites.find(item => item.id == current.site) : false;
+  let current_site = sites.find((item) => item.id == current.site)
+    ? sites.find((item) => item.id == current.site)
+    : false;
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [wage, setWage] = useState(0.00);
-  const [wageType, setWageType] = useState("N")
+  const [wage, setWage] = useState(0.0);
+  const [wageType, setWageType] = useState("N");
   const [position, setPosition] = useState([]);
   const [siteAdmin, setSiteAdmin] = useState(false);
-  const formTitles = {"Staff": "Create Employee", "Department": "Create Department", "Position": "Create Position", "Site": "Create Site", "BusinessName": "Set your business name"}
-  const updateFormTitles = {"Staff": "Update Employee", "Department": "Update Department", "Position": "Update Position", "Site": "Update Site", "BusinessName": "Update your business name"}
-  let error_obj = {}
+  const formTitles = {
+    Staff: "Create Employee",
+    Department: "Create Department",
+    Position: "Create Position",
+    Site: "Create Site",
+    BusinessName: "Set your business name",
+  };
+  const updateFormTitles = {
+    Staff: "Update Employee",
+    Department: "Update Department",
+    Position: "Update Position",
+    Site: "Update Site",
+    BusinessName: "Update your business name",
+  };
+  let error_obj = {};
 
   const isSiteAdmin = (user_id) => {
-    return sites.find(site => site.id == current.site) ? sites.find(site => site.id == current.site).admins.includes(user_id) : false;
-  }
+    return sites.find((site) => site.id == current.site)
+      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+      : false;
+  };
 
   const [admins, setAdmins] = useState([]);
   useEffect(() => {
@@ -71,7 +86,7 @@ const AddStaff = (props) => {
         setPosition(update.position.map((item) => item));
         setWage(update.wage);
         setWageType(update.wage_type);
-        setSiteAdmin(isSiteAdmin(update.user))
+        setSiteAdmin(isSiteAdmin(update.user));
       }
     }
   }, [update]);
@@ -84,7 +99,7 @@ const AddStaff = (props) => {
         last_name: lastName,
         wage: wage,
         wage_type: wageType,
-        position_id: position.map(pos => pos.id),
+        position_id: position.map((pos) => pos.id),
         business_id: current.business,
         default_availability: {
           0: { name: "unselected", start_time: null, end_time: null },
@@ -94,15 +109,30 @@ const AddStaff = (props) => {
           4: { name: "unselected", start_time: null, end_time: null },
           5: { name: "unselected", start_time: null, end_time: null },
           6: { name: "unselected", start_time: null, end_time: null },
-        }
+        },
       };
-      error_obj = {first_name: firstName.length > 0 ? true : "This field is required", last_name: lastName.length > 0 ? true : "This field is required", positions: position.length > 0 ? true : positions.length > 0 ? "This field is required" : "You don't have any positions"}
+      error_obj = {
+        first_name: firstName.length > 0 ? true : "This field is required",
+        last_name: lastName.length > 0 ? true : "This field is required",
+        positions:
+          position.length > 0
+            ? true
+            : positions.length > 0
+            ? "This field is required"
+            : "You don't have any positions",
+      };
       dispatch(getErrors(error_obj, 400));
 
-      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
+      if (
+        Object.keys(error_obj).every((k) => {
+          return error_obj[k] == true;
+        })
+      ) {
         if (update) {
-          dispatch(updateEmployee(update.id, employee, siteAdmin, current_site));
-          
+          dispatch(
+            updateEmployee(update.id, employee, siteAdmin, current_site)
+          );
+
           toast.success("Employee updated!");
         } else {
           dispatch(addEmployee(employee));
@@ -116,86 +146,89 @@ const AddStaff = (props) => {
         onClose();
       }
     } else {
-      error_obj = {name: name.length > 0 ? true : "This field is required"}
+      error_obj = { name: name.length > 0 ? true : "This field is required" };
       dispatch(getErrors(error_obj, 400));
-      if (Object.keys(error_obj).every((k) => { return error_obj[k] == true })) {
+      if (
+        Object.keys(error_obj).every((k) => {
+          return error_obj[k] == true;
+        })
+      ) {
         if (form == "Department") {
-          
-        if (update) {
-          dispatch(
-            updateDepartment(update.id, {
-              name,
-              business_id: current.business,
-              site_id: current.site,
-              admins_id: admins,
-            })
-          );
-          toast.success("Department updated!");
-        } else {
-          dispatch(
-            addDepartment({
-              name,
-              business_id: current.business,
-              site_id: current.site,
-            })
-          );
-          toast.success("Department added!");
+          if (update) {
+            dispatch(
+              updateDepartment(update.id, {
+                name,
+                business_id: current.business,
+                site_id: current.site,
+                admins_id: admins,
+              })
+            );
+            toast.success("Department updated!");
+          } else {
+            dispatch(
+              addDepartment({
+                name,
+                business_id: current.business,
+                site_id: current.site,
+              })
+            );
+            toast.success("Department added!");
+          }
+          setName("");
+          onClose();
+        } else if (form == "Position") {
+          if (update) {
+            dispatch(
+              updatePosition(update.id, {
+                name,
+                department_id: current.department,
+                business_id: current.business,
+              })
+            );
+            toast.success("Position updated!");
+          } else {
+            dispatch(
+              addPosition({
+                name,
+                department_id: parseInt(current.department),
+                business_id: current.business,
+              })
+            );
+            toast.success("Position added!");
+          }
+          setName("");
+          onClose();
+        } else if (form == "Site") {
+          if (update) {
+            dispatch(
+              updateSite(update.id, {
+                name,
+                business_id: current.business,
+              })
+            );
+            toast.success("Site updated!");
+          } else {
+            dispatch(
+              addSite({
+                name,
+                business_id: current.business,
+              })
+            );
+            toast.success("Site added!");
+          }
+          setName("");
+          onClose();
+        } else if (form == "BusinessName") {
+          dispatch(updateBusinessName(update.id, { name }));
+          toast.success("Business name updated!");
+          setName("");
+          onClose();
         }
-        setName("");
-        onClose();
-      } else if (form == "Position") {
-        if (update) {
-          dispatch(
-            updatePosition(update.id, {
-              name,
-              department_id: current.department,
-              business_id: current.business,
-            })
-          );
-          toast.success("Position updated!");
-        } else {
-          dispatch(
-            addPosition({
-              name,
-              department_id: parseInt(current.department),
-              business_id: current.business,
-            })
-          );
-          toast.success("Position added!");
-        }
-        setName("");
-        onClose();
-      } else if (form == "Site") {
-        if (update) {
-          dispatch(
-            updateSite(update.id, {
-              name,
-              business_id: current.business,
-            })
-          );
-          toast.success("Site updated!");
-        } else {
-          dispatch(
-            addSite({
-              name,
-              business_id: current.business,
-            })
-          );
-          toast.success("Site added!");
-        }
-        setName("");
-        onClose();
-      } else if (form == "BusinessName") {
-        dispatch(updateBusinessName(update.id, { name }));
-        toast.success("Business name updated!");
-        setName("");
-        onClose();
       }
-    }
     }
   };
 
-  const staffForm = {}
+  const staffForm = {};
 
   return (
     <div className="staffForm">
@@ -232,64 +265,70 @@ const AddStaff = (props) => {
               <label className="staffForm__label">Wage Type:</label>
               <div className="flex-container--wrap">
                 <span
-                    className={`btn-toggle--sm ${wageType == "N" && "active"}`}
-                    onClick={() => {
-                      setWageType("N");
-                    }}
-                  >
-                    None
+                  className={`btn-toggle--sm ${wageType == "N" && "active"}`}
+                  onClick={() => {
+                    setWageType("N");
+                  }}
+                >
+                  None
                 </span>
                 <span
-                    className={`btn-toggle--sm ${wageType == "H" && "active"}`}
-                    onClick={() => {
-                      setWageType("H");
-                    }}
-                  >
-                    Hourly
+                  className={`btn-toggle--sm ${wageType == "H" && "active"}`}
+                  onClick={() => {
+                    setWageType("H");
+                  }}
+                >
+                  Hourly
                 </span>
                 <span
-                    className={`btn-toggle--sm ${wageType == "S" && "active"}`}
-                    onClick={() => {
-                      setWageType("S");
-                    }}
-                  >
-                    Salary
+                  className={`btn-toggle--sm ${wageType == "S" && "active"}`}
+                  onClick={() => {
+                    setWageType("S");
+                  }}
+                >
+                  Salary
                 </span>
               </div>
             </div>
             {["S", "H"].includes(wageType) && (
               <div className="staffForm__control">
-              <label className="staffForm__label">{wageType == "H" ? "Hourly Rate" : "Salary"}:</label>
-              <input
-                className="staffForm__input"
-                type="number"
-                name="wage"
-                onChange={(e) => setWage(e.target.value)}
-                value={wage}
-                step="0.01"
-              ></input>
-            </div>
+                <label className="staffForm__label">
+                  {wageType == "H" ? "Hourly Rate" : "Salary"}:
+                </label>
+                <input
+                  className="staffForm__input"
+                  type="number"
+                  name="wage"
+                  onChange={(e) => setWage(e.target.value)}
+                  value={wage}
+                  step="0.01"
+                ></input>
+              </div>
             )}
-            
+
             <div className="staffForm__control">
               <label className="staffForm__label">Position(s):</label>
-              <PositionField departments={departments} position={position} setPosition={setPosition} positions={positions} />
+              <PositionField
+                departments={departments}
+                position={position}
+                setPosition={setPosition}
+                positions={positions}
+              />
               <p className="error">{errors.positions}</p>
             </div>
             {update && update.user && (
               <div className="staffForm__control">
-              <label className="staffForm__label">Site admin?</label>
-              <input
-                type="checkbox"
-                name="site_admin"
-                onChange={(e) => {
-                  setSiteAdmin(!siteAdmin)
-                }}
-                checked={siteAdmin}
-              ></input>
-            </div>
+                <label className="staffForm__label">Site admin?</label>
+                <input
+                  type="checkbox"
+                  name="site_admin"
+                  onChange={(e) => {
+                    setSiteAdmin(!siteAdmin);
+                  }}
+                  checked={siteAdmin}
+                ></input>
+              </div>
             )}
-            
           </Fragment>
         ) : (
           <Fragment>
@@ -351,34 +390,34 @@ const AddStaff = (props) => {
                 e.preventDefault();
                 if (update) {
                   setConfirmOpen(true);
-                  setMessage(`Are you sure you want to delete this ${form.toLowerCase()}?`)
+                  setMessage(
+                    `Are you sure you want to delete this ${form.toLowerCase()}?`
+                  );
 
                   if (form == "Department") {
                     setOnConfirm(() => () => {
-                        setConfirmOpen(false)
-                        dispatch(deleteDepartment(update.id));
-                    })
+                      setConfirmOpen(false);
+                      dispatch(deleteDepartment(update.id));
+                    });
                   } else if (form == "Position") {
                     setOnConfirm(() => () => {
-                      setConfirmOpen(false)
+                      setConfirmOpen(false);
                       dispatch(deletePosition(update.id));
-                  })
-                    
+                    });
                   } else if (form == "Staff") {
                     setOnConfirm(() => () => {
-                      setConfirmOpen(false)
+                      setConfirmOpen(false);
                       dispatch(deleteEmployee(update.id));
-                  })
-                    
+                    });
                   } else if (form == "Site") {
-                    if(sites.length == 1) {
+                    if (sites.length == 1) {
                       toast.warning("You cannot delete this site!");
                       return false;
                     }
                     setOnConfirm(() => () => {
-                      setConfirmOpen(false)
+                      setConfirmOpen(false);
                       dispatch(deleteSite(update.id));
-                    })
+                    });
                   }
                 }
                 onClose();

@@ -8,10 +8,9 @@ import {
   getSites,
 } from "../actions/employees";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import SideNav from "./layout/SideNav"
+import SideNav from "./layout/SideNav";
 import store from "../store";
 import Rota from "./shifts/Rota";
-import ShiftTemplate from "./shifts/ShiftTemplate";
 
 import List from "./lists/List";
 
@@ -37,118 +36,150 @@ import CreateShift from "./modals/CreateShift";
 import AdminPanel from "./profiles/dashboard/AdminPanel";
 import Checkout from "./accounts/Checkout";
 
-import Confirm from "./layout/Confirm"
+import Confirm from "./layout/Confirm";
 
 const Main = () => {
-    const [open, setOpen] = useState(false);
-    const [update, setUpdate] = useState(false);
-    const [type, setType] = useState("");
-    const [shiftInfo, setShiftInfo] = useState({});
+  const dispatch = useDispatch();
 
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    const [onConfirm, setOnConfirm] = useState(false);
-    const [message, setMessage] = useState(false);
+  // Use state
+  const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [type, setType] = useState("");
+  const [shiftInfo, setShiftInfo] = useState({});
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [onConfirm, setOnConfirm] = useState(false);
+  const [message, setMessage] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
 
-    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
+  // Selectors
+  let departments = useSelector((state) => state.employees.departments);
+  let current = useSelector((state) => state.employees.current);
+  let loading = useSelector((state) => state.loading);
+  let sites = useSelector((state) => state.employees.sites);
 
-    const dispatch = useDispatch();
-
-    let positions = useSelector((state) => state.employees.positions);
-    let departments = useSelector((state) => state.employees.departments);
-    let current = useSelector(
-        (state) => state.employees.current
-    );
-    let siteAdmin = useSelector((state) => state.employees.site_admin)
-    let business = useSelector((state) => state.employees.business)
-    let loading = useSelector((state) => state.loading);
-
-    let sites = useSelector((state) => state.employees.sites);
-
-
-    useEffect(() => {
-        if(sites.length == 0) {
-            dispatch(getSites());
-        }
-        if(current.site > 0) {
-            dispatch(getDepartments());         
-        }
-    }, [current.site]);
-
-    useEffect(() => {
-        if(!loading.departments && !loading.sites) {
-            dispatch(getEmployees());
-            dispatch(getPositions(true));
-            dispatch(getPositions());
-        }
-    }, [departments, sites]);
-
-    const modalProps = {
-        setOpen,
-        setUpdate,
-        setType,
-        setShiftInfo
+  // Use effect
+  useEffect(() => {
+    if (sites.length == 0) {
+      dispatch(getSites());
     }
-
-    const confirmProps = {
-        setConfirmOpen,
-        setOnConfirm,
-        setMessage
+    if (current.site > 0) {
+      dispatch(getDepartments());
     }
-    return (
-        <Router>
-        <ToastContainer position="bottom-center" autoClose={2500} />
-        <CreateShift
-          open={open}
-          type={type}
-          onConfirm={() => {
-            setOpen(false);
-          }}
-          onClose={() => {
-            setOpen(false);
-            store.dispatch(resetErrors());
-          }}
-          update={update}
-          sidebarOpen={sidebarOpen}
-          {...shiftInfo}
-          confirmProps={confirmProps}
-        />
-        <Confirm open={confirmOpen} onConfirm={onConfirm} onClose={() => {
-          setConfirmOpen(!confirmOpen)}} message={message} sidebarOpen={sidebarOpen} />
-        <SideNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} confirmProps={confirmProps} />
-        <div className="sidenav__bar">
-          <i onClick={() => {
-              setSidebarOpen(!sidebarOpen);
-            }} className={`fas fa-bars`}></i>
-        </div>
-        <div className={`App ${sidebarOpen ? "open" : ""}`}>
-          
-          <Switch>
-            <PrivateRoute
-              path="/"
-              exact
-              component={Home}
-              user_only_pass={true}
-              modalProps={modalProps}
-            />
-            <PrivateRoute path="/list/:type" admin={true} exact component={List} modalProps={modalProps} confirmProps={confirmProps} />
+  }, [current.site]);
 
-            <PrivateRoute path="/rota" exact component={Rota} modalProps={modalProps} confirmProps={confirmProps} />
-            <PrivateRoute path="/template" exact component={ShiftTemplate} />
-            <PrivateRoute admin={true} path="/staff-management" exact component={StaffManagement} modalProps={modalProps} />
-            <PrivateRoute admin={true} path="/admin-panel" exact component={AdminPanel} />
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
-            <Route path="/privacy" component={PrivacyPolicy} />
-            <Route path="/terms" component={TermsAndConditions} />
-            <PrivateRoute path="/changepassword" component={ChangePassword} />
-            <PrivateRoute path="/profile/:id" component={StaffProfile} />
-            <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
-            <PrivateRoute path="/premium" component={Plans} />
-            <PrivateRoute path="/checkout" component={Checkout} />
-          </Switch>
-        </div>
-      </Router>
-    )
-}
+  useEffect(() => {
+    if (!loading.departments && !loading.sites) {
+      dispatch(getEmployees());
+      dispatch(getPositions(true));
+      dispatch(getPositions());
+    }
+  }, [departments, sites]);
+
+  // Props
+  const modalProps = {
+    setOpen,
+    setUpdate,
+    setType,
+    setShiftInfo,
+  };
+
+  const confirmProps = {
+    setConfirmOpen,
+    setOnConfirm,
+    setMessage,
+  };
+
+  return (
+    <Router>
+      <ToastContainer position="bottom-center" autoClose={2500} />
+      <CreateShift
+        open={open}
+        type={type}
+        onConfirm={() => {
+          setOpen(false);
+        }}
+        onClose={() => {
+          setOpen(false);
+          store.dispatch(resetErrors());
+        }}
+        update={update}
+        sidebarOpen={sidebarOpen}
+        {...shiftInfo}
+        confirmProps={confirmProps}
+      />
+      <Confirm
+        open={confirmOpen}
+        onConfirm={onConfirm}
+        onClose={() => {
+          setConfirmOpen(!confirmOpen);
+        }}
+        message={message}
+        sidebarOpen={sidebarOpen}
+      />
+      <SideNav
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        confirmProps={confirmProps}
+      />
+      <div className="sidenav__bar">
+        <i
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen);
+          }}
+          className={`fas fa-bars`}
+        ></i>
+      </div>
+      <div className={`App ${sidebarOpen ? "open" : ""}`}>
+        <Switch>
+          <PrivateRoute
+            path="/"
+            exact
+            component={Home}
+            user_only_pass={true}
+            modalProps={modalProps}
+          />
+          <PrivateRoute
+            path="/list/:type"
+            admin={true}
+            exact
+            component={List}
+            modalProps={modalProps}
+            confirmProps={confirmProps}
+          />
+
+          <PrivateRoute
+            path="/rota"
+            exact
+            component={Rota}
+            modalProps={modalProps}
+            confirmProps={confirmProps}
+          />
+          <PrivateRoute
+            admin={true}
+            path="/staff-management"
+            exact
+            component={StaffManagement}
+            modalProps={modalProps}
+          />
+          <PrivateRoute
+            admin={true}
+            path="/admin-panel"
+            exact
+            component={AdminPanel}
+          />
+          <Route path="/register" component={Register} />
+          <Route path="/login" component={Login} />
+          <Route path="/privacy" component={PrivacyPolicy} />
+          <Route path="/terms" component={TermsAndConditions} />
+          <PrivateRoute path="/changepassword" component={ChangePassword} />
+          <PrivateRoute path="/profile/:id" component={StaffProfile} />
+          <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
+          <PrivateRoute path="/premium" component={Plans} />
+          <PrivateRoute path="/checkout" component={Checkout} />
+        </Switch>
+      </div>
+    </Router>
+  );
+};
 
 export default Main;

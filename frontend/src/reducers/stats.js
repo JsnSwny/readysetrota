@@ -1,7 +1,11 @@
 import { GET_STATS } from "../actions/types";
 
 const initialState = {
-  stats: {shifts: {current: 0, before: 0}, hours: {current: 0, before: 0}, wage: {current: 0, before: 0}}
+  stats: {
+    shifts: { current: 0, before: 0 },
+    hours: { current: 0, before: 0 },
+    wage: { current: 0, before: 0 },
+  },
 };
 
 export default function (state = initialState, action) {
@@ -9,7 +13,7 @@ export default function (state = initialState, action) {
     case GET_STATS:
       return {
         ...state,
-        stats: action.payload
+        stats: action.payload,
       };
     default:
       return state;

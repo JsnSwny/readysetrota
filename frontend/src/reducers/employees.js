@@ -40,17 +40,18 @@ const initialState = {
   positions: [],
   all_positions: [],
   departments: [],
-  current: { 
+  current: {
     department: localStorage.getItem("current_department")
       ? localStorage.getItem("current_department")
-      : 0, 
-    business: 0, 
+      : 0,
+    business: 0,
     site: localStorage.getItem("current_site")
       ? parseInt(localStorage.getItem("current_site"))
-      : 0,  },
+      : 0,
+  },
   uuid_success: false,
   business: { plan: "F" },
-  site_admin: false
+  site_admin: false,
 };
 
 export default function (state = initialState, action) {
@@ -67,19 +68,28 @@ export default function (state = initialState, action) {
         holidays: action.payload,
       };
     case GET_SITES:
-    let current_site = state.current.site == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.site;
-  
-    let isSiteAdminGet = (user) => {
-        return user.business ? true : action.payload.find(site => site.id == current_site) ? (action.payload.find(site => site.id == current_site).admins.includes(user.id)) : false;
-      }
+      let current_site =
+        state.current.site == 0 && action.payload.length > 0
+          ? action.payload[0].id
+          : state.current.site;
+
+      let isSiteAdminGet = (user) => {
+        return user.business
+          ? true
+          : action.payload.find((site) => site.id == current_site)
+          ? action.payload
+              .find((site) => site.id == current_site)
+              .admins.includes(user.id)
+          : false;
+      };
       return {
         ...state,
         sites: action.payload,
         current: {
           ...state.current,
-          site: current_site
+          site: current_site,
         },
-        site_admin: isSiteAdminGet(action.user)
+        site_admin: isSiteAdminGet(action.user),
       };
 
     case ADD_SITE:
@@ -90,7 +100,7 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           site: action.payload.id,
-          department: 0
+          department: 0,
         },
         positions: [],
         employees: [],
@@ -105,20 +115,25 @@ export default function (state = initialState, action) {
     case DELETE_SITE:
       let newSites = state.sites.filter((site) => site.id !== action.payload);
 
-      let deleted_site = state.sites.find((item) => item.id == action.payload)
+      let deleted_site = state.sites.find((item) => item.id == action.payload);
 
       newState = {
         ...state,
         sites: newSites,
         current: {
           ...state.current,
-          site: newSites.length > 0 && action.payload == state.current.site ? newSites[0].id : state.current.site
+          site:
+            newSites.length > 0 && action.payload == state.current.site
+              ? newSites[0].id
+              : state.current.site,
         },
         business: {
           ...state.business,
-          number_of_employees: state.business.number_of_employees - deleted_site.number_of_employees
-        }
-      }
+          number_of_employees:
+            state.business.number_of_employees -
+            deleted_site.number_of_employees,
+        },
+      };
 
       localStorage.setItem("current_site", newState.current.site);
 
@@ -126,27 +141,35 @@ export default function (state = initialState, action) {
     case SET_SITE:
       localStorage.setItem("current_site", action.payload);
       let isSiteAdmin = (user) => {
-        return user.business ? true : state.sites.find(site => site.id == action.payload) ? (state.sites.find(site => site.id == action.payload).admins.includes(user.id)) : false;
-      }
+        return user.business
+          ? true
+          : state.sites.find((site) => site.id == action.payload)
+          ? state.sites
+              .find((site) => site.id == action.payload)
+              .admins.includes(user.id)
+          : false;
+      };
       return {
         ...state,
         current: {
           ...state.current,
           site: action.payload,
           department: 0,
-          business: state.sites.find(item => item.id == action.payload).business.id
+          business: state.sites.find((item) => item.id == action.payload)
+            .business.id,
         },
         site_admin: isSiteAdmin(action.user),
         departments: [],
         employees: [],
-        positions: []
+        positions: [],
       };
     case ADD_AVAILABILITY:
       return {
         ...state,
         availability: [...state.availability, action.payload],
         holidays:
-          (action.payload.name == "holiday" || action.payload.name == "unavailable")
+          action.payload.name == "holiday" ||
+          action.payload.name == "unavailable"
             ? [...state.holidays, action.payload]
             : state.holidays,
       };
@@ -158,7 +181,9 @@ export default function (state = initialState, action) {
         ),
         holidays: state.holidays.map((item) =>
           item.id === action.payload.id
-            ? (action.payload.name == "holiday" || action.payload.name == "unavailable") && action.payload
+            ? (action.payload.name == "holiday" ||
+                action.payload.name == "unavailable") &&
+              action.payload
             : item
         ),
       };
@@ -174,13 +199,13 @@ export default function (state = initialState, action) {
       };
     case GET_EMPLOYEES:
       // let emp = action.payload;
-      if(!state.site_admin) {
-        action.payload.forEach((item => {
+      if (!state.site_admin) {
+        action.payload.forEach((item) => {
           delete item.wage_type;
           delete item.wage;
-        }))
+        });
       }
-      
+
       return {
         ...state,
         employees: action.payload,
@@ -196,15 +221,17 @@ export default function (state = initialState, action) {
         all_positions: action.payload,
       };
     case GET_DEPARTMENTS:
-      
       newState = {
         ...state,
         departments: action.payload,
         current: {
-        ...state.current,
-        department: state.current.department == 0 && action.payload.length > 0 ? action.payload[0].id : state.current.department
-        }
-      }
+          ...state.current,
+          department:
+            state.current.department == 0 && action.payload.length > 0
+              ? action.payload[0].id
+              : state.current.department,
+        },
+      };
       localStorage.setItem("current_department", newState.current.department);
       return newState;
     case SET_BUSINESS:
@@ -213,8 +240,8 @@ export default function (state = initialState, action) {
         business: action.payload,
         current: {
           ...state.current,
-          business: action.payload.id
-        }
+          business: action.payload.id,
+        },
       };
     case CHARGE_COMPLETE:
       return {
@@ -245,8 +272,8 @@ export default function (state = initialState, action) {
           ...state.current,
           department: 0,
           site: 0,
-          business: 0
-        }
+          business: 0,
+        },
       };
     case SET_DEPARTMENT:
       localStorage.setItem("current_department", action.payload);
@@ -257,10 +284,12 @@ export default function (state = initialState, action) {
           department: action.payload,
         },
         employees: [],
-        positions: [],       
+        positions: [],
       };
     case ADD_EMPLOYEE:
-      let foundIndex = state.sites.findIndex(item => item.id == action.payload.position[0].department.site.id)
+      let foundIndex = state.sites.findIndex(
+        (item) => item.id == action.payload.position[0].department.site.id
+      );
       state.sites[foundIndex].number_of_employees++;
       if (
         action.payload.position.some(
@@ -287,7 +316,11 @@ export default function (state = initialState, action) {
       );
       return {
         ...state,
-        employees: newEmployees.filter(item => item.position.some(pos => pos.department.id == state.current.department))
+        employees: newEmployees.filter((item) =>
+          item.position.some(
+            (pos) => pos.department.id == state.current.department
+          )
+        ),
       };
 
     case DELETE_EMPLOYEE:
@@ -306,10 +339,14 @@ export default function (state = initialState, action) {
         all_positions: state.all_positions.filter(
           (position) => position.id !== action.payload
         ),
-        employees: state.employees.filter(employees => !employees.position.some(position => position.id == action.payload)),
+        employees: state.employees.filter(
+          (employees) =>
+            !employees.position.some(
+              (position) => position.id == action.payload
+            )
+        ),
       };
     case DELETE_DEPARTMENT:
-
       let newDepartments = state.departments.filter(
         (department) => department.id !== action.payload
       );
@@ -318,9 +355,13 @@ export default function (state = initialState, action) {
         departments: newDepartments,
         current: {
           ...state.current,
-          department: newDepartments.length > 0 && action.payload == state.current.department ? newDepartments[0].id : state.current.department
+          department:
+            newDepartments.length > 0 &&
+            action.payload == state.current.department
+              ? newDepartments[0].id
+              : state.current.department,
         },
-      }
+      };
 
       localStorage.setItem("current_department", newState.current.department);
 
@@ -347,8 +388,8 @@ export default function (state = initialState, action) {
         employees: [],
         current: {
           ...state.current,
-          department: action.payload.id
-        }
+          department: action.payload.id,
+        },
       };
 
     case UPDATE_DEPARTMENT:
@@ -369,8 +410,8 @@ export default function (state = initialState, action) {
         uuid_success: true,
         current: {
           ...state.current,
-          department: action.payload
-        }
+          department: action.payload,
+        },
       };
     default:
       return state;

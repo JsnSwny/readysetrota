@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { login } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { location, history } = props;
+  const { location } = props;
   let errors = useSelector((state) => state.errors.msg);
   let path = { url: "/" };
   if (location.state) {
@@ -62,12 +62,17 @@ const Login = (props) => {
                 </button>
               </div>
               <p className="login__leftExtra">
-                Don't have an account? <Link to={{
-                  pathname: `/register`,
-                  state: {
-                    path,
-                  }
-              }}>Register</Link>
+                Don't have an account?{" "}
+                <Link
+                  to={{
+                    pathname: `/register`,
+                    state: {
+                      path,
+                    },
+                  }}
+                >
+                  Register
+                </Link>
               </p>
               <p className="login__leftExtra">
                 <a href="/reset_password">Forgot Password? </a>
