@@ -87,7 +87,7 @@ textarea {
   font-family: inherit;
 }
 
-input,
+input:not([type="checkbox"]),
 textarea {
   -webkit-appearance: none;
 }
