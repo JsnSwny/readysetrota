@@ -73,7 +73,7 @@ const AddShift = (props) => {
       break_length: breakLength,
       absence: absence,
       department_id: current.department,
-      published: shiftEmployee || openEmployee ? false : true,
+      stage: shiftEmployee || openEmployee ? "Unpublished" : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
     error_obj = {

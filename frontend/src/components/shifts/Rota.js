@@ -133,8 +133,8 @@ const Rota = ({ modalProps, confirmProps }) => {
     shifts_list.filter((obj) => {
       return obj.employee && obj.employee.id === employee && obj.date === date
         ? siteAdmin
-          ? !obj.published || obj.published
-          : obj.published
+          ? true
+          : obj.stage == "Published"
         : "";
     });
 

@@ -204,13 +204,13 @@ export const getPopularTimes = () => (dispatch, getState) => {
 };
 
 // Get Popular Times
-export const publish = () => (dispatch, getState) => {
+export const approveShifts = () => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
   axios
     .get(
-      `/api-view/publish/?department_id=${
+      `/api-view/approveshifts/?department_id=${
         getState().employees.current.department
       }`,
       tokenConfig(getState)
@@ -219,6 +219,50 @@ export const publish = () => (dispatch, getState) => {
       dispatch({
         type: PUBLISHED_SHIFTS,
         payload: res.data,
+        stage: "Unpublished",
+      });
+    });
+};
+
+// Get Popular Times
+export const sendForApproval = () => (dispatch, getState) => {
+  dispatch({
+    type: SHIFTS_LOADING,
+  });
+  axios
+    .get(
+      `/api-view/sendforapproval/?department_id=${
+        getState().employees.current.department
+      }`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: PUBLISHED_SHIFTS,
+        payload: res.data,
+        stage: "Approval",
+      });
+    });
+};
+
+// Get Popular Times
+export const publish = () => (dispatch, getState) => {
+  dispatch({
+    type: SHIFTS_LOADING,
+  });
+  let user = getState().auth.user;
+  axios
+    .get(
+      `/api-view/publish/?department_id=${
+        getState().employees.current.department
+      }&business=${user.business ? true : false}`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: PUBLISHED_SHIFTS,
+        payload: res.data,
+        stage: "Published",
       });
     });
 };

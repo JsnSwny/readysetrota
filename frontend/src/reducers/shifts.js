@@ -114,7 +114,7 @@ export default function (state = initialState, action) {
           if (action.payload.includes(item.id)) {
             return {
               ...item,
-              published: true,
+              stage: action.stage,
             };
           } else {
             return {

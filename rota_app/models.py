@@ -98,6 +98,30 @@ class Shift(models.Model):
     info = models.TextField(blank=True)
     department = models.ForeignKey(Department, related_name="shift_department", on_delete=models.CASCADE, null=True, blank=True)
     published = models.BooleanField(default=False)
+
+    STAGE_TYPES = [
+        ("Published", 'Published'),
+        ("Unpublished", 'Unpublished'),
+        ("Approval", 'Approval'),
+        ("Creation", 'Creation')
+    ]
+    stage = models.CharField(
+        max_length=12,
+        choices=STAGE_TYPES,
+        default="Unpublished",
+    )
+
+    WAGE_TYPES = [
+        ("H", 'Hourly'),
+        ("S", 'Salary'),
+        ("N", 'None')
+    ]
+    wage_type = models.CharField(
+        max_length=1,
+        choices=WAGE_TYPES,
+        default="N",
+    )
+
     owner = models.ForeignKey(User, related_name="shifts", on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
     positions = models.ManyToManyField(Position, related_name="shift_positions", blank=True, null=True)

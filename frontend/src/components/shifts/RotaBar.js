@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { format, parseISO, addDays } from "date-fns";
-import { publish } from "../../actions/shifts";
+import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 
 const RotaBar = (props) => {
   const dispatch = useDispatch();
@@ -119,7 +119,38 @@ const RotaBar = (props) => {
                 <p>Availabilities</p>
               </div>
             )}
-
+            {/* SEND APPROVAL SHIFTS */}
+            {user.business && (
+              <div
+                onClick={() => {
+                  dispatch(approveShifts());
+                }}
+                className={`dates__mobile-item ${
+                  !shifts.some((item) => item.stage == "Approval")
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                <i className="fas fa-paper-plane"></i>
+                <p>Approve Shifts</p>
+              </div>
+            )}
+            {/* SEND APPROVAL SHIFTS */}
+            {siteAdmin && !user.business && (
+              <div
+                onClick={() => {
+                  dispatch(sendForApproval());
+                }}
+                className={`dates__mobile-item ${
+                  !shifts.some((item) => item.stage == "Creation")
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                <i className="fas fa-paper-plane"></i>
+                <p>Send for Approval</p>
+              </div>
+            )}
             {/* PUBLISH SHIFTS */}
             {siteAdmin && (
               <div
@@ -127,7 +158,13 @@ const RotaBar = (props) => {
                   dispatch(publish());
                 }}
                 className={`dates__mobile-item ${
-                  !shifts.some((item) => !item.published) ? "disabled" : ""
+                  !user.business
+                    ? !shifts.some((item) => item.stage == "Unpublished")
+                      ? "disabled"
+                      : ""
+                    : !shifts.some((item) => item.stage != "Published")
+                    ? "disabled"
+                    : ""
                 }`}
               >
                 <i className="fas fa-check"></i>

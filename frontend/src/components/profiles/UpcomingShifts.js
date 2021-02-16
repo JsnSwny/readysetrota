@@ -15,7 +15,9 @@ const UpcomingShifts = (props) => {
   let departments = useSelector((state) => state.employees.departments);
   let width = useSelector((state) => state.responsive.width);
 
-  let published_shifts = currentShifts.filter((item) => item.published);
+  let published_shifts = currentShifts.filter(
+    (item) => item.stage == "Published"
+  );
 
   if (
     !shifts.some((item) => departments.some((dep) => dep.id == item.department))
@@ -53,7 +55,7 @@ const UpcomingShifts = (props) => {
               <th className="no-mobile">Length</th>
               <th className="no-mobile">Pay</th>
               {admin && <th>Employee</th>}
-              {admin && <th>Published</th>}
+              {admin && <th>Stage</th>}
             </tr>
             {published_shifts.map((item) => (
               <tr>
@@ -77,9 +79,7 @@ const UpcomingShifts = (props) => {
                     {item.employee ? item.employee.full_name : "Open Shift"}
                   </td>
                 )}
-                {admin && (
-                  <td>{item.published ? "Published" : "Not Published"}</td>
-                )}
+                {admin && <td>{item.stage}</td>}
               </tr>
             ))}
           </table>

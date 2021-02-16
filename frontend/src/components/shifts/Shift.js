@@ -35,7 +35,7 @@ const Shift = (props) => {
         className={`item-block shift__shift ${
           filterDate == format_date ? "filtered" : ""
         } ${
-          shifts.some((item) => item.published == false) ? "unpublished" : ""
+          shifts.some((item) => item.stage != "Published") ? "unpublished" : ""
         } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
         {admin && (
@@ -51,7 +51,7 @@ const Shift = (props) => {
 
         {shifts.map((shift) => (
           <Fragment key={shift.id}>
-            {!admin && shift.published == false ? (
+            {!admin && shift.stage != "Published" ? (
               ""
             ) : (
               <div
@@ -84,7 +84,11 @@ const Shift = (props) => {
                     }
                   }}
                 >
-                  <p className={`shift__time ${!employee ? "open-shift" : ""}`}>
+                  <p
+                    className={`shift__time ${!employee ? "open-shift" : ""} ${
+                      shift.stage
+                    }`}
+                  >
                     {shift.start_time} - {shift.end_time}{" "}
                   </p>
                 </div>

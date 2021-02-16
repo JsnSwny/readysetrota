@@ -35,7 +35,6 @@ const ShiftList = ({ listProps }) => {
     name: "Delete",
     action: () => action("Shifts Deleted", batchDeleteShifts(selected)),
   };
-
   return (
     <Fragment>
       <DropButton
@@ -54,7 +53,7 @@ const ShiftList = ({ listProps }) => {
             { name: "Break", nomobile: true },
             { name: "Cost", nomobile: true },
             { name: "Employee" },
-            { name: "Published" },
+            { name: "Stage" },
           ]}
           selectAll={selectAll}
           setSelectAll={setSelectAll}
@@ -97,8 +96,9 @@ const ShiftList = ({ listProps }) => {
                   : "Salary"
                 : ""}
             </td>
+            {console.log(item)}
             <td>{item.employee ? item.employee.full_name : "Open Shift"}</td>
-            <td>{item.published ? "Published" : "Not Published"}</td>
+            <td>{item.stage}</td>
           </tr>
         ))}
       </table>

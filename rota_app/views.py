@@ -59,13 +59,40 @@ class GetPopularTimes(APIView):
             i['start_time'] = str(i['start_time'])[0:5]
         return Response(most_common)
 
+class ApproveShifts(APIView):
+    def get(self, request):
+        all_shifts = Shift.objects.filter(
+            stage="Approval", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
+        for i in all_shifts:
+            i.stage = "Unpublished"
+            i.save()
+
+        ids = (o.id for o in all_shifts)
+        return Response(ids)
+
+class SendForApproval(APIView):
+    def get(self, request):
+        all_shifts = Shift.objects.filter(
+            owner=self.request.user, stage="Creation", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
+        for i in all_shifts:
+            i.stage = "Approval"
+            i.save()
+
+        ids = (o.id for o in all_shifts)
+        return Response(ids)
+
 
 class Publish(APIView):
     def get(self, request):
-        all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False, date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-
-
+        business = request.query_params.get('business')
+        all_shifts = {}
+        if business:
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+        else:
+            all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+   
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
 
@@ -93,7 +120,7 @@ class Publish(APIView):
         # publish_email.delay(shifts_list)
 
         for i in all_shifts:
-            i.published = True
+            i.stage = "Published"
             i.save()
 
         ids = (o.id for o in all_shifts)
@@ -184,7 +211,7 @@ class ExportShifts(APIView):
         id = request.query_params.get('id')
         employee = Employee.objects.filter(id=id)[0]
         shifts = Shift.objects.filter(
-            employee__id=id, published=True, date__gte=datetime.now()).order_by('date')
+            employee__id=id, stage="Published", date__gte=datetime.now()).order_by('date')
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('shifts.html', file_object=resp, context={
@@ -194,14 +221,14 @@ class ExportShifts(APIView):
 
 class ExportAllShifts(APIView):
     def get(self, request):
-        shifts = Shift.objects.filter(published=True, date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
+        shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
             'end_date'), department__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
             all_shifts[i] = Shift.objects.filter(
-                date=i, published=True, department__id=request.query_params.get('id')).order_by('start_time')
+                date=i, stage="Published", department__id=request.query_params.get('id')).order_by('start_time')
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('allshifts.html', file_object=resp, context={

@@ -77,7 +77,7 @@ const ShiftModal = (props) => {
       absence: absence,
       absence_info: absenceInfo,
       department_id: current.department,
-      published: shiftEmployee || openEmployee ? false : true,
+      stage: shiftEmployee || openEmployee ? "Creation" : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
     error_obj = {

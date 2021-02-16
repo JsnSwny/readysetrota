@@ -148,7 +148,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length - (obj.break_length / 60)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'published', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 
@@ -184,7 +184,7 @@ class SiteSerializer(serializers.ModelSerializer):
         employees = Employee.objects.filter(position__department__site=obj.id).distinct()
         return len(employees)
     def get_unpublished_shifts(self, obj):
-        shifts = Shift.objects.filter(department__site=obj.id, published=False, date__gte=date.today())
+        shifts = Shift.objects.filter(department__site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
     def get_unmarked_holidays(self, obj):
         holidays = Availability.objects.filter(Q(name="holiday") | Q(name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
