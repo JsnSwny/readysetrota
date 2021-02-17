@@ -29,6 +29,9 @@ import {
   DELETE_SITE,
   SET_SITE,
   LOGOUT_SUCCESS,
+  GET_FORECAST,
+  ADD_FORECAST,
+  UPDATE_FORECAST,
 } from "../actions/types";
 import { format, parseISO } from "date-fns";
 
@@ -40,6 +43,7 @@ const initialState = {
   positions: [],
   all_positions: [],
   departments: [],
+  forecast: [],
   current: {
     department: localStorage.getItem("current_department")
       ? localStorage.getItem("current_department")
@@ -61,6 +65,23 @@ export default function (state = initialState, action) {
       return {
         ...state,
         availability: action.payload,
+      };
+    case GET_FORECAST:
+      return {
+        ...state,
+        forecast: action.payload,
+      };
+    case ADD_FORECAST:
+      return {
+        ...state,
+        forecast: [...state.forecast, action.payload],
+      };
+    case UPDATE_FORECAST:
+      return {
+        ...state,
+        forecast: state.forecast.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
       };
     case GET_HOLIDAYS:
       return {

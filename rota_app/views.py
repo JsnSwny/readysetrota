@@ -155,8 +155,6 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
         employees = Employee.objects.filter(position__department__site=site_id).distinct()
     for i in employees:
         if i.wage_type == "S":
-            print(float(i.wage/365))
-            print(days_difference.days)
             wage += float(i.wage/365) * float(days_difference.days)
         
 
@@ -201,8 +199,13 @@ class GetStats(APIView):
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
         shifts = shifts.filter(absence="None").exclude(employee__isnull=True)
-        before_shifts = before_shifts.exclude(employee__isnull=True)
+        before_shifts = before_shifts.filter(absence="None").exclude(employee__isnull=True)
+        print(shifts)
+        print(before_shifts)
+        
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
+        
+        print(data)
         return HttpResponse( json.dumps( data ) )
 
 
@@ -313,7 +316,6 @@ class Cancel(APIView):
         stripe.api_key = STRIPE_SECRET_KEY
 
         customer = stripe.Customer.retrieve(request.data['customer_id'])
-        print(customer)
         for i in customer['subscriptions']['data']:
             cancellation = stripe.Subscription.modify(
                 i.id,

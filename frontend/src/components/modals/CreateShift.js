@@ -2,6 +2,7 @@ import React from "react";
 import EmployeeProfileModal from "./EmployeeProfileModal";
 import StaffManagementModal from "./StaffManagementModal";
 import ShiftModal from "./ShiftModal";
+import ForecastModal from "./ForecastModal";
 
 const CreateShift = (props) => {
   const {
@@ -16,6 +17,7 @@ const CreateShift = (props) => {
     template,
     sidebarOpen,
     confirmProps,
+    forecastDate,
   } = props;
 
   const staffTypes = [
@@ -33,6 +35,8 @@ const CreateShift = (props) => {
       return <EmployeeProfileModal {...modalProps} />;
     } else if (type == "shift") {
       return <ShiftModal employee={employee} date={date} {...modalProps} />;
+    } else if (type == "forecast") {
+      return <ForecastModal date={forecastDate} {...modalProps} />;
     } else if (staffTypes.includes(type)) {
       return (
         <StaffManagementModal

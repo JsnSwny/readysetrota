@@ -20,9 +20,15 @@ const StatsItem = ({
             {money && "£"}
             <CountUp duration={1} decimals={decimal} end={value} />
           </h2>
-          <h3 onClick={setBeforeDate}>
-            {difference > 0 && "+"} <CountUp duration={1} end={difference} />%
-          </h3>
+          {difference == Infinity ? (
+            <h3>
+              <small>No previous data</small>
+            </h3>
+          ) : (
+            <h3 onClick={setBeforeDate}>
+              {difference > 0 && "+"} <CountUp duration={1} end={difference} />%
+            </h3>
+          )}
         </div>
       </div>
     </div>

@@ -29,6 +29,9 @@ import {
   UPDATE_SITE,
   DELETE_SITE,
   SET_SITE,
+  GET_FORECAST,
+  ADD_FORECAST,
+  UPDATE_FORECAST,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -37,6 +40,50 @@ import { loadUser } from "./auth";
 import { format, addDays, parseISO } from "date-fns";
 
 import { tokenConfig } from "./auth";
+
+export const getForecast = (site, startDate, endDate) => (
+  dispatch,
+  getState
+) => {
+  axios
+    .get(
+      `/api/forecast/?site=${
+        getState().employees.current.site
+      }&date_after=${startDate}&date_before=${endDate}&ordering=date`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_FORECAST,
+        payload: res.data,
+      });
+    });
+};
+
+export const addForecast = (obj) => (dispatch, getState) => {
+  axios
+    .post("/api/forecast/", obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_FORECAST,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err.response));
+};
+
+export const updateForecast = (id, obj) => (dispatch, getState) => {
+  axios
+    .put(`/api/forecast/${id}/`, obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_FORECAST,
+        payload: res.data,
+      });
+    })
+
+    .catch((err) => console.log(err.response));
+};
 
 export const batchApprove = (holidays, val) => (dispatch, getState) => {
   axios
