@@ -207,7 +207,7 @@ const ShiftModal = (props) => {
           //   />
           // </div>
         )}
-        <div className="staffForm__buttons">
+        <div className="flex-container--between form__actions">
           <button
             onClick={() => {
               update ? deleteShiftByID(update.id) : onClose();
