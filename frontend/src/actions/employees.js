@@ -41,13 +41,10 @@ import { format, addDays, parseISO } from "date-fns";
 
 import { tokenConfig } from "./auth";
 
-export const getForecast = (site, startDate, endDate) => (
-  dispatch,
-  getState
-) => {
+export const getForecast = (startDate, endDate) => (dispatch, getState) => {
   axios
     .get(
-      `/api/forecast/?site=${
+      `/api/forecast/?site__id=${
         getState().employees.current.site
       }&date_after=${startDate}&date_before=${endDate}&ordering=date`,
       tokenConfig(getState)

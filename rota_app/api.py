@@ -252,11 +252,19 @@ class SiteViewSet(viewsets.ModelViewSet):
         return super(SiteViewSet, self).destroy(request, *args, **kwargs)
     serializer_class = SiteSerializer
 
+class ForecastFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
+    class Meta:
+        model = Forecast
+        fields = ['date', 'site__id']
+
 class ForecastViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = ForecastSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = ForecastFilter
     ordering_fields = ('date',)
     queryset = Forecast.objects.all()
 

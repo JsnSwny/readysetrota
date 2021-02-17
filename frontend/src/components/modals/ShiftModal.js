@@ -208,9 +208,6 @@ const ShiftModal = (props) => {
           // </div>
         )}
         <div className="staffForm__buttons">
-          <button className="form__save" type="submit">
-            Save
-          </button>
           <button
             onClick={() => {
               update ? deleteShiftByID(update.id) : onClose();
@@ -218,6 +215,9 @@ const ShiftModal = (props) => {
             className="form__delete"
           >
             {update ? "Delete" : "Cancel"}
+          </button>
+          <button className="form__save" type="submit">
+            Save
           </button>
         </div>
       </form>

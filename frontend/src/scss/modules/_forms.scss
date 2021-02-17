@@ -63,6 +63,14 @@
       font-size: 28px;
     }
   }
+  &__actions {
+    .form__save {
+      order: 2;
+    }
+    .form__delete {
+      order: 1;
+    }
+  }
   &__image {
     position: absolute;
     top: -75px;
