@@ -96,7 +96,6 @@ const ShiftList = ({ listProps }) => {
                   : "Salary"
                 : ""}
             </td>
-            {console.log(item)}
             <td>{item.employee ? item.employee.full_name : "Open Shift"}</td>
             <td>{item.stage}</td>
           </tr>

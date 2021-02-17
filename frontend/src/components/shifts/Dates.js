@@ -25,6 +25,7 @@ const Dates = (props) => {
       .map(
         (item) =>
           item.employee &&
+          item.absence == "None" &&
           item.employee.wage_type == "H" &&
           +parseFloat(item.wage * item.length).toFixed(2)
       )

@@ -15,7 +15,11 @@ const Employee = (props) => {
   const getHours = (employee) => {
     return shifts
       .map(
-        (item) => item.employee && item.employee.id == employee && item.length
+        (item) =>
+          item.employee &&
+          item.absence == "None" &&
+          item.employee.id == employee &&
+          item.length
       )
       .reduce((a, b) => a + b, 0.0);
   };

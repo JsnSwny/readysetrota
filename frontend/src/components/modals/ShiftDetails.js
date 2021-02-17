@@ -46,6 +46,7 @@ const ShiftDetails = ({
             value={shiftEmployee}
             onChange={(e) => setShiftEmployee(e.target.value)}
             className="form__input"
+            disabled
           >
             {employees.map((employee) => (
               <option key={employee.id} value={employee.id}>
