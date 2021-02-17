@@ -189,3 +189,10 @@ class UserProfile(models.Model):
   
   def __str__(self):
       return self.user.email
+
+class Forecast(models.Model):
+    date = models.DateField()
+    site = models.ForeignKey(Site, related_name="site_forecast", on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    def __str__(self):
+        return f'{self.date}: {self.site.name} - {self.amount}'

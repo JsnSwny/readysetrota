@@ -4,8 +4,20 @@ import { format } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 
 const Dates = (props) => {
-  const { filterEmployees, scrollPosition, template, dates, shifts } = props;
+  const {
+    filterEmployees,
+    scrollPosition,
+    template,
+    dates,
+    shifts,
+    setOpen,
+    setType,
+    setUpdate,
+    setForecastDate,
+    forecastDate,
+  } = props;
   let employees = useSelector((state) => state.employees.employees);
+  let forecast = useSelector((state) => state.employees.forecast);
 
   const getCost = (date) => {
     let shifts_filtered = shifts.filter((item) => item.date == date);
@@ -13,6 +25,7 @@ const Dates = (props) => {
       .map(
         (item) =>
           item.employee &&
+          item.absence == "None" &&
           item.employee.wage_type == "H" &&
           +parseFloat(item.wage * item.length).toFixed(2)
       )
@@ -23,10 +36,16 @@ const Dates = (props) => {
           item.wage_type == "S" && +(parseFloat(item.wage) / 365).toFixed(2)
       )
       .reduce((a, b) => a + b, 0.0);
-    return hourly + salary;
+    return parseFloat(hourly + salary).toFixed(2);
   };
 
   let siteAdmin = useSelector((state) => state.employees.site_admin);
+
+  const getAmount = (date) => {
+    return parseFloat(
+      forecast.find((item) => item.date == format(date, "yyyy-MM-dd")).amount
+    ).toFixed(2);
+  };
 
   return (
     <section
@@ -38,6 +57,19 @@ const Dates = (props) => {
         <div className="container-right">
           {dates.map((date) => (
             <div key={date} className="item-block dates__date">
+              <i
+                onClick={() => {
+                  setOpen(true);
+                  setType("forecast");
+                  setUpdate(
+                    forecast.find(
+                      (item) => item.date == format(date, "yyyy-MM-dd")
+                    )
+                  );
+                  setForecastDate(date);
+                }}
+                class="fas fa-coins"
+              ></i>
               <p className="item-block__title">
                 {format(date, "ccc do MMM").split(" ")[0]}
                 <br></br>
@@ -45,7 +77,18 @@ const Dates = (props) => {
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
               {siteAdmin && (
-                <small>£{getCost(format(date, "yyyy-MM-dd"))}</small>
+                <small>
+                  £{getCost(format(date, "yyyy-MM-dd"))}{" "}
+                  {forecast.some(
+                    (item) => item.date == format(date, "yyyy-MM-dd")
+                  )
+                    ? `/ £${getAmount(date)} (${(
+                        (getCost(format(date, "yyyy-MM-dd")) /
+                          getAmount(date)) *
+                        100
+                      ).toFixed(0)}%)`
+                    : ""}
+                </small>
               )}
               {template ? (
                 <AddShiftButton

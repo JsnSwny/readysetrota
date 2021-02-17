@@ -31,13 +31,13 @@ const NoShift = (props) => {
     <div
       key={result}
       className={`item-block shift__shift-noshift ${
-        showAvailabilities && available.name
-      } ${
         showAvailabilities &&
-        (available.name == "holiday" || available.name == "unmarked") &&
+        ((available.name == "holiday" || available.name == "unmarked") &&
         available.approved == null
+          ? "unmarked"
+          : available.approved == false
           ? "not-approved"
-          : ""
+          : available.name)
       } ${filterDate == format_date ? "filtered" : ""} ${
         result <= addDays(new Date(), -1) ? "date-before" : ""
       }`}
@@ -54,14 +54,14 @@ const NoShift = (props) => {
       {showAvailabilities && (
         <Fragment>
           <p className={`shift__text`}>
-            {available.name != "unselected" && available.name}
+            {available.name != "unselected" &&
+              available.approved != false &&
+              available.name}
           </p>
-          {available.name == "holiday" && available.approved == null && (
-            <p className="shift__text">Unmarked</p>
-          )}
-          {available.name == "unavailable" && available.approved == null && (
-            <p className="shift__text">Unmarked</p>
-          )}
+          {(available.name == "holiday" || available.name == "unavailable") &&
+            available.approved == null && (
+              <p className="shift__text">Unmarked</p>
+            )}
           {available.start_time && (
             <p className="shift__text">
               {available.start_time.substr(0, 5)} - {available.end_time}

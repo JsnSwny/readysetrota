@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -169,7 +169,7 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         depth = 1
 
 class SiteSerializer(serializers.ModelSerializer):
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True, required=False)
     business = BusinessSerializer(required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
@@ -189,3 +189,10 @@ class SiteSerializer(serializers.ModelSerializer):
     def get_unmarked_holidays(self, obj):
         holidays = Availability.objects.filter(Q(name="holiday") | Q(name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
         return len(holidays)
+
+class ForecastSerializer(serializers.ModelSerializer):
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True, required=False)
+    class Meta:
+        model = Forecast
+        fields = ('id', 'date', 'site_id', 'amount',)
+    

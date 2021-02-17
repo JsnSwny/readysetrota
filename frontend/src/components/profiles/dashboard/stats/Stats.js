@@ -82,6 +82,7 @@ const Stats = ({ type, employee, title }) => {
           title="Shifts"
           value={stats.shifts.current}
           difference={getDif(stats.shifts.current, stats.shifts.before)}
+          dateDifference={dateDifference}
         />
         <StatsItem
           setBeforeDate={setBeforeDate}
@@ -90,6 +91,7 @@ const Stats = ({ type, employee, title }) => {
           value={stats.hours.current}
           difference={getDif(stats.hours.current, stats.hours.before)}
           decimal={2}
+          dateDifference={dateDifference}
         />
         <StatsItem
           setBeforeDate={setBeforeDate}
@@ -99,6 +101,7 @@ const Stats = ({ type, employee, title }) => {
           money={true}
           difference={getDif(stats.wage.current, stats.wage.before)}
           decimal={2}
+          dateDifference={dateDifference}
         />
       </div>
     </div>

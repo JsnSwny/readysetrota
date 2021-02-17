@@ -77,7 +77,12 @@ const ShiftModal = (props) => {
       absence: absence,
       absence_info: absenceInfo,
       department_id: current.department,
-      stage: shiftEmployee || openEmployee ? "Creation" : "Published",
+      stage:
+        shiftEmployee || openEmployee
+          ? absence != "None"
+            ? "Published"
+            : "Creation"
+          : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
     error_obj = {
@@ -154,7 +159,7 @@ const ShiftModal = (props) => {
         >
           Extra Info
         </button>
-        {update && (
+        {employee && update && update.stage == "Published" && (
           <button
             onClick={() => setCurrentTab("Absence")}
             className={`btn-8 ${currentTab == "Absence" ? "active" : ""}`}
@@ -195,22 +200,8 @@ const ShiftModal = (props) => {
             many={true}
             shift={update}
           />
-          // <div className="form__control">
-          //   <label className="form__label">Position(s):</label>
-          //   <PositionField
-          //     many={true}
-          //     shift={update}
-          //     departments={departments}
-          //     position={position}
-          //     setPosition={setPosition}
-          //     positions={positions}
-          //   />
-          // </div>
         )}
-        <div className="staffForm__buttons">
-          <button className="form__save" type="submit">
-            Save
-          </button>
+        <div className="flex-container--between form__actions">
           <button
             onClick={() => {
               update ? deleteShiftByID(update.id) : onClose();
@@ -218,6 +209,9 @@ const ShiftModal = (props) => {
             className="form__delete"
           >
             {update ? "Delete" : "Cancel"}
+          </button>
+          <button className="form__save" type="submit">
+            Save
           </button>
         </div>
       </form>

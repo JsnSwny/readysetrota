@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SideNav from "./layout/SideNav";
 import store from "../store";
 import Rota from "./shifts/Rota";
+import { format } from "date-fns";
 
 import List from "./lists/List";
 
@@ -44,6 +45,7 @@ const Main = () => {
   // Use state
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [forecastDate, setForecastDate] = useState(false);
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -81,6 +83,7 @@ const Main = () => {
     setUpdate,
     setType,
     setShiftInfo,
+    setForecastDate,
   };
 
   const confirmProps = {
@@ -105,6 +108,7 @@ const Main = () => {
         update={update}
         sidebarOpen={sidebarOpen}
         {...shiftInfo}
+        forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
         confirmProps={confirmProps}
       />
       <Confirm

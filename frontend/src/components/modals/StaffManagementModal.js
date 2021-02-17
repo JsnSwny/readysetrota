@@ -120,6 +120,9 @@ const StaffManagementModal = (props) => {
           <p className="error">{errors.name}</p>
         )}
         <div className="flex-container--between form__actions">
+          <button className="form__save" type="submit" value="Save">
+            Save
+          </button>
           {form != "BusinessName" && (
             <button
               onClick={(e) => {
@@ -164,9 +167,6 @@ const StaffManagementModal = (props) => {
               {update ? "Delete" : "Cancel"}
             </button>
           )}
-          <button className="form__save" type="submit" value="Save">
-            Save
-          </button>
         </div>
       </form>
     </div>

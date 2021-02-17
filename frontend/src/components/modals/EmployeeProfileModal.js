@@ -186,6 +186,9 @@ const EmployeeProfileModal = (props) => {
           <DefaultAvailability {...availabilityProps} />
         )}
         <div className="flex-container--between form__actions">
+          <button className="form__save" type="submit" value="Save">
+            Save
+          </button>
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -205,9 +208,6 @@ const EmployeeProfileModal = (props) => {
             className="form__delete"
           >
             {update ? "Delete" : "Cancel"}
-          </button>
-          <button className="form__save" type="submit" value="Save">
-            Save
           </button>
         </div>
       </form>
