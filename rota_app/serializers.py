@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, Settings, SiteSettings
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -15,6 +15,11 @@ class BusinessSerializer(serializers.ModelSerializer):
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()
         return len(employees)
+    def create(self, validated_data):
+        business = Business.objects.create(**validated_data)
+        settings = Settings(business=business)
+        settings.save()
+        return business
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
@@ -148,7 +153,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length - (obj.break_length / 60)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
+        fields = ('date', 'start_time', 'end_time', 'open_shift', 'employee', 'break_length', 'positions', 'info', 'id', 'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 
@@ -179,6 +184,12 @@ class SiteSerializer(serializers.ModelSerializer):
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins', 'number_of_employees', 'unpublished_shifts', 'unmarked_holidays',)
         depth: 1
+
+    def create(self, validated_data):
+        site = Site.objects.create(**validated_data)
+        settings = SiteSettings(site=site)
+        settings.save()
+        return site
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(position__department__site=obj.id).distinct()

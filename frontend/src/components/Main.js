@@ -58,6 +58,7 @@ const Main = () => {
   let current = useSelector((state) => state.employees.current);
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites);
+  let auth = useSelector((state) => state.auth);
 
   // Use effect
   useEffect(() => {
@@ -67,7 +68,7 @@ const Main = () => {
     if (current.site > 0) {
       dispatch(getDepartments());
     }
-  }, [current.site]);
+  }, [current.site, auth.token]);
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {

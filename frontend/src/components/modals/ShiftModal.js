@@ -21,7 +21,6 @@ const ShiftModal = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
-  const [openEmployee, setOpenEmployee] = useState("");
   const [shiftEmployee, setShiftEmployee] = useState(
     employee ? employee.id : ""
   );
@@ -64,11 +63,7 @@ const ShiftModal = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: shiftEmployee
-        ? shiftEmployee
-        : openEmployee
-        ? openEmployee
-        : null,
+      employee_id: shiftEmployee ? shiftEmployee : null,
       start_time: startTime,
       end_time: endTime,
       info,
@@ -76,13 +71,13 @@ const ShiftModal = (props) => {
       break_length: breakLength,
       absence: absence,
       absence_info: absenceInfo,
+      open_shift: shiftEmployee ? false : true,
       department_id: current.department,
-      stage:
-        shiftEmployee || openEmployee
-          ? absence != "None"
-            ? "Published"
-            : "Creation"
-          : "Published",
+      stage: shiftEmployee
+        ? absence != "None"
+          ? "Published"
+          : "Creation"
+        : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
     error_obj = {
@@ -133,8 +128,6 @@ const ShiftModal = (props) => {
     setShiftEmployee,
     breakLength,
     setBreakLength,
-    openEmployee,
-    setOpenEmployee,
   };
 
   return (

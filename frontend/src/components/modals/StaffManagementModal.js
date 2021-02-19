@@ -22,6 +22,7 @@ const StaffManagementModal = (props) => {
   let errors = useSelector((state) => state.errors.msg);
   let error_obj = {};
   let current = useSelector((state) => state.employees.current);
+  let sites = useSelector((state) => state.employees.sites);
   useEffect(() => {
     if (update) {
       setName(update.name);

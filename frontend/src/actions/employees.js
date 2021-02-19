@@ -300,7 +300,9 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
       dispatch(getDepartments());
       dispatch(getSites());
     })
-    .catch((error) => {});
+    .catch((error) => {
+      console.log(error.response);
+    });
 };
 
 export const updateEmployee = (update, employee, siteAdmin, current_site) => (

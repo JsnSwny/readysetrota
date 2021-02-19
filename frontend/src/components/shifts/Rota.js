@@ -238,7 +238,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     !user.business &&
     shifts_list.filter(
       (item) =>
-        item.employee == null &&
+        item.open_shift == true &&
         item.positions.some((pos) =>
           current_employee.position.map((empPos) => empPos.id).includes(pos.id)
         )
@@ -284,7 +284,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                 result={result}
                 shifts={
                   siteAdmin
-                    ? shifts_list.filter((item) => item.employee == null)
+                    ? shifts_list.filter((item) => item.open_shift == true)
                     : openShifts
                 }
               />

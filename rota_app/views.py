@@ -143,7 +143,7 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             shift_length = round((end - start).total_seconds() / 3600, 2)
             
             hours += shift_length - (i.break_length / 60)
-            if(i.employee.wage_type == "H"):
+            if(i.employee and i.employee.wage_type == "H"):
                 wage += float(i.wage) * (shift_length - (i.break_length / 60))
 
 
@@ -198,14 +198,12 @@ class GetStats(APIView):
             shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
-        shifts = shifts.filter(absence="None").exclude(employee__isnull=True)
-        before_shifts = before_shifts.filter(absence="None").exclude(employee__isnull=True)
+        shifts = shifts.filter(absence="None").exclude(open_shift=True)
+        before_shifts = before_shifts.filter(absence="None").exclude(open_shift=True)
         print(shifts)
-        print(before_shifts)
-        
+
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
-        
-        print(data)
+
         return HttpResponse( json.dumps( data ) )
 
 

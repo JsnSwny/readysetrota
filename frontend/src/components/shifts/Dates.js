@@ -86,7 +86,7 @@ const Dates = (props) => {
                         (getCost(format(date, "yyyy-MM-dd")) /
                           getAmount(date)) *
                         100
-                      ).toFixed(0)}%)`
+                      ).toFixed(2)}%)`
                     : ""}
                 </small>
               )}

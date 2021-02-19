@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PersonalDetails from "./PersonalDetails";
 import Positions from "./Positions";
-import { updateEmployee, addEmployee } from "../../actions/employees";
+import {
+  updateEmployee,
+  addEmployee,
+  deleteEmployee,
+} from "../../actions/employees";
 import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 import DefaultAvailability from "./DefaultAvailability";
@@ -195,7 +199,7 @@ const EmployeeProfileModal = (props) => {
               if (update) {
                 setConfirmOpen(true);
                 setMessage(
-                  `Are you sure you want to delete ${employee.full_name}?`
+                  `Are you sure you want to delete ${update.full_name}?`
                 );
                 setOnConfirm(() => () => {
                   setConfirmOpen(false);
