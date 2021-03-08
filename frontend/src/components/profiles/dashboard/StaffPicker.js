@@ -77,122 +77,124 @@ const StaffPicker = (props) => {
 
   return (
     <div className="dashboard__block">
-      <div className="dashboard__block-title-container">
-        <div className="flex-container--align-center">
-          <p className="dashboard__block-title">
-            Staff ({business.number_of_employees} / {total_employees})
-          </p>
-          <i
-            onClick={() => {
-              if (plan == "F" && business.number_of_employees >= 15) {
-                toast.warning(
-                  "Upgrade to premium to create more than 15 employees"
-                );
-                return false;
-              } else if (business.number_of_employees >= total_employees) {
-                toast.warning(
-                  `You have reached your max number of ${total_employees} employees!`
-                );
-                return false;
-              }
-              setOpen(true);
-              setUpdate(false);
-              setType("employeeprofile");
-            }}
-            className="fas fa-plus"
-          ></i>
+      <div className="dashboard__block-container">
+        <div className="dashboard__block-title-container">
+          <div className="flex-container--align-center">
+            <p className="dashboard__block-title">
+              Staff ({business.number_of_employees} / {total_employees})
+            </p>
+            <i
+              onClick={() => {
+                if (plan == "F" && business.number_of_employees >= 15) {
+                  toast.warning(
+                    "Upgrade to premium to create more than 15 employees"
+                  );
+                  return false;
+                } else if (business.number_of_employees >= total_employees) {
+                  toast.warning(
+                    `You have reached your max number of ${total_employees} employees!`
+                  );
+                  return false;
+                }
+                setOpen(true);
+                setUpdate(false);
+                setType("employeeprofile");
+              }}
+              className="fas fa-plus"
+            ></i>
+          </div>
         </div>
-      </div>
-      <small className="helper-text">
-        <i class="fas fa-info-circle"></i> Click the clipboard icon to copy the
-        employee's unique ID which you can send to them to sign up.
-      </small>
-      {loading.employees && (
-        <small className="loading-text">Loading staff...</small>
-      )}
-      {employees.length > 0 && (
-        <div className="flex-container--wrap">
-          <span
-            onClick={() => {
-              setStaffSort("alphabetical");
-              localStorage.setItem("staff_sort", "alphabetical");
-            }}
-            className={`btn-toggle--sm ${
-              staffSort == "alphabetical" ? "active" : ""
-            }`}
-          >
-            Sort Alphabetically
-          </span>
-          <span
-            onClick={() => {
-              setStaffSort("position");
-              localStorage.setItem("staff_sort", "position");
-            }}
-            className={`btn-toggle--sm ${
-              staffSort == "position" ? "active" : ""
-            }`}
-          >
-            Sort by Position
-          </span>
-        </div>
-      )}
-
-      <div className="dashboard__wrapper">
-        {sortEmployees().map((item) => (
-          <div key={item.id} className="dashboard__item--sm">
-            <div
-              className={`title-md bold flex-container--between-center ${
-                isSiteAdmin(item.user) ? "admin" : ""
+        <small className="helper-text">
+          <i class="fas fa-info-circle"></i> Click the clipboard icon to copy
+          the employee's unique ID which you can send to them to sign up.
+        </small>
+        {loading.employees && (
+          <small className="loading-text">Loading staff...</small>
+        )}
+        {employees.length > 0 && (
+          <div className="flex-container--wrap">
+            <span
+              onClick={() => {
+                setStaffSort("alphabetical");
+                localStorage.setItem("staff_sort", "alphabetical");
+              }}
+              className={`btn-toggle--sm ${
+                staffSort == "alphabetical" ? "active" : ""
               }`}
             >
-              <Link to={`/profile/${item.id}`}>
-                {item.first_name} <strong>{item.last_name}</strong>
-              </Link>
-              <div className="flex dashboard__icons">
-                {item.user && (
-                  <i
-                    className={`fas fa-crown ${
-                      isSiteAdmin(item.user)
-                        ? "site-admin"
-                        : isDepartmentAdmin(item.user)
-                        ? "department-admin"
-                        : ""
-                    }`}
-                  ></i>
-                )}
-
-                {business && !item.user && <CopyUUID employee={item} />}
-                {item.user != user.id && (
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("employeeprofile");
-                    }}
-                    className="fas fa-edit"
-                  ></i>
-                )}
-              </div>
-            </div>
-
-            <p className="subtitle-sm">
-              {item.position.map(
-                (position) =>
-                  position.department.id == current.department && (
-                    <span key={position.id}>{position.name}</span>
-                  )
-              )}
-            </p>
-            {["H", "S"].includes(item.wage_type) && (
-              <Fragment>
-                <p className="subtitle-sm">
-                  {item.wage_type == "H" ? "Hourly" : "Salary"}
-                </p>
-                <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
-              </Fragment>
-            )}
+              Sort Alphabetically
+            </span>
+            <span
+              onClick={() => {
+                setStaffSort("position");
+                localStorage.setItem("staff_sort", "position");
+              }}
+              className={`btn-toggle--sm ${
+                staffSort == "position" ? "active" : ""
+              }`}
+            >
+              Sort by Position
+            </span>
           </div>
-        ))}
+        )}
+
+        <div className="dashboard__wrapper">
+          {sortEmployees().map((item) => (
+            <div key={item.id} className="dashboard__item--sm">
+              <div
+                className={`title-md bold flex-container--between-center ${
+                  isSiteAdmin(item.user) ? "admin" : ""
+                }`}
+              >
+                <Link to={`/profile/${item.id}`}>
+                  {item.first_name} <strong>{item.last_name}</strong>
+                </Link>
+                <div className="flex dashboard__icons">
+                  {item.user && (
+                    <i
+                      className={`fas fa-crown ${
+                        isSiteAdmin(item.user)
+                          ? "site-admin"
+                          : isDepartmentAdmin(item.user)
+                          ? "department-admin"
+                          : ""
+                      }`}
+                    ></i>
+                  )}
+
+                  {business && !item.user && <CopyUUID employee={item} />}
+                  {item.user != user.id && (
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdate(item);
+                        setType("employeeprofile");
+                      }}
+                      className="fas fa-edit"
+                    ></i>
+                  )}
+                </div>
+              </div>
+
+              <p className="subtitle-sm">
+                {item.position.map(
+                  (position) =>
+                    position.department.id == current.department && (
+                      <span key={position.id}>{position.name}</span>
+                    )
+                )}
+              </p>
+              {["H", "S"].includes(item.wage_type) && (
+                <Fragment>
+                  <p className="subtitle-sm">
+                    {item.wage_type == "H" ? "Hourly" : "Salary"}
+                  </p>
+                  <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+                </Fragment>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

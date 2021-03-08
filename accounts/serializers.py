@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business, Position, Site
+from rota_app.models import UserProfile, Employee, Department, Business, Position, Site, Settings
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
@@ -134,6 +134,8 @@ class RegisterSerializer(serializers.ModelSerializer):
                 profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
                 site = Site(business=business, name="My First Site")
                 site.save()
+                settings = Settings(business=business)
+                settings.save()
                 department = Department(owner=user, business=business, site=site, name="My First Department")
                 department.save()
             else:
