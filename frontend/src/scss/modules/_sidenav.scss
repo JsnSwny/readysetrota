@@ -166,10 +166,13 @@
     }
   }
   &__sublinks {
+    left: 250px;
+    @include wi-mq(laptop) {
+      left: 200px;
+    }
     @include wi-mq(not-tablet) {
       position: absolute;
       top: 0;
-      left: 200px;
       width: 200px;
       z-index: 10;
       background-color: white;

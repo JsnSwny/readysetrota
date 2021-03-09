@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const DashboardBlock = ({ children, disabled, disabledText, size }) => {
   return (
-    <div className={`dashboard__block${size && size}`}>
+    <div className={`dashboard__block${size ? size : ""}`}>
       {disabled && (
         <div className="dashboard__block-disabled flex-container--column-center">
           <i class="fas fa-lock"></i>

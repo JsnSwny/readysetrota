@@ -106,7 +106,10 @@
     color: white;
     position: relative;
     small {
-      font-size: 10px;
+      font-size: 14px;
+      @include wi-mq(laptop) {
+        font-size: 12px;
+      }
     }
     .fa-coins {
       position: absolute;
@@ -279,7 +282,10 @@
 .rota__container {
   display: flex;
   margin: 4px 0;
-  min-height: 75px;
+  min-height: 85px;
+  @include wi-mq(widescreen) {
+    min-height: 75px;
+  }
   &.open-shifts {
     margin-bottom: 20px;
     .employee__name {
@@ -408,6 +414,9 @@
     &.open-shift {
       cursor: pointer;
     }
+    @include wi-mq(widescreen) {
+      font-size: 14px;
+    }
     @include wi-mq(laptop) {
       font-size: 12px;
     }
@@ -450,6 +459,9 @@
     color: rgb(243, 243, 243);
     word-break: keep-all;
     transition: 0.2s ease-in-out color;
+    @include wi-mq(widescreen) {
+      font-size: 12px;
+    }
     @include wi-mq(laptop) {
       font-size: 10px;
     }

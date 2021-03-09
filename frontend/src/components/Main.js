@@ -39,6 +39,8 @@ import Checkout from "./accounts/Checkout";
 
 import Confirm from "./layout/Confirm";
 
+import Settings from "./settings/Settings";
+
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -177,6 +179,7 @@ const Main = () => {
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsAndConditions} />
           <PrivateRoute path="/changepassword" component={ChangePassword} />
+          <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
           <PrivateRoute path="/premium" component={Plans} />
