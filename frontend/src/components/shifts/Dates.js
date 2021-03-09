@@ -80,7 +80,7 @@ const Dates = (props) => {
             <small>
               £
               <CountUp
-                duration={2}
+                duration={1}
                 decimals={2}
                 end={getWeeklyCost(dates, getCost)}
               />
@@ -128,7 +128,7 @@ const Dates = (props) => {
               {siteAdmin && (
                 <small>
                   £
-                  <CountUp duration={2} decimals={2} end={getCost(date)} />
+                  <CountUp duration={1} decimals={2} end={getCost(date)} />
                   {forecast.some(
                     (item) => item.date == format(date, "yyyy-MM-dd")
                   )
