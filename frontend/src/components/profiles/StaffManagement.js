@@ -25,6 +25,21 @@ const StaffManagement = ({ modalProps }) => {
           <StaffPicker {...modalProps} />
         </Fragment>
       )}
+
+      {business.plan == "F" && (
+        <Fragment>
+          <SitePicker
+            {...modalProps}
+            admin={user.business ? true : false}
+            disabled={user.business.plan == "F"}
+          />
+          <DepartmentPicker
+            {...modalProps}
+            admin={true}
+            disabled={user.business.plan == "F"}
+          />
+        </Fragment>
+      )}
     </div>
   );
 };

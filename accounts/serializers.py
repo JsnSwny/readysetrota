@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business, Position, Site
+from rota_app.models import UserProfile, Employee, Department, Business, Position, Site, SiteSettings
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password

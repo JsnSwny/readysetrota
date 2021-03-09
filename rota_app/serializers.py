@@ -1,15 +1,9 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, Settings, SiteSettings
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
 from django.db.models import Q
-
-
-class SettingsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Settings
-        fields = '__all__'
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -21,12 +15,11 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     name = serializers.CharField(required=False)
-    settings = SettingsSerializer(read_only=True)
 
     class Meta:
         model = Business
         fields = ('id', 'name', 'plan', 'total_employees',
-                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'settings',)
+                  'subscription_cancellation', 'number_of_employees', 'trial_end',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()
@@ -238,11 +231,12 @@ class SiteSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
     unmarked_holidays = serializers.SerializerMethodField(read_only=True)
+    sitesettings = SiteSettingsSerializer(read_only=True)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
-                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays',)
+                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings',)
         depth: 1
 
     def create(self, validated_data):

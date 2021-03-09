@@ -1,12 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDepartment } from "../../../actions/employees";
-
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import DashboardBlock from "./DashboardBlock";
 
 const DepartmentPicker = (props) => {
   const dispatch = useDispatch();
-  const { setOpen, setUpdate, setType, admin } = props;
+  const { setOpen, setUpdate, setType, admin, disabled } = props;
 
   let departments = useSelector((state) => state.employees.departments);
   let current = useSelector((state) => state.employees.current);
@@ -18,7 +19,7 @@ const DepartmentPicker = (props) => {
   };
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock disabled={disabled} disabledText={"add more departments"}>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Departments</p>
@@ -102,7 +103,7 @@ const DepartmentPicker = (props) => {
           </div>
         ))}
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

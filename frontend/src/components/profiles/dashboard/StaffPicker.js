@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
 import { toast } from "react-toastify";
+import DashboardBlock from "./DashboardBlock";
 
 const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -76,7 +77,7 @@ const StaffPicker = (props) => {
   };
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">
@@ -194,7 +195,7 @@ const StaffPicker = (props) => {
           </div>
         ))}
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

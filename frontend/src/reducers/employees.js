@@ -90,7 +90,9 @@ export default function (state = initialState, action) {
       };
     case GET_SITES:
       let current_site =
-        state.current.site == 0 && action.payload.length > 0
+        (state.current.site == 0 ||
+          !action.payload.some((item) => item.id == state.current.site)) &&
+        action.payload.length > 0
           ? action.payload[0].id
           : state.current.site;
 
@@ -248,7 +250,11 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           department:
-            state.current.department == 0 && action.payload.length > 0
+            (state.current.department == 0 ||
+              !action.payload.some(
+                (item) => item.id == state.current.department
+              )) &&
+            action.payload.length > 0
               ? action.payload[0].id
               : state.current.department,
         },

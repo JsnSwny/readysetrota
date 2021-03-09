@@ -8,6 +8,7 @@ import ShiftDetails from "./ShiftDetails";
 import ExtraInfo from "./ExtraInfo";
 import Absence from "./Absence";
 import Positions from "./Positions";
+import useref from "gulp-useref";
 
 const ShiftModal = (props) => {
   const { date, employee, onClose, update } = props;
@@ -17,6 +18,9 @@ const ShiftModal = (props) => {
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let user = useSelector((state) => state.auth.user);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -76,6 +80,8 @@ const ShiftModal = (props) => {
       stage: shiftEmployee
         ? absence != "None"
           ? "Published"
+          : !settings.shift_approval || user.business
+          ? "Unpublished"
           : "Creation"
         : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),

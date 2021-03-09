@@ -24,6 +24,8 @@ const RotaBar = (props) => {
   let user = useSelector((state) => state.auth.user);
   let siteAdmin = useSelector((state) => state.employees.site_admin);
   let employees = useSelector((state) => state.employees.employees);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = sites.find((item) => item.id == current.site).sitesettings;
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -120,7 +122,7 @@ const RotaBar = (props) => {
               </div>
             )}
             {/* SEND APPROVAL SHIFTS */}
-            {user.business && (
+            {user.business && settings.shift_approval && (
               <div
                 onClick={() => {
                   dispatch(approveShifts());
@@ -136,7 +138,7 @@ const RotaBar = (props) => {
               </div>
             )}
             {/* SEND APPROVAL SHIFTS */}
-            {siteAdmin && !user.business && (
+            {siteAdmin && !user.business && settings.shift_approval && (
               <div
                 onClick={() => {
                   dispatch(sendForApproval());
@@ -158,7 +160,7 @@ const RotaBar = (props) => {
                   dispatch(publish());
                 }}
                 className={`dates__mobile-item ${
-                  !user.business
+                  !user.business && settings.shift_approval
                     ? !shifts.some((item) => item.stage == "Unpublished")
                       ? "disabled"
                       : ""

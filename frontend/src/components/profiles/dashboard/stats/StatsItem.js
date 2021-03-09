@@ -1,5 +1,6 @@
 import React from "react";
 import CountUp from "react-countup";
+import DashboardBlock from "../DashboardBlock";
 
 const StatsItem = ({
   setBeforeDate,
@@ -10,7 +11,7 @@ const StatsItem = ({
   decimal,
 }) => {
   return (
-    <div className="dashboard__block--third">
+    <DashboardBlock size={"--third"}>
       <div className="flex-container--column">
         <div className="dashboard__block-title-container">
           <div className="dashboard__block-title">{title}</div>
@@ -31,7 +32,7 @@ const StatsItem = ({
           )}
         </div>
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

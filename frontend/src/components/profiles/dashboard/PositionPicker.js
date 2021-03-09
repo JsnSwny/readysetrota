@@ -6,6 +6,7 @@ import update from "immutability-helper";
 import { updatePositionIndex } from "../../../actions/employees";
 import { toast } from "react-toastify";
 import { TouchBackend } from "react-dnd-touch-backend";
+import DashboardBlock from "./DashboardBlock";
 
 const MovableItem = ({ position, props, index, movePosition }) => {
   let employees = useSelector((state) => state.employees.employees);
@@ -132,7 +133,7 @@ const PositionPicker = (props) => {
   const isMobile = window.innerWidth < 680;
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Positions</p>
@@ -176,7 +177,7 @@ const PositionPicker = (props) => {
           ))}
         </DndProvider>
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 
