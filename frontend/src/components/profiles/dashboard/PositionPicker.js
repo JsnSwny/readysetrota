@@ -6,6 +6,7 @@ import update from "immutability-helper";
 import { updatePositionIndex } from "../../../actions/employees";
 import { toast } from "react-toastify";
 import { TouchBackend } from "react-dnd-touch-backend";
+import DashboardBlock from "./DashboardBlock";
 
 const MovableItem = ({ position, props, index, movePosition }) => {
   let employees = useSelector((state) => state.employees.employees);
@@ -132,53 +133,51 @@ const PositionPicker = (props) => {
   const isMobile = window.innerWidth < 680;
 
   return (
-    <div className="dashboard__block">
-      <div className="dashboard__block-container">
-        <div className="dashboard__block-title-container">
-          <div className="flex-container--align-center">
-            <p className="dashboard__block-title">Positions</p>
+    <DashboardBlock>
+      <div className="dashboard__block-title-container">
+        <div className="flex-container--align-center">
+          <p className="dashboard__block-title">Positions</p>
+          <i
+            onClick={() => {
+              setOpen(true);
+              setUpdate(false);
+              setType("Position");
+            }}
+            className="fas fa-plus"
+          ></i>
+          {!positionsEqual && (
             <i
               onClick={() => {
-                setOpen(true);
-                setUpdate(false);
-                setType("Position");
+                dispatch(updatePositionIndex(newPositions));
+                toast.success("Position orders updated!");
               }}
-              className="fas fa-plus"
+              className="fas fa-save"
             ></i>
-            {!positionsEqual && (
-              <i
-                onClick={() => {
-                  dispatch(updatePositionIndex(newPositions));
-                  toast.success("Position orders updated!");
-                }}
-                className="fas fa-save"
-              ></i>
-            )}
-          </div>
-        </div>
-        <small className="helper-text">
-          <i class="fas fa-info-circle"></i> Click and drag positions to
-          reorder, click the save icon to save changes.
-        </small>
-
-        {loading.positions && (
-          <small className="loading-text">Loading positions...</small>
-        )}
-        <div className="dashboard__wrapper">
-          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-            {newPositions.map((item, i) => (
-              <MovableItem
-                key={item.id}
-                position={item}
-                props={props}
-                index={i}
-                movePosition={movePosition}
-              />
-            ))}
-          </DndProvider>
+          )}
         </div>
       </div>
-    </div>
+      <small className="helper-text">
+        <i class="fas fa-info-circle"></i> Click and drag positions to reorder,
+        click the save icon to save changes.
+      </small>
+
+      {loading.positions && (
+        <small className="loading-text">Loading positions...</small>
+      )}
+      <div className="dashboard__wrapper">
+        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+          {newPositions.map((item, i) => (
+            <MovableItem
+              key={item.id}
+              position={item}
+              props={props}
+              index={i}
+              movePosition={movePosition}
+            />
+          ))}
+        </DndProvider>
+      </div>
+    </DashboardBlock>
   );
 };
 

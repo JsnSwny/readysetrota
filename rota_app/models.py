@@ -259,13 +259,12 @@ class Break(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-
-class Settings(models.Model):
-    business = models.OneToOneField(Business, on_delete=models.CASCADE)
-    shift_approval = models.BooleanField(default=False)
-
-
 class SiteSettings(models.Model):
     site = models.OneToOneField(Site, on_delete=models.CASCADE)
+    shift_approval = models.BooleanField(default=False)
     min_time = models.CharField(max_length=5, default="00:00")
     max_time = models.CharField(max_length=5, default="23:45")
+    time_increment = models.IntegerField(default=15)
+    forecasting = models.BooleanField(default=False)
+    def __str__(self):
+        return f'{self.site.business.name} - {self.site.name} [ID: {self.id}]'

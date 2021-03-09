@@ -18,7 +18,8 @@ const ShiftModal = (props) => {
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
-  let settings = useSelector((state) => state.employees.business.settings);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = sites.find((item) => item.id == current.site).sitesettings;
   let user = useSelector((state) => state.auth.user);
 
   const [startTime, setStartTime] = useState("");

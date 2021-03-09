@@ -32,7 +32,7 @@ const UpcomingShifts = (props) => {
   };
 
   return (
-    <div className="dashboard__block">
+    <div className="dashboard__block dashboard__block-container">
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">{title}</p>
         {published_shifts.length > 0 && allow_export && (

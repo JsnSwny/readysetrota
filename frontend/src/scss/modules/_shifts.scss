@@ -1,5 +1,14 @@
 .dates {
   position: relative;
+  &.filtered {
+    .container-right {
+      .dates__date {
+        &:not(.filtered) {
+          filter: blur(1px) opacity(50%);
+        }
+      }
+    }
+  }
   &.container {
     @include wi-mq(mobile) {
       margin-top: 20px;
@@ -7,9 +16,6 @@
   }
   .item-block {
     padding: 10px 0;
-    @include wi-mq(mobile) {
-      margin: 0;
-    }
   }
   &.fixed {
     position: sticky;
@@ -29,8 +35,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    @include wi-mq(mobile) {
-      display: none;
+    .item-block {
+      margin: 0;
     }
   }
   .btn-1 {
@@ -284,22 +290,10 @@
 
 .shiftList {
   &.filtered {
-    .rota__container:nth-child(even) {
-      .shift__shift-noshift {
-        &:not(.filtered) {
-          background-color: #8b8b8b;
-        }
-      }
-    }
     .shift {
       &__shift {
         &:not(.filtered) {
-          background-color: #c352be;
-        }
-        &-noshift {
-          &:not(.filtered) {
-            background: rgb(179, 179, 179);
-          }
+          filter: blur(1px) opacity(50%);
         }
       }
     }

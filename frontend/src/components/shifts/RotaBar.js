@@ -24,7 +24,8 @@ const RotaBar = (props) => {
   let user = useSelector((state) => state.auth.user);
   let siteAdmin = useSelector((state) => state.employees.site_admin);
   let employees = useSelector((state) => state.employees.employees);
-  let settings = useSelector((state) => state.employees.business.settings);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = sites.find((item) => item.id == current.site).sitesettings;
 
   const formatDate = (date, add, display = false) => {
     let newDate = display

@@ -267,6 +267,7 @@ const Rota = ({ modalProps, confirmProps }) => {
           scrollPosition={scrollPosition}
           template={template}
           shifts={shifts_list}
+          filterDate={filterDate}
           {...modalProps}
         />
         {isLoading && <Loading />}
