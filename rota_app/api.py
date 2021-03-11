@@ -1,9 +1,9 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer, 
 DepartmentSerializer, BusinessSerializer, AvailabilitySerializer, 
 ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-BasicPositionSerializer, ForecastSerializer)
+BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -266,5 +266,9 @@ class ForecastViewSet(viewsets.ModelViewSet):
     filter_class = ForecastFilter
     ordering_fields = ('date',)
     queryset = Forecast.objects.all()
+
+class SiteSettingsViewSet(viewsets.ModelViewSet):
+    serializer_class = SiteSettingsSerializer
+    queryset = SiteSettings.objects.all()
 
 

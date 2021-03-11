@@ -1,0 +1,40 @@
+.banner {
+  background-image: url("/static/media/staff-management-banner3.jpg");
+  background-position: center;
+  background-size: cover;
+  height: 25vh;
+  margin-top: -20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  color: white;
+  margin-bottom: 2rem;
+  @include wi-mq(tablet) {
+    height: 20vh;
+  }
+  @include wi-mq(mobile) {
+    height: 20vh;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(darken($blue, 0%), 0.85),
+      rgba(darken($blue, 10%), 0.85)
+    );
+  }
+  .header {
+    z-index: 10;
+    position: relative;
+  }
+  p {
+    @extend .header;
+    font-size: 18px;
+  }
+}

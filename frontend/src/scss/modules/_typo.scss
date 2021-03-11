@@ -12,7 +12,6 @@
 }
 
 .header {
-  margin-top: 6rem;
   font-size: 60px;
   @include wi-mq(widescreen) {
     font-size: 48px;
@@ -21,7 +20,7 @@
     font-size: 36px;
   }
   @include wi-mq(mobile) {
-    font-size: 24px;
+    font-size: 28px;
   }
   &.underline {
     line-height: 0.8;

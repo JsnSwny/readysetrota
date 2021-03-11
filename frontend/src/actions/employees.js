@@ -32,6 +32,7 @@ import {
   GET_FORECAST,
   ADD_FORECAST,
   UPDATE_FORECAST,
+  UPDATE_SETTINGS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -55,6 +56,13 @@ export const getForecast = (startDate, endDate) => (dispatch, getState) => {
         payload: res.data,
       });
     });
+};
+
+export const updateSettings = (settings) => (dispatch, getState) => {
+  dispatch({
+    type: UPDATE_SETTINGS,
+    payload: settings,
+  });
 };
 
 export const addForecast = (obj) => (dispatch, getState) => {
@@ -189,6 +197,7 @@ export const addSite = (site) => (dispatch, getState) => {
 };
 
 export const updateSite = (id, site) => (dispatch, getState) => {
+  console.log(site);
   axios
     .put(`/api/sites/${id}/`, site, tokenConfig(getState))
     .then((res) => {
@@ -196,9 +205,10 @@ export const updateSite = (id, site) => (dispatch, getState) => {
         type: UPDATE_SITE,
         payload: res.data,
       });
+      console.log(res.data);
     })
 
-    .catch((err) => console.log(err.response));
+    .catch((err) => console.log(err.response.data));
 };
 
 export const deleteSite = (id) => (dispatch, getState) => {

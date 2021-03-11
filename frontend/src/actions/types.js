@@ -70,3 +70,5 @@ export const SEND_MESSAGE = "SEND_MESSAGE";
 export const RESET_LOADING = "RESET_LOADING";
 
 export const GET_STATS = "GET_STATS";
+
+export const UPDATE_SETTINGS = "UPDATE_SETTINGS";

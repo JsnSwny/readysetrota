@@ -9,7 +9,7 @@ from django.db.models import Q
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
-        fields = '__all__'
+        fields = ('id', 'forecasting', 'max_time', 'min_time', 'shift_approval', 'time_increment',)
 
 
 class BusinessSerializer(serializers.ModelSerializer):
@@ -231,13 +231,26 @@ class SiteSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
     unmarked_holidays = serializers.SerializerMethodField(read_only=True)
-    sitesettings = SiteSettingsSerializer(read_only=True)
+    sitesettings = SiteSettingsSerializer(many=False, required=False)
+    name = serializers.CharField(required=False)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
                   'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings',)
         depth: 1
+
+    def update(self, instance, validated_data):
+        sitesettings = validated_data.pop('sitesettings', [])
+        instance = super().update(instance, validated_data)
+        if(sitesettings):
+            settings = SiteSettings.objects.get(site=instance)
+            for attr, value in sitesettings.items():
+                setattr(settings, attr, value)
+                
+            settings.save()
+        
+        return instance 
 
     def create(self, validated_data):
         site = Site.objects.create(**validated_data)

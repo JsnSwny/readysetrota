@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import ShiftList from "./ShiftList";
@@ -17,6 +17,14 @@ const List = () => {
     holidays: "Holidays List",
     absences: "Absence List",
     siteOverview: "Site Overview",
+  };
+
+  const subtitles = {
+    shifts: "View a list of upcoming shifts.",
+    employees: "List of all employees",
+    holidays: "List of all holidays and unavailabilities",
+    absences: "List of absences",
+    siteOverview: "Site overview",
   };
 
   const [selected, setSelected] = useState([]);
@@ -58,10 +66,15 @@ const List = () => {
   };
 
   return (
-    <div className="list">
-      <h1 className="header underline">{titles[type]}</h1>
-      {component[type]}
-    </div>
+    <Fragment>
+      <div className="banner banner--blue">
+        <div className="wrapper--lg">
+          <h1 className="header">{titles[type]}</h1>
+          {/* <p>{subtitles[type]}</p> */}
+        </div>
+      </div>
+      <div className="list">{component[type]}</div>
+    </Fragment>
   );
 };
 

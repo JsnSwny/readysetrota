@@ -11,36 +11,44 @@ const StaffManagement = ({ modalProps }) => {
   let user = useSelector((state) => state.auth.user);
 
   return (
-    <div className="dashboard container-2">
-      {business.plan != "F" && (
-        <Fragment>
-          <SitePicker {...modalProps} admin={user.business ? true : false} />
-          <DepartmentPicker {...modalProps} admin={true} />
-        </Fragment>
-      )}
+    <Fragment>
+      <div className="banner">
+        <div className="wrapper--lg">
+          <h1 className="header">Staff Management</h1>
+          {/* <p>{subtitles[type]}</p> */}
+        </div>
+      </div>
+      <div className="dashboard container-2">
+        {business.plan != "F" && (
+          <Fragment>
+            <SitePicker {...modalProps} admin={user.business ? true : false} />
+            <DepartmentPicker {...modalProps} admin={true} />
+          </Fragment>
+        )}
 
-      {current.department != 0 && (
-        <Fragment>
-          <PositionPicker {...modalProps} />
-          <StaffPicker {...modalProps} />
-        </Fragment>
-      )}
+        {current.department != 0 && (
+          <Fragment>
+            <PositionPicker {...modalProps} />
+            <StaffPicker {...modalProps} />
+          </Fragment>
+        )}
 
-      {business.plan == "F" && (
-        <Fragment>
-          <SitePicker
-            {...modalProps}
-            admin={user.business ? true : false}
-            disabled={user.business.plan == "F"}
-          />
-          <DepartmentPicker
-            {...modalProps}
-            admin={true}
-            disabled={user.business.plan == "F"}
-          />
-        </Fragment>
-      )}
-    </div>
+        {business.plan == "F" && (
+          <Fragment>
+            <SitePicker
+              {...modalProps}
+              admin={user.business ? true : false}
+              disabled={user.business.plan == "F"}
+            />
+            <DepartmentPicker
+              {...modalProps}
+              admin={true}
+              disabled={user.business.plan == "F"}
+            />
+          </Fragment>
+        )}
+      </div>
+    </Fragment>
   );
 };
 

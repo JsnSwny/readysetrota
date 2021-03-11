@@ -257,7 +257,17 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 navOpen == "settings" ? "open" : ""
               }`}
             >
-              <div className="sidenav__link">
+              <NavLink
+                toggleNav={toggleNav}
+                link="/settings"
+                icon="fas fa-cogs"
+                title="Settings"
+                dropdown={true}
+                dropdownAction={() =>
+                  setNavOpen(`${navOpen != "settings" ? "settings" : ""}`)
+                }
+              />
+              {/* <div className="sidenav__link">
                 <div className="no-link">
                   <div className="sidenav__link-text">
                     <i className="fas fa-cogs"></i> Settings
@@ -269,7 +279,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   }
                   className="fas fa-chevron-down"
                 ></i>
-              </div>
+              </div> */}
 
               <div className="sidenav__sublinks">
                 <NavLink

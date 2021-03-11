@@ -66,6 +66,7 @@ const EmployeeProfileModal = (props) => {
       setWage(update.wage);
       setWageType(update.wage_type);
       setSiteAdmin(isSiteAdmin(update.user));
+      setAvailability(update.default_availability);
     }
   }, [update]);
 

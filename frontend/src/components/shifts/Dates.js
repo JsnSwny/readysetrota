@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { format } from "date-fns";
+import { addBusinessDays, format } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import CountUp from "react-countup";
 
@@ -23,6 +23,8 @@ const Dates = (props) => {
   let forecast = useSelector((state) => state.employees.forecast);
   let sites = useSelector((state) => state.employees.sites);
   let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let business = useSelector((state) => state.employees.business);
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
 
   const getWeeklyCost = (dateList, fun) => {
     return dateList
@@ -51,8 +53,6 @@ const Dates = (props) => {
     return parseFloat(hourly + salary).toFixed(2);
   };
 
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
-
   const getAmount = (date) => {
     let forecastValue = forecast.find(
       (item) => item.date == format(date, "yyyy-MM-dd")
@@ -77,21 +77,23 @@ const Dates = (props) => {
               {format(dates[0], "do MMMM")} -{" "}
               {format(dates[dates.length - 1], "do MMMM")}
             </p>
-            <small>
-              £
-              <CountUp
-                duration={1}
-                decimals={2}
-                end={getWeeklyCost(dates, getCost)}
-              />
-              {forecast.length > 0
-                ? `/ £${getWeeklyCost(dates, getAmount)} (${(
-                    (getWeeklyCost(dates, getCost) /
-                      getWeeklyCost(dates, getAmount)) *
-                    100
-                  ).toFixed(2)}%)`
-                : ""}
-            </small>
+            {siteAdmin && business.plan != "F" && (
+              <small>
+                £
+                <CountUp
+                  duration={1}
+                  decimals={2}
+                  end={getWeeklyCost(dates, getCost)}
+                />
+                {forecast.length > 0
+                  ? `/ £${getWeeklyCost(dates, getAmount)} (${(
+                      (getWeeklyCost(dates, getCost) /
+                        getWeeklyCost(dates, getAmount)) *
+                      100
+                    ).toFixed(2)}%)`
+                  : ""}
+              </small>
+            )}
           </div>
         </div>
 
@@ -103,7 +105,7 @@ const Dates = (props) => {
                 filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
               }`}
             >
-              {settings.forecasting && (
+              {settings.forecasting && siteAdmin && business.plan != "F" && (
                 <i
                   onClick={() => {
                     setOpen(true);
@@ -125,10 +127,10 @@ const Dates = (props) => {
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
-              {siteAdmin && (
+              {siteAdmin && business.plan != "F" && (
                 <small>
-                  £
-                  <CountUp duration={1} decimals={2} end={getCost(date)} />
+                  £{getCost(date)}
+                  {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
                   {forecast.some(
                     (item) => item.date == format(date, "yyyy-MM-dd")
                   )

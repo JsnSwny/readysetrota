@@ -32,6 +32,7 @@ import {
   GET_FORECAST,
   ADD_FORECAST,
   UPDATE_FORECAST,
+  UPDATE_SETTINGS,
 } from "../actions/types";
 import { format, parseISO } from "date-fns";
 
@@ -56,11 +57,17 @@ const initialState = {
   uuid_success: false,
   business: { plan: "F" },
   site_admin: false,
+  sitesettings: {},
 };
 
 export default function (state = initialState, action) {
   let newState = {};
   switch (action.type) {
+    case UPDATE_SETTINGS:
+      return {
+        ...state,
+        sitesettings: action.payload,
+      };
     case GET_AVAILABILITY:
       return {
         ...state,

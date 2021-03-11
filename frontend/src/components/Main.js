@@ -6,6 +6,7 @@ import {
   getPositions,
   getHolidays,
   getSites,
+  updateSettings,
 } from "../actions/employees";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SideNav from "./layout/SideNav";
@@ -69,6 +70,13 @@ const Main = () => {
     }
     if (current.site > 0) {
       dispatch(getDepartments());
+      if (sites.length > 0) {
+        dispatch(
+          updateSettings(
+            sites.find((item) => item.id == current.site).sitesettings
+          )
+        );
+      }
     }
   }, [current.site, auth.token]);
 
@@ -77,6 +85,11 @@ const Main = () => {
       dispatch(getEmployees());
       dispatch(getPositions(true));
       dispatch(getPositions());
+      dispatch(
+        updateSettings(
+          sites.find((item) => item.id == current.site).sitesettings
+        )
+      );
     }
   }, [departments, sites]);
 
