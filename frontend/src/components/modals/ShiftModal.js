@@ -19,7 +19,9 @@ const ShiftModal = (props) => {
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
   let sites = useSelector((state) => state.employees.sites);
-  let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
   let user = useSelector((state) => state.auth.user);
 
   const [startTime, setStartTime] = useState("");
@@ -76,7 +78,7 @@ const ShiftModal = (props) => {
       absence: absence,
       absence_info: absenceInfo,
       open_shift: shiftEmployee ? false : true,
-      department_id: current.department,
+      department_id: current.department.id,
       stage: shiftEmployee
         ? absence != "None"
           ? "Published"

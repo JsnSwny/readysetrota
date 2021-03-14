@@ -25,15 +25,17 @@ const StaffPicker = (props) => {
   }
 
   const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site)
-      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+    return sites.find((site) => site.id == current.site.id)
+      ? sites
+          .find((site) => site.id == current.site.id)
+          .admins.includes(user_id)
       : false;
   };
 
   const isDepartmentAdmin = (user_id) => {
-    return departments.find((dep) => dep.id == current.department)
+    return departments.find((dep) => dep.id == current.department.id)
       ? departments
-          .find((dep) => dep.id == current.department)
+          .find((dep) => dep.id == current.department.id)
           .admins.includes(user_id)
       : false;
   };
@@ -45,6 +47,7 @@ const StaffPicker = (props) => {
   );
 
   const sortEmployees = () => {
+    console.log(current.department);
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":
@@ -54,14 +57,14 @@ const StaffPicker = (props) => {
                 (pos) =>
                   pos.id ==
                   a.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order -
               positions.find(
                 (pos) =>
                   pos.id ==
                   b.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order
           );
@@ -179,7 +182,7 @@ const StaffPicker = (props) => {
             <p className="subtitle-sm">
               {item.position.map(
                 (position) =>
-                  position.department.id == current.department && (
+                  position.department.id == current.department.id && (
                     <span key={position.id}>{position.name}</span>
                   )
               )}

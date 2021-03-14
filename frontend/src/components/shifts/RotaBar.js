@@ -25,7 +25,9 @@ const RotaBar = (props) => {
   let siteAdmin = useSelector((state) => state.employees.site_admin);
   let employees = useSelector((state) => state.employees.employees);
   let sites = useSelector((state) => state.employees.sites);
-  let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -95,7 +97,7 @@ const RotaBar = (props) => {
                     ? `/exportall?start_date=${date}&end_date=${format(
                         addDays(parseISO(date), 6),
                         "yyyy-MM-dd"
-                      )}&id=${current.department}`
+                      )}&id=${current.department.id}`
                     : ""
                 }`}
                 target={`${published_shifts.length > 0 ? "_blank" : ""}`}

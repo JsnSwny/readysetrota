@@ -52,7 +52,7 @@ const DepartmentPicker = (props) => {
           <div
             key={item.id}
             className={`dashboard__item--sm ${
-              (current.department == item.id || current.department == 0) &&
+              (current.department.id == item.id || current.department == 0) &&
               "current"
             }`}
           >
@@ -70,21 +70,21 @@ const DepartmentPicker = (props) => {
                   ></i>
                 )}
 
-                {current.department != item.id && (
+                {current.department.id != item.id && (
                   <i
                     onClick={() => {
                       if (
                         plan == "F" &&
                         i > 0 &&
-                        item.business.id == current.business
+                        item.business.id == current.business.id
                       ) {
                         toast.warning(
                           "Upgrade to premium to unlock unlimited departments"
                         );
                         return false;
                       } else {
-                        if (current.department != item.id) {
-                          setDep(item.id);
+                        if (current.department.id != item.id) {
+                          setDep(item);
                         }
                       }
                     }}
@@ -94,7 +94,7 @@ const DepartmentPicker = (props) => {
               </div>
             </div>
             <p className="subtitle-sm" style={{ flex: "0" }}>
-              {current.site == 0 && item.site.name}
+              {current.site.id == 0 && item.site.name}
             </p>
             <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
               {item.number_of_employees}{" "}

@@ -128,7 +128,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   setNavOpen={setNavOpen}
                   name="Sites"
                   items={sites}
-                  current={current.site}
+                  current={current.site.id}
                   action={setSite}
                 />
                 <NavPicker
@@ -136,7 +136,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   setNavOpen={setNavOpen}
                   name="Departments"
                   items={departments}
-                  current={current.department}
+                  current={current.department.id}
                   action={setDepartment}
                 />
               </div>

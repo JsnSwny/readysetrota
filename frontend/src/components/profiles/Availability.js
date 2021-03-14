@@ -214,7 +214,7 @@ const Availability = (props) => {
                         currentSelector == "partial" && endTime
                           ? endTime
                           : null,
-                      site_id: current.site,
+                      site_id: current.site.id,
                     };
                     if (differenceInDays(date, new Date()) > 365) {
                       toast.warning(

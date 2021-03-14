@@ -7,7 +7,9 @@ import { toast } from "react-toastify";
 const Settings = () => {
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
-  let settings = useSelector((state) => state.employees.sitesettings);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
 
   const [shiftApproval, setShiftApproval] = useState(false);
   const [forecasting, setForecasting] = useState(false);
@@ -44,7 +46,8 @@ const Settings = () => {
       <div className="banner">
         <div className="wrapper">
           <h1 className="header">
-            Site Settings [{sites.find((item) => item.id == current.site).name}]
+            Site Settings [
+            {sites.find((item) => item.id == current.site.id).name}]
           </h1>
         </div>
       </div>
@@ -159,7 +162,7 @@ const Settings = () => {
           className="form__save"
           onClick={() => {
             dispatch(
-              updateSite(current.site, {
+              updateSite(current.site.id, {
                 sitesettings: {
                   ...settings,
                   forecasting,

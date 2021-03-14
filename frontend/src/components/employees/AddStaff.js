@@ -38,8 +38,8 @@ const AddStaff = (props) => {
   }, []);
   let current = useSelector((state) => state.employees.current);
 
-  let current_site = sites.find((item) => item.id == current.site)
-    ? sites.find((item) => item.id == current.site)
+  let current_site = sites.find((item) => item.id == current.site.id)
+    ? sites.find((item) => item.id == current.site.id)
     : false;
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -65,8 +65,10 @@ const AddStaff = (props) => {
   let error_obj = {};
 
   const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site)
-      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+    return sites.find((site) => site.id == current.site.id)
+      ? sites
+          .find((site) => site.id == current.site.id)
+          .admins.includes(user_id)
       : false;
   };
 
@@ -100,7 +102,7 @@ const AddStaff = (props) => {
         wage: wage,
         wage_type: wageType,
         position_id: position.map((pos) => pos.id),
-        business_id: current.business,
+        business_id: current.business.id,
         default_availability: {
           0: { name: "unselected", start_time: null, end_time: null },
           1: { name: "unselected", start_time: null, end_time: null },
@@ -158,8 +160,8 @@ const AddStaff = (props) => {
             dispatch(
               updateDepartment(update.id, {
                 name,
-                business_id: current.business,
-                site_id: current.site,
+                business_id: current.business.id,
+                site_id: current.site.id,
                 admins_id: admins,
               })
             );
@@ -168,8 +170,8 @@ const AddStaff = (props) => {
             dispatch(
               addDepartment({
                 name,
-                business_id: current.business,
-                site_id: current.site,
+                business_id: current.business.id,
+                site_id: current.site.id,
               })
             );
             toast.success("Department added!");
@@ -181,8 +183,8 @@ const AddStaff = (props) => {
             dispatch(
               updatePosition(update.id, {
                 name,
-                department_id: current.department,
-                business_id: current.business,
+                department_id: current.department.id,
+                business_id: current.business.id,
               })
             );
             toast.success("Position updated!");
@@ -190,8 +192,8 @@ const AddStaff = (props) => {
             dispatch(
               addPosition({
                 name,
-                department_id: parseInt(current.department),
-                business_id: current.business,
+                department_id: parseInt(current.department.id),
+                business_id: current.business.id,
               })
             );
             toast.success("Position added!");
@@ -203,7 +205,7 @@ const AddStaff = (props) => {
             dispatch(
               updateSite(update.id, {
                 name,
-                business_id: current.business,
+                business_id: current.business.id,
               })
             );
             toast.success("Site updated!");
@@ -211,7 +213,7 @@ const AddStaff = (props) => {
             dispatch(
               addSite({
                 name,
-                business_id: current.business,
+                business_id: current.business.id,
               })
             );
             toast.success("Site added!");

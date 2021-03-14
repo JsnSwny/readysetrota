@@ -40,7 +40,7 @@ const ForecastModal = ({ onClose, date, update }) => {
           addForecast({
             amount: forecastAmount,
             date,
-            site_id: current.site,
+            site_id: current.site.id,
           })
         );
         toast.success("Forecast added");

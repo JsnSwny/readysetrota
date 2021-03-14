@@ -63,7 +63,7 @@ const SitePicker = (props) => {
           <div
             key={item.id}
             className={`dashboard__item--sm ${
-              (current.site == item.id || current.site == 0) && "current"
+              (current.site.id == item.id || current.site.id == 0) && "current"
             }`}
           >
             <div className="title-md bold flex-container--between-center">
@@ -79,11 +79,11 @@ const SitePicker = (props) => {
                     className="fas fa-edit"
                   ></i>
                 )}
-                {current.site != item.id && (
+                {current.site.id != item.id && (
                   <i
                     onClick={() => {
-                      if (current.site != item.id) {
-                        dispatch(setSite(item.id));
+                      if (current.site.id != item.id) {
+                        dispatch(setSite(item));
                       }
                     }}
                     className="fas fa-check-circle"

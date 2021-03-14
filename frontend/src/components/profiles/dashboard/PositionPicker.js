@@ -82,7 +82,7 @@ const MovableItem = ({ position, props, index, movePosition }) => {
         ></i>
       </p>
       <p className="subtitle-sm" style={{ flex: "0" }}>
-        {current.site == 0 &&
+        {current.site.id == 0 &&
           `${position.department.name} - ${position.department.site.name}`}
       </p>
       <p className="subtitle-sm">

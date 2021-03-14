@@ -26,8 +26,8 @@ const EmployeeProfileModal = (props) => {
   // }, []);
   let current = useSelector((state) => state.employees.current);
 
-  let current_site = sites.find((item) => item.id == current.site)
-    ? sites.find((item) => item.id == current.site)
+  let current_site = sites.find((item) => item.id == current.site.id)
+    ? sites.find((item) => item.id == current.site.id)
     : false;
 
   const [firstName, setFirstName] = useState("");
@@ -51,8 +51,10 @@ const EmployeeProfileModal = (props) => {
   let error_obj = {};
 
   const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site)
-      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+    return sites.find((site) => site.id == current.site.id)
+      ? sites
+          .find((site) => site.id == current.site.id)
+          .admins.includes(user_id)
       : false;
   };
 
@@ -101,7 +103,7 @@ const EmployeeProfileModal = (props) => {
       wage: wage,
       wage_type: wageType,
       position_id: position.map((pos) => pos.id),
-      business_id: current.business,
+      business_id: current.business.id,
       default_availability: availability,
     };
     error_obj = {

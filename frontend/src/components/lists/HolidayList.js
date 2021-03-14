@@ -26,7 +26,7 @@ const HolidayList = ({ listProps }) => {
   }, [holidays]);
 
   useEffect(() => {
-    dispatch(getHolidays(current.site));
+    dispatch(getHolidays(current.site.id));
   }, []);
 
   const approveAction = {

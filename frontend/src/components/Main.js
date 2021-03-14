@@ -68,17 +68,17 @@ const Main = () => {
     if (sites.length == 0) {
       dispatch(getSites());
     }
-    if (current.site > 0) {
+    if (current.site.id > 0) {
       dispatch(getDepartments());
       if (sites.length > 0) {
         dispatch(
           updateSettings(
-            sites.find((item) => item.id == current.site).sitesettings
+            sites.find((item) => item.id == current.site.id).sitesettings
           )
         );
       }
     }
-  }, [current.site, auth.token]);
+  }, [current.site.id, auth.token]);
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
@@ -87,7 +87,7 @@ const Main = () => {
       dispatch(getPositions());
       dispatch(
         updateSettings(
-          sites.find((item) => item.id == current.site).sitesettings
+          sites.find((item) => item.id == current.site.id).sitesettings
         )
       );
     }

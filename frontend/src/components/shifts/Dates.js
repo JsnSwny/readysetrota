@@ -22,7 +22,9 @@ const Dates = (props) => {
   let current = useSelector((state) => state.employees.current);
   let forecast = useSelector((state) => state.employees.forecast);
   let sites = useSelector((state) => state.employees.sites);
-  let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
   let business = useSelector((state) => state.employees.business);
   let siteAdmin = useSelector((state) => state.employees.site_admin);
 

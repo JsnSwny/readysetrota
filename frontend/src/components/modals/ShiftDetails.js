@@ -20,7 +20,9 @@ const ShiftDetails = ({
   let errors = useSelector((state) => state.errors.msg);
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
-  let settings = sites.find((item) => item.id == current.site).sitesettings;
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
 
   const timeInRange = (item) => {
     let date = new Date();

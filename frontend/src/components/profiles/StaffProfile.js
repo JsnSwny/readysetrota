@@ -71,7 +71,7 @@ const StaffProfile = (props) => {
         employee={id_param ? employee_id : false}
       />
       <div className="dashboard container-2">
-        {current.site != 0 && (
+        {current.site.id != 0 && (
           <Fragment>
             {current.department != 0 && currentEmployee && (
               <Fragment>

@@ -19,7 +19,7 @@ const AbsenceList = ({ listProps }) => {
   let width = useSelector((state) => state.responsive.width);
 
   useEffect(() => {
-    dispatch(getAbsences(format(new Date(), "yyyy-MM-dd")), current.site);
+    dispatch(getAbsences(format(new Date(), "yyyy-MM-dd")), current.site.id);
   }, []);
 
   const toMinutes = (val) => {

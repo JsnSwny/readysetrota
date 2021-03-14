@@ -42,7 +42,7 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
-    dispatch(getAllAvailability(current.site, start_date, end_date));
+    dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
   };
@@ -89,11 +89,11 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   // Update Shifts and Popular Times
   useEffect(() => {
-    if (current.department > 0 && current.site > 0) {
+    if (current.department.id > 0 && current.site.id > 0) {
       dispatch(getPopularTimes());
       widthUpdate(true);
     }
-  }, [current.department, current.site]);
+  }, [current.department.id, current.site.id]);
 
   // Initialise employee list
   useEffect(() => {
@@ -201,14 +201,14 @@ const Rota = ({ modalProps, confirmProps }) => {
                 (pos) =>
                   pos.id ==
                   a.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order -
               positions.find(
                 (pos) =>
                   pos.id ==
                   b.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order
           );
@@ -297,7 +297,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                   current_employee={current_employee}
                   shifts={shifts_list}
                   user={user}
-                  currentDepartment={current.department}
+                  currentDepartment={current.department.id}
                   result={result}
                 />
                 <div className="container-right">

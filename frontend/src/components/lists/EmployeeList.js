@@ -52,14 +52,14 @@ const EmployeeList = ({ listProps }) => {
           <td>{item.last_name}</td>
           <td>
             {item.position
-              .map((pos) => pos.department.site == current.site && pos.name)
+              .map((pos) => pos.department.site == current.site.id && pos.name)
               .join(", ")}
           </td>
           <td>
             {item.position
               .map(
                 (pos) =>
-                  pos.department.site == current.site && pos.department.name
+                  pos.department.site == current.site.id && pos.department.name
               )
               .join(", ")}
           </td>

@@ -24,7 +24,11 @@ const Stats = ({ type, employee, title }) => {
   const [currentFilter, setCurrentFilter] = useState("site");
 
   let id =
-    type == "business" ? current[currentFilter] : employee ? employee : user.id;
+    type == "business"
+      ? current[currentFilter].id
+      : employee
+      ? employee
+      : user.id;
 
   const dateProps = { startDate, setStartDate, endDate, setEndDate };
 
