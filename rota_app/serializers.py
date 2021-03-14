@@ -4,6 +4,7 @@ from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
 from django.db.models import Q
+from guardian.shortcuts import get_perms
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -233,11 +234,12 @@ class SiteSerializer(serializers.ModelSerializer):
     unmarked_holidays = serializers.SerializerMethodField(read_only=True)
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
+    perms = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
-                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings',)
+                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings', 'perms',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -251,6 +253,9 @@ class SiteSerializer(serializers.ModelSerializer):
             settings.save()
         
         return instance 
+
+    def get_perms(self, obj):
+        return get_perms(self.context['request'].user, obj)
 
     def create(self, validated_data):
         site = Site.objects.create(**validated_data)

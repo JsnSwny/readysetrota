@@ -88,14 +88,16 @@ class Publish(APIView):
     def get(self, request):
         business = request.query_params.get('business')
         all_shifts = {}
-        if business:
+        print(business)
+        if business != "false":
             all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+            print("Business")
         else:
             all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-   
+            print("Not business")
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
-
+        print(all_shifts)
         connection = mail.get_connection()
         shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
         shifts_unique = [list(grp) for k, grp in groupby(

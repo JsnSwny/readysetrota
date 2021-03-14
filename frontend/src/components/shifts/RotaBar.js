@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { format, parseISO, addDays } from "date-fns";
+import { format, parseISO, addDays, subDays } from "date-fns";
 import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 
 const RotaBar = (props) => {
@@ -153,7 +153,6 @@ const RotaBar = (props) => {
                 <p>Send for Approval</p>
               </div>
             )}
-            {/* PUBLISH SHIFTS */}
             {siteAdmin && (
               <div
                 onClick={() => {
@@ -161,10 +160,18 @@ const RotaBar = (props) => {
                 }}
                 className={`dates__mobile-item ${
                   !user.business && settings.shift_approval
-                    ? !shifts.some((item) => item.stage == "Unpublished")
-                      ? "disabled"
-                      : ""
-                    : !shifts.some((item) => item.stage != "Published")
+                    ? shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= subDays(new Date(), 1) &&
+                          item.stage == "Unpublished"
+                      )
+                      ? ""
+                      : "disabled"
+                    : !shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= subDays(new Date(), 1) &&
+                          item.stage != "Published"
+                      )
                     ? "disabled"
                     : ""
                 }`}

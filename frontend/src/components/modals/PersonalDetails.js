@@ -45,6 +45,7 @@ const PersonalDetails = ({
           <select
             className="form__input"
             onChange={(e) => setWageType(e.target.value)}
+            value={wageType}
           >
             <option value="N">None</option>
             <option value="H">Hourly</option>

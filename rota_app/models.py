@@ -265,6 +265,6 @@ class SiteSettings(models.Model):
     min_time = models.CharField(max_length=5, default="00:00")
     max_time = models.CharField(max_length=5, default="23:45")
     time_increment = models.IntegerField(default=15)
-    forecasting = models.BooleanField(default=False)
+    forecasting = models.BooleanField(default=True)
     def __str__(self):
         return f'{self.site.business.name} - {self.site.name} [ID: {self.id}]'

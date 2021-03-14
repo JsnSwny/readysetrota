@@ -60,6 +60,7 @@ const EmployeeProfileModal = (props) => {
 
   useEffect(() => {
     if (update) {
+      console.log(update);
       setFirstName(update.first_name);
       setLastName(update.last_name);
       setPosition(update.position.map((item) => item));
