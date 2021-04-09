@@ -13,6 +13,9 @@ const AdminPanel = (props) => {
   let holidays = useSelector((state) => state.employees.holidays);
   let business = useSelector((state) => state.employees.business);
   let sites = useSelector((state) => state.employees.sites);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
 
   useEffect(() => {
     dispatch(getHolidays(current.site.id));
@@ -21,12 +24,15 @@ const AdminPanel = (props) => {
 
   return (
     <Fragment>
-      <Stats title="Admin Panel" type="business" />
+      {permissions.includes("view_stats") && (
+        <Stats title="Admin Panel" type="business" />
+      )}
       <div className="dashboard container-2">
         {user.business && <SiteOverview />}
-        {business.plan != "F" && (
-          <HolidayRequest holidays={holidays} admin={true} />
-        )}
+        {business.plan != "F" &&
+          permissions.includes("manage_availabilities") && (
+            <HolidayRequest holidays={holidays} admin={true} />
+          )}
       </div>
     </Fragment>
   );

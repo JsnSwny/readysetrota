@@ -32,7 +32,10 @@ const Employee = (props) => {
     }
   };
 
-  let site_admin = useSelector((state) => state.employees.site_admin);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
 
   return (
     <div
@@ -61,7 +64,7 @@ const Employee = (props) => {
 
       <p className="employee__hours">
         {getHours(employee.id)} Hours{" "}
-        {site_admin &&
+        {permissions.includes("manage_wages") &&
           ["H", "S"].includes(employee.wage_type) &&
           `(£${getWage(
             employee.wage_type,

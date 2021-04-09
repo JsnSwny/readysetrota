@@ -13,6 +13,10 @@ const DepartmentPicker = (props) => {
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
   let loading = useSelector((state) => state.loading);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let user = useSelector((state) => state.auth.user);
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
@@ -23,7 +27,7 @@ const DepartmentPicker = (props) => {
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Departments</p>
-          {admin && (
+          {permissions.includes("manage_departments") && (
             <i
               onClick={() => {
                 if (plan == "F" && departments.length >= 1) {
@@ -59,7 +63,7 @@ const DepartmentPicker = (props) => {
             <div className="title-md bold flex-container--between-center">
               <p>{item.name} </p>
               <div className="flex">
-                {admin && (
+                {permissions.includes("manage_departments") && (
                   <i
                     onClick={() => {
                       setOpen(true);

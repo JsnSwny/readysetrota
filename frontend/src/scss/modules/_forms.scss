@@ -110,7 +110,7 @@
   }
   &__control {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     &--half {
       @extend .form__control;
       width: 48.5%;
@@ -172,6 +172,9 @@
   &__label {
     display: block;
     margin: 5px 0;
+    &--inline {
+      margin-left: 10px;
+    }
   }
   &__save {
     background-color: $green;
@@ -202,9 +205,76 @@
   }
   &__tabs {
     margin-bottom: 15px;
+    justify-content: center;
     @include wi-mq(tablet) {
       flex-wrap: wrap;
       justify-content: space-between;
+    }
+  }
+  &__check {
+    &--indent {
+      margin-left: 1rem;
+    }
+  }
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: lighten($blue, 10%);
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: lighten($blue, 20%);
+  }
+  &__perms {
+    max-height: 30vh;
+    overflow: auto;
+    h4 {
+      font-weight: normal;
+      margin-top: 5px;
+    }
+    h3:not(:first-child) {
+      margin-top: 10px;
+    }
+    .fa-info-circle {
+      margin-left: 10px;
+      position: relative;
+      opacity: 0.5;
+      transition: 0.2s ease opacity;
+      &:hover {
+        opacity: 1;
+        div {
+          visibility: visible;
+        }
+      }
+      div {
+        visibility: hidden;
+        position: absolute;
+        width: 220px;
+        background-color: $blue;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 10px;
+        z-index: 1;
+        top: -5px;
+        left: 130%;
+        font-family: monospace;
+        line-height: 1.1rem;
+      }
     }
   }
 }

@@ -37,13 +37,13 @@ const StaffManagement = ({ modalProps }) => {
           <Fragment>
             <SitePicker
               {...modalProps}
-              admin={user.business ? true : false}
-              disabled={user.business.plan == "F"}
+              admin={business ? true : false}
+              disabled={business.plan == "F"}
             />
             <DepartmentPicker
               {...modalProps}
               admin={true}
-              disabled={user.business.plan == "F"}
+              disabled={business.plan == "F"}
             />
           </Fragment>
         )}

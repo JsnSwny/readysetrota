@@ -19,6 +19,9 @@ const StaffPicker = (props) => {
   let sites = useSelector((state) => state.employees.sites);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.positions);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -47,7 +50,6 @@ const StaffPicker = (props) => {
   );
 
   const sortEmployees = () => {
-    console.log(current.department);
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":
@@ -86,25 +88,27 @@ const StaffPicker = (props) => {
           <p className="dashboard__block-title">
             Staff ({business.number_of_employees} / {total_employees})
           </p>
-          <i
-            onClick={() => {
-              if (plan == "F" && business.number_of_employees >= 15) {
-                toast.warning(
-                  "Upgrade to premium to create more than 15 employees"
-                );
-                return false;
-              } else if (business.number_of_employees >= total_employees) {
-                toast.warning(
-                  `You have reached your max number of ${total_employees} employees!`
-                );
-                return false;
-              }
-              setOpen(true);
-              setUpdate(false);
-              setType("employeeprofile");
-            }}
-            className="fas fa-plus"
-          ></i>
+          {permissions.includes("manage_employees") && (
+            <i
+              onClick={() => {
+                if (plan == "F" && business.number_of_employees >= 15) {
+                  toast.warning(
+                    "Upgrade to premium to create more than 15 employees"
+                  );
+                  return false;
+                } else if (business.number_of_employees >= total_employees) {
+                  toast.warning(
+                    `You have reached your max number of ${total_employees} employees!`
+                  );
+                  return false;
+                }
+                setOpen(true);
+                setUpdate(false);
+                setType("employeeprofile");
+              }}
+              className="fas fa-plus"
+            ></i>
+          )}
         </div>
       </div>
       <small className="helper-text">
@@ -152,6 +156,7 @@ const StaffPicker = (props) => {
               <Link to={`/profile/${item.id}`}>
                 {item.first_name} <strong>{item.last_name}</strong>
               </Link>
+
               <div className="flex dashboard__icons">
                 {item.user && (
                   <i
@@ -165,17 +170,20 @@ const StaffPicker = (props) => {
                   ></i>
                 )}
 
-                {business && !item.user && <CopyUUID employee={item} />}
-                {item.user != user.id && (
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("employeeprofile");
-                    }}
-                    className="fas fa-edit"
-                  ></i>
+                {permissions.includes("manage_employees") && !item.user && (
+                  <CopyUUID employee={item} />
                 )}
+                {item.user != user.id &&
+                  permissions.includes("manage_employees") && (
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdate(item);
+                        setType("employeeprofile");
+                      }}
+                      className="fas fa-edit"
+                    ></i>
+                  )}
               </div>
             </div>
 
@@ -187,14 +195,15 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
-            {["H", "S"].includes(item.wage_type) && (
-              <Fragment>
-                <p className="subtitle-sm">
-                  {item.wage_type == "H" ? "Hourly" : "Salary"}
-                </p>
-                <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
-              </Fragment>
-            )}
+            {permissions.includes("manage_wages") &&
+              ["H", "S"].includes(item.wage_type) && (
+                <Fragment>
+                  <p className="subtitle-sm">
+                    {item.wage_type == "H" ? "Hourly" : "Salary"}
+                  </p>
+                  <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+                </Fragment>
+              )}
           </div>
         ))}
       </div>

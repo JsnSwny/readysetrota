@@ -29,7 +29,12 @@ const Rota = ({ modalProps, confirmProps }) => {
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
+  let shiftPerm = permissions.includes("manage_shifts");
 
   // Use State
   const [employeesList, setEmployeesList] = useState(employees);
@@ -193,6 +198,8 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   const sortEmployees = () => {
     if (positions.length > 0 && filterDate == "") {
+      console.log(positions);
+      console.log(employeesList);
       switch (staffSort) {
         case "position":
           return employeesList.sort(
@@ -243,12 +250,12 @@ const Rota = ({ modalProps, confirmProps }) => {
           current_employee.position.map((empPos) => empPos.id).includes(pos.id)
         )
     );
-  if (!siteAdmin) {
-    let employeeShifts = shifts_list.filter(
-      (item) => item.employee && item.employee.id == current_employee.id
-    );
-    // openShifts.filter()
-  }
+  // if (!siteAdmin) {
+  //   let employeeShifts = shifts_list.filter(
+  //     (item) => item.employee && item.employee.id == current_employee.id
+  //   );
+  //   // openShifts.filter()
+  // }
 
   return (
     <div className="rota">
@@ -312,7 +319,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                       employee,
                       showAvailabilities,
                       filterDate,
-                      admin: siteAdmin,
+                      admin: shiftPerm,
                     };
 
                     return shifts.length > 0 ? (

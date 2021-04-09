@@ -48,11 +48,9 @@ const initialState = {
   current: {
     department: localStorage.getItem("current_department")
       ? localStorage.getItem("current_department")
-      : 0,
-    business: 0,
-    site: localStorage.getItem("current_site")
-      ? parseInt(localStorage.getItem("current_site"))
-      : 0,
+      : {},
+    business: {},
+    site: { permissions: [] },
   },
   uuid_success: false,
   business: { plan: "F" },
@@ -233,7 +231,7 @@ export default function (state = initialState, action) {
       };
     case GET_EMPLOYEES:
       // let emp = action.payload;
-      if (!state.site_admin) {
+      if (!state.current.site.permissions.includes("manage_wages")) {
         action.payload.forEach((item) => {
           delete item.wage_type;
           delete item.wage;
@@ -302,15 +300,15 @@ export default function (state = initialState, action) {
         },
       };
     case LOGOUT_SUCCESS:
-      localStorage.setItem("current_department", 0);
-      localStorage.setItem("current_site", 0);
+      localStorage.setItem("current_department", {});
+      localStorage.setItem("current_site", {});
       return {
         ...state,
         current: {
           ...state.current,
-          department: 0,
-          site: 0,
-          business: 0,
+          department: {},
+          site: { permissions: [] },
+          business: {},
         },
       };
     case SET_DEPARTMENT:
@@ -356,7 +354,7 @@ export default function (state = initialState, action) {
         ...state,
         employees: newEmployees.filter((item) =>
           item.position.some(
-            (pos) => pos.department.id == state.current.department
+            (pos) => pos.department.id == state.current.department.id
           )
         ),
       };

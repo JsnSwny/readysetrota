@@ -4,7 +4,9 @@ from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
 from django.db.models import Q
-from guardian.shortcuts import get_perms
+from guardian.shortcuts import get_perms, remove_perm, assign_perm
+from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
+import numpy as np
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -110,10 +112,52 @@ class EmployeeSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
+    site_permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = Employee
         fields = ('__all__')
+
+
+    def get_site_permissions(self, obj):
+        if(obj.user != None):
+            user = obj.user
+            site = obj.position.all().first().department.site
+            return get_perms(user, site)
+        return []
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        user = instance.user
+        if user:
+            site = instance.position.all().first().department.site
+        
+            permissions_query = self.context['request'].query_params.get('permissions')
+            permissions = []
+            if permissions_query:
+                permissions = self.context['request'].query_params.get('permissions')
+                permissions = permissions.split(',') if isinstance(permissions, str) else permissions
+
+
+            print(permissions)
+            all_perms = get_perms(user, site)
+            diff = np.setdiff1d(all_perms,permissions)
+            print(f'Diff 1: {np.setdiff1d(all_perms,permissions)}')
+            print(f'Diff 2: {np.setdiff1d(permissions,all_perms)}')
+            print(f'Permissions: {permissions}')
+            print(f'All Perms: {all_perms}')
+            print(f'Diff: {diff}')
+            for i in diff:
+                print(f'Removing {i}')
+                remove_perm(i, user, obj=site)
+
+            for i in permissions:
+                print(f'Assigning {i}')
+                assign_perm(i, user, obj=site)
+
+            print(get_perms(user, site))
+            
+        return instance 
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -123,11 +167,20 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
     full_name = serializers.SerializerMethodField()
+    site_permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability',)
+                  'position', 'business', 'business_id', 'default_availability', 'site_permissions',)
+                
+    def get_site_permissions(self, obj):
+        if(obj.user != None):
+            user = obj.user
+            site = obj.position.all().first().department.site
+            return get_perms(user, site)
+        return []
+
 
     def get_full_name(self, obj):
         if obj.first_name:
@@ -143,14 +196,22 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         queryset=Business.objects.all(), source='business', write_only=True)
     uuid = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
+    site_permissions = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
 
+    def get_site_permissions(self, obj):
+        if(obj.user != None):
+            user = obj.user
+            site = obj.position.all().first().department.site
+            return get_perms(user, site)
+        return []
+
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type')
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type', 'site_permissions',)
 
     def get_uuid(self, obj):
         user = None
@@ -162,6 +223,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
             return obj.uuid
         else:
             return False
+            
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -225,6 +287,7 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         depth = 1
 
 
+
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True, required=False)
@@ -234,12 +297,12 @@ class SiteSerializer(serializers.ModelSerializer):
     unmarked_holidays = serializers.SerializerMethodField(read_only=True)
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
-    perms = serializers.SerializerMethodField(read_only=True)
+    permissions = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
-                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings', 'perms',)
+                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings', 'permissions',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -251,16 +314,34 @@ class SiteSerializer(serializers.ModelSerializer):
                 setattr(settings, attr, value)
                 
             settings.save()
-        
+    
+        # user = self.context['request'].user
+        # permissions = self.context['request'].query_params.get('permissions')
+        # permissions = permissions.split(',') if isinstance(permissions, str) else permissions
+        # all_perms = get_perms(user, instance)
+        # diff = np.setdiff1d(all_perms,permissions)
+        # for i in diff:
+        #     print(f'Removing {i}')
+        #     remove_perm(i, user, obj=instance)
+
+        # for i in permissions:
+        #     print(f'Assigning {i}')
+        #     assign_perm(i, user, obj=instance)
+
+        # print(get_perms(user, instance))
+            
         return instance 
 
-    def get_perms(self, obj):
+    def get_permissions(self, obj):
         return get_perms(self.context['request'].user, obj)
 
     def create(self, validated_data):
         site = Site.objects.create(**validated_data)
         settings = SiteSettings(site=site)
         settings.save()
+        all_perms = get_perms_for_model(Site)
+        for i in all_perms:
+            assign_perm(i.codename, site.business.owner, site)
         return site
 
     def get_number_of_employees(self, obj):

@@ -12,6 +12,9 @@ const PersonalDetails = ({
   setWageType,
 }) => {
   let errors = useSelector((state) => state.errors.msg);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
   return (
     <Fragment>
       <div className="flex-container--between form__wrapper">
@@ -39,35 +42,37 @@ const PersonalDetails = ({
           <p className="error">{errors.last_name}</p>
         </div>
       </div>
-      <div className="flex-container--between form__wrapper">
-        <div className="form__control--half">
-          <label className="form__label">Wage Type</label>
-          <select
-            className="form__input"
-            onChange={(e) => setWageType(e.target.value)}
-            value={wageType}
-          >
-            <option value="N">None</option>
-            <option value="H">Hourly</option>
-            <option value="S">Salary</option>
-          </select>
+      {permissions.includes("manage_wages") && (
+        <div className="flex-container--between form__wrapper">
+          <div className="form__control--half">
+            <label className="form__label">Wage Type</label>
+            <select
+              className="form__input"
+              onChange={(e) => setWageType(e.target.value)}
+              value={wageType}
+            >
+              <option value="N">None</option>
+              <option value="H">Hourly</option>
+              <option value="S">Salary</option>
+            </select>
+          </div>
+          <div className="form__control--half">
+            {wageType != "N" && (
+              <Fragment>
+                <label className="form__label">Wage</label>
+                <input
+                  className="form__input"
+                  type="number"
+                  name="wage"
+                  onChange={(e) => setWage(e.target.value)}
+                  value={wage}
+                  step="0.01"
+                />
+              </Fragment>
+            )}
+          </div>
         </div>
-        <div className="form__control--half">
-          {wageType != "N" && (
-            <Fragment>
-              <label className="form__label">Wage</label>
-              <input
-                className="form__input"
-                type="number"
-                name="wage"
-                onChange={(e) => setWage(e.target.value)}
-                value={wage}
-                step="0.01"
-              />
-            </Fragment>
-          )}
-        </div>
-      </div>
+      )}
     </Fragment>
   );
 };

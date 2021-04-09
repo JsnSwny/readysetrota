@@ -94,7 +94,7 @@ const Shift = (props) => {
                 </div>
                 {shift.break_length > 0 && (
                   <p className="shift__info">
-                    <i class="fas fa-clock"></i>{shift.break_length} minutes
+                    Break: {shift.break_length} minutes
                   </p>
                 )}
                 {shift.info && (

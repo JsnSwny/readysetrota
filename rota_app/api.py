@@ -234,9 +234,10 @@ class SiteViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, "business"):
             business = self.request.user.business
             return Site.objects.filter(business=business)
-            
+        print("GETTING SITES")
         sites = Site.objects.filter(department_site__pos_department__position__user=self.request.user)
         sites = sites | self.request.user.site_admin.all()
+        print(sites)
 
         return sites.distinct()
             

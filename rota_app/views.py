@@ -42,7 +42,7 @@ class CheckUUID(APIView):
                 return Response({'error': ["You already have an account associated with the same business."]})
             employee.user = user
             employee.save()
-            return Response({"department_id": employee.position.all().first().department.id})
+            return Response(True)
         else:
             return Response(
                 {"error": ["UUID does not match any employees."]},
@@ -53,7 +53,7 @@ class GetPopularTimes(APIView):
     def get(self, request):
         department_id = request.query_params.get('department')
         shifts = Shift.objects.filter(department=department_id)
-        most_common = shifts.values("start_time", "end_time", "department").annotate(
+        most_common = shifts.values("start_time", "end_time", "break_length", "department").annotate(
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]
@@ -88,16 +88,15 @@ class Publish(APIView):
     def get(self, request):
         business = request.query_params.get('business')
         all_shifts = {}
-        print(business)
+
         if business != "false":
-            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-            print("Business")
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id'), stage="Unpublished").exclude(employee__isnull=True)
         else:
             all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-            print("Not business")
+
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
-        print(all_shifts)
+
         connection = mail.get_connection()
         shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
         shifts_unique = [list(grp) for k, grp in groupby(

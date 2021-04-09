@@ -55,7 +55,6 @@ const ForecastModal = ({ onClose, date, update }) => {
       <div className="form__image">
         <i class="fas fa-coins"></i>
       </div>
-      {console.log(date)}
       <p className="form__subheading">
         {format(parseISO(date), "cccc do MMMM yyyy")}
       </p>

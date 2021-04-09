@@ -22,7 +22,10 @@ const RotaBar = (props) => {
   let published_shifts = shifts.filter((item) => item.published);
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
   let employees = useSelector((state) => state.employees.employees);
   let sites = useSelector((state) => state.employees.sites);
   let settings = useSelector(
@@ -108,23 +111,24 @@ const RotaBar = (props) => {
             )}
 
             {/* AVAILABILITIES */}
-            {siteAdmin && business.plan != "F" && (
-              <div
-                onClick={() => {
-                  setShowAvailabilities(!showAvailabilities);
-                }}
-                className={`dates__mobile-item`}
-              >
-                <i
-                  className={`fas ${
-                    showAvailabilities ? "fa-eye-slash" : "fa-eye"
-                  }`}
-                ></i>
-                <p>Availabilities</p>
-              </div>
-            )}
+            {permissions.includes("manage_availabilities") &&
+              business.plan != "F" && (
+                <div
+                  onClick={() => {
+                    setShowAvailabilities(!showAvailabilities);
+                  }}
+                  className={`dates__mobile-item`}
+                >
+                  <i
+                    className={`fas ${
+                      showAvailabilities ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
+                  <p>Availabilities</p>
+                </div>
+              )}
             {/* SEND APPROVAL SHIFTS */}
-            {user.business && settings.shift_approval && (
+            {permissions.includes("approve_shifts") && settings.shift_approval && (
               <div
                 onClick={() => {
                   dispatch(approveShifts());
@@ -140,22 +144,24 @@ const RotaBar = (props) => {
               </div>
             )}
             {/* SEND APPROVAL SHIFTS */}
-            {siteAdmin && !user.business && settings.shift_approval && (
-              <div
-                onClick={() => {
-                  dispatch(sendForApproval());
-                }}
-                className={`dates__mobile-item ${
-                  !shifts.some((item) => item.stage == "Creation")
-                    ? "disabled"
-                    : ""
-                }`}
-              >
-                <i className="fas fa-paper-plane"></i>
-                <p>Send for Approval</p>
-              </div>
-            )}
-            {siteAdmin && (
+            {permissions.includes("manage_shifts") &&
+              !user.business &&
+              settings.shift_approval && (
+                <div
+                  onClick={() => {
+                    dispatch(sendForApproval());
+                  }}
+                  className={`dates__mobile-item ${
+                    !shifts.some((item) => item.stage == "Creation")
+                      ? "disabled"
+                      : ""
+                  }`}
+                >
+                  <i className="fas fa-paper-plane"></i>
+                  <p>Send for Approval</p>
+                </div>
+              )}
+            {permissions.includes("manage_shifts") && (
               <div
                 onClick={() => {
                   dispatch(publish());
@@ -165,14 +171,16 @@ const RotaBar = (props) => {
                     ? shifts.some(
                         (item) =>
                           parseISO(item.date) >= subDays(new Date(), 1) &&
-                          item.stage == "Unpublished"
+                          item.stage == "Unpublished" &&
+                          item.employee
                       )
                       ? ""
                       : "disabled"
                     : !shifts.some(
                         (item) =>
                           parseISO(item.date) >= subDays(new Date(), 1) &&
-                          item.stage != "Published"
+                          item.stage != "Published" &&
+                          item.employee
                       )
                     ? "disabled"
                     : ""

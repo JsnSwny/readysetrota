@@ -11,6 +11,10 @@ import DashboardBlock from "./DashboardBlock";
 const MovableItem = ({ position, props, index, movePosition }) => {
   let employees = useSelector((state) => state.employees.employees);
   let current = useSelector((state) => state.employees.current);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let user = useSelector((state) => state.auth.user);
   const { setOpen, setUpdate, setType } = props;
 
   const ref = useRef(null);
@@ -72,14 +76,16 @@ const MovableItem = ({ position, props, index, movePosition }) => {
     <div ref={ref} style={{ opacity }} className={`dashboard__item--sm`}>
       <p className="title-md bold flex-container--between-center">
         {position.name}{" "}
-        <i
-          onClick={() => {
-            setOpen(true);
-            setUpdate(position);
-            setType("Position");
-          }}
-          className="fas fa-edit"
-        ></i>
+        {permissions.includes("manage_positions") && (
+          <i
+            onClick={() => {
+              setOpen(true);
+              setUpdate(position);
+              setType("Position");
+            }}
+            className="fas fa-edit"
+          ></i>
+        )}
       </p>
       <p className="subtitle-sm" style={{ flex: "0" }}>
         {current.site.id == 0 &&
@@ -102,6 +108,10 @@ const PositionPicker = (props) => {
   const dispatch = useDispatch();
   let positions = useSelector((state) => state.employees.positions);
   let loading = useSelector((state) => state.loading);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let user = useSelector((state) => state.auth.user);
 
   const [newPositions, setNewPositions] = useState([]);
 
@@ -137,15 +147,18 @@ const PositionPicker = (props) => {
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Positions</p>
-          <i
-            onClick={() => {
-              setOpen(true);
-              setUpdate(false);
-              setType("Position");
-            }}
-            className="fas fa-plus"
-          ></i>
-          {!positionsEqual && (
+          {permissions.includes("manage_positions") && (
+            <i
+              onClick={() => {
+                setOpen(true);
+                setUpdate(false);
+                setType("Position");
+              }}
+              className="fas fa-plus"
+            ></i>
+          )}
+
+          {!positionsEqual && permissions.includes("manage_positions") && (
             <i
               onClick={() => {
                 dispatch(updatePositionIndex(newPositions));

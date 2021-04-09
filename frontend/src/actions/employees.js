@@ -198,13 +198,20 @@ export const addSite = (site) => (dispatch, getState) => {
 
 export const updateSite = (id, site) => (dispatch, getState) => {
   axios
-    .put(`/api/sites/${id}/`, site, tokenConfig(getState))
+    .put(
+      `/api/sites/${id}${
+        site.hasOwnProperty("permissions")
+          ? `/?permissions=${site.permissions}/`
+          : "/"
+      }`,
+      site,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: UPDATE_SITE,
         payload: res.data,
       });
-      console.log(res.data);
     })
 
     .catch((err) => console.log(err.response.data));
@@ -258,7 +265,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 
 export const getEmployees = () => (dispatch, getState) => {
   let current = getState().employees.current;
-  let site_admin = getState().employees.site_admin;
+  let site_admin = true;
   let query = "";
 
   if (current.site > 0) {
@@ -268,7 +275,6 @@ export const getEmployees = () => (dispatch, getState) => {
     query += `&position__department=${current.department.id}`;
   }
 
-  console.log(query);
   axios
     .get(
       `/api/employeelist${
@@ -322,7 +328,14 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 ) => {
   let current = getState().employees.current;
   axios
-    .put(`/api/employees/${update}/`, employee, tokenConfig(getState))
+    .put(
+      `/api/employees/${update}${
+        employee.hasOwnProperty("permissions") &&
+        `/?permissions=${employee.permissions}`
+      }`,
+      employee,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: UPDATE_EMPLOYEE,
@@ -520,7 +533,7 @@ export const getDepartments = () => (dispatch, getState) => {
   axios
     .get(
       `/api/departments/${
-        getState().employees.current.site > 0
+        getState().employees.current.site != 0
           ? `?site__id=${
               getState().employees.current.site.id
             }&current_department=${current_department}`
@@ -552,11 +565,11 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
       } else {
         dispatch({
           type: UUID_SUCCESS,
-          payload: res.data.department_id,
+          payload: 0,
         });
-        axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
+        axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
           dispatch({
-            type: GET_DEPARTMENTS,
+            type: GET_SITES,
             payload: res.data,
           });
         });

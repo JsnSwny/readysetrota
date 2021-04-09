@@ -82,14 +82,16 @@ const Main = () => {
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
-      dispatch(
-        updateSettings(
-          sites.find((item) => item.id == current.site.id).sitesettings
-        )
-      );
+      if (sites.length > 0) {
+        dispatch(getEmployees());
+        dispatch(getPositions(true));
+        dispatch(getPositions());
+        dispatch(
+          updateSettings(
+            sites.find((item) => item.id == current.site.id).sitesettings
+          )
+        );
+      }
     }
   }, [departments, sites]);
 
@@ -176,6 +178,11 @@ const Main = () => {
           />
           <PrivateRoute
             admin={true}
+            perms={[
+              "manage_departments",
+              "manage_positions",
+              "manage_employees",
+            ]}
             path="/staff-management"
             exact
             component={StaffManagement}

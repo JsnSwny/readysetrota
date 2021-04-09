@@ -37,6 +37,18 @@ class Site(models.Model):
 
     def __str__(self):
         return f'{self.name} (ID: {self.id})'
+        
+    class Meta:
+        permissions = [
+            ('manage_departments', 'Manage Departments'),
+            ('manage_positions', 'Manage Positions'),
+            ('manage_employees', 'Manage Employees'),
+            ('manage_shifts', 'Manage Shifts'),
+            ('manage_wages', 'Manage Employee Wages'),
+            ('create_forecasts', 'Create Forecasts'),
+            ('manage_availabilities', 'Manage Availabilities'),
+            ('view_stats', 'View Stats'),
+        ]
 
 
 class Department(models.Model):

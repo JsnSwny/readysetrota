@@ -24,13 +24,30 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
   let subscription = useSelector((state) => state.payments.subscription);
   let employees = useSelector((state) => state.employees.employees);
   let departments = useSelector((state) => state.employees.departments);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
 
   const location = useLocation();
 
   const [userName, setUserName] = useState("");
   const [navOpen, setNavOpen] = useState("");
 
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let staffManagementPerm =
+    user &&
+    permissions &&
+    permissions.some((item) =>
+      ["manage_departments", "manage_positions", "manage_employees"].includes(
+        item
+      )
+    );
+
+  let adminPanelPerm =
+    user &&
+    permissions &&
+    permissions.some((item) =>
+      ["manage_stats", "manage_availabilities"].includes(item)
+    );
 
   const plans = { F: "Free", T: "Premium Trial", P: "Premium" };
 
@@ -153,13 +170,13 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   link="/"
                   icon="fas fa-home"
                   title="Dashboard"
-                  dropdown={siteAdmin && !user.business}
+                  dropdown={adminPanelPerm && !user.business}
                   dropdownAction={() =>
                     setNavOpen(`${navOpen != "dashboard" ? "dashboard" : ""}`)
                   }
                 />
                 <div className="sidenav__sublinks">
-                  {siteAdmin && !user.business && (
+                  {adminPanelPerm && !user.business && (
                     <NavLink
                       toggleNav={toggleNav}
                       link="/admin-panel"
@@ -170,7 +187,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 </div>
               </div>
             )}
-            {siteAdmin && (
+            {staffManagementPerm && (
               <div
                 className={`sidenav__link-container ${
                   navOpen == "staff-management" ? "open" : ""
@@ -213,7 +230,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               </div>
             )}
 
-            {siteAdmin ? (
+            {permissions.includes["manage_shifts"] ? (
               <div
                 className={`sidenav__link-container ${
                   navOpen == "rota" ? "open" : ""

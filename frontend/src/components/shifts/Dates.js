@@ -25,6 +25,9 @@ const Dates = (props) => {
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
   );
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
   let business = useSelector((state) => state.employees.business);
   let siteAdmin = useSelector((state) => state.employees.site_admin);
 
@@ -79,7 +82,7 @@ const Dates = (props) => {
               {format(dates[0], "do MMMM")} -{" "}
               {format(dates[dates.length - 1], "do MMMM")}
             </p>
-            {siteAdmin && business.plan != "F" && (
+            {permissions.includes("manage_wages") && business.plan != "F" && (
               <small>
                 £
                 <CountUp
@@ -107,21 +110,23 @@ const Dates = (props) => {
                 filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
               }`}
             >
-              {settings.forecasting && siteAdmin && business.plan != "F" && (
-                <i
-                  onClick={() => {
-                    setOpen(true);
-                    setType("forecast");
-                    setUpdate(
-                      forecast.find(
-                        (item) => item.date == format(date, "yyyy-MM-dd")
-                      )
-                    );
-                    setForecastDate(date);
-                  }}
-                  class="fas fa-coins"
-                ></i>
-              )}
+              {settings.forecasting &&
+                permissions.includes("create_forecasts") &&
+                business.plan != "F" && (
+                  <i
+                    onClick={() => {
+                      setOpen(true);
+                      setType("forecast");
+                      setUpdate(
+                        forecast.find(
+                          (item) => item.date == format(date, "yyyy-MM-dd")
+                        )
+                      );
+                      setForecastDate(date);
+                    }}
+                    class="fas fa-coins"
+                  ></i>
+                )}
 
               <p className="item-block__title">
                 {format(date, "ccc do MMM").split(" ")[0]}
@@ -129,14 +134,17 @@ const Dates = (props) => {
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
-              {siteAdmin && business.plan != "F" && (
+              {permissions.includes("manage_wages") && business.plan != "F" && (
                 <small>
-                  £{getCost(date)}
+                  {permissions.includes("manage_wages") && `£${getCost(date)}`}
+
                   {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
                   {forecast.some(
                     (item) => item.date == format(date, "yyyy-MM-dd")
                   )
-                    ? `/ £${getAmount(date)} (${(
+                    ? settings.forecasting &&
+                      `/ £${getAmount(date)} (${(
                         (getCost(date) / getAmount(date)) *
                         100
                       ).toFixed(2)}%)`

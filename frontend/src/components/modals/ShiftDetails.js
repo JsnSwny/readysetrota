@@ -169,9 +169,11 @@ const ShiftDetails = ({
             onClick={() => {
               setStartTime(item.start_time);
               setEndTime(item.end_time);
+              setBreakLength(item.break_length);
             }}
           >
-            {item.start_time} - {item.end_time}
+            {item.start_time} - {item.end_time}{" "}
+            {item.break_length > 0 && `(${item.break_length})`}
           </p>
         ))}
       </div>
