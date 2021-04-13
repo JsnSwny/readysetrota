@@ -1,6 +1,8 @@
 import React from "react";
-import AddShift from "./AddShift";
-import AddStaff from "../employees/AddStaff";
+import EmployeeProfileModal from "./EmployeeProfileModal";
+import StaffManagementModal from "./StaffManagementModal";
+import ShiftModal from "./ShiftModal";
+import ForecastModal from "./ForecastModal";
 
 const CreateShift = (props) => {
   const {
@@ -14,10 +16,9 @@ const CreateShift = (props) => {
     update,
     template,
     sidebarOpen,
-    confirmProps
+    confirmProps,
+    forecastDate,
   } = props;
-
-
 
   const staffTypes = [
     "Staff",
@@ -26,27 +27,22 @@ const CreateShift = (props) => {
     "BusinessName",
     "Site",
   ];
-  
+
+  const modalProps = { onClose, update, confirmProps };
 
   const getModal = () => {
-    if (type == "shift") {
-      return (
-        <AddShift
-          employee={employee}
-          date={date}
-          onClose={onClose}
-          shift={update}
-          template={template}
-        />
-      );
+    if (type == "employeeprofile") {
+      return <EmployeeProfileModal {...modalProps} />;
+    } else if (type == "shift") {
+      return <ShiftModal employee={employee} date={date} {...modalProps} />;
+    } else if (type == "forecast") {
+      return <ForecastModal date={forecastDate} {...modalProps} />;
     } else if (staffTypes.includes(type)) {
       return (
-        <AddStaff
-          onClose={onClose}
+        <StaffManagementModal
+          {...modalProps}
           form={type}
-          staffPosition={staffPosition}
-          update={update}
-          confirmProps={confirmProps}
+          title={`Create ${type}`}
         />
       );
     }
@@ -55,8 +51,13 @@ const CreateShift = (props) => {
   return (
     open && (
       <div className={`modal App ${sidebarOpen ? "open" : ""}`}>
-        
-        <div className="modal__container"><i className="fas fa-times modal__close" onClick={() => onClose()}></i>{getModal()}</div>
+        <div className="modal__container">
+          <i
+            className="fas fa-times modal__close"
+            onClick={() => onClose()}
+          ></i>
+          {getModal()}
+        </div>
       </div>
     )
   );

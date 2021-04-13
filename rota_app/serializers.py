@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -39,8 +39,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
     admins_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='admins', write_only=True, many=True, required=False)
     owner = BasicUserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
-    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True, required=False)
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True, required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Department
@@ -148,7 +148,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             return shift_length - (obj.break_length / 60)
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'published', 'absence', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
+        fields = ('date', 'start_time', 'end_time', 'employee', 'break_length', 'positions', 'info', 'id', 'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id',)
 
 
 
@@ -169,7 +169,7 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         depth = 1
 
 class SiteSerializer(serializers.ModelSerializer):
-    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True)
+    business_id = serializers.PrimaryKeyRelatedField(queryset=Business.objects.all(), source='business', write_only=True, required=False)
     business = BusinessSerializer(required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
@@ -184,8 +184,15 @@ class SiteSerializer(serializers.ModelSerializer):
         employees = Employee.objects.filter(position__department__site=obj.id).distinct()
         return len(employees)
     def get_unpublished_shifts(self, obj):
-        shifts = Shift.objects.filter(department__site=obj.id, published=False, date__gte=date.today())
+        shifts = Shift.objects.filter(department__site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
     def get_unmarked_holidays(self, obj):
         holidays = Availability.objects.filter(Q(name="holiday") | Q(name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
         return len(holidays)
+
+class ForecastSerializer(serializers.ModelSerializer):
+    site_id = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), source='site', write_only=True, required=False)
+    class Meta:
+        model = Forecast
+        fields = ('id', 'date', 'site_id', 'amount',)
+    

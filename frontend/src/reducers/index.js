@@ -16,7 +16,7 @@ const appReducer = combineReducers({
   errors,
   payments,
   loading,
-  stats
+  stats,
 });
 
 const rootReducer = (state, action) => {

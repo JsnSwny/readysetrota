@@ -59,12 +59,40 @@ class GetPopularTimes(APIView):
             i['start_time'] = str(i['start_time'])[0:5]
         return Response(most_common)
 
+class ApproveShifts(APIView):
+    def get(self, request):
+        all_shifts = Shift.objects.filter(
+            stage="Approval", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
+        for i in all_shifts:
+            i.stage = "Unpublished"
+            i.save()
+
+        ids = (o.id for o in all_shifts)
+        return Response(ids)
+
+class SendForApproval(APIView):
+    def get(self, request):
+        all_shifts = Shift.objects.filter(
+            owner=self.request.user, stage="Creation", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
+        for i in all_shifts:
+            i.stage = "Approval"
+            i.save()
+
+        ids = (o.id for o in all_shifts)
+        return Response(ids)
+
 
 class Publish(APIView):
     def get(self, request):
-        all_shifts = Shift.objects.filter(
-            owner=self.request.user, published=False, department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-
+        business = request.query_params.get('business')
+        all_shifts = {}
+        if business:
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+        else:
+            all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+   
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
 
@@ -76,7 +104,6 @@ class Publish(APIView):
         today_date = datetime.now().strftime("%d/%m/%Y")
         connection.open()
         for idx, val in enumerate(shifts_unique):
-
             employee = shifts_unique[idx][0].employee
             if employee.user:
                 shifts = Shift.objects.filter(
@@ -87,14 +114,13 @@ class Publish(APIView):
                     "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
                 mail_item.attach_alternative(html_message, "text/html")
                 email.append(mail_item)
-
         connection.send_messages(email)
         connection.close()
 
         # publish_email.delay(shifts_list)
 
         for i in all_shifts:
-            i.published = True
+            i.stage = "Published"
             i.save()
 
         ids = (o.id for o in all_shifts)
@@ -123,18 +149,14 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
 
     employees = []
 
-    print(site_id)
-    print(user_id)
-        
     if user_id:
-        employees = Employee.objects.filter(user__id=user_id)
+        employees = Employee.objects.filter(user__id=user_id).distinct()
     if site_id:
-        employees = Employee.objects.filter(position__department__site=site_id)
-
-    print(employees)
+        employees = Employee.objects.filter(position__department__site=site_id).distinct()
     for i in employees:
         if i.wage_type == "S":
             wage += float(i.wage/365) * float(days_difference.days)
+        
 
     return hours, wage
 
@@ -176,9 +198,14 @@ class GetStats(APIView):
             shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
-        shifts = shifts.exclude(employee__isnull=True)
-        before_shifts = before_shifts.exclude(employee__isnull=True)
+        shifts = shifts.filter(absence="None").exclude(employee__isnull=True)
+        before_shifts = before_shifts.filter(absence="None").exclude(employee__isnull=True)
+        print(shifts)
+        print(before_shifts)
+        
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
+        
+        print(data)
         return HttpResponse( json.dumps( data ) )
 
 
@@ -187,7 +214,7 @@ class ExportShifts(APIView):
         id = request.query_params.get('id')
         employee = Employee.objects.filter(id=id)[0]
         shifts = Shift.objects.filter(
-            employee__id=id, published=True, date__gte=datetime.now()).order_by('date')
+            employee__id=id, stage="Published", date__gte=datetime.now()).order_by('date')
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('shifts.html', file_object=resp, context={
@@ -197,14 +224,14 @@ class ExportShifts(APIView):
 
 class ExportAllShifts(APIView):
     def get(self, request):
-        shifts = Shift.objects.filter(published=True, date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
+        shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
             'end_date'), department__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
             all_shifts[i] = Shift.objects.filter(
-                date=i, published=True, department__id=request.query_params.get('id')).order_by('start_time')
+                date=i, stage="Published", department__id=request.query_params.get('id')).order_by('start_time')
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('allshifts.html', file_object=resp, context={
@@ -289,7 +316,6 @@ class Cancel(APIView):
         stripe.api_key = STRIPE_SECRET_KEY
 
         customer = stripe.Customer.retrieve(request.data['customer_id'])
-        print(customer)
         for i in customer['subscriptions']['data']:
             cancellation = stripe.Subscription.modify(
                 i.id,

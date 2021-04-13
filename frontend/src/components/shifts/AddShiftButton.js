@@ -1,9 +1,16 @@
-import React, { useState, Fragment } from "react";
-import CreateShift from "../modals/CreateShift";
-import { useSelector } from "react-redux";
+import React, { Fragment } from "react";
 
 const AddShiftButton = (props) => {
-  const { employee, date, white, limit, template, setShiftInfo, setOpen, setType, setUpdate } = props;
+  const {
+    employee,
+    date,
+    white,
+    limit,
+    setShiftInfo,
+    setOpen,
+    setType,
+    setUpdate,
+  } = props;
   return (
     (!limit || employee.id <= limit) && (
       <Fragment>
@@ -12,7 +19,7 @@ const AddShiftButton = (props) => {
             onClick={() => {
               setOpen(true);
               setType("shift");
-              setShiftInfo({employee, date})
+              setShiftInfo({ employee, date });
               setUpdate("");
             }}
             className={`shift__add${white ? "--white" : ""}`}

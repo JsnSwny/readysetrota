@@ -3,13 +3,13 @@
   transition: 0.5s ease transform, 0.5s ease margin-left;
   margin: 20px 0;
   margin-left: 50px;
-  
+
   @include wi-mq(mobile) {
     margin-left: 0;
     margin: 70px 0;
   }
   &.open {
-    margin-left: 300px;
+    margin-left: 250px;
     @include wi-mq(laptop) {
       margin-left: 200px;
     }

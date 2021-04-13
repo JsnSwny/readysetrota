@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Register = (props) => {
   let path = false;
-  if(props.location.state) {
+  if (props.location.state) {
     path = props.location.state.path.url;
-    if(!path.includes("/join")) {
+    if (!path.includes("/join")) {
       path = false;
     }
   }
-  
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -32,13 +32,13 @@ const Register = (props) => {
       role,
       businessName,
       first_name: firstName,
-      last_name: lastName
+      last_name: lastName,
     };
     dispatch(register(newUser));
   };
 
   if (useSelector((state) => state.auth.isAuthenticated)) {
-    if(path) {
+    if (path) {
       return <Redirect to={path} />;
     } else {
       return <Redirect to="/" />;
@@ -51,34 +51,33 @@ const Register = (props) => {
             <form onSubmit={onSubmit}>
               {!path && (
                 <div className="form-group">
-                <label>What role are you?</label>
-                <div className="flex-container">
-                  <span
-                    className={`form-control ${
-                      role == "User" ? "active" : ""
-                    } btn-toggle`}
-                    onClick={() => {
-                      setRole("User");
-                    }}
-                  >
-                    Employee
-                  </span>
+                  <label>What role are you?</label>
+                  <div className="flex-container">
                     <span
-                    className={`form-control ${
-                      role == "Business" ? "active" : ""
-                    } btn-toggle`}
-                    onClick={() => {
-                      setRole("Business");
-                    }}
-                  >
-                    Business
-                  </span>
-                  
+                      className={`form-control ${
+                        role == "User" ? "active" : ""
+                      } btn-toggle`}
+                      onClick={() => {
+                        setRole("User");
+                      }}
+                    >
+                      Employee
+                    </span>
+                    <span
+                      className={`form-control ${
+                        role == "Business" ? "active" : ""
+                      } btn-toggle`}
+                      onClick={() => {
+                        setRole("Business");
+                      }}
+                    >
+                      Business
+                    </span>
+                  </div>
+                  <p className="error">{errors.role}</p>
                 </div>
-                <p className="error">{errors.role}</p>
-              </div>
               )}
-              
+
               {role == "Business" && (
                 <div className="form-group">
                   <label>Business Name</label>
@@ -97,31 +96,31 @@ const Register = (props) => {
               {role == "User" && (
                 <Fragment>
                   <div className="form-group">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    className="form-control input-1"
-                    name="business_name"
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                    }}
-                    value={firstName}
-                  />
-                  <p className="error">{errors.first_name}</p>
-                </div>
-                <div className="form-group">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    className="form-control input-1"
-                    name="business_name"
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                    }}
-                    value={lastName}
-                  />
-                  <p className="error">{errors.last_name}</p>
-                </div>
+                    <label>First Name</label>
+                    <input
+                      type="text"
+                      className="form-control input-1"
+                      name="business_name"
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                      }}
+                      value={firstName}
+                    />
+                    <p className="error">{errors.first_name}</p>
+                  </div>
+                  <div className="form-group">
+                    <label>Last Name</label>
+                    <input
+                      type="text"
+                      className="form-control input-1"
+                      name="business_name"
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                      }}
+                      value={lastName}
+                    />
+                    <p className="error">{errors.last_name}</p>
+                  </div>
                 </Fragment>
               )}
 
