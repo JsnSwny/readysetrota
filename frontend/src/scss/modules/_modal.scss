@@ -173,13 +173,14 @@
     justify-content: center;
   }
   &__popular {
-    background-color: #ee6de7;
+    background-color: $pink;
     font-size: 12px;
     margin: 2px;
-    padding: 5px;
+    padding: 5px 10px;
     color: white;
     text-align: center;
     cursor: pointer;
+    border-radius: 5px;
   }
 }
 

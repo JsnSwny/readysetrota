@@ -201,8 +201,6 @@ class GetStats(APIView):
 
         shifts = shifts.filter(absence="None").exclude(open_shift=True)
         before_shifts = before_shifts.filter(absence="None").exclude(open_shift=True)
-        print(shifts)
-
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
 
         return HttpResponse( json.dumps( data ) )

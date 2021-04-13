@@ -146,23 +146,24 @@
       background-color: lighten($blue, 20%);
     }
     &-text {
-      width: 80%;
-      margin: 0 auto;
+      margin: 0 10px;
       font-size: 14px;
       display: flex;
       align-items: center;
       @include wi-mq(laptop) {
         font-size: 12px;
-        width: 85%;
       }
     }
     i {
-      width: 45px;
       font-size: 14px;
+      width: 30px;
       @include wi-mq(laptop) {
-        width: 35px;
         font-size: 16px;
       }
+    }
+    .fa-chevron-down {
+      margin-right: 10px;
+      width: auto;
     }
   }
   &__sublinks {
