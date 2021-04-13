@@ -1,5 +1,14 @@
 .dates {
   position: relative;
+  &.filtered {
+    .container-right {
+      .dates__date {
+        &:not(.filtered) {
+          filter: blur(1px) opacity(50%);
+        }
+      }
+    }
+  }
   &.container {
     @include wi-mq(mobile) {
       margin-top: 20px;
@@ -7,9 +16,6 @@
   }
   .item-block {
     padding: 10px 0;
-    @include wi-mq(mobile) {
-      margin: 0;
-    }
   }
   &.fixed {
     position: sticky;
@@ -29,8 +35,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    @include wi-mq(mobile) {
-      display: none;
+    .item-block {
+      margin: 0;
     }
   }
   .btn-1 {
@@ -66,7 +72,7 @@
       }
       &:hover {
         i {
-          color: #ec70c9;
+          color: $pink;
         }
       }
     }
@@ -78,7 +84,7 @@
   }
   &__pickerDate {
     font-size: 16px;
-    color: #ec70c9;
+    color: $pink;
     background-color: white;
     font-weight: normal;
     display: flex;
@@ -100,7 +106,10 @@
     color: white;
     position: relative;
     small {
-      font-size: 10px;
+      font-size: 14px;
+      @include wi-mq(laptop) {
+        font-size: 12px;
+      }
     }
     .fa-coins {
       position: absolute;
@@ -131,7 +140,7 @@
     font-size: 24px;
     transition: 0.2s ease all;
     &:hover {
-      color: #ee6de7;
+      color: $pink;
     }
   }
   &__mobile {
@@ -209,12 +218,15 @@
     justify-content: center;
     position: relative;
     &.active {
-      border: 3px #ee6de7 dotted;
+      border: 3px $pink dotted;
     }
   }
   &__name {
     font-size: 16px;
     transition: 0.2s ease-in-out color;
+    @include wi-mq(widescreen) {
+      font-size: 14px;
+    }
     @include wi-mq(laptop) {
       font-size: 12px;
     }
@@ -273,7 +285,10 @@
 .rota__container {
   display: flex;
   margin: 4px 0;
-  min-height: 75px;
+  min-height: 85px;
+  @include wi-mq(widescreen) {
+    min-height: 75px;
+  }
   &.open-shifts {
     margin-bottom: 20px;
     .employee__name {
@@ -284,22 +299,10 @@
 
 .shiftList {
   &.filtered {
-    .rota__container:nth-child(even) {
-      .shift__shift-noshift {
-        &:not(.filtered) {
-          background-color: #8b8b8b;
-        }
-      }
-    }
     .shift {
       &__shift {
         &:not(.filtered) {
-          background-color: #c352be;
-        }
-        &-noshift {
-          &:not(.filtered) {
-            background: rgb(179, 179, 179);
-          }
+          filter: blur(1px) opacity(50%);
         }
       }
     }
@@ -311,18 +314,23 @@
     text-transform: capitalize;
 
     color: white;
+    @include wi-mq(widescreen) {
+      font-size: 14px;
+    }
     @include wi-mq(laptop) {
       font-size: 12px;
     }
   }
   &__shift {
-    background-color: #ee6de7;
+    background-color: $pink;
     border-radius: 10px;
     // overflow-x: auto;
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 5px 15px;
+    transition: 0.2s ease background-color;
+
     &:hover {
       .shift__add {
         opacity: 1;
@@ -414,6 +422,9 @@
     &.open-shift {
       cursor: pointer;
     }
+    @include wi-mq(widescreen) {
+      font-size: 14px;
+    }
     @include wi-mq(laptop) {
       font-size: 12px;
     }
@@ -456,6 +467,9 @@
     color: rgb(243, 243, 243);
     word-break: keep-all;
     transition: 0.2s ease-in-out color;
+    @include wi-mq(widescreen) {
+      font-size: 12px;
+    }
     @include wi-mq(laptop) {
       font-size: 10px;
     }

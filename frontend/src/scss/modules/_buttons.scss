@@ -29,7 +29,7 @@
     border: 1px solid rgb(190, 190, 190);
     background-color: white;
     padding: 0 20px;
-    color: #ec70c9;
+    color: $pink;
     width: 200px;
     @include wi-mq(tablet) {
       margin-right: 0;
@@ -169,7 +169,7 @@
     transition: 0.3s ease all;
     cursor: pointer;
     &.active {
-      background-color: #ec70c9;
+      background-color: $pink;
       color: white;
     }
     &.disabled {
@@ -181,7 +181,7 @@
       font-size: 16px;
       margin: 5px 0;
       margin-right: 10px;
-      @include wi-mq(laptop) {
+      @include wi-mq(widescreen) {
         font-size: 14px;
       }
     }
@@ -204,7 +204,7 @@
     }
     &__btn {
       @extend .btn;
-      background-color: $green;
+      background-color: $blue;
       padding: 7.5px 15px;
       border-radius: 5px;
       display: flex;

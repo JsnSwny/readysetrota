@@ -22,6 +22,7 @@ const StaffManagementModal = (props) => {
   let errors = useSelector((state) => state.errors.msg);
   let error_obj = {};
   let current = useSelector((state) => state.employees.current);
+  let sites = useSelector((state) => state.employees.sites);
   useEffect(() => {
     if (update) {
       setName(update.name);
@@ -49,7 +50,7 @@ const StaffManagementModal = (props) => {
           dispatch(
             addSite({
               name,
-              business_id: current.business,
+              business_id: current.business.id,
             })
           );
           toast.success("Site added!");
@@ -67,8 +68,8 @@ const StaffManagementModal = (props) => {
           dispatch(
             addDepartment({
               name,
-              business_id: current.business,
-              site_id: current.site,
+              business_id: current.business.id,
+              site_id: current.site.id,
             })
           );
           toast.success("Department added!");
@@ -86,8 +87,8 @@ const StaffManagementModal = (props) => {
           dispatch(
             addPosition({
               name,
-              business_id: current.business,
-              department_id: parseInt(current.department),
+              business_id: current.business.id,
+              department_id: parseInt(current.department.id),
             })
           );
           toast.success("Position added!");

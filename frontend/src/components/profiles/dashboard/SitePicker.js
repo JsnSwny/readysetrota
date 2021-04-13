@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { setSite } from "../../../actions/employees";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import DashboardBlock from "./DashboardBlock";
 
 const SitePicker = (props) => {
-  const { setOpen, setUpdate, setType, admin } = props;
+  const { setOpen, setUpdate, setType, admin, disabled } = props;
   const dispatch = useDispatch();
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
@@ -14,7 +15,7 @@ const SitePicker = (props) => {
   let user = useSelector((state) => state.auth.user);
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock disabled={disabled} disabledText={"add more sites"}>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Sites</p>
@@ -62,7 +63,7 @@ const SitePicker = (props) => {
           <div
             key={item.id}
             className={`dashboard__item--sm ${
-              (current.site == item.id || current.site == 0) && "current"
+              (current.site.id == item.id || current.site.id == 0) && "current"
             }`}
           >
             <div className="title-md bold flex-container--between-center">
@@ -78,11 +79,11 @@ const SitePicker = (props) => {
                     className="fas fa-edit"
                   ></i>
                 )}
-                {current.site != item.id && (
+                {current.site.id != item.id && (
                   <i
                     onClick={() => {
-                      if (current.site != item.id) {
-                        dispatch(setSite(item.id));
+                      if (current.site.id != item.id) {
+                        dispatch(setSite(item));
                       }
                     }}
                     className="fas fa-check-circle"
@@ -97,7 +98,7 @@ const SitePicker = (props) => {
           </div>
         ))}
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

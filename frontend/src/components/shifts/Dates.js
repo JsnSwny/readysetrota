@@ -1,7 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { format } from "date-fns";
+import { addBusinessDays, format } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
+import CountUp from "react-countup";
 
 const Dates = (props) => {
   const {
@@ -15,11 +16,29 @@ const Dates = (props) => {
     setUpdate,
     setForecastDate,
     forecastDate,
+    filterDate,
   } = props;
   let employees = useSelector((state) => state.employees.employees);
+  let current = useSelector((state) => state.employees.current);
   let forecast = useSelector((state) => state.employees.forecast);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let business = useSelector((state) => state.employees.business);
+  let siteAdmin = useSelector((state) => state.employees.site_admin);
+
+  const getWeeklyCost = (dateList, fun) => {
+    return dateList
+      .map((item) => parseFloat(fun(item)))
+      .reduce((a, b) => a + b, 0);
+  };
 
   const getCost = (date) => {
+    date = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == date);
     let hourly = shifts_filtered
       .map(
@@ -39,54 +58,96 @@ const Dates = (props) => {
     return parseFloat(hourly + salary).toFixed(2);
   };
 
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
-
   const getAmount = (date) => {
-    return parseFloat(
-      forecast.find((item) => item.date == format(date, "yyyy-MM-dd")).amount
-    ).toFixed(2);
+    let forecastValue = forecast.find(
+      (item) => item.date == format(date, "yyyy-MM-dd")
+    );
+    if (forecastValue) {
+      return parseFloat(forecastValue.amount).toFixed(2);
+    } else {
+      return 0;
+    }
   };
 
   return (
     <section
-      className={`dates container ${scrollPosition >= 250 ? " fixed" : ""}`}
+      className={`dates container ${filterDate ? "filtered" : ""} ${
+        scrollPosition >= 250 ? " fixed" : ""
+      }`}
     >
       <div className="dates__container">
-        {!template && <div className="container-left"></div>}
+        <div className="container-left">
+          <div className="item-block dates__date">
+            <p className="item-block__title">
+              {format(dates[0], "do MMMM")} -{" "}
+              {format(dates[dates.length - 1], "do MMMM")}
+            </p>
+            {permissions.includes("manage_wages") && business.plan != "F" && (
+              <small>
+                £
+                <CountUp
+                  duration={1}
+                  decimals={2}
+                  end={getWeeklyCost(dates, getCost)}
+                />
+                {forecast.length > 0
+                  ? `/ £${getWeeklyCost(dates, getAmount)} (${(
+                      (getWeeklyCost(dates, getCost) /
+                        getWeeklyCost(dates, getAmount)) *
+                      100
+                    ).toFixed(2)}%)`
+                  : ""}
+              </small>
+            )}
+          </div>
+        </div>
 
         <div className="container-right">
           {dates.map((date) => (
-            <div key={date} className="item-block dates__date">
-              <i
-                onClick={() => {
-                  setOpen(true);
-                  setType("forecast");
-                  setUpdate(
-                    forecast.find(
-                      (item) => item.date == format(date, "yyyy-MM-dd")
-                    )
-                  );
-                  setForecastDate(date);
-                }}
-                class="fas fa-coins"
-              ></i>
+            <div
+              key={date}
+              className={`item-block dates__date ${
+                filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
+              }`}
+            >
+              {settings.forecasting &&
+                permissions.includes("create_forecasts") &&
+                business.plan != "F" && (
+                  <i
+                    onClick={() => {
+                      setOpen(true);
+                      setType("forecast");
+                      setUpdate(
+                        forecast.find(
+                          (item) => item.date == format(date, "yyyy-MM-dd")
+                        )
+                      );
+                      setForecastDate(date);
+                    }}
+                    class="fas fa-coins"
+                  ></i>
+                )}
+
               <p className="item-block__title">
                 {format(date, "ccc do MMM").split(" ")[0]}
                 <br></br>
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
-              {siteAdmin && (
+              {permissions.includes("manage_wages") && business.plan != "F" && (
                 <small>
-                  £{getCost(format(date, "yyyy-MM-dd"))}{" "}
+                  {permissions.includes("manage_wages") && `£${getCost(date)}`}
+
+                  {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
                   {forecast.some(
                     (item) => item.date == format(date, "yyyy-MM-dd")
                   )
-                    ? `/ £${getAmount(date)} (${(
-                        (getCost(format(date, "yyyy-MM-dd")) /
-                          getAmount(date)) *
+                    ? settings.forecasting &&
+                      `/ £${getAmount(date)} (${(
+                        (getCost(date) / getAmount(date)) *
                         100
-                      ).toFixed(0)}%)`
+                      ).toFixed(2)}%)`
                     : ""}
                 </small>
               )}

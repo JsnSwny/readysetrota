@@ -1,28 +1,33 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDepartment } from "../../../actions/employees";
-
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import DashboardBlock from "./DashboardBlock";
 
 const DepartmentPicker = (props) => {
   const dispatch = useDispatch();
-  const { setOpen, setUpdate, setType, admin } = props;
+  const { setOpen, setUpdate, setType, admin, disabled } = props;
 
   let departments = useSelector((state) => state.employees.departments);
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
   let loading = useSelector((state) => state.loading);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let user = useSelector((state) => state.auth.user);
 
   const setDep = (id) => {
     dispatch(setDepartment(id));
   };
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock disabled={disabled} disabledText={"add more departments"}>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">Departments</p>
-          {admin && (
+          {permissions.includes("manage_departments") && (
             <i
               onClick={() => {
                 if (plan == "F" && departments.length >= 1) {
@@ -51,14 +56,14 @@ const DepartmentPicker = (props) => {
           <div
             key={item.id}
             className={`dashboard__item--sm ${
-              (current.department == item.id || current.department == 0) &&
+              (current.department.id == item.id || current.department == 0) &&
               "current"
             }`}
           >
             <div className="title-md bold flex-container--between-center">
               <p>{item.name} </p>
               <div className="flex">
-                {admin && (
+                {permissions.includes("manage_departments") && (
                   <i
                     onClick={() => {
                       setOpen(true);
@@ -69,21 +74,21 @@ const DepartmentPicker = (props) => {
                   ></i>
                 )}
 
-                {current.department != item.id && (
+                {current.department.id != item.id && (
                   <i
                     onClick={() => {
                       if (
                         plan == "F" &&
                         i > 0 &&
-                        item.business.id == current.business
+                        item.business.id == current.business.id
                       ) {
                         toast.warning(
                           "Upgrade to premium to unlock unlimited departments"
                         );
                         return false;
                       } else {
-                        if (current.department != item.id) {
-                          setDep(item.id);
+                        if (current.department.id != item.id) {
+                          setDep(item);
                         }
                       }
                     }}
@@ -93,7 +98,7 @@ const DepartmentPicker = (props) => {
               </div>
             </div>
             <p className="subtitle-sm" style={{ flex: "0" }}>
-              {current.site == 0 && item.site.name}
+              {current.site.id == 0 && item.site.name}
             </p>
             <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
               {item.number_of_employees}{" "}
@@ -102,7 +107,7 @@ const DepartmentPicker = (props) => {
           </div>
         ))}
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

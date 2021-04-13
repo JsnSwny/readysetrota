@@ -1,110 +1,101 @@
 .list {
-    width: 95%;
-    margin: 0 auto;
-    font-size: 16px;
-    &.dash {
-        width: 100%;
-        margin-bottom: 50px;
-    }
-    &__items {
-        overflow-y: auto;
-        max-height: 300px;
-    }
-    .header {
-        margin-top: 40px;
-    }
-    table {
-        background-color: white;
-        -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-        -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-        box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-        margin-top: 20px;
-        width: 100%;
-        border-collapse: collapse;
-        &:hover {
-            tr:not(:hover) {
-                &:not(.selected) {
-                    &:not(:first-child) {
-                        opacity: 0.6;
-                    }
-                }
-                
-                
-            }
+  width: 95%;
+  margin: 0 auto;
+  font-size: 16px;
+  &.dash {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+  &__items {
+    overflow-y: auto;
+    max-height: 300px;
+  }
+  table {
+    background-color: white;
+    -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    &:hover {
+      tr:not(:hover) {
+        &:not(.selected) {
+          &:not(:first-child) {
+            opacity: 0.6;
+          }
         }
+      }
+    }
+  }
+  th {
+    text-align: left;
+  }
+  tr {
+    &.selected {
+      text-shadow: 0px 0px 1px black;
+    }
+    &:not(:first-child) {
+      &:hover {
+        text-shadow: 0px 0px 1px black;
+      }
+    }
+
+    td,
+    th {
+      padding: 20px 15px;
+      @include wi-mq(tablet) {
+        font-size: 12px;
+        padding: 10px;
+        input[type="checkbox"] {
+          width: 10px;
+        }
+      }
+      @include wi-mq(mobile) {
+        font-size: 10px;
+        padding: 15px 10px;
+        &.no-mobile {
+          display: none;
+        }
+        input[type="checkbox"] {
+          width: 8px;
+        }
+      }
+      @include wi-mq(stamp) {
+        font-size: 8px;
+        padding: 10px 5px;
+      }
+    }
+    transition: 0.2s ease opacity, 0.2s ease color;
+    &:nth-child(even) {
+      background-color: rgb(246, 246, 246);
+    }
+    td {
+      &.green {
+        color: green;
+      }
+      &.orange {
+        color: orange;
+        font-weight: bold;
+      }
+      &.red {
+        color: red;
+        font-weight: bold;
+      }
     }
     th {
-        text-align: left;
+      color: rgb(116, 116, 116);
+      text-transform: uppercase;
+      padding: 25px 15px;
+      @include wi-mq(mobile) {
+        padding: 15px 10px;
+      }
+      @include wi-mq(stamp) {
+        padding: 15px 5px;
+      }
     }
-    tr {
-        &.selected {
-            text-shadow:0px 0px 1px black;
-        }
-        &:not(:first-child) {
-            &:hover {
-                text-shadow:0px 0px 1px black;
-            }
-        }
-        
-        td, th {
-            padding: 20px 15px;
-            @include wi-mq(tablet) {
-                font-size: 12px;
-                padding: 10px;
-                input[type=checkbox] {
-                    width: 10px;
-                }
-            }
-            @include wi-mq(mobile) {
-                font-size: 10px;
-                padding: 15px 10px;
-                &.no-mobile {
-                    display: none;
-                }
-                input[type=checkbox] {
-                    width: 8px;
-                }
-            }
-            @include wi-mq(stamp) {
-                font-size: 8px;
-                padding: 10px 5px;
-            }
-            
-        }
-        transition: 0.2s ease opacity, 0.2s ease color;
-        &:nth-child(even) {
-            background-color: rgb(246, 246, 246);
-        }
-        // &:not(:last-child) {
-        //     border-bottom: 1.5px rgb(189, 189, 189) solid;
-        // }
-        td {
-            &.green {
-                color: green;
-            }
-            &.orange {
-                color: orange;
-                font-weight: bold;
-            }
-            &.red {
-                color: red;
-                font-weight: bold;
-            }
-        }
-        th {
-            color: rgb(116, 116, 116);
-            text-transform: uppercase;
-            padding: 25px 15px;
-            @include wi-mq(mobile) {
-                padding: 15px 10px;
-            }
-            @include wi-mq(stamp) {
-                padding: 15px 5px;
-            }
-        }
-        // &:first-child {
-        //     border-bottom: 2px rgb(189, 189, 189) solid;
-        // }
-    }
-    
+    // &:first-child {
+    //     border-bottom: 2px rgb(189, 189, 189) solid;
+    // }
+  }
 }

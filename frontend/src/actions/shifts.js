@@ -65,7 +65,7 @@ export const getShifts = (
   axios
     .get(
       `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }${
         user ? `&employee__user__id=${id}` : `&employee=${id}`
       }&ordering=date,start_time`,
@@ -87,7 +87,7 @@ export const getOpenShifts = (startdate) => (dispatch, getState) => {
   axios
     .get(
       `/api/shiftlist/?date_after=${startdate}&department=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }&open_shift=true&ordering=date,start_time`,
       tokenConfig(getState)
     )
@@ -104,7 +104,7 @@ export const getAbsences = (startdate, site) => (dispatch, getState) => {
   axios
     .get(
       `/api/shiftlist/?date_after=${startdate}&department=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }&absence__not=None&ordering=date,start_time`,
       tokenConfig(getState)
     )
@@ -191,7 +191,7 @@ export const getPopularTimes = () => (dispatch, getState) => {
   axios
     .get(
       `/api-view/getpopulartimes?department=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }`,
       tokenConfig(getState)
     )
@@ -211,7 +211,7 @@ export const approveShifts = () => (dispatch, getState) => {
   axios
     .get(
       `/api-view/approveshifts/?department_id=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }`,
       tokenConfig(getState)
     )
@@ -232,7 +232,7 @@ export const sendForApproval = () => (dispatch, getState) => {
   axios
     .get(
       `/api-view/sendforapproval/?department_id=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }`,
       tokenConfig(getState)
     )
@@ -254,7 +254,7 @@ export const publish = () => (dispatch, getState) => {
   axios
     .get(
       `/api-view/publish/?department_id=${
-        getState().employees.current.department
+        getState().employees.current.department.id
       }&business=${user.business ? true : false}`,
       tokenConfig(getState)
     )

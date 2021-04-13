@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { format, parseISO, addDays } from "date-fns";
+import { format, parseISO, addDays, subDays } from "date-fns";
 import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 
 const RotaBar = (props) => {
@@ -22,8 +22,15 @@ const RotaBar = (props) => {
   let published_shifts = shifts.filter((item) => item.published);
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
   let employees = useSelector((state) => state.employees.employees);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
 
   const formatDate = (date, add, display = false) => {
     let newDate = display
@@ -93,7 +100,7 @@ const RotaBar = (props) => {
                     ? `/exportall?start_date=${date}&end_date=${format(
                         addDays(parseISO(date), 6),
                         "yyyy-MM-dd"
-                      )}&id=${current.department}`
+                      )}&id=${current.department.id}`
                     : ""
                 }`}
                 target={`${published_shifts.length > 0 ? "_blank" : ""}`}
@@ -104,23 +111,24 @@ const RotaBar = (props) => {
             )}
 
             {/* AVAILABILITIES */}
-            {siteAdmin && business.plan != "F" && (
-              <div
-                onClick={() => {
-                  setShowAvailabilities(!showAvailabilities);
-                }}
-                className={`dates__mobile-item`}
-              >
-                <i
-                  className={`fas ${
-                    showAvailabilities ? "fa-eye-slash" : "fa-eye"
-                  }`}
-                ></i>
-                <p>Availabilities</p>
-              </div>
-            )}
+            {permissions.includes("manage_availabilities") &&
+              business.plan != "F" && (
+                <div
+                  onClick={() => {
+                    setShowAvailabilities(!showAvailabilities);
+                  }}
+                  className={`dates__mobile-item`}
+                >
+                  <i
+                    className={`fas ${
+                      showAvailabilities ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
+                  <p>Availabilities</p>
+                </div>
+              )}
             {/* SEND APPROVAL SHIFTS */}
-            {user.business && (
+            {permissions.includes("approve_shifts") && settings.shift_approval && (
               <div
                 onClick={() => {
                   dispatch(approveShifts());
@@ -136,33 +144,44 @@ const RotaBar = (props) => {
               </div>
             )}
             {/* SEND APPROVAL SHIFTS */}
-            {siteAdmin && !user.business && (
-              <div
-                onClick={() => {
-                  dispatch(sendForApproval());
-                }}
-                className={`dates__mobile-item ${
-                  !shifts.some((item) => item.stage == "Creation")
-                    ? "disabled"
-                    : ""
-                }`}
-              >
-                <i className="fas fa-paper-plane"></i>
-                <p>Send for Approval</p>
-              </div>
-            )}
-            {/* PUBLISH SHIFTS */}
-            {siteAdmin && (
+            {permissions.includes("manage_shifts") &&
+              !user.business &&
+              settings.shift_approval && (
+                <div
+                  onClick={() => {
+                    dispatch(sendForApproval());
+                  }}
+                  className={`dates__mobile-item ${
+                    !shifts.some((item) => item.stage == "Creation")
+                      ? "disabled"
+                      : ""
+                  }`}
+                >
+                  <i className="fas fa-paper-plane"></i>
+                  <p>Send for Approval</p>
+                </div>
+              )}
+            {permissions.includes("manage_shifts") && (
               <div
                 onClick={() => {
                   dispatch(publish());
                 }}
                 className={`dates__mobile-item ${
-                  !user.business
-                    ? !shifts.some((item) => item.stage == "Unpublished")
-                      ? "disabled"
-                      : ""
-                    : !shifts.some((item) => item.stage != "Published")
+                  !user.business && settings.shift_approval
+                    ? shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= subDays(new Date(), 1) &&
+                          item.stage == "Unpublished" &&
+                          item.employee
+                      )
+                      ? ""
+                      : "disabled"
+                    : !shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= subDays(new Date(), 1) &&
+                          item.stage != "Published" &&
+                          item.employee
+                      )
                     ? "disabled"
                     : ""
                 }`}

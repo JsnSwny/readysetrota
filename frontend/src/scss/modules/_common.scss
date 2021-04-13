@@ -1,0 +1,46 @@
+.availability-buttons {
+  margin: 0 auto;
+  margin-top: 20px;
+  i {
+    font-size: 24px;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    transition: 0.2s ease background-color, 0.2s ease opacity;
+    opacity: 0.5;
+    &.active {
+      opacity: 1;
+    }
+  }
+  .fa-check {
+    background-color: $green;
+    &:hover {
+      background-color: lighten($green, 10%);
+    }
+  }
+  .fa-times {
+    background-color: $red;
+    &:hover {
+      background-color: lighten($red, 10%);
+    }
+  }
+  .fa-atlas {
+    background-color: #46cdda;
+    &:hover {
+      background-color: lighten(#46cdda, 10%);
+    }
+  }
+  .fa-hourglass-half {
+    background-color: $yellow;
+    &:hover {
+      background-color: lighten($yellow, 10%);
+    }
+  }
+}

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django_filters',
     'knox',
     'accounts',
-    'stripe'
+    'stripe',
+    'guardian'
 ]
 
 REST_FRAMEWORK = {
@@ -53,6 +54,11 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     )
 }
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

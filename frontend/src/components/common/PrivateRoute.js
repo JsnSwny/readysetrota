@@ -12,14 +12,22 @@ const PrivateRoute = ({
   modalProps,
   confirmProps,
   admin,
+  perms,
   ...rest
 }) => {
   const dispatch = useDispatch();
   let auth = useSelector((state) => state.auth);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let user = useSelector((state) => state.auth.user);
   let sites = useSelector((state) => state.employees.sites);
   let loading = useSelector((state) => state.loading);
   let business = useSelector((state) => state.employees.business);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let hasPerm = true;
+  if (perms) {
+    hasPerm = user && permissions.some((item) => perms.includes(item));
+  }
 
   useEffect(() => {
     if (auth.user) {
@@ -63,8 +71,8 @@ const PrivateRoute = ({
             );
           }
         } else {
-          if (admin) {
-            if (!siteAdmin) {
+          if (perms) {
+            if (!hasPerm) {
               return (
                 <Redirect
                   to={{

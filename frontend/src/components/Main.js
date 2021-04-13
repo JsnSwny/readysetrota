@@ -6,6 +6,7 @@ import {
   getPositions,
   getHolidays,
   getSites,
+  updateSettings,
 } from "../actions/employees";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SideNav from "./layout/SideNav";
@@ -39,6 +40,8 @@ import Checkout from "./accounts/Checkout";
 
 import Confirm from "./layout/Confirm";
 
+import Settings from "./settings/Settings";
+
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -58,22 +61,37 @@ const Main = () => {
   let current = useSelector((state) => state.employees.current);
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites);
+  let auth = useSelector((state) => state.auth);
 
   // Use effect
   useEffect(() => {
     if (sites.length == 0) {
       dispatch(getSites());
     }
-    if (current.site > 0) {
+    if (current.site.id > 0) {
       dispatch(getDepartments());
+      if (sites.length > 0) {
+        dispatch(
+          updateSettings(
+            sites.find((item) => item.id == current.site.id).sitesettings
+          )
+        );
+      }
     }
-  }, [current.site]);
+  }, [current.site.id, auth.token]);
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
-      dispatch(getEmployees());
-      dispatch(getPositions(true));
-      dispatch(getPositions());
+      if (sites.length > 0) {
+        dispatch(getEmployees());
+        dispatch(getPositions(true));
+        dispatch(getPositions());
+        dispatch(
+          updateSettings(
+            sites.find((item) => item.id == current.site.id).sitesettings
+          )
+        );
+      }
     }
   }, [departments, sites]);
 
@@ -160,6 +178,11 @@ const Main = () => {
           />
           <PrivateRoute
             admin={true}
+            perms={[
+              "manage_departments",
+              "manage_positions",
+              "manage_employees",
+            ]}
             path="/staff-management"
             exact
             component={StaffManagement}
@@ -176,6 +199,7 @@ const Main = () => {
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsAndConditions} />
           <PrivateRoute path="/changepassword" component={ChangePassword} />
+          <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
           <PrivateRoute path="/premium" component={Plans} />

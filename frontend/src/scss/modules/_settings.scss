@@ -1,0 +1,35 @@
+.settings {
+  &__wrapper {
+    align-items: center;
+    &:not(:first-child) {
+      .settings__item {
+        padding-top: 25px;
+      }
+    }
+  }
+  &__item {
+    width: 50%;
+    padding-bottom: 25px;
+  }
+  p {
+    margin-top: 5px;
+    color: #8e8e8e;
+  }
+  hr {
+    border: 0.75px solid #b6b6b6;
+  }
+  .form__save {
+    width: 200px;
+  }
+  .form__control {
+    width: auto;
+  }
+  .form__wrapper {
+    margin: 20px 0;
+  }
+  .form__input {
+    width: auto;
+    margin-right: 0;
+    min-width: 200px;
+  }
+}

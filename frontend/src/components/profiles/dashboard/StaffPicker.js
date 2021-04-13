@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
 import { toast } from "react-toastify";
+import DashboardBlock from "./DashboardBlock";
 
 const StaffPicker = (props) => {
   const { setOpen, setUpdate, setType } = props;
@@ -18,21 +19,26 @@ const StaffPicker = (props) => {
   let sites = useSelector((state) => state.employees.sites);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.positions);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site)
-      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+    return sites.find((site) => site.id == current.site.id)
+      ? sites
+          .find((site) => site.id == current.site.id)
+          .admins.includes(user_id)
       : false;
   };
 
   const isDepartmentAdmin = (user_id) => {
-    return departments.find((dep) => dep.id == current.department)
+    return departments.find((dep) => dep.id == current.department.id)
       ? departments
-          .find((dep) => dep.id == current.department)
+          .find((dep) => dep.id == current.department.id)
           .admins.includes(user_id)
       : false;
   };
@@ -53,14 +59,14 @@ const StaffPicker = (props) => {
                 (pos) =>
                   pos.id ==
                   a.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order -
               positions.find(
                 (pos) =>
                   pos.id ==
                   b.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order
           );
@@ -76,31 +82,33 @@ const StaffPicker = (props) => {
   };
 
   return (
-    <div className="dashboard__block">
+    <DashboardBlock>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">
             Staff ({business.number_of_employees} / {total_employees})
           </p>
-          <i
-            onClick={() => {
-              if (plan == "F" && business.number_of_employees >= 15) {
-                toast.warning(
-                  "Upgrade to premium to create more than 15 employees"
-                );
-                return false;
-              } else if (business.number_of_employees >= total_employees) {
-                toast.warning(
-                  `You have reached your max number of ${total_employees} employees!`
-                );
-                return false;
-              }
-              setOpen(true);
-              setUpdate(false);
-              setType("employeeprofile");
-            }}
-            className="fas fa-plus"
-          ></i>
+          {permissions.includes("manage_employees") && (
+            <i
+              onClick={() => {
+                if (plan == "F" && business.number_of_employees >= 15) {
+                  toast.warning(
+                    "Upgrade to premium to create more than 15 employees"
+                  );
+                  return false;
+                } else if (business.number_of_employees >= total_employees) {
+                  toast.warning(
+                    `You have reached your max number of ${total_employees} employees!`
+                  );
+                  return false;
+                }
+                setOpen(true);
+                setUpdate(false);
+                setType("employeeprofile");
+              }}
+              className="fas fa-plus"
+            ></i>
+          )}
         </div>
       </div>
       <small className="helper-text">
@@ -148,7 +156,8 @@ const StaffPicker = (props) => {
               <Link to={`/profile/${item.id}`}>
                 {item.first_name} <strong>{item.last_name}</strong>
               </Link>
-              <div className="flex">
+
+              <div className="flex dashboard__icons">
                 {item.user && (
                   <i
                     className={`fas fa-crown ${
@@ -161,40 +170,44 @@ const StaffPicker = (props) => {
                   ></i>
                 )}
 
-                {business && !item.user && <CopyUUID employee={item} />}
-                {item.user != user.id && (
-                  <i
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdate(item);
-                      setType("employeeprofile");
-                    }}
-                    className="fas fa-edit"
-                  ></i>
+                {permissions.includes("manage_employees") && !item.user && (
+                  <CopyUUID employee={item} />
                 )}
+                {item.user != user.id &&
+                  permissions.includes("manage_employees") && (
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdate(item);
+                        setType("employeeprofile");
+                      }}
+                      className="fas fa-edit"
+                    ></i>
+                  )}
               </div>
             </div>
 
             <p className="subtitle-sm">
               {item.position.map(
                 (position) =>
-                  position.department.id == current.department && (
+                  position.department.id == current.department.id && (
                     <span key={position.id}>{position.name}</span>
                   )
               )}
             </p>
-            {["H", "S"].includes(item.wage_type) && (
-              <Fragment>
-                <p className="subtitle-sm">
-                  {item.wage_type == "H" ? "Hourly" : "Salary"}
-                </p>
-                <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
-              </Fragment>
-            )}
+            {permissions.includes("manage_wages") &&
+              ["H", "S"].includes(item.wage_type) && (
+                <Fragment>
+                  <p className="subtitle-sm">
+                    {item.wage_type == "H" ? "Hourly" : "Salary"}
+                  </p>
+                  <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+                </Fragment>
+              )}
           </div>
         ))}
       </div>
-    </div>
+    </DashboardBlock>
   );
 };
 

@@ -32,6 +32,7 @@ import {
   GET_FORECAST,
   ADD_FORECAST,
   UPDATE_FORECAST,
+  UPDATE_SETTINGS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -45,7 +46,7 @@ export const getForecast = (startDate, endDate) => (dispatch, getState) => {
   axios
     .get(
       `/api/forecast/?site__id=${
-        getState().employees.current.site
+        getState().employees.current.site.id
       }&date_after=${startDate}&date_before=${endDate}&ordering=date`,
       tokenConfig(getState)
     )
@@ -55,6 +56,13 @@ export const getForecast = (startDate, endDate) => (dispatch, getState) => {
         payload: res.data,
       });
     });
+};
+
+export const updateSettings = (settings) => (dispatch, getState) => {
+  dispatch({
+    type: UPDATE_SETTINGS,
+    payload: settings,
+  });
 };
 
 export const addForecast = (obj) => (dispatch, getState) => {
@@ -143,8 +151,8 @@ export const endTrial = (id) => (dispatch, getState) => {
 };
 
 export const getSites = () => (dispatch, getState) => {
-  let current_site = getState().employees.current.site;
-  let current_department = getState().employees.current.department;
+  let current_site = getState().employees.current.site.id;
+  let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
 
   axios
@@ -190,7 +198,15 @@ export const addSite = (site) => (dispatch, getState) => {
 
 export const updateSite = (id, site) => (dispatch, getState) => {
   axios
-    .put(`/api/sites/${id}/`, site, tokenConfig(getState))
+    .put(
+      `/api/sites/${id}${
+        site.hasOwnProperty("permissions")
+          ? `/?permissions=${site.permissions}/`
+          : "/"
+      }`,
+      site,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: UPDATE_SITE,
@@ -198,7 +214,7 @@ export const updateSite = (id, site) => (dispatch, getState) => {
       });
     })
 
-    .catch((err) => console.log(err.response));
+    .catch((err) => console.log(err.response.data));
 };
 
 export const deleteSite = (id) => (dispatch, getState) => {
@@ -249,15 +265,16 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 
 export const getEmployees = () => (dispatch, getState) => {
   let current = getState().employees.current;
-  let site_admin = getState().employees.site_admin;
+  let site_admin = true;
   let query = "";
 
   if (current.site > 0) {
-    query += `&position__department__site=${current.site}`;
+    query += `&position__department__site=${current.site.id}`;
   }
-  if (current.department > 0) {
-    query += `&position__department=${current.department}`;
+  if (current.department.id > 0) {
+    query += `&position__department=${current.department.id}`;
   }
+
   axios
     .get(
       `/api/employeelist${
@@ -300,7 +317,9 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
       dispatch(getDepartments());
       dispatch(getSites());
     })
-    .catch((error) => {});
+    .catch((error) => {
+      console.log(error.response);
+    });
 };
 
 export const updateEmployee = (update, employee, siteAdmin, current_site) => (
@@ -309,7 +328,14 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 ) => {
   let current = getState().employees.current;
   axios
-    .put(`/api/employees/${update}/`, employee, tokenConfig(getState))
+    .put(
+      `/api/employees/${update}${
+        employee.hasOwnProperty("permissions") &&
+        `/?permissions=${employee.permissions}`
+      }`,
+      employee,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: UPDATE_EMPLOYEE,
@@ -318,7 +344,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
       if (update.user) {
         if (siteAdmin) {
           dispatch(
-            updateSite(current.site, {
+            updateSite(current.site.id, {
               ...current_site,
               admins: [...current_site.admins, update.user],
               business_id: current_site.business.id,
@@ -326,7 +352,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
           );
         } else {
           dispatch(
-            updateSite(current.site, {
+            updateSite(current.site.id, {
               ...current_site,
               admins: current_site.admins.filter((item) => item != update.user),
               business_id: current_site.business.id,
@@ -345,7 +371,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
   axios
     .post(
-      `/api/employees/?business=${current.business}`,
+      `/api/employees/?business=${current.business.id}`,
       employee,
       tokenConfig(getState)
     )
@@ -369,16 +395,16 @@ export const getPositions = (all = false) => (dispatch, getState) => {
   let site_admin = getState().employees.site_admin;
 
   let query = "";
-  if (current.site > 0) {
-    query += `&department__site=${current.site}`;
+  if (current.site.id > 0) {
+    query += `&department__site=${current.site.id}`;
   }
-  if (current.department > 0) {
-    query += `&department=${current.department}`;
+  if (current.department.id > 0) {
+    query += `&department=${current.department.id}`;
   }
   axios
     .get(
       `/api/positionslist/${
-        all ? `?department__site=${current.site}` : `?${query}`
+        all ? `?department__site=${current.site.id}` : `?${query}`
       }`,
       tokenConfig(getState)
     )
@@ -450,7 +476,7 @@ export const addDepartment = (department) => (dispatch, getState) => {
   let current = getState().employees.current;
   axios
     .post(
-      `/api/departments/?business=${current.business}`,
+      `/api/departments/?business=${current.business.id}`,
       department,
       tokenConfig(getState)
     )
@@ -502,14 +528,14 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
 
 // Get Department
 export const getDepartments = () => (dispatch, getState) => {
-  let current_site = getState().employees.current.site;
-  let current_department = getState().employees.current.department;
+  let current_site = getState().employees.current.site.id;
+  let current_department = getState().employees.current.department.id;
   axios
     .get(
       `/api/departments/${
-        getState().employees.current.site > 0
+        getState().employees.current.site != 0
           ? `?site__id=${
-              getState().employees.current.site
+              getState().employees.current.site.id
             }&current_department=${current_department}`
           : ""
       }`,
@@ -539,11 +565,11 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
       } else {
         dispatch({
           type: UUID_SUCCESS,
-          payload: res.data.department_id,
+          payload: 0,
         });
-        axios.get("/api/departments/", tokenConfig(getState)).then((res) => {
+        axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
           dispatch({
-            type: GET_DEPARTMENTS,
+            type: GET_SITES,
             payload: res.data,
           });
         });

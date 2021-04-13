@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PersonalDetails from "./PersonalDetails";
 import Positions from "./Positions";
-import { updateEmployee, addEmployee } from "../../actions/employees";
+import {
+  updateEmployee,
+  addEmployee,
+  deleteEmployee,
+  updateSite,
+} from "../../actions/employees";
 import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 import DefaultAvailability from "./DefaultAvailability";
+import Permissions from "./Permissions";
 
 const EmployeeProfileModal = (props) => {
   const { onClose, form, staffPosition, update, confirmProps } = props;
@@ -14,6 +20,7 @@ const EmployeeProfileModal = (props) => {
   const dispatch = useDispatch();
   let positions = useSelector((state) => state.employees.all_positions);
   let sites = useSelector((state) => state.employees.sites);
+  let user = useSelector((state) => state.auth.user);
   // const dispatch = useDispatch();
   // useEffect(() => {
   //     if (form == "Staff") {
@@ -21,9 +28,10 @@ const EmployeeProfileModal = (props) => {
   //     }
   // }, []);
   let current = useSelector((state) => state.employees.current);
+  let perms = useSelector((state) => state.employees.current.site.permissions);
 
-  let current_site = sites.find((item) => item.id == current.site)
-    ? sites.find((item) => item.id == current.site)
+  let current_site = sites.find((item) => item.id == current.site.id)
+    ? sites.find((item) => item.id == current.site.id)
     : false;
 
   const [firstName, setFirstName] = useState("");
@@ -35,6 +43,7 @@ const EmployeeProfileModal = (props) => {
   const [currentSelector, setCurrentSelector] = useState("unselected");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [permissions, setPermissions] = useState([]);
   const [availability, setAvailability] = useState({
     0: { name: "unselected", start_time: null, end_time: null },
     1: { name: "unselected", start_time: null, end_time: null },
@@ -47,8 +56,10 @@ const EmployeeProfileModal = (props) => {
   let error_obj = {};
 
   const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site)
-      ? sites.find((site) => site.id == current.site).admins.includes(user_id)
+    return sites.find((site) => site.id == current.site.id)
+      ? sites
+          .find((site) => site.id == current.site.id)
+          .admins.includes(user_id)
       : false;
   };
 
@@ -62,6 +73,8 @@ const EmployeeProfileModal = (props) => {
       setWage(update.wage);
       setWageType(update.wage_type);
       setSiteAdmin(isSiteAdmin(update.user));
+      setAvailability(update.default_availability);
+      setPermissions(update.site_permissions);
     }
   }, [update]);
 
@@ -76,6 +89,7 @@ const EmployeeProfileModal = (props) => {
     setWageType,
   };
   const positionsProps = { position, setPosition };
+  const permissionsProps = { permissions, setPermissions };
   const availabilityProps = {
     startTime,
     setStartTime,
@@ -95,8 +109,9 @@ const EmployeeProfileModal = (props) => {
       wage: wage,
       wage_type: wageType,
       position_id: position.map((pos) => pos.id),
-      business_id: current.business,
+      business_id: current.business.id,
       default_availability: availability,
+      permissions,
     };
     error_obj = {
       first_name: firstName.length > 0 ? true : "First name is required",
@@ -109,6 +124,7 @@ const EmployeeProfileModal = (props) => {
           : "You don't have any positions",
     };
     dispatch(getErrors(error_obj, 400));
+
     if (
       Object.keys(error_obj).every((k) => {
         return error_obj[k] == true;
@@ -164,18 +180,23 @@ const EmployeeProfileModal = (props) => {
         >
           Positions
         </button>
-        <button
-          onClick={() => setCurrentTab("Availability")}
-          className={`btn-8 ${currentTab == "Availability" ? "active" : ""}`}
-        >
-          Availability
-        </button>
-        <button
-          onClick={() => setCurrentTab("Permissions")}
-          className={`btn-8 ${currentTab == "Permissions" ? "active" : ""}`}
-        >
-          Permissions
-        </button>
+        {perms.includes("manage_availabilities") && (
+          <button
+            onClick={() => setCurrentTab("Availability")}
+            className={`btn-8 ${currentTab == "Availability" ? "active" : ""}`}
+          >
+            Availability
+          </button>
+        )}
+
+        {user.business && update && update.user && (
+          <button
+            onClick={() => setCurrentTab("Permissions")}
+            className={`btn-8 ${currentTab == "Permissions" ? "active" : ""}`}
+          >
+            Permissions
+          </button>
+        )}
       </div>
       <form onSubmit={onSubmit} className="form__form">
         {currentTab == "Personal Details" && (
@@ -185,6 +206,7 @@ const EmployeeProfileModal = (props) => {
         {currentTab == "Availability" && (
           <DefaultAvailability {...availabilityProps} />
         )}
+        {currentTab == "Permissions" && <Permissions {...permissionsProps} />}
         <div className="flex-container--between form__actions">
           <button className="form__save" type="submit" value="Save">
             Save
@@ -195,7 +217,7 @@ const EmployeeProfileModal = (props) => {
               if (update) {
                 setConfirmOpen(true);
                 setMessage(
-                  `Are you sure you want to delete ${employee.full_name}?`
+                  `Are you sure you want to delete ${update.full_name}?`
                 );
                 setOnConfirm(() => () => {
                   setConfirmOpen(false);

@@ -32,6 +32,7 @@ import {
   GET_FORECAST,
   ADD_FORECAST,
   UPDATE_FORECAST,
+  UPDATE_SETTINGS,
 } from "../actions/types";
 import { format, parseISO } from "date-fns";
 
@@ -47,20 +48,24 @@ const initialState = {
   current: {
     department: localStorage.getItem("current_department")
       ? localStorage.getItem("current_department")
-      : 0,
-    business: 0,
-    site: localStorage.getItem("current_site")
-      ? parseInt(localStorage.getItem("current_site"))
-      : 0,
+      : {},
+    business: {},
+    site: { permissions: [] },
   },
   uuid_success: false,
   business: { plan: "F" },
   site_admin: false,
+  sitesettings: {},
 };
 
 export default function (state = initialState, action) {
   let newState = {};
   switch (action.type) {
+    case UPDATE_SETTINGS:
+      return {
+        ...state,
+        sitesettings: action.payload,
+      };
     case GET_AVAILABILITY:
       return {
         ...state,
@@ -90,8 +95,10 @@ export default function (state = initialState, action) {
       };
     case GET_SITES:
       let current_site =
-        state.current.site == 0 && action.payload.length > 0
-          ? action.payload[0].id
+        (state.current.site == 0 ||
+          !action.payload.some((item) => item.id == state.current.site.id)) &&
+        action.payload.length > 0
+          ? action.payload[0]
           : state.current.site;
 
       let isSiteAdminGet = (user) => {
@@ -120,7 +127,7 @@ export default function (state = initialState, action) {
         sites: [...state.sites, action.payload],
         current: {
           ...state.current,
-          site: action.payload.id,
+          site: action.payload,
           department: 0,
         },
         positions: [],
@@ -132,6 +139,10 @@ export default function (state = initialState, action) {
         sites: state.sites.map((item) =>
           item.id === action.payload.id ? action.payload : item
         ),
+        current: {
+          ...state.current,
+          site: action.payload,
+        },
       };
     case DELETE_SITE:
       let newSites = state.sites.filter((site) => site.id !== action.payload);
@@ -144,8 +155,8 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           site:
-            newSites.length > 0 && action.payload == state.current.site
-              ? newSites[0].id
+            newSites.length > 0 && action.payload == state.current.site.id
+              ? newSites[0]
               : state.current.site,
         },
         business: {
@@ -164,9 +175,9 @@ export default function (state = initialState, action) {
       let isSiteAdmin = (user) => {
         return user.business
           ? true
-          : state.sites.find((site) => site.id == action.payload)
+          : state.sites.find((site) => site.id == action.payload.id)
           ? state.sites
-              .find((site) => site.id == action.payload)
+              .find((site) => site.id == action.payload.id)
               .admins.includes(user.id)
           : false;
       };
@@ -176,8 +187,8 @@ export default function (state = initialState, action) {
           ...state.current,
           site: action.payload,
           department: 0,
-          business: state.sites.find((item) => item.id == action.payload)
-            .business.id,
+          business: state.sites.find((item) => item.id == action.payload.id)
+            .business,
         },
         site_admin: isSiteAdmin(action.user),
         departments: [],
@@ -220,7 +231,7 @@ export default function (state = initialState, action) {
       };
     case GET_EMPLOYEES:
       // let emp = action.payload;
-      if (!state.site_admin) {
+      if (!state.current.site.permissions.includes("manage_wages")) {
         action.payload.forEach((item) => {
           delete item.wage_type;
           delete item.wage;
@@ -248,8 +259,12 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           department:
-            state.current.department == 0 && action.payload.length > 0
-              ? action.payload[0].id
+            (state.current.department == 0 ||
+              !action.payload.some(
+                (item) => item.id == state.current.department.id
+              )) &&
+            action.payload.length > 0
+              ? action.payload[0]
               : state.current.department,
         },
       };
@@ -261,7 +276,7 @@ export default function (state = initialState, action) {
         business: action.payload,
         current: {
           ...state.current,
-          business: action.payload.id,
+          business: action.payload,
         },
       };
     case CHARGE_COMPLETE:
@@ -285,15 +300,15 @@ export default function (state = initialState, action) {
         },
       };
     case LOGOUT_SUCCESS:
-      localStorage.setItem("current_department", 0);
-      localStorage.setItem("current_site", 0);
+      localStorage.setItem("current_department", {});
+      localStorage.setItem("current_site", {});
       return {
         ...state,
         current: {
           ...state.current,
-          department: 0,
-          site: 0,
-          business: 0,
+          department: {},
+          site: { permissions: [] },
+          business: {},
         },
       };
     case SET_DEPARTMENT:
@@ -339,7 +354,7 @@ export default function (state = initialState, action) {
         ...state,
         employees: newEmployees.filter((item) =>
           item.position.some(
-            (pos) => pos.department.id == state.current.department
+            (pos) => pos.department.id == state.current.department.id
           )
         ),
       };
@@ -378,8 +393,8 @@ export default function (state = initialState, action) {
           ...state.current,
           department:
             newDepartments.length > 0 &&
-            action.payload == state.current.department
-              ? newDepartments[0].id
+            action.payload == state.current.department.id
+              ? newDepartments[0]
               : state.current.department,
         },
       };
@@ -401,7 +416,7 @@ export default function (state = initialState, action) {
         ),
       };
     case ADD_DEPARTMENT:
-      localStorage.setItem("current_department", action.payload.id);
+      localStorage.setItem("current_department", action.payload);
       return {
         ...state,
         departments: [...state.departments, action.payload],
@@ -409,7 +424,7 @@ export default function (state = initialState, action) {
         employees: [],
         current: {
           ...state.current,
-          department: action.payload.id,
+          department: action.payload,
         },
       };
 

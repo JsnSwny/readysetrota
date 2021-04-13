@@ -11,7 +11,11 @@ const OpenShifts = ({
   shifts,
   confirmProps,
 }) => {
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+  let user = useSelector((state) => state.auth.user);
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
   return (
     <div className="rota__container open-shifts">
       <div className={`employee__wrapper container-left`}>

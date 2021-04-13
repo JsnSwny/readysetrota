@@ -42,7 +42,7 @@ class CheckUUID(APIView):
                 return Response({'error': ["You already have an account associated with the same business."]})
             employee.user = user
             employee.save()
-            return Response({"department_id": employee.position.all().first().department.id})
+            return Response(True)
         else:
             return Response(
                 {"error": ["UUID does not match any employees."]},
@@ -53,7 +53,7 @@ class GetPopularTimes(APIView):
     def get(self, request):
         department_id = request.query_params.get('department')
         shifts = Shift.objects.filter(department=department_id)
-        most_common = shifts.values("start_time", "end_time", "department").annotate(
+        most_common = shifts.values("start_time", "end_time", "break_length", "department").annotate(
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]
@@ -88,11 +88,12 @@ class Publish(APIView):
     def get(self, request):
         business = request.query_params.get('business')
         all_shifts = {}
-        if business:
-            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+
+        if business != "false":
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id'), stage="Unpublished").exclude(employee__isnull=True)
         else:
             all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
-   
+
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
 
@@ -143,7 +144,7 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             shift_length = round((end - start).total_seconds() / 3600, 2)
             
             hours += shift_length - (i.break_length / 60)
-            if(i.employee.wage_type == "H"):
+            if(i.employee and i.employee.wage_type == "H"):
                 wage += float(i.wage) * (shift_length - (i.break_length / 60))
 
 
@@ -198,14 +199,10 @@ class GetStats(APIView):
             shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
             before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
-        shifts = shifts.filter(absence="None").exclude(employee__isnull=True)
-        before_shifts = before_shifts.filter(absence="None").exclude(employee__isnull=True)
-        print(shifts)
-        print(before_shifts)
-        
+        shifts = shifts.filter(absence="None").exclude(open_shift=True)
+        before_shifts = before_shifts.filter(absence="None").exclude(open_shift=True)
         data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
-        
-        print(data)
+
         return HttpResponse( json.dumps( data ) )
 
 

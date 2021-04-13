@@ -8,6 +8,7 @@ import ShiftDetails from "./ShiftDetails";
 import ExtraInfo from "./ExtraInfo";
 import Absence from "./Absence";
 import Positions from "./Positions";
+import useref from "gulp-useref";
 
 const ShiftModal = (props) => {
   const { date, employee, onClose, update } = props;
@@ -17,11 +18,15 @@ const ShiftModal = (props) => {
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
   let positions = useSelector((state) => state.employees.all_positions);
+  let sites = useSelector((state) => state.employees.sites);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
+  let user = useSelector((state) => state.auth.user);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
-  const [openEmployee, setOpenEmployee] = useState("");
   const [shiftEmployee, setShiftEmployee] = useState(
     employee ? employee.id : ""
   );
@@ -64,11 +69,7 @@ const ShiftModal = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const shiftObj = {
-      employee_id: shiftEmployee
-        ? shiftEmployee
-        : openEmployee
-        ? openEmployee
-        : null,
+      employee_id: shiftEmployee ? shiftEmployee : null,
       start_time: startTime,
       end_time: endTime,
       info,
@@ -76,13 +77,15 @@ const ShiftModal = (props) => {
       break_length: breakLength,
       absence: absence,
       absence_info: absenceInfo,
-      department_id: current.department,
-      stage:
-        shiftEmployee || openEmployee
-          ? absence != "None"
-            ? "Published"
-            : "Creation"
-          : "Published",
+      open_shift: shiftEmployee ? false : true,
+      department_id: current.department.id,
+      stage: shiftEmployee
+        ? absence != "None"
+          ? "Published"
+          : !settings.shift_approval || user.business
+          ? "Unpublished"
+          : "Creation"
+        : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
     };
     error_obj = {
@@ -133,8 +136,6 @@ const ShiftModal = (props) => {
     setShiftEmployee,
     breakLength,
     setBreakLength,
-    openEmployee,
-    setOpenEmployee,
   };
 
   return (

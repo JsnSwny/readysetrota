@@ -1,3 +1,4 @@
+import { parseISO, format } from "date-fns";
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 
@@ -17,7 +18,38 @@ const ShiftDetails = ({
   let popular_times = useSelector((state) => state.shifts.popular_times);
   let employees = useSelector((state) => state.employees.employees);
   let errors = useSelector((state) => state.errors.msg);
-  let minutes = ["00", "15", "30", "45"];
+  let sites = useSelector((state) => state.employees.sites);
+  let current = useSelector((state) => state.employees.current);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
+
+  const timeInRange = (item) => {
+    let date = new Date();
+    let itemTimeToDate = date.setHours(item.substr(0, 2), item.substr(3, 5), 0);
+    let maxTimeToDate = date.setHours(
+      settings.max_time.substr(0, 2),
+      settings.max_time.substr(3, 5),
+      0
+    );
+    let minTimeToDate = date.setHours(
+      settings.min_time.substr(0, 2),
+      settings.min_time.substr(3, 5),
+      0
+    );
+    return itemTimeToDate <= maxTimeToDate && itemTimeToDate >= minTimeToDate;
+  };
+
+  let minutes = ["00"];
+  if (settings.time_increment > 0) {
+    while (minutes[minutes.length - 1] + settings.time_increment < 60) {
+      minutes.push(
+        parseInt(minutes[minutes.length - 1]) +
+          parseInt(settings.time_increment)
+      );
+    }
+  }
+
   let hours = [];
   for (let i = 0; i < 24; i++) {
     if (
@@ -26,6 +58,8 @@ const ShiftDetails = ({
         : minutes.map((minute) => hours.push(i.toString() + ":" + minute))
     );
   }
+  hours = hours.filter((item) => timeInRange(item));
+
   const breaks = [
     { title: "No break", val: 0 },
     { title: "15 minutes", val: 15 },
@@ -135,9 +169,11 @@ const ShiftDetails = ({
             onClick={() => {
               setStartTime(item.start_time);
               setEndTime(item.end_time);
+              setBreakLength(item.break_length);
             }}
           >
-            {item.start_time} - {item.end_time}
+            {item.start_time} - {item.end_time}{" "}
+            {item.break_length > 0 && `(${item.break_length})`}
           </p>
         ))}
       </div>

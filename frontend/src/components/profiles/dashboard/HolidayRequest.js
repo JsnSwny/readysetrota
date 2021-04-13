@@ -35,7 +35,11 @@ const HolidayRequest = (props) => {
   );
 
   return (
-    <div className={`dashboard__block${admin ? "" : "--half"}`}>
+    <div
+      className={`dashboard__block${
+        admin ? "" : "--half"
+      } dashboard__block-container`}
+    >
       <div className="dashboard__block-title-container">
         <p className="dashboard__block-title">
           {admin ? "" : "Your"} Availability Requests

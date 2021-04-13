@@ -29,7 +29,12 @@ const Rota = ({ modalProps, confirmProps }) => {
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
+
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+  let siteAdmin = permissions.includes("manage_shifts");
+  let shiftPerm = permissions.includes("manage_shifts");
 
   // Use State
   const [employeesList, setEmployeesList] = useState(employees);
@@ -42,7 +47,7 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
-    dispatch(getAllAvailability(current.site, start_date, end_date));
+    dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
   };
@@ -89,11 +94,11 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   // Update Shifts and Popular Times
   useEffect(() => {
-    if (current.department > 0 && current.site > 0) {
+    if (current.department.id > 0 && current.site.id > 0) {
       dispatch(getPopularTimes());
       widthUpdate(true);
     }
-  }, [current.department, current.site]);
+  }, [current.department.id, current.site.id]);
 
   // Initialise employee list
   useEffect(() => {
@@ -193,6 +198,8 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   const sortEmployees = () => {
     if (positions.length > 0 && filterDate == "") {
+      console.log(positions);
+      console.log(employeesList);
       switch (staffSort) {
         case "position":
           return employeesList.sort(
@@ -201,14 +208,14 @@ const Rota = ({ modalProps, confirmProps }) => {
                 (pos) =>
                   pos.id ==
                   a.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order -
               positions.find(
                 (pos) =>
                   pos.id ==
                   b.position.find(
-                    (item) => item.department.id == current.department
+                    (item) => item.department.id == current.department.id
                   ).id
               ).order
           );
@@ -238,17 +245,17 @@ const Rota = ({ modalProps, confirmProps }) => {
     !user.business &&
     shifts_list.filter(
       (item) =>
-        item.employee == null &&
+        item.open_shift == true &&
         item.positions.some((pos) =>
           current_employee.position.map((empPos) => empPos.id).includes(pos.id)
         )
     );
-  if (!siteAdmin) {
-    let employeeShifts = shifts_list.filter(
-      (item) => item.employee && item.employee.id == current_employee.id
-    );
-    // openShifts.filter()
-  }
+  // if (!siteAdmin) {
+  //   let employeeShifts = shifts_list.filter(
+  //     (item) => item.employee && item.employee.id == current_employee.id
+  //   );
+  //   // openShifts.filter()
+  // }
 
   return (
     <div className="rota">
@@ -267,6 +274,7 @@ const Rota = ({ modalProps, confirmProps }) => {
           scrollPosition={scrollPosition}
           template={template}
           shifts={shifts_list}
+          filterDate={filterDate}
           {...modalProps}
         />
         {isLoading && <Loading />}
@@ -284,7 +292,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                 result={result}
                 shifts={
                   siteAdmin
-                    ? shifts_list.filter((item) => item.employee == null)
+                    ? shifts_list.filter((item) => item.open_shift == true)
                     : openShifts
                 }
               />
@@ -296,7 +304,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                   current_employee={current_employee}
                   shifts={shifts_list}
                   user={user}
-                  currentDepartment={current.department}
+                  currentDepartment={current.department.id}
                   result={result}
                 />
                 <div className="container-right">
@@ -311,7 +319,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                       employee,
                       showAvailabilities,
                       filterDate,
-                      admin: siteAdmin,
+                      admin: shiftPerm,
                     };
 
                     return shifts.length > 0 ? (

@@ -41,7 +41,7 @@ const NavPicker = ({ items, current, name, action, navOpen, setNavOpen }) => {
                       item.name
                     }'`
                   ),
-                  dispatch(action(item.id)))
+                  dispatch(action(item)))
                 : toast.warning(
                     `You are already on this ${name.slice(0, -1).toLowerCase()}`
                   )

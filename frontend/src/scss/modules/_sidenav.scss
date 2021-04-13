@@ -146,30 +146,34 @@
       background-color: lighten($blue, 20%);
     }
     &-text {
-      width: 80%;
-      margin: 0 auto;
+      margin: 0 10px;
       font-size: 14px;
       display: flex;
       align-items: center;
       @include wi-mq(laptop) {
         font-size: 12px;
-        width: 85%;
       }
     }
     i {
-      width: 45px;
       font-size: 14px;
+      width: 30px;
       @include wi-mq(laptop) {
-        width: 35px;
         font-size: 16px;
       }
     }
+    .fa-chevron-down {
+      margin-right: 10px;
+      width: auto;
+    }
   }
   &__sublinks {
+    left: 250px;
+    @include wi-mq(laptop) {
+      left: 200px;
+    }
     @include wi-mq(not-tablet) {
       position: absolute;
       top: 0;
-      left: 200px;
       width: 200px;
       z-index: 10;
       background-color: white;
