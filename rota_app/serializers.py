@@ -33,6 +33,7 @@ class BusinessSerializer(serializers.ModelSerializer):
         business = Business.objects.create(**validated_data)
         settings = Settings(business=business)
         settings.save()
+
         return business
 
 

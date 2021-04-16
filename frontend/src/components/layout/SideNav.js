@@ -344,7 +344,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               </div>
             </div>
 
-            {user.business && !user.business.trial_end && (
+            {user.business && !user.business.trial_end && user.business.plan != "P" && (
               <div className={`sidenav__link-container`}>
                 <div
                   onClick={() => {

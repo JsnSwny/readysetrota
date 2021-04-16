@@ -7,14 +7,12 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import Group
 import json
 import stripe
+from guardian.shortcuts import get_perms, remove_perm, assign_perm
+from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
 
 from rotaready.settings import STRIPE_SECRET_KEY
 
 stripe.api_key = STRIPE_SECRET_KEY
-
-
-
-
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -22,47 +20,59 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ('role',)
 
+
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Business
-        fields = ('id', 'name', 'plan', 'total_employees', 'subscription_cancellation', 'number_of_employees', 'trial_end',)
+        fields = ('id', 'name', 'plan', 'total_employees',
+                  'subscription_cancellation', 'number_of_employees', 'trial_end',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()
         return len(employees)
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('__all__')
 
-class BasicPositionSerializer(serializers.ModelSerializer):   
+
+class BasicPositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
         fields = ('id', 'name', 'department',)
         depth = 1
+
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ('id', 'name',)
 
+
 class EmployeeSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()
+
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'user', 'owner', 'position', 'business', 'default_availability', 'business_id',)
+        fields = ('id', 'first_name', 'last_name', 'user', 'owner',
+                  'position', 'business', 'default_availability', 'business_id',)
 
         # User Serializer
+
+
 class UserSerializer(serializers.ModelSerializer):
     business = BusinessSerializer()
     all_permissions = serializers.SerializerMethodField()
     department_admin = DepartmentSerializer(read_only=True, many=True)
     employee = EmployeeSerializer(required=False, read_only=True, many=True)
     # site_admin = serializers.SerializerMethodField()
+
     def get_all_permissions(self, obj):
         permissions = []
         for i in obj.groups.all():
@@ -79,24 +89,28 @@ class UserSerializer(serializers.ModelSerializer):
     #         site_id = Site.objects.filter(department_site__pos_department__position=i).first().id
     #         site_ids.append(site_id)
     #     return site_ids
-         
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'employee', 'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'employee',
+                  'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
         depth = 3
 
 
 # Register Serializers
 class RegisterSerializer(serializers.ModelSerializer):
     role = serializers.CharField(write_only=True)
-    businessName = serializers.CharField(write_only=True, required=False, allow_blank=True)
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    businessName = serializers.CharField(
+        write_only=True, required=False, allow_blank=True)
+    password2 = serializers.CharField(
+        style={'input_type': 'password'}, write_only=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password2', 'role', 'businessName', 'first_name', 'last_name',)
+        fields = ('id', 'username', 'email', 'password', 'password2',
+                  'role', 'businessName', 'first_name', 'last_name',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -112,29 +126,43 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(errors)
 
         if password != password2:
-            raise serializers.ValidationError({'password': 'Passwords must match.'})
+            raise serializers.ValidationError(
+                {'password': 'Passwords must match.'})
         else:
             if User.objects.filter(username__iexact=validated_data['username']).exists():
-                raise serializers.ValidationError({'username': 'A user with that username already exists.'})
-            
-            user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+                raise serializers.ValidationError(
+                    {'username': 'A user with that username already exists.'})
+
+            user = User.objects.create_user(
+                validated_data['username'], validated_data['email'], validated_data['password'])
             user.first_name = validated_data['first_name']
             user.last_name = validated_data['last_name']
             user.save()
             if validated_data['role'] == "Business":
-                my_group = Group.objects.get(name='Business') 
-                my_group.user_set.add(user) 
+                my_group = Group.objects.get(name='Business')
+                my_group.user_set.add(user)
                 customer = stripe.Customer.create(
                     description="",
                     name="",
                     email=validated_data['email']
                 )
-                business = Business(owner=user, name=validated_data['businessName'])
+                business = Business(
+                    owner=user, name=validated_data['businessName'])
                 business.save()
-                profile = UserProfile(user=user, role=validated_data['role'], stripe_id=customer.id)
+                profile = UserProfile(
+                    user=user, role=validated_data['role'], stripe_id=customer.id)
                 site = Site(business=business, name="My First Site")
                 site.save()
-                department = Department(owner=user, business=business, site=site, name="My First Department")
+
+                settings = SiteSettings(site=site)
+                settings.save()
+
+                all_perms = get_perms_for_model(Site)
+                for i in all_perms:
+                    assign_perm(i.codename, site.business.owner, site)
+
+                department = Department(
+                    owner=user, business=business, site=site, name="My First Department")
                 department.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
@@ -142,6 +170,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             return user
 
 # Login Serializers
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -152,6 +182,7 @@ class LoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError("Incorrect Credentials")
 
+
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
     old_password = serializers.CharField(required=True)
@@ -160,4 +191,3 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
-    

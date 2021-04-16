@@ -1,8 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from rota_app.models import Department, Business, Employee, Site, UserProfile, Position
+from rota_app.models import Department, Business, Employee, Site, UserProfile, Position, SiteSettings
 from django.contrib.auth.models import User
 import random
 from django.contrib.auth.models import Group
+from guardian.shortcuts import get_perms, remove_perm, assign_perm
+from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
 
 
 class Command(BaseCommand):
@@ -38,6 +40,13 @@ class Command(BaseCommand):
             profile = UserProfile(user=user, role='business', stripe_id='0')
             site = Site(business=business, name="Site 1")
             site.save()
+
+            settings = SiteSettings(site=site)
+            settings.save()
+
+            all_perms = get_perms_for_model(Site)
+            for i in all_perms:
+                assign_perm(i.codename, site.business.owner, site)
 
             department1 = Department(
                 name="Department 1", site=site, owner=user, business=business)

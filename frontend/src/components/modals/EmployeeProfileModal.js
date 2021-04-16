@@ -21,6 +21,7 @@ const EmployeeProfileModal = (props) => {
   let positions = useSelector((state) => state.employees.all_positions);
   let sites = useSelector((state) => state.employees.sites);
   let user = useSelector((state) => state.auth.user);
+  let errors = useSelector((state) => state.errors.msg);
   // const dispatch = useDispatch();
   // useEffect(() => {
   //     if (form == "Staff") {
@@ -64,6 +65,8 @@ const EmployeeProfileModal = (props) => {
   };
 
   const [currentTab, setCurrentTab] = useState("Personal Details");
+
+  console.log(errors);
 
   useEffect(() => {
     if (update) {
@@ -165,10 +168,10 @@ const EmployeeProfileModal = (props) => {
           ? ""
           : "Create an Employee"}
       </h1>
-      <div className="flex-container form__tabs">
+      <div className={`flex-container form__tabs`}>
         <button
           onClick={() => setCurrentTab("Personal Details")}
-          className={`btn-8 ${
+          className={`btn-8 ${errors && errors.first_name && (errors.first_name != true || errors.last_name != true) ? "err" : ""} ${
             currentTab == "Personal Details" ? "active" : ""
           }`}
         >
@@ -176,7 +179,7 @@ const EmployeeProfileModal = (props) => {
         </button>
         <button
           onClick={() => setCurrentTab("Positions")}
-          className={`btn-8 ${currentTab == "Positions" ? "active" : ""}`}
+          className={`btn-8 ${errors && errors.positions && errors.positions != true ? "err" : ""} ${currentTab == "Positions" ? "active" : ""}`}
         >
           Positions
         </button>
