@@ -11,7 +11,7 @@
   &__circle {
     border: 16px solid #2a2a2a;
     border-radius: 50%;
-    border-top: 16px solid #ec70c9;
+    border-top: 16px solid $pink;
     width: 120px;
     height: 120px;
     -webkit-animation: spin 0.3s linear infinite; /* Safari */

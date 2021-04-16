@@ -12,7 +12,8 @@ import numpy as np
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
-        fields = ('id', 'forecasting', 'max_time', 'min_time', 'shift_approval', 'time_increment',)
+        fields = ('id', 'forecasting', 'max_time', 'min_time',
+                  'shift_approval', 'time_increment',)
 
 
 class BusinessSerializer(serializers.ModelSerializer):
@@ -118,7 +119,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('__all__')
 
-
     def get_site_permissions(self, obj):
         if(obj.user != None):
             user = obj.user
@@ -131,33 +131,25 @@ class EmployeeSerializer(serializers.ModelSerializer):
         user = instance.user
         if user:
             site = instance.position.all().first().department.site
-        
-            permissions_query = self.context['request'].query_params.get('permissions')
+
+            permissions_query = self.context['request'].query_params.get(
+                'permissions')
             permissions = []
             if permissions_query:
-                permissions = self.context['request'].query_params.get('permissions')
-                permissions = permissions.split(',') if isinstance(permissions, str) else permissions
+                permissions = self.context['request'].query_params.get(
+                    'permissions')
+                permissions = permissions.split(',') if isinstance(
+                    permissions, str) else permissions
 
-
-            print(permissions)
             all_perms = get_perms(user, site)
-            diff = np.setdiff1d(all_perms,permissions)
-            print(f'Diff 1: {np.setdiff1d(all_perms,permissions)}')
-            print(f'Diff 2: {np.setdiff1d(permissions,all_perms)}')
-            print(f'Permissions: {permissions}')
-            print(f'All Perms: {all_perms}')
-            print(f'Diff: {diff}')
+            diff = np.setdiff1d(all_perms, permissions)
             for i in diff:
-                print(f'Removing {i}')
                 remove_perm(i, user, obj=site)
 
             for i in permissions:
-                print(f'Assigning {i}')
                 assign_perm(i, user, obj=site)
 
-            print(get_perms(user, site))
-            
-        return instance 
+        return instance
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -173,14 +165,13 @@ class EmployeeListSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
                   'position', 'business', 'business_id', 'default_availability', 'site_permissions',)
-                
+
     def get_site_permissions(self, obj):
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
             return get_perms(user, site)
         return []
-
 
     def get_full_name(self, obj):
         if obj.first_name:
@@ -223,7 +214,6 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
             return obj.uuid
         else:
             return False
-            
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -287,7 +277,6 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         depth = 1
 
 
-
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True, required=False)
@@ -312,9 +301,9 @@ class SiteSerializer(serializers.ModelSerializer):
             settings = SiteSettings.objects.get(site=instance)
             for attr, value in sitesettings.items():
                 setattr(settings, attr, value)
-                
+
             settings.save()
-    
+
         # user = self.context['request'].user
         # permissions = self.context['request'].query_params.get('permissions')
         # permissions = permissions.split(',') if isinstance(permissions, str) else permissions
@@ -329,8 +318,8 @@ class SiteSerializer(serializers.ModelSerializer):
         #     assign_perm(i, user, obj=instance)
 
         # print(get_perms(user, instance))
-            
-        return instance 
+
+        return instance
 
     def get_permissions(self, obj):
         return get_perms(self.context['request'].user, obj)

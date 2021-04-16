@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const NavLink = (props) => {
+  console.log(link);
   const {
     link,
     icon,
@@ -25,11 +26,13 @@ const NavLink = (props) => {
         onClick={() => disabled && toast.error(disabledMessage)}
         className="sidenav__link"
       >
+        
         <Link
           onClick={() => {
             toggleNav();
           }}
           to={link}
+          style={!link ? {pointerEvents: "none"} : null}
         >
           <div className="sidenav__link-text">
             <i className={icon}></i> {title}

@@ -104,7 +104,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               className="sidenav__logo--bottom"
               to="/"
             >
-              <img src="/static/media/logo2-01.svg"></img>
+              <img src="/static/media/readysetcore-01.svg"></img>
             </Link>
           </div>
         </div>
@@ -276,7 +276,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
             >
               <NavLink
                 toggleNav={toggleNav}
-                link="/settings"
+                link={`${user.business ? "settings" : ""}`}
                 icon="fas fa-cogs"
                 title="Settings"
                 dropdown={true}
@@ -399,7 +399,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               className="sidenav__logo--bottom"
               to="/"
             >
-              <img src="/static/media/logo2-01.svg"></img>
+              <img src="/static/media/readysetcore-01.svg"></img>
             </Link>
           </div>
         </div>
