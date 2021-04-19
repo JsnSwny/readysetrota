@@ -26,7 +26,7 @@ const Employee = (props) => {
 
   const getWage = (type, wage, hours) => {
     if (type == "H") {
-      return wage * hours;
+      return (wage * hours).toFixed(2);
     } else if (type == "S") {
       return ((wage / 365) * result.length).toFixed(2);
     }
