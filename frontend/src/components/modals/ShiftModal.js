@@ -57,9 +57,9 @@ const ShiftModal = (props) => {
     return (
       shift1.start_time == shift2.start_time &&
         shift1.end_time == shift2.end_time &&
-        shift1.absence == shift2.absence,
-      shift1.info == shift2.info &&
-        shift1.employee_id == shift2.employee_id &&
+        shift1.absence == shift2.absence &&
+      shift1.info == shift2.info && shift1.break_length == shift2.break_length &&
+        shift1.employee.id == shift2.employee_id &&
         (shift2.position_id.length > 0 || shift1.positions.length > 0
           ? shift1.positions == shift2.positions
           : true)

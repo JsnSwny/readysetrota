@@ -95,83 +95,7 @@ const Availability = (props) => {
         <div className="dashboard__block-title-container">
           <p className="dashboard__block-title">Availability</p>
         </div>
-        <DropButton
-          title={actionNames[currentSelector]}
-          actions={[
-            resetAction,
-            availableAction,
-            partialAction,
-            unavailableAction,
-            holidayAction,
-          ]}
-        />
-        {siteAdmin && (
-          <Fragment>
-            <h4
-              style={{
-                textAlign: "center",
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
-            >
-              Default Availability
-            </h4>
-            <div className="dashboard__dates" style={{ marginBottom: "60px" }}>
-              {[...Array(7)].map((e, i) => (
-                <div key={i} className="dashboard__dates-item">
-                  <p
-                    onClick={() => {
-                      if (
-                        currentSelector == "partial" &&
-                        !(startTime && endTime)
-                      ) {
-                        toast.warning(
-                          "You must set a start and end time when creating a partial availability!"
-                        );
-                      } else if (currentSelector == "holiday") {
-                        toast.warning(
-                          "You can't set a holiday as a default availability!"
-                        );
-                      } else {
-                        let temp_availability = employee.default_availability;
-                        temp_availability[i] = {
-                          name: currentSelector,
-                          approved:
-                            currentSelector == "unavailable" ? true : null,
-                          start_time:
-                            currentSelector == "partial" && startTime
-                              ? startTime.substr(0, 5)
-                              : null,
-                          end_time:
-                            currentSelector == "partial" && endTime
-                              ? endTime
-                              : null,
-                        };
-
-                        let obj = {
-                          default_availability: temp_availability,
-                        };
-                        dispatch(
-                          updateEmployee(employee.id, {
-                            ...employee,
-                            obj,
-                            position_id: employee.position.map(
-                              (item) => item.id
-                            ),
-                            business_id: employee.business.id,
-                          })
-                        );
-                      }
-                    }}
-                    className={`${currentSelector} current-${employee.default_availability[i].name}`}
-                  >
-                    {days[i + 1]}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Fragment>
-        )}
+        
 
         <p className="dashboard__dates-title flex-container--between-center">
           <span
@@ -333,6 +257,16 @@ const Availability = (props) => {
             </div>
           </div>
         )}
+        <DropButton
+          title={actionNames[currentSelector]}
+          actions={[
+            resetAction,
+            availableAction,
+            partialAction,
+            unavailableAction,
+            holidayAction,
+          ]}
+        />
       </div>
     </div>
   );
