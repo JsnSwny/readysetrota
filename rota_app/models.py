@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 import uuid
 from datetime import datetime
 from jsonfield import JSONField
+from simple_history.models import HistoricalRecords
 
 
 class Business(models.Model):
@@ -34,10 +35,11 @@ class Site(models.Model):
         Business, related_name="site_business", on_delete=models.CASCADE, null=True, blank=True)
     admins = models.ManyToManyField(
         User, related_name="site_admin", blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f'{self.name} (ID: {self.id})'
-        
+
     class Meta:
         permissions = [
             ('manage_departments', 'Manage Departments'),
@@ -64,6 +66,7 @@ class Department(models.Model):
                              on_delete=models.CASCADE, null=True, blank=True)
     business = models.ForeignKey(
         Business, related_name="department_business", on_delete=models.CASCADE, null=True, blank=True)
+    history = HistoricalRecords()
 
 
 class Position(models.Model):
@@ -78,6 +81,7 @@ class Position(models.Model):
     order = models.IntegerField(blank=True, null=True)
     business = models.ForeignKey(
         Business, related_name="position_business", on_delete=models.CASCADE, null=True, blank=True)
+    history = HistoricalRecords()
 
 
 def default_availability():
@@ -120,6 +124,7 @@ class Employee(models.Model):
         choices=WAGE_TYPES,
         default="N",
     )
+    history = HistoricalRecords()
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
@@ -144,6 +149,7 @@ class Shift(models.Model):
     department = models.ForeignKey(
         Department, related_name="shift_department", on_delete=models.SET_NULL, null=True, blank=True)
     published = models.BooleanField(default=False)
+    history = HistoricalRecords()
 
     STAGE_TYPES = [
         ("Published", 'Published'),
@@ -271,6 +277,7 @@ class Break(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
+
 class SiteSettings(models.Model):
     site = models.OneToOneField(Site, on_delete=models.CASCADE)
     shift_approval = models.BooleanField(default=False)
@@ -278,5 +285,6 @@ class SiteSettings(models.Model):
     max_time = models.CharField(max_length=5, default="23:45")
     time_increment = models.IntegerField(default=15)
     forecasting = models.BooleanField(default=True)
+
     def __str__(self):
         return f'{self.site.business.name} - {self.site.name} [ID: {self.id}]'

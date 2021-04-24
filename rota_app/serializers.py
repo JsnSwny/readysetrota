@@ -332,6 +332,7 @@ class SiteSerializer(serializers.ModelSerializer):
         all_perms = get_perms_for_model(Site)
         for i in all_perms:
             assign_perm(i.codename, site.business.owner, site)
+        site.save()
         return site
 
     def get_number_of_employees(self, obj):
