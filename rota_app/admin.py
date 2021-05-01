@@ -11,7 +11,11 @@ class SiteAdmin(GuardedModelAdmin):
     ordering = ('name',)
 
 
-admin.site.register(Employee, SimpleHistoryAdmin)
+class EmployeeAdmin(admin.ModelAdmin):
+    readonly_fields = ('uuid',)
+
+
+admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Shift, SimpleHistoryAdmin)
 admin.site.register(Position, SimpleHistoryAdmin)
 admin.site.register(Department, SimpleHistoryAdmin)
