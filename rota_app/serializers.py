@@ -186,7 +186,6 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
-    uuid = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
     site_permissions = serializers.SerializerMethodField()
 
@@ -204,17 +203,6 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
                   'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type', 'site_permissions',)
-
-    def get_uuid(self, obj):
-        user = None
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user = request.user
-
-        if(hasattr(user, 'business')):
-            return obj.uuid
-        else:
-            return False
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
