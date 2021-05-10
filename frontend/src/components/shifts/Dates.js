@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { addBusinessDays, format } from "date-fns";
+import { addBusinessDays, format, parseISO, addDays, subDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import CountUp from "react-countup";
 
@@ -37,25 +37,48 @@ const Dates = (props) => {
       .reduce((a, b) => a + b, 0);
   };
 
-  const getCost = (date) => {
-    date = format(date, "yyyy-MM-dd");
-    let shifts_filtered = shifts.filter((item) => item.date == date);
+  const getWage = (date, employee) => {
+    let result = employee.wage;
+    if(result) {
+      result.sort((a, b) => {
+          return Math.abs(date - parseISO(a.start_date)) - Math.abs(date - parseISO(b.start_date)); // sort a before b when the distance is smaller
+      });
+      result = result.filter((item) => parseISO(item.start_date) <= date);
+      if(result.length > 0) {
+        result = result[0]
+      }
+      if(result.wage_type == "S") {
+        return parseFloat((result.wage / 52 / 5).toFixed(2));
+      } else if (result.wage_type == "H") {
+        return 0;
+      }
+    }
+    return 0;
+  }
+
+  const getHourly = (date) => {
+    let formatDate = format(date, "yyyy-MM-dd");
+    let shifts_filtered = shifts.filter((item) => item.date == formatDate);
     let hourly = shifts_filtered
       .map(
         (item) =>
           item.employee &&
           item.absence == "None" &&
-          item.employee.wage_type == "H" &&
+          item.wage > 0 &&
           +parseFloat(item.wage * item.length).toFixed(2)
       )
       .reduce((a, b) => a + b, 0.0);
-    let salary = employees
-      .map(
-        (item) =>
-          item.wage_type == "S" && +(parseFloat(item.wage) / 365).toFixed(2)
-      )
-      .reduce((a, b) => a + b, 0.0);
-    return parseFloat(hourly + salary).toFixed(2);
+
+    return hourly;
+  }
+
+  const getCost = (date) => {
+    let total = employees.map(item => getWage(date, item))
+    total = total.reduce((a, b) => a + b);
+
+    total += getHourly(date);
+    
+    return total.toFixed(2);
   };
 
   const getAmount = (date) => {
@@ -68,6 +91,9 @@ const Dates = (props) => {
       return 0;
     }
   };
+
+
+
 
   return (
     <section
@@ -104,6 +130,7 @@ const Dates = (props) => {
 
         <div className="container-right">
           {dates.map((date) => (
+            
             <div
               key={date}
               className={`item-block dates__date ${
@@ -127,7 +154,6 @@ const Dates = (props) => {
                     class="fas fa-coins"
                   ></i>
                 )}
-
               <p className="item-block__title">
                 {format(date, "ccc do MMM").split(" ")[0]}
                 <br></br>

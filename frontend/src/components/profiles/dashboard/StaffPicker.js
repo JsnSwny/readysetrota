@@ -24,7 +24,7 @@ const StaffPicker = (props) => {
   );
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   const isSiteAdmin = (user_id) => {
@@ -195,13 +195,10 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
-            {permissions.includes("manage_wages") &&
-              ["H", "S"].includes(item.wage_type) && (
+            {permissions.includes("manage_wages") && item.current_wage &&
+              ["H", "S"].includes(item.current_wage.type) && (
                 <Fragment>
-                  <p className="subtitle-sm">
-                    {item.wage_type == "H" ? "Hourly" : "Salary"}
-                  </p>
-                  <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+                  <p className="subtitle-sm">£{numberWithCommas(item.current_wage.amount)} {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}</p>
                 </Fragment>
               )}
           </div>

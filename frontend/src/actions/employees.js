@@ -329,9 +329,9 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
   let current = getState().employees.current;
   axios
     .put(
-      `/api/employees/${update}${
+      `/api/employees/${update}/?wage_type=${employee.wage_type}&wage=${employee.wage}${
         employee.hasOwnProperty("permissions") &&
-        `/?permissions=${employee.permissions}`
+        `&permissions=${employee.permissions}`
       }`,
       employee,
       tokenConfig(getState)
@@ -369,9 +369,10 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
+  console.log(employee)
   axios
     .post(
-      `/api/employees/?business=${current.business.id}`,
+      `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}`,
       employee,
       tokenConfig(getState)
     )

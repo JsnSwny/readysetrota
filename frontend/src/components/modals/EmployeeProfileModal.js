@@ -66,15 +66,13 @@ const EmployeeProfileModal = (props) => {
 
   const [currentTab, setCurrentTab] = useState("Personal Details");
 
-  console.log(errors);
-
   useEffect(() => {
     if (update) {
       setFirstName(update.first_name);
       setLastName(update.last_name);
       setPosition(update.position.map((item) => item));
-      setWage(update.wage);
-      setWageType(update.wage_type);
+      setWage(update.current_wage ? update.current_wage.amount : 0);
+      setWageType(update.current_wage ? update.current_wage.type : "N");
       setSiteAdmin(isSiteAdmin(update.user));
       setAvailability(update.default_availability);
       setPermissions(update.site_permissions);

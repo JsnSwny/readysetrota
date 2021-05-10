@@ -102,9 +102,6 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=25)
     position = models.ManyToManyField(
         Position, related_name="position", blank=True)
-
-    def __str__(self):
-        return self.first_name + " " + self.last_name
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True, related_name="employee")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -113,6 +110,37 @@ class Employee(models.Model):
     default_availability = JSONField(default=default_availability)
     business = models.ForeignKey(
         Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
+
+    # wage = models.DecimalField(max_digits=12, decimal_places=2)
+    # WAGE_TYPES = [
+    #     ("H", 'Hourly'),
+    #     ("S", 'Salary'),
+    #     ("N", 'None')
+    # ]
+    # wage_type = models.CharField(
+    #     max_length=1,
+    #     choices=WAGE_TYPES,
+    #     default="N",
+    # )
+    history = HistoricalRecords()
+
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
+
+class EmployeeStatus(models.Model):
+    employee = models.ForeignKey(
+        Employee, related_name="status", on_delete=models.SET_NULL, null=True, blank=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+
+class Wage(models.Model):
+    employee = models.ForeignKey(
+        Employee, related_name="wage", on_delete=models.SET_NULL, null=True, blank=True)
     wage = models.DecimalField(max_digits=12, decimal_places=2)
     WAGE_TYPES = [
         ("H", 'Hourly'),
@@ -124,19 +152,8 @@ class Employee(models.Model):
         choices=WAGE_TYPES,
         default="N",
     )
-    history = HistoricalRecords()
-
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
-
-    def save(self, *args, **kwargs):
-        shifts = Shift.objects.filter(
-            date__gte=datetime.now(), employee__id=self.id)
-        for i in shifts:
-            i.wage = self.wage
-            i.save()
-
-        super(Employee, self).save(*args, **kwargs)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
 
 
 class Shift(models.Model):
@@ -203,12 +220,12 @@ class Shift(models.Model):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'
 
     def save(self, *args, **kwargs):
+        wage_obj = Wage.objects.filter(
+            employee=self.employee).order_by('-start_date').first()
         if not self.wage:
-            if self.employee:
-                if self.employee.wage_type == "H":
-                    self.wage = self.employee.wage
-                else:
-                    self.wage = self.employee.wage/365
+            if wage_obj:
+                if wage_obj.wage_type == "H":
+                    self.wage = wage_obj.wage
         super(Shift, self).save(*args, **kwargs)
 
 

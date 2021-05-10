@@ -140,6 +140,9 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
     wage = 0
     for i in shifts:
         if i.end_time != "Finish":
+            wage_obj = Wage.objects.filter(
+                employee=i.employee).order_by('-start_date').first()
+
             current_date = date.today()
             start = datetime.combine(current_date, i.start_time)
             end_time = datetime.strptime(i.end_time, '%H:%M')
@@ -150,8 +153,9 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
             shift_length = round((end - start).total_seconds() / 3600, 2)
 
             hours += shift_length - (i.break_length / 60)
-            if(i.employee and i.employee.wage_type == "H"):
-                wage += float(i.wage) * (shift_length - (i.break_length / 60))
+            if(wage_obj and wage_obj.wage_type == "H"):
+                wage += float(wage_obj.wage) * \
+                    (shift_length - (i.break_length / 60))
 
     employees = []
 

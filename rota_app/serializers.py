@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -116,6 +116,22 @@ class EmployeeSerializer(serializers.ModelSerializer):
         queryset=Business.objects.all(), source='business', write_only=True)
     site_permissions = serializers.SerializerMethodField()
 
+    wage = serializers.SerializerMethodField()
+    current_wage = serializers.SerializerMethodField()
+
+    def get_wage(self, instance):
+        wages = instance.wage.all().order_by('-start_date')
+        return WageSerializer(wages, read_only=True, many=True).data
+
+    def get_current_wage(self, instance):
+        wage = instance.wage.all().filter(
+            start_date__lte=datetime.now()).order_by('-start_date')
+        if wage:
+            wage = wage[0]
+            return {'type': wage.wage_type, 'amount': wage.wage}
+        return None
+        # return (wage.wage_type, wage.wage)
+
     class Meta:
         model = Employee
         fields = ('__all__')
@@ -130,6 +146,42 @@ class EmployeeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
         user = instance.user
+
+        wage_type = self.context['request'].query_params.get(
+            'wage_type')
+
+        wage = self.context['request'].query_params.get(
+            'wage')
+
+        if wage:
+            wage_obj = Wage.objects.filter(
+                employee=instance).order_by('-start_date').first()
+
+            if not wage_obj or wage_obj.wage_type != wage_type or wage_obj.wage != float(wage):
+                if wage_obj and str(wage_obj.start_date) == datetime.now().strftime('%Y-%m-%d'):
+                    wage_obj.wage = wage
+                    wage_obj.wage_type = wage_type
+                else:
+                    if wage_obj:
+                        wage_obj.end_date = datetime.now()
+                    wage_obj = Wage(employee=instance, wage_type=wage_type,
+                                    wage=wage, start_date=datetime.now())
+                    wage_obj.save()
+
+                if wage_obj:
+                    wage_obj.save()
+
+            shifts = Shift.objects.filter(
+                date__gte=datetime.now(), employee=instance)
+            if wage_obj and wage_obj.wage_type == "H":
+                for i in shifts:
+                    i.wage = wage_obj.wage
+                    i.save()
+            elif wage_obj and wage_obj.wage_type == "S":
+                for i in shifts:
+                    i.wage = 0
+                    i.save()
+
         if user:
             site = instance.position.all().first().department.site
 
@@ -151,6 +203,23 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 assign_perm(i, user, obj=site)
 
         return instance
+
+    def create(self, validated_data):
+        position = validated_data.pop('position')
+        employee = Employee.objects.create(**validated_data)
+        employee.position.set(position)
+
+        wage_type = self.context['request'].query_params.get(
+            'wage_type')
+
+        wage = self.context['request'].query_params.get(
+            'wage')
+
+        wage_obj = Wage(employee=employee, wage_type=wage_type,
+                        wage=wage, start_date=datetime.now())
+        wage_obj.save()
+
+        return employee
 
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -180,6 +249,17 @@ class EmployeeListSerializer(serializers.ModelSerializer):
         return 'Open Shift'
 
 
+class WageSerializer(serializers.ModelSerializer):
+    wage = serializers.SerializerMethodField()
+
+    def get_wage(self, obj):
+        return int(obj.wage)
+
+    class Meta:
+        model = Wage
+        fields = '__all__'
+
+
 class AdminEmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
@@ -188,6 +268,8 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         queryset=Business.objects.all(), source='business', write_only=True)
     full_name = serializers.SerializerMethodField()
     site_permissions = serializers.SerializerMethodField()
+    wage = serializers.SerializerMethodField()
+    current_wage = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
@@ -199,10 +281,23 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
             return get_perms(user, site)
         return []
 
+    def get_wage(self, instance):
+        wages = instance.wage.all().order_by('-start_date')
+        return WageSerializer(wages, read_only=True, many=True).data
+
+    def get_current_wage(self, instance):
+        wage = instance.wage.all().filter(
+            start_date__lte=datetime.now()).order_by('-start_date')
+
+        if wage:
+            wage = wage[0]
+            return {'type': wage.wage_type, 'amount': wage.wage}
+        return None
+
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'wage_type', 'site_permissions',)
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'site_permissions',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -215,7 +310,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'full_name', 'wage', 'wage_type',)
+        fields = ('id', 'full_name',)
 
 
 class ShiftListSerializer(serializers.ModelSerializer):

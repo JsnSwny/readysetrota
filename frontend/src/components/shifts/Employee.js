@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { parseISO, format } from "date-fns";
 
 const Employee = (props) => {
   const {
@@ -24,13 +25,49 @@ const Employee = (props) => {
       .reduce((a, b) => a + b, 0.0);
   };
 
-  const getWage = (type, wage, hours) => {
-    if (type == "H") {
-      return (wage * hours).toFixed(2);
-    } else if (type == "S") {
-      return ((wage / 365) * result.length).toFixed(2);
+  const getWage = (date, employee) => {
+    let result = employee.wage;
+    if(result) {
+      result.sort((a, b) => {
+          return Math.abs(date - parseISO(a.start_date)) - Math.abs(date - parseISO(b.start_date)); // sort a before b when the distance is smaller
+      });
+      result = result.filter((item) => parseISO(item.start_date) <= date);
+      if(result.length > 0) {
+        result = result[0]
+      }
+      if(result.wage_type == "S") {
+        return parseFloat((result.wage / 52 / 5).toFixed(2));
+      } else if (result.wage_type == "H") {
+        return 0;
+      }
     }
-  };
+    return 0;
+  }
+
+  const getHourly = (date) => {
+    let formatDate = format(date, "yyyy-MM-dd");
+    let shifts_filtered = shifts.filter((item) => item.date == formatDate);
+    let hourly = shifts_filtered
+      .map(
+        (item) =>
+          item.employee && item.employee.id == employee.id &&
+          item.absence == "None" &&
+          item.wage > 0 &&
+          +parseFloat(item.wage * item.length).toFixed(2)
+      )
+      .reduce((a, b) => a + b, 0.0);
+
+    return hourly;
+  }
+
+  const getTotalWage = () => {
+    let total = 0;
+    result.forEach(item => {
+      total += getWage(item, employee);
+      total += getHourly(item)
+    })
+    return total.toFixed(2);
+  }
 
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
@@ -64,13 +101,8 @@ const Employee = (props) => {
 
       <p className="employee__hours">
         {getHours(employee.id)} Hours{" "}
-        {permissions.includes("manage_wages") &&
-          ["H", "S"].includes(employee.wage_type) &&
-          `(£${getWage(
-            employee.wage_type,
-            employee.wage,
-            getHours(employee.id)
-          )})`}
+        {permissions.includes("manage_wages") && getTotalWage() != 0.00 &&
+          `(£${getTotalWage()})`}
       </p>
     </div>
   );
