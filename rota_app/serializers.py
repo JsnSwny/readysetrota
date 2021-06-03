@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -118,6 +118,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
+    current_status = serializers.SerializerMethodField()
 
     def get_wage(self, instance):
         wages = instance.wage.all().order_by('-start_date')
@@ -131,6 +132,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
             return {'type': wage.wage_type, 'amount': wage.wage}
         return None
         # return (wage.wage_type, wage.wage)
+
+    def get_current_status(self, instance):
+        status = instance.status.all().filter(
+            start_date__lte=datetime.now()).order_by('-start_date')
+        if status:
+            status = status[0]
+            return {'start_date': status.start_date, 'end_date': status.end_date}
+        return None
 
     class Meta:
         model = Employee
@@ -152,6 +161,23 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         wage = self.context['request'].query_params.get(
             'wage')
+
+        start_working_date = self.context['request'].query_params.get(
+            'start_working_date')
+        end_working_date = self.context['request'].query_params.get(
+            'end_working_date')
+
+        current_status = EmployeeStatus.objects.filter(
+            employee=instance).order_by('-start_date').first()
+
+        if current_status:
+            current_status.start_date = start_working_date
+            current_status.end_date = end_working_date
+            current_status.save()
+        else:
+            new_status = EmployeeStatus(
+                employee=instance, start_date=start_working_date, end_date=end_working_date)
+            new_status.save()
 
         if wage:
             wage_obj = Wage.objects.filter(
@@ -219,6 +245,23 @@ class EmployeeSerializer(serializers.ModelSerializer):
                         wage=wage, start_date=datetime.now())
         wage_obj.save()
 
+        start_working_date = self.context['request'].query_params.get(
+            'start_working_date')
+        end_working_date = self.context['request'].query_params.get(
+            'end_working_date')
+
+        current_status = EmployeeStatus.objects.filter(
+            employee=employee).order_by('-start_date').first()
+
+        if current_status:
+            current_status.start_date = start_working_date
+            current_status.end_date = end_working_date
+            current_status.save()
+        else:
+            new_status = EmployeeStatus(
+                employee=employee, start_date=start_working_date, end_date=end_working_date)
+            new_status.save()
+
         return employee
 
 
@@ -270,6 +313,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     site_permissions = serializers.SerializerMethodField()
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
+    current_status = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
@@ -294,10 +338,18 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
             return {'type': wage.wage_type, 'amount': wage.wage}
         return None
 
+    def get_current_status(self, instance):
+        status = instance.status.all().filter(
+            start_date__lte=datetime.now()).order_by('-start_date')
+        if status:
+            status = status[0]
+            return {'start_date': status.start_date, 'end_date': status.end_date}
+        return None
+
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'site_permissions',)
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):

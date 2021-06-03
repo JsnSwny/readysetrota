@@ -68,12 +68,13 @@ const Dates = (props) => {
           +parseFloat(item.wage * item.length).toFixed(2)
       )
       .reduce((a, b) => a + b, 0.0);
-
+    
     return hourly;
   }
 
   const getCost = (date) => {
     let total = employees.map(item => getWage(date, item))
+    if(total.length == 0) return 0;
     total = total.reduce((a, b) => a + b);
 
     total += getHourly(date);

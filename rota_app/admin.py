@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Employee, Shift, Position, SiteSettings, Department, Forecast, UserProfile, ShiftSwap, Business, Availability, Site, Wage
+from .models import Employee, Shift, Position, SiteSettings, Department, Forecast, UserProfile, ShiftSwap, Business, Availability, Site, Wage, EmployeeStatus
 from django.contrib.auth.models import Permission
 from guardian.admin import GuardedModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
@@ -28,3 +28,4 @@ admin.site.register(Site, SiteAdmin)
 admin.site.register(Forecast)
 admin.site.register(SiteSettings)
 admin.site.register(Wage)
+admin.site.register(EmployeeStatus)

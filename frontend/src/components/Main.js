@@ -83,7 +83,7 @@ const Main = () => {
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
       if (sites.length > 0) {
-        dispatch(getEmployees());
+        dispatch(getEmployees(format(new Date(), "yyyy-MM-dd")))
         dispatch(getPositions(true));
         dispatch(getPositions());
         dispatch(

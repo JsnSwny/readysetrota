@@ -1,14 +1,21 @@
-import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
+import React, { Fragment, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker";
+import { getEmployees } from "../../actions/employees";
+import { format } from "date-fns";
 
 const StaffManagement = ({ modalProps }) => {
+  const dispatch = useDispatch();
   let current = useSelector((state) => state.employees.current);
   let business = useSelector((state) => state.employees.business);
   let user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    dispatch(getEmployees(format(new Date(), "yyyy-MM-dd")))
+  }, [])
 
   return (
     <Fragment>

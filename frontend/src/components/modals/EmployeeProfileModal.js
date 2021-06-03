@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 import DefaultAvailability from "./DefaultAvailability";
 import Permissions from "./Permissions";
+import Status from "./Status"
+import { parseISO, format } from "date-fns";
 
 const EmployeeProfileModal = (props) => {
   const { onClose, form, staffPosition, update, confirmProps } = props;
@@ -45,6 +47,8 @@ const EmployeeProfileModal = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [permissions, setPermissions] = useState([]);
+  const [startWorkingDate, setStartWorkingDate] = useState(update && update.current_status.start_date ? parseISO(update.current_status.start_date) : new Date());
+  const [endWorkingDate, setEndWorkingDate] = useState(update && update.current_status.end_date ? parseISO(update.current_status.end_date) : "");
   const [availability, setAvailability] = useState({
     0: { name: "unselected", start_time: null, end_time: null },
     1: { name: "unselected", start_time: null, end_time: null },
@@ -91,6 +95,7 @@ const EmployeeProfileModal = (props) => {
   };
   const positionsProps = { position, setPosition };
   const permissionsProps = { permissions, setPermissions };
+  const statusProps = { startWorkingDate, setStartWorkingDate, endWorkingDate, setEndWorkingDate }
   const availabilityProps = {
     startTime,
     setStartTime,
@@ -113,6 +118,8 @@ const EmployeeProfileModal = (props) => {
       business_id: current.business.id,
       default_availability: availability,
       permissions,
+      start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
+      end_working_date: format(endWorkingDate, "yyyy-MM-dd")
     };
     error_obj = {
       first_name: firstName.length > 0 ? true : "First name is required",
@@ -181,6 +188,12 @@ const EmployeeProfileModal = (props) => {
         >
           Positions
         </button>
+        <button
+          onClick={() => setCurrentTab("Status")}
+          className={`btn-8 ${currentTab == "Status" ? "active" : ""}`}
+        >
+          Status
+        </button>
         {perms.includes("manage_availabilities") && (
           <button
             onClick={() => setCurrentTab("Availability")}
@@ -208,6 +221,9 @@ const EmployeeProfileModal = (props) => {
           <DefaultAvailability {...availabilityProps} />
         )}
         {currentTab == "Permissions" && <Permissions {...permissionsProps} />}
+        {currentTab == "Status" && (
+          <Status {...statusProps} />
+        )}
         <div className="flex-container--between form__actions">
           <button className="form__save" type="submit" value="Save">
             Save
