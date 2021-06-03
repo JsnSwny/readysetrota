@@ -59,6 +59,7 @@ class GetPopularTimes(APIView):
             i['start_time'] = str(i['start_time'])[0:5]
         return Response(most_common)
 
+
 class ApproveShifts(APIView):
     def get(self, request):
         all_shifts = Shift.objects.filter(
@@ -70,6 +71,7 @@ class ApproveShifts(APIView):
 
         ids = (o.id for o in all_shifts)
         return Response(ids)
+
 
 class SendForApproval(APIView):
     def get(self, request):
@@ -90,12 +92,16 @@ class Publish(APIView):
         all_shifts = {}
 
         if business != "false":
-            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get('department_id'), stage="Unpublished").exclude(employee__isnull=True)
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department=request.query_params.get(
+                'department_id'), stage="Unpublished").exclude(employee__isnull=True)
         else:
-            all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
+            all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(
+            ), department=request.query_params.get('department_id')).exclude(employee__isnull=True)
 
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
+
+        # print(all_shifts)
 
         connection = mail.get_connection()
         shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
@@ -106,6 +112,7 @@ class Publish(APIView):
         connection.open()
         for idx, val in enumerate(shifts_unique):
             employee = shifts_unique[idx][0].employee
+
             if employee.user:
                 shifts = Shift.objects.filter(
                     employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
@@ -127,13 +134,15 @@ class Publish(APIView):
         ids = (o.id for o in all_shifts)
         return Response(ids)
 
-import json
 
 def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, user_id=False):
     hours = 0
     wage = 0
     for i in shifts:
         if i.end_time != "Finish":
+            wage_obj = Wage.objects.filter(
+                employee=i.employee).order_by('-start_date').first()
+
             current_date = date.today()
             start = datetime.combine(current_date, i.start_time)
             end_time = datetime.strptime(i.end_time, '%H:%M')
@@ -142,24 +151,25 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
                 end = end + timedelta(days=1)
 
             shift_length = round((end - start).total_seconds() / 3600, 2)
-            
-            hours += shift_length - (i.break_length / 60)
-            if(i.employee and i.employee.wage_type == "H"):
-                wage += float(i.wage) * (shift_length - (i.break_length / 60))
 
+            hours += shift_length - (i.break_length / 60)
+            if(wage_obj and wage_obj.wage_type == "H"):
+                wage += float(wage_obj.wage) * \
+                    (shift_length - (i.break_length / 60))
 
     employees = []
 
     if user_id:
         employees = Employee.objects.filter(user__id=user_id).distinct()
     if site_id:
-        employees = Employee.objects.filter(position__department__site=site_id).distinct()
+        employees = Employee.objects.filter(
+            position__department__site=site_id).distinct()
     for i in employees:
         if i.wage_type == "S":
             wage += float(i.wage/365) * float(days_difference.days)
-        
 
     return hours, wage
+
 
 class GetStats(APIView):
     def get(self, request):
@@ -171,7 +181,7 @@ class GetStats(APIView):
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
 
         days_difference = (end_date - start_date) + timedelta(days=1)
-        
+
         before_range_date = start_date - days_difference
 
         id = False
@@ -181,29 +191,41 @@ class GetStats(APIView):
             current_filter = request.query_params.get('currentFilter')
             id = request.query_params.get('id')
             if current_filter == "business":
-                shifts = Shift.objects.filter(department__site__business=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department__site__business=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+                shifts = Shift.objects.filter(
+                    department__site__business=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department__site__business=id, date__range=[
+                                                     before_range_date, start_date - timedelta(days=1)])
             if current_filter == "site":
-                shifts = Shift.objects.filter(department__site=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department__site=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+                shifts = Shift.objects.filter(
+                    department__site=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department__site=id, date__range=[
+                                                     before_range_date, start_date - timedelta(days=1)])
             if current_filter == "department":
-                shifts = Shift.objects.filter(department=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department=id, date__range=[before_range_date, start_date - timedelta(days=1)])
+                shifts = Shift.objects.filter(
+                    department=id, date__range=[start_date, end_date])
+                before_shifts = Shift.objects.filter(department=id, date__range=[
+                                                     before_range_date, start_date - timedelta(days=1)])
 
         elif stat_type == "staff":
             user_id = request.query_params.get('user_id')
-            shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__user__id=user_id)
-            before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
+            shifts = Shift.objects.filter(
+                date__range=[start_date, end_date], employee__user__id=user_id)
+            before_shifts = Shift.objects.filter(date__range=[
+                                                 before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
         elif stat_type == "staff_profile":
             employee_id = request.query_params.get('user_id')
-            shifts = Shift.objects.filter(date__range=[start_date, end_date], employee__id=employee_id)
-            before_shifts = Shift.objects.filter(date__range=[before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
+            shifts = Shift.objects.filter(
+                date__range=[start_date, end_date], employee__id=employee_id)
+            before_shifts = Shift.objects.filter(date__range=[
+                                                 before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
 
         shifts = shifts.filter(absence="None").exclude(open_shift=True)
-        before_shifts = before_shifts.filter(absence="None").exclude(open_shift=True)
-        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
+        before_shifts = before_shifts.filter(
+            absence="None").exclude(open_shift=True)
+        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[
+            0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
 
-        return HttpResponse( json.dumps( data ) )
+        return HttpResponse(json.dumps(data))
 
 
 class ExportShifts(APIView):

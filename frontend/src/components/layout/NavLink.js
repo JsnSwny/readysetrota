@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const NavLink = (props) => {
-  console.log(link);
   const {
     link,
     icon,

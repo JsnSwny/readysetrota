@@ -1,11 +1,15 @@
 import React, { useState, Fragment } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import CopyUUID from "../../common/CopyUUID";
 import { toast } from "react-toastify";
 import DashboardBlock from "./DashboardBlock";
+import Switch from "react-switch";
+import { getEmployees } from "../../../actions/employees";
+import { format } from "date-fns";
 
 const StaffPicker = (props) => {
+  const dispatch = useDispatch();
   const { setOpen, setUpdate, setType } = props;
   let business = useSelector((state) => state.employees.business);
   let user = useSelector((state) => state.auth.user);
@@ -22,9 +26,10 @@ const StaffPicker = (props) => {
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
+  let [showAll, setShowAll] = useState(localStorage.getItem("show_all_employees") ? localStorage.getItem("show_all_employees") : true)
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   const isSiteAdmin = (user_id) => {
@@ -142,6 +147,21 @@ const StaffPicker = (props) => {
           >
             Sort by Position
           </span>
+          <Switch
+            onChange={() => {
+              localStorage.setItem("show_all_employees", !showAll)
+              if(!showAll == true) {
+                dispatch(getEmployees())
+              } else {
+                dispatch(getEmployees(format(new Date(), "yyyy-MM-dd")))
+              }
+              setShowAll(!showAll);
+              
+            }}
+            checked={showAll}
+            onColor={"#EC70C9"}
+          />
+          
         </div>
       )}
 
@@ -195,13 +215,10 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
-            {permissions.includes("manage_wages") &&
-              ["H", "S"].includes(item.wage_type) && (
+            {permissions.includes("manage_wages") && item.current_wage &&
+              ["H", "S"].includes(item.current_wage.type) && (
                 <Fragment>
-                  <p className="subtitle-sm">
-                    {item.wage_type == "H" ? "Hourly" : "Salary"}
-                  </p>
-                  <p className="subtitle-sm">£{numberWithCommas(item.wage)}</p>
+                  <p className="subtitle-sm">£{numberWithCommas(item.current_wage.amount)} {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}</p>
                 </Fragment>
               )}
           </div>

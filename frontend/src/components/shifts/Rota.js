@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
-import { getAllAvailability, getForecast } from "../../actions/employees";
+import { getAllAvailability, getForecast, getEmployees } from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -50,6 +50,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
+    dispatch(getEmployees(start_date, end_date))
   };
 
   // Set Current Employee
@@ -198,11 +199,9 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   const sortEmployees = () => {
     if (positions.length > 0 && filterDate == "") {
-      console.log(positions);
-      console.log(employeesList);
       switch (staffSort) {
         case "position":
-          return employeesList.sort(
+          return employees.sort(
             (a, b) =>
               positions.find(
                 (pos) =>
@@ -221,12 +220,12 @@ const Rota = ({ modalProps, confirmProps }) => {
           );
 
         default:
-          return employeesList.sort((a, b) =>
+          return employees.sort((a, b) =>
             a.first_name.localeCompare(b.first_name)
           );
       }
     } else {
-      return employeesList;
+      return employees;
     }
   };
 
@@ -234,12 +233,12 @@ const Rota = ({ modalProps, confirmProps }) => {
     return <Loading />;
   }
 
-  if (!loading.employees && employees.length == 0) {
-    toast.warning(
-      "You do not currently have any employees to manage in this department"
-    );
-    return <Redirect to="/staff-management" />;
-  }
+  // if (!loading.employees && employees.length == 0) {
+  //   toast.warning(
+  //     "You do not currently have any employees to manage in this department"
+  //   );
+  //   return <Redirect to="/staff-management" />;
+  // }
 
   let openShifts =
     !user.business &&
@@ -297,6 +296,10 @@ const Rota = ({ modalProps, confirmProps }) => {
                 }
               />
             )}
+            {console.log("SORT")}
+            {console.log(sortEmployees())}
+            {console.log("EMPLOYEES")}
+            {console.log(employees)}
             {sortEmployees().map((employee, i) => (
               <div key={employee.id} className="rota__container">
                 <Employee

@@ -15,6 +15,7 @@ const PersonalDetails = ({
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
+
   return (
     <Fragment>
       <div className="flex-container--between form__wrapper">

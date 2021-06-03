@@ -81,10 +81,12 @@ class ShiftViewSet(viewsets.ModelViewSet):
 
 class EmployeeFilter(django_filters.FilterSet):
     position__department = django_filters.NumberFilter(distinct=True)
+    status__start_date = DateFilter(lookup_expr='lte')
+    status__end_date = DateFilter(lookup_expr='gte')
 
     class Meta:
         model = Employee
-        fields = ['position__department',
+        fields = ['status__start_date', 'status__end_date', 'position__department',
                   'position__department__site', 'business']
 
 

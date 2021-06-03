@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'knox',
     'accounts',
     'stripe',
-    'guardian'
+    'guardian',
+    'simple_history',
 ]
 
 REST_FRAMEWORK = {
@@ -56,7 +57,7 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

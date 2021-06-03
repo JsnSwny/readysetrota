@@ -28,6 +28,7 @@ stripe = "*"
 jsonfield = "*"
 django-guardian = "*"
 numpy = "*"
+django-simple-history = "*"
 
 [requires]
 python_version = "3.7"

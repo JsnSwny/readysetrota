@@ -38,7 +38,7 @@ const Landing = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "white" }}>
+    <div style={{ backgroundColor: "white", margin: "-20px 0" }}>
       {loading && <Loading />}
       <section className="landing__hero container-2">
         <div className="landing__hero-text">

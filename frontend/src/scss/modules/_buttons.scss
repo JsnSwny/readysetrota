@@ -134,8 +134,12 @@
     color: white;
     margin: 5px;
     cursor: pointer;
+    transition: 0.2s ease background-color;
     &.active {
       background-color: lighten($blue, 20%);
+    }
+    &.err {
+      background-color: $red;
     }
   }
   &-modal {
