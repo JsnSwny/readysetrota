@@ -14,8 +14,8 @@ const StaffManagement = ({ modalProps }) => {
   let user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    dispatch(getEmployees(format(new Date(), "yyyy-MM-dd")))
-  }, [])
+    dispatch(getEmployees());
+  }, []);
 
   return (
     <Fragment>

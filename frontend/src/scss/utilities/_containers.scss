@@ -102,6 +102,11 @@
     @extend .flex-container;
     align-items: center;
   }
+  &--align-center-wrap {
+    @extend .flex-container;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   &--column-center {
     @extend .flex-container;
     flex-direction: column;

@@ -26,10 +26,19 @@ const StaffPicker = (props) => {
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
-  let [showAll, setShowAll] = useState(localStorage.getItem("show_all_employees") ? localStorage.getItem("show_all_employees") : true)
+  let [showAll, setShowAll] = useState(
+    localStorage.getItem("show_all_employees")
+      ? localStorage.getItem("show_all_employees") == "true"
+        ? true
+        : false
+      : true
+  );
 
   function numberWithCommas(x) {
-    return x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x
+      .toFixed(2)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   const isSiteAdmin = (user_id) => {
@@ -58,6 +67,8 @@ const StaffPicker = (props) => {
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":
+          console.log(employees);
+          console.log(positions);
           return employees.sort(
             (a, b) =>
               positions.find(
@@ -124,45 +135,44 @@ const StaffPicker = (props) => {
         <small className="loading-text">Loading staff...</small>
       )}
       {employees.length > 0 && (
-        <div className="flex-container--wrap">
-          <span
-            onClick={() => {
-              setStaffSort("alphabetical");
-              localStorage.setItem("staff_sort", "alphabetical");
-            }}
-            className={`btn-toggle--sm ${
-              staffSort == "alphabetical" ? "active" : ""
-            }`}
-          >
-            Sort Alphabetically
-          </span>
-          <span
-            onClick={() => {
-              setStaffSort("position");
-              localStorage.setItem("staff_sort", "position");
-            }}
-            className={`btn-toggle--sm ${
-              staffSort == "position" ? "active" : ""
-            }`}
-          >
-            Sort by Position
-          </span>
-          <Switch
-            onChange={() => {
-              localStorage.setItem("show_all_employees", !showAll)
-              if(!showAll == true) {
-                dispatch(getEmployees())
-              } else {
-                dispatch(getEmployees(format(new Date(), "yyyy-MM-dd")))
-              }
-              setShowAll(!showAll);
-              
-            }}
-            checked={showAll}
-            onColor={"#EC70C9"}
-          />
-          
-        </div>
+        <Fragment>
+          <div className="flex-container--align-center-wrap">
+            <span
+              onClick={() => {
+                setStaffSort("alphabetical");
+                localStorage.setItem("staff_sort", "alphabetical");
+              }}
+              className={`btn-toggle--sm ${
+                staffSort == "alphabetical" ? "active" : ""
+              }`}
+            >
+              Sort Alphabetically
+            </span>
+            <span
+              onClick={() => {
+                setStaffSort("position");
+                localStorage.setItem("staff_sort", "position");
+              }}
+              className={`btn-toggle--sm ${
+                staffSort == "position" ? "active" : ""
+              }`}
+            >
+              Sort by Position
+            </span>
+            <div>
+              <p>Show All Employees</p>
+              <Switch
+                onChange={() => {
+                  localStorage.setItem("show_all_employees", !showAll);
+                  dispatch(getEmployees());
+                  setShowAll(!showAll);
+                }}
+                checked={showAll}
+                onColor={"#EC70C9"}
+              />
+            </div>
+          </div>
+        </Fragment>
       )}
 
       <div className="dashboard__wrapper">
@@ -215,10 +225,14 @@ const StaffPicker = (props) => {
                   )
               )}
             </p>
-            {permissions.includes("manage_wages") && item.current_wage &&
+            {permissions.includes("manage_wages") &&
+              item.current_wage &&
               ["H", "S"].includes(item.current_wage.type) && (
                 <Fragment>
-                  <p className="subtitle-sm">£{numberWithCommas(item.current_wage.amount)} {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}</p>
+                  <p className="subtitle-sm">
+                    £{numberWithCommas(item.current_wage.amount)}{" "}
+                    {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}
+                  </p>
                 </Fragment>
               )}
           </div>

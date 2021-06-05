@@ -263,7 +263,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
     });
 };
 
-export const getEmployees = (start_date, end_date=false) => (dispatch, getState) => {
+export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
   let current = getState().employees.current;
   let site_admin = true;
   let query = "";
@@ -274,8 +274,12 @@ export const getEmployees = (start_date, end_date=false) => (dispatch, getState)
   if (current.department.id > 0) {
     query += `&position__department=${current.department.id}`;
   }
-  if(start_date) {
-    query += `&status__start_date=${end_date ? end_date : start_date}${end_date ? `&status__end_date=${start_date}` : ""}`
+  if (localStorage.getItem("show_all_employees") == "false") {
+    start_date = format(new Date(), "yyyy-MM-dd");
+    end_date = format(new Date(), "yyyy-MM-dd");
+  }
+  if (start_date && end_date) {
+    query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
   }
 
   axios
@@ -286,7 +290,7 @@ export const getEmployees = (start_date, end_date=false) => (dispatch, getState)
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(res.data)
+      console.log(res.data);
       dispatch({
         type: GET_EMPLOYEES,
         payload: res.data,
@@ -333,7 +337,11 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
   let current = getState().employees.current;
   axios
     .put(
-      `/api/employees/${update}/?wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}${
+      `/api/employees/${update}/?wage_type=${employee.wage_type}&wage=${
+        employee.wage
+      }&start_working_date=${employee.start_working_date}&end_working_date=${
+        employee.end_working_date
+      }${
         employee.hasOwnProperty("permissions") &&
         `&permissions=${employee.permissions}`
       }`,
@@ -373,7 +381,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
-  console.log(employee)
+  console.log("Employee");
   axios
     .post(
       `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`,

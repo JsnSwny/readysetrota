@@ -172,7 +172,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         if current_status:
             current_status.start_date = start_working_date
-            current_status.end_date = end_working_date
+            if current_status.end_date != "":
+                current_status.end_date = end_working_date
             current_status.save()
         else:
             new_status = EmployeeStatus(
@@ -255,11 +256,16 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         if current_status:
             current_status.start_date = start_working_date
-            current_status.end_date = end_working_date
+            if current_status.end_date != "":
+                current_status.end_date = end_working_date
             current_status.save()
         else:
+            if end_working_date == "":
+                end_working_date = None
             new_status = EmployeeStatus(
                 employee=employee, start_date=start_working_date, end_date=end_working_date)
+            print("Test")
+            print(new_status)
             new_status.save()
 
         return employee

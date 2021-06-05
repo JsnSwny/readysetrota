@@ -111,17 +111,6 @@ class Employee(models.Model):
     business = models.ForeignKey(
         Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
 
-    # wage = models.DecimalField(max_digits=12, decimal_places=2)
-    # WAGE_TYPES = [
-    #     ("H", 'Hourly'),
-    #     ("S", 'Salary'),
-    #     ("N", 'None')
-    # ]
-    # wage_type = models.CharField(
-    #     max_length=1,
-    #     choices=WAGE_TYPES,
-    #     default="N",
-    # )
     history = HistoricalRecords()
 
     start_date = models.DateField(null=True, blank=True)
@@ -135,7 +124,7 @@ class EmployeeStatus(models.Model):
     employee = models.ForeignKey(
         Employee, related_name="status", on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateField()
-    end_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
 
 
 class Wage(models.Model):

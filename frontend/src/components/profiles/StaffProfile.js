@@ -90,7 +90,6 @@ const StaffProfile = (props) => {
                 />
                 <div className="flex-container--between-start mobile">
                   {plan != "F" && <Availability employee={currentEmployee} />}
-                  {console.log(holidays)}
                   <HolidayRequest
                     holidays={
                       siteAdmin && id_param

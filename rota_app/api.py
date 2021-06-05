@@ -82,7 +82,10 @@ class ShiftViewSet(viewsets.ModelViewSet):
 class EmployeeFilter(django_filters.FilterSet):
     position__department = django_filters.NumberFilter(distinct=True)
     status__start_date = DateFilter(lookup_expr='lte')
-    status__end_date = DateFilter(lookup_expr='gte')
+    status__end_date = DateFilter(method='check_end_date')
+
+    def check_end_date(self, queryset, name, value):
+        return queryset.filter(Q(status__end_date__gte=value) | Q(status__end_date=None))
 
     class Meta:
         model = Employee

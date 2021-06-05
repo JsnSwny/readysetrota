@@ -15,22 +15,20 @@ const Status = ({
     (state) => state.employees.current.site.permissions
   );
 
-  console.log(startWorkingDate, endWorkingDate)
-
   return (
     <Fragment>
       <div className="flex-container--between form__wrapper">
         <div className="form__control--half">
           <label className="form__label">Start Working Date*</label>
-            <DatePicker
-                selected={startWorkingDate}
-                onChange={(date) => setStartWorkingDate(date)}
-                selectsStart
-                startDate={startWorkingDate}
-                endDate={endWorkingDate}
-                className="form__input"
-                dateFormat="MMMM do yyyy"
-            />
+          <DatePicker
+            selected={startWorkingDate}
+            onChange={(date) => setStartWorkingDate(date)}
+            selectsStart
+            startDate={startWorkingDate}
+            endDate={endWorkingDate}
+            className="form__input"
+            dateFormat="MMMM do yyyy"
+          />
           {/* <input
             className="form__input"
             type="date"
@@ -53,7 +51,7 @@ const Status = ({
             className="form__input"
             dateFormat="MMMM do yyyy
             "
-        />
+          />
           <p className="error">{errors.last_name}</p>
         </div>
       </div>

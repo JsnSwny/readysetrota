@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 import DefaultAvailability from "./DefaultAvailability";
 import Permissions from "./Permissions";
-import Status from "./Status"
+import Status from "./Status";
 import { parseISO, format } from "date-fns";
 
 const EmployeeProfileModal = (props) => {
@@ -47,8 +47,16 @@ const EmployeeProfileModal = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [permissions, setPermissions] = useState([]);
-  const [startWorkingDate, setStartWorkingDate] = useState(update && update.current_status.start_date ? parseISO(update.current_status.start_date) : new Date());
-  const [endWorkingDate, setEndWorkingDate] = useState(update && update.current_status.end_date ? parseISO(update.current_status.end_date) : "");
+  const [startWorkingDate, setStartWorkingDate] = useState(
+    update && update.current_status.start_date
+      ? parseISO(update.current_status.start_date)
+      : new Date()
+  );
+  const [endWorkingDate, setEndWorkingDate] = useState(
+    update && update.current_status.end_date
+      ? parseISO(update.current_status.end_date)
+      : ""
+  );
   const [availability, setAvailability] = useState({
     0: { name: "unselected", start_time: null, end_time: null },
     1: { name: "unselected", start_time: null, end_time: null },
@@ -95,7 +103,12 @@ const EmployeeProfileModal = (props) => {
   };
   const positionsProps = { position, setPosition };
   const permissionsProps = { permissions, setPermissions };
-  const statusProps = { startWorkingDate, setStartWorkingDate, endWorkingDate, setEndWorkingDate }
+  const statusProps = {
+    startWorkingDate,
+    setStartWorkingDate,
+    endWorkingDate,
+    setEndWorkingDate,
+  };
   const availabilityProps = {
     startTime,
     setStartTime,
@@ -119,7 +132,9 @@ const EmployeeProfileModal = (props) => {
       default_availability: availability,
       permissions,
       start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
-      end_working_date: format(endWorkingDate, "yyyy-MM-dd")
+      end_working_date: endWorkingDate
+        ? format(endWorkingDate, "yyyy-MM-dd")
+        : "",
     };
     error_obj = {
       first_name: firstName.length > 0 ? true : "First name is required",
@@ -176,15 +191,21 @@ const EmployeeProfileModal = (props) => {
       <div className={`flex-container form__tabs`}>
         <button
           onClick={() => setCurrentTab("Personal Details")}
-          className={`btn-8 ${errors && errors.first_name && (errors.first_name != true || errors.last_name != true) ? "err" : ""} ${
-            currentTab == "Personal Details" ? "active" : ""
-          }`}
+          className={`btn-8 ${
+            errors &&
+            errors.first_name &&
+            (errors.first_name != true || errors.last_name != true)
+              ? "err"
+              : ""
+          } ${currentTab == "Personal Details" ? "active" : ""}`}
         >
           Personal Details
         </button>
         <button
           onClick={() => setCurrentTab("Positions")}
-          className={`btn-8 ${errors && errors.positions && errors.positions != true ? "err" : ""} ${currentTab == "Positions" ? "active" : ""}`}
+          className={`btn-8 ${
+            errors && errors.positions && errors.positions != true ? "err" : ""
+          } ${currentTab == "Positions" ? "active" : ""}`}
         >
           Positions
         </button>
@@ -221,9 +242,7 @@ const EmployeeProfileModal = (props) => {
           <DefaultAvailability {...availabilityProps} />
         )}
         {currentTab == "Permissions" && <Permissions {...permissionsProps} />}
-        {currentTab == "Status" && (
-          <Status {...statusProps} />
-        )}
+        {currentTab == "Status" && <Status {...statusProps} />}
         <div className="flex-container--between form__actions">
           <button className="form__save" type="submit" value="Save">
             Save
