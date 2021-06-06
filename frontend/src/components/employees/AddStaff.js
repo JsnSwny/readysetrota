@@ -409,7 +409,7 @@ const AddStaff = (props) => {
                   } else if (form == "Staff") {
                     setOnConfirm(() => () => {
                       setConfirmOpen(false);
-                      dispatch(deleteEmployee(update.id));
+                      dispatch(updateEmployee(update.id, {...update, first_name: 'Anonymous', last_name: 'User'}))
                     });
                   } else if (form == "Site") {
                     if (sites.length == 1) {

@@ -153,6 +153,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return []
 
     def update(self, instance, validated_data):
+        last_archived_employee = Employee.objects.filter(
+            business=validated_data.get('business'), archived=True).last()
         instance = super().update(instance, validated_data)
         user = instance.user
 
@@ -167,18 +169,32 @@ class EmployeeSerializer(serializers.ModelSerializer):
         end_working_date = self.context['request'].query_params.get(
             'end_working_date')
 
+        if validated_data.get('archived') == True:
+            instance.first_name = 'Anonymous'
+            if last_archived_employee:
+                value = int(
+                    last_archived_employee.last_name.replace('Employee ', ''))
+                instance.last_name = 'Employee ' + str(value + 1)
+            else:
+                instance.last_name = 'Employee 1'
+            instance.save()
+
+            shifts = Shift.objects.filter(
+                employee=instance, date__gt=datetime.today()).delete()
+
         current_status = EmployeeStatus.objects.filter(
             employee=instance).order_by('-start_date').first()
 
-        if current_status:
-            current_status.start_date = start_working_date
-            if current_status.end_date != "":
-                current_status.end_date = end_working_date
-            current_status.save()
-        else:
-            new_status = EmployeeStatus(
-                employee=instance, start_date=start_working_date, end_date=end_working_date)
-            new_status.save()
+        if start_working_date:
+            if current_status:
+                current_status.start_date = start_working_date
+                if end_working_date != "":
+                    current_status.end_date = end_working_date
+                current_status.save()
+            else:
+                new_status = EmployeeStatus(
+                    employee=instance, start_date=start_working_date, end_date=end_working_date)
+                new_status.save()
 
         if wage:
             wage_obj = Wage.objects.filter(
@@ -253,20 +269,18 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         current_status = EmployeeStatus.objects.filter(
             employee=employee).order_by('-start_date').first()
-
-        if current_status:
-            current_status.start_date = start_working_date
-            if current_status.end_date != "":
-                current_status.end_date = end_working_date
-            current_status.save()
-        else:
-            if end_working_date == "":
-                end_working_date = None
-            new_status = EmployeeStatus(
-                employee=employee, start_date=start_working_date, end_date=end_working_date)
-            print("Test")
-            print(new_status)
-            new_status.save()
+        if start_working_date:
+            if current_status:
+                current_status.start_date = start_working_date
+                if current_status.end_date != "":
+                    current_status.end_date = end_working_date
+                current_status.save()
+            else:
+                if end_working_date == "":
+                    end_working_date = None
+                new_status = EmployeeStatus(
+                    employee=employee, start_date=start_working_date, end_date=end_working_date)
+                new_status.save()
 
         return employee
 
@@ -283,7 +297,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'site_permissions',)
+                  'position', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
 
     def get_site_permissions(self, obj):
         if(obj.user != None):
@@ -355,7 +369,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions',)
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):

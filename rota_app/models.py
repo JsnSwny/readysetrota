@@ -110,11 +110,9 @@ class Employee(models.Model):
     default_availability = JSONField(default=default_availability)
     business = models.ForeignKey(
         Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
-
     history = HistoricalRecords()
 
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

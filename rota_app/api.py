@@ -90,7 +90,7 @@ class EmployeeFilter(django_filters.FilterSet):
     class Meta:
         model = Employee
         fields = ['status__start_date', 'status__end_date', 'position__department',
-                  'position__department__site', 'business']
+                  'position__department__site', 'business', 'archived']
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
@@ -105,7 +105,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         business = int(self.request.query_params.get('business'))
         business = Business.objects.filter(id=business).first()
-
         total_employees = business.total_employees
         current_employees = Employee.objects.filter(business=business)
         if len(current_employees) >= total_employees:
@@ -114,7 +113,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = EmployeeFilter
-    ordering_fields = ('first_name',)
+    ordering_fields = ('first_name', 'archived', 'last_name',)
 
 
 class EmployeeListViewSet(viewsets.ModelViewSet):
@@ -130,7 +129,7 @@ class EmployeeListViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = EmployeeFilter
-    ordering_fields = ('first_name',)
+    ordering_fields = ('first_name', 'archived', 'last_name',)
 
 
 class AdminEmployeeListViewSet(EmployeeListViewSet, viewsets.ModelViewSet):
