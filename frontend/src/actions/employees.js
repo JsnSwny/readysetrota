@@ -263,7 +263,8 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
     });
 };
 
-export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
+export const getEmployees = (archived=false, start_date, end_date) => (dispatch, getState) => {
+
   let current = getState().employees.current;
   let site_admin = true;
   let query = "";
@@ -275,18 +276,23 @@ export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
     query += `&position__department=${current.department.id}`;
   }
   if (localStorage.getItem("show_all_employees") == "false") {
-    start_date = format(new Date(), "yyyy-MM-dd");
-    end_date = format(new Date(), "yyyy-MM-dd");
+    if(!start_date) {
+      start_date = format(new Date(), "yyyy-MM-dd");
+      end_date = format(new Date(), "yyyy-MM-dd");
+    }
+    
+    if (start_date && end_date) {
+      query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
+    }
+    
   }
-  if (start_date && end_date) {
-    query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
-  }
+  
 
   axios
     .get(
       `/api/employeelist${
         site_admin ? "admin" : ""
-      }/?${query}&ordering=first_name`,
+      }/?${query}&archived=${!archived ? false : ""}&ordering=archived,first_name,last_name`,
       tokenConfig(getState)
     )
     .then((res) => {
@@ -335,15 +341,18 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
   getState
 ) => {
   let current = getState().employees.current;
+  let query = "";
+  if(employee.wage_type) {
+    query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`
+  }
+  if(employee.start_working_date) {
+    query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`
+  }
   axios
     .put(
-      `/api/employees/${update}/?wage_type=${employee.wage_type}&wage=${
-        employee.wage
-      }&start_working_date=${employee.start_working_date}&end_working_date=${
-        employee.end_working_date
-      }${
-        employee.hasOwnProperty("permissions") &&
-        `&permissions=${employee.permissions}`
+      `/api/employees/${update}/?${query}${
+        employee.hasOwnProperty("permissions") ?
+        `&permissions=${employee.permissions}` : ""
       }`,
       employee,
       tokenConfig(getState)
@@ -381,7 +390,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
-  console.log("Employee");
+  
   axios
     .post(
       `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`,

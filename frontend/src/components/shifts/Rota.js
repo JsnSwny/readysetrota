@@ -54,7 +54,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
-    dispatch(getEmployees(start_date, end_date));
+    dispatch(getEmployees(true, start_date, end_date));
   };
 
   // Set Current Employee
@@ -224,9 +224,7 @@ const Rota = ({ modalProps, confirmProps }) => {
           );
 
         default:
-          return employees.sort((a, b) =>
-            a.first_name.localeCompare(b.first_name)
-          );
+          return employees;
       }
     } else {
       return employees;
@@ -301,7 +299,9 @@ const Rota = ({ modalProps, confirmProps }) => {
               />
             )}
             {sortEmployees().map((employee, i) => (
+              (!employee.archived || shifts_list.find(item => item.employee && item.employee.id == employee.id)) &&
               <div key={employee.id} className="rota__container">
+                {console.log(shifts_list)}
                 <Employee
                   employee={employee}
                   current_employee={current_employee}
