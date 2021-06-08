@@ -269,10 +269,13 @@ class Forecast(models.Model):
 
 
 class TimeClock(models.Model):
+    shift = models.OneToOneField(
+        Shift, on_delete=models.CASCADE)
     employee = models.ForeignKey(
         Employee, related_name="employee_timeclock", on_delete=models.CASCADE)
     clock_in = models.TimeField()
     clock_out = models.TimeField()
+    break_length = models.IntegerField(default=0)
 
 
 class Break(models.Model):

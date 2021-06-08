@@ -1,7 +1,7 @@
 import React from "react";
-import EmployeeProfileModal from "./EmployeeProfileModal";
+import EmployeeProfileModal from "./employee/EmployeeProfileModal";
 import StaffManagementModal from "./StaffManagementModal";
-import ShiftModal from "./ShiftModal";
+import ShiftModal from "./shift/ShiftModal";
 import ForecastModal from "./ForecastModal";
 
 const CreateShift = (props) => {

@@ -146,8 +146,7 @@ const StaffManagementModal = (props) => {
                     });
                   } else if (form == "Staff") {
                     setOnConfirm(() => () => {
-                      setConfirmOpen(false);
-                      console.log("TEST 1")
+                      setConfirmOpen(false);     
                       // dispatch(updateEmployee(update.id, {...update, first_name: 'Anonymous', last_name: 'User'}))
                       dispatch(deleteEmployee(update.id));
                     });

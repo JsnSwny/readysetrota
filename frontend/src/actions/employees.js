@@ -265,8 +265,6 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 
 export const getEmployees = (archived=false, start_date, end_date) => (dispatch, getState) => {
 
-  console.log(archived)
-
   let current = getState().employees.current;
   let site_admin = true;
   let query = "";
@@ -278,8 +276,6 @@ export const getEmployees = (archived=false, start_date, end_date) => (dispatch,
     query += `&position__department=${current.department.id}`;
   }
   if (localStorage.getItem("show_all_employees") == "false") {
-    console.log("YES")
-    console.log(start_date)
     if(!start_date) {
       start_date = format(new Date(), "yyyy-MM-dd");
       end_date = format(new Date(), "yyyy-MM-dd");
@@ -394,7 +390,7 @@ export const updateEmployee = (update, employee, siteAdmin, current_site) => (
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
-  console.log("Employee");
+  
   axios
     .post(
       `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`,
