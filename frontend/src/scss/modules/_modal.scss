@@ -32,6 +32,9 @@
     max-height: 80%;
     // overflow: auto;
     max-width: 750px;
+    &--sm {
+      max-width: 550px;
+    }
     width: 100%;
     @include wi-mq(tablet) {
       max-width: 90%;

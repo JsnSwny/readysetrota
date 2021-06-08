@@ -40,6 +40,13 @@
 // }
 
 .form {
+  &-beta {
+    label {
+      font-weight: bold;
+      text-align: center;
+      display: block;
+    }
+  }
   width: 80%;
   margin: 0 auto;
   padding: 40px 0;
@@ -110,7 +117,7 @@
   }
   &__control {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 14px;
     &--half {
       @extend .form__control;
       width: 48.5%;
@@ -194,6 +201,14 @@
     }
     &:hover {
       background-color: darken($green, 10%);
+    }
+    &.join {
+      background-color: $blue;
+      margin: 0 auto;
+      margin-top: 20px;
+      &:hover {
+        background-color: darken($blue, 10%);
+      }
     }
   }
   &__delete {

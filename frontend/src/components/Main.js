@@ -41,6 +41,7 @@ import Checkout from "./accounts/Checkout";
 import Confirm from "./layout/Confirm";
 
 import Settings from "./settings/Settings";
+import Beta from "./landing/Beta";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -83,7 +84,7 @@ const Main = () => {
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
       if (sites.length > 0) {
-        dispatch(getEmployees(false))
+        dispatch(getEmployees(false));
         dispatch(getPositions(true));
         dispatch(getPositions());
         dispatch(
@@ -159,6 +160,10 @@ const Main = () => {
             component={Home}
             user_only_pass={true}
             modalProps={modalProps}
+          />
+          <Route
+            path="/beta"
+            render={(props) => <Beta {...props} {...modalProps} />}
           />
           <PrivateRoute
             path="/list/:type"

@@ -386,3 +386,84 @@ footer {
     }
   }
 }
+
+.beta {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+    url("/static/media/restaurant.jpg");
+  margin: -20px 0;
+  color: white;
+  background-position: center;
+  background-size: cover;
+  h1 {
+    font-size: 72px;
+  }
+  p {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+  }
+  img {
+    width: 150px;
+  }
+  button {
+    background-color: $pink;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin: 0 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.2s ease background-color, 0.5s ease color;
+    &:hover {
+      background-color: lighten($pink, 5%);
+      color: $blue;
+    }
+    &:nth-child(1) {
+      background-color: #38bde7;
+      &:hover {
+        background-color: lighten(#38bde7, 5%);
+      }
+    }
+  }
+  label {
+    font-weight: bold;
+    text-align: center;
+  }
+  .form__save {
+    background-color: $blue;
+    margin: 0 auto;
+  }
+  .video-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    iframe {
+      width: 80%;
+      height: 80vh;
+    }
+    &__close {
+      align-self: flex-end;
+      margin-right: 10%;
+      font-size: 32px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.3s ease transform, 0.5s ease color;
+      &:hover {
+        transform: rotate(90deg);
+        color: $pink;
+      }
+    }
+  }
+}
