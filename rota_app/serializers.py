@@ -26,7 +26,8 @@ class BusinessSerializer(serializers.ModelSerializer):
                   'subscription_cancellation', 'number_of_employees', 'trial_end',)
 
     def get_number_of_employees(self, obj):
-        employees = Employee.objects.filter(business=obj.id).distinct()
+        employees = Employee.objects.filter(business=obj.id, status__start_date__lte=date.today(
+        )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
     def create(self, validated_data):
@@ -48,7 +49,8 @@ class BasicUserSerializer(serializers.ModelSerializer):
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(
-            position__department=obj.id).distinct()
+            position__department=obj.id, status__start_date__lte=date.today(
+            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
 
@@ -81,7 +83,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(
-            position__department=obj.id).distinct()
+            position__department=obj.id, status__start_date__lte=date.today(
+            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
 
@@ -389,10 +392,22 @@ class TimeClockSerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(
     ), source='employee', write_only=True, required=False, allow_null=True)
 
+    length = serializers.SerializerMethodField()
+
     class Meta:
         model = TimeClock
         fields = ('clock_in', 'clock_out', 'break_length',
-                  'employee_id',)
+                  'employee_id', 'length',)
+
+    def get_length(self, obj):
+        if obj.clock_in and obj.clock_out:
+            current_date = date.today()
+            start = datetime.combine(current_date, obj.clock_in)
+            end = datetime.combine(current_date, obj.clock_out)
+            if (end < start):
+                end = end + timedelta(days=1)
+            shift_length = round((end - start).total_seconds() / 3600, 2)
+            return shift_length - (obj.break_length / 60)
 
 
 class ShiftListSerializer(serializers.ModelSerializer):
@@ -439,18 +454,18 @@ class ShiftListSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
+        print("UPDATING")
         timeclock = validated_data.pop('timeclock', [])
+        print(timeclock)
         instance = super().update(instance, validated_data)
         if(timeclock):
-            tc, created = TimeClock.objects.get_or_create(shift=instance)
+            print("UPDATING 2")
+            tc, created = TimeClock.objects.get_or_create(
+                shift=instance, defaults=timeclock)
             if not created:
-                print(timeclock)
-                print(tc)
                 for attr, value in timeclock.items():
                     setattr(tc, attr, value)
                 tc.save()
-        print(timeclock)
-
         return instance
 
     class Meta:
@@ -539,7 +554,8 @@ class SiteSerializer(serializers.ModelSerializer):
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(
-            position__department__site=obj.id).distinct()
+            position__department__site=obj.id, status__start_date__lte=date.today(
+            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
     def get_unpublished_shifts(self, obj):

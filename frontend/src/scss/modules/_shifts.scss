@@ -1,4 +1,17 @@
 .dates {
+  &--stats {
+    .dates__date {
+      background-color: lighten($blue, 5%);
+      border-bottom-left-radius: 7px;
+      border-bottom-right-radius: 7px;
+      small {
+        font-size: 12px;
+      }
+    }
+    .item-block {
+      padding: 7px 5px !important;
+    }
+  }
   position: relative;
   &.filtered {
     .container-right {
@@ -98,6 +111,14 @@
   }
   &__container {
     display: flex;
+    &--stats {
+      max-height: 0;
+      overflow: hidden;
+      transition: 0.5s ease max-height;
+      &.active {
+        max-height: 100px;
+      }
+    }
   }
   &__date {
     text-align: center;

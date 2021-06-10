@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { addBusinessDays, format, parseISO, addDays, subDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
@@ -17,6 +17,7 @@ const Dates = (props) => {
     setForecastDate,
     forecastDate,
     filterDate,
+    showFinancials
   } = props;
   let employees = useSelector((state) => state.employees.employees);
   let current = useSelector((state) => state.employees.current);
@@ -31,9 +32,9 @@ const Dates = (props) => {
   let business = useSelector((state) => state.employees.business);
   let siteAdmin = useSelector((state) => state.employees.site_admin);
 
-  const getWeeklyCost = (dateList, fun) => {
+  const getWeeklyCost = (dateList, fun, type) => {
     return dateList
-      .map((item) => parseFloat(fun(item)))
+      .map((item) => parseFloat(fun(item, type)))
       .reduce((a, b) => a + b, 0);
   };
 
@@ -56,7 +57,7 @@ const Dates = (props) => {
     return 0;
   }
 
-  const getHourly = (date) => {
+  const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == formatDate);
     let hourly = shifts_filtered
@@ -64,20 +65,20 @@ const Dates = (props) => {
         (item) =>
           item.employee &&
           item.absence == "None" &&
-          item.wage > 0 &&
-          +parseFloat(item.wage * item.length).toFixed(2)
+          item.wage > 0 && (type == 'p' ?
+          item.timeclock ? +parseFloat(item.wage * item.timeclock.length).toFixed(2) : 0 : +parseFloat(item.wage * item.length).toFixed(2))
       )
       .reduce((a, b) => a + b, 0.0);
     
     return hourly;
   }
 
-  const getCost = (date) => {
+  const getCost = (date, type) => {
     let total = employees.map(item => getWage(date, item))
     if(total.length == 0) return 0;
     total = total.reduce((a, b) => a + b);
 
-    total += getHourly(date);
+    total += getHourly(date, type);
     
     return total.toFixed(2);
   };
@@ -97,6 +98,7 @@ const Dates = (props) => {
 
 
   return (
+    <Fragment>
     <section
       className={`dates container ${filterDate ? "filtered" : ""} ${
         scrollPosition >= 250 ? " fixed" : ""
@@ -109,23 +111,6 @@ const Dates = (props) => {
               {format(dates[0], "do MMMM")} -{" "}
               {format(dates[dates.length - 1], "do MMMM")}
             </p>
-            {permissions.includes("manage_wages") && business.plan != "F" && (
-              <small>
-                £
-                <CountUp
-                  duration={1}
-                  decimals={2}
-                  end={getWeeklyCost(dates, getCost)}
-                />
-                {forecast.length > 0
-                  ? `/ £${getWeeklyCost(dates, getAmount)} (${(
-                      (getWeeklyCost(dates, getCost) /
-                        getWeeklyCost(dates, getAmount)) *
-                      100
-                    ).toFixed(2)}%)`
-                  : ""}
-              </small>
-            )}
           </div>
         </div>
 
@@ -161,23 +146,6 @@ const Dates = (props) => {
                 {format(date, "ccc do MMM").split(" ")[1]}{" "}
                 {format(date, "ccc do MMM").split(" ")[2]}
               </p>
-              {permissions.includes("manage_wages") && business.plan != "F" && (
-                <small>
-                  {permissions.includes("manage_wages") && `£${getCost(date)}`}
-
-                  {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
-
-                  {forecast.some(
-                    (item) => item.date == format(date, "yyyy-MM-dd")
-                  )
-                    ? settings.forecasting &&
-                      `/ £${getAmount(date)} (${(
-                        (getCost(date) / getAmount(date)) *
-                        100
-                      ).toFixed(2)}%)`
-                    : ""}
-                </small>
-              )}
               {template ? (
                 <AddShiftButton
                   date={format(date, "yyyy-MM-dd")}
@@ -195,6 +163,120 @@ const Dates = (props) => {
         </div>
       </div>
     </section>
+
+    <section
+      className={`dates dates--stats container ${filterDate ? "filtered" : ""} ${
+        scrollPosition >= 250 ? " fixed" : ""
+      }`}
+    >
+      <div className={`dates__container dates__container--stats ${showFinancials ? 'active' : ""}`}>
+        <div className="container-left">
+          <div className="item-block dates__date">
+            {permissions.includes("manage_wages") && business.plan != "F" && (
+              <Fragment>
+              <div>
+                <small>
+                <strong>Predicted:</strong> £
+                <CountUp
+                  duration={1}
+                  decimals={2}
+                  end={getWeeklyCost(dates, getCost)}
+                />
+                {forecast.length > 0
+                  ? ` (${(
+                      (getWeeklyCost(dates, getCost) /
+                        getWeeklyCost(dates, getAmount)) *
+                      100
+                    ).toFixed(2)}%)`
+                  : ""}
+              </small>
+              </div>
+              <div>
+              <small>
+              <strong>Accurate:</strong> £
+              <CountUp
+                duration={1}
+                decimals={2}
+                end={getWeeklyCost(dates, getCost, 'p')}
+              />
+              {forecast.length > 0
+                ? ` (${(
+                    (getWeeklyCost(dates, getCost, 'p') /
+                      getWeeklyCost(dates, getAmount)) *
+                    100
+                  ).toFixed(2)}%)`
+                : ""}
+            </small>
+            </div>
+            </Fragment>
+            )}
+          </div>
+        </div>
+
+        <div className="container-right">
+          {dates.map((date) => (
+            
+            <div
+              key={date}
+              className={`item-block dates__date ${
+                filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
+              }`}
+            >
+              {permissions.includes("manage_wages") && business.plan != "F" && (
+                <Fragment>
+                  <div>
+                    <small>
+                      {permissions.includes("manage_wages") && (
+                        <Fragment>
+                          £{getCost(date)}
+                        </Fragment>
+                        
+                        
+                       )
+                      }
+
+                      {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
+                      {forecast.some(
+                        (item) => item.date == format(date, "yyyy-MM-dd")
+                      )
+                        ? settings.forecasting &&
+                          ` (${(
+                            (getCost(date) / getAmount(date)) *
+                            100
+                          ).toFixed(2)}%)`
+                        : ""}
+                    </small>
+                  </div>
+                  <div>
+                    <small>
+                      {permissions.includes("manage_wages") && (
+                        <Fragment>
+                          £{getCost(date, 'p')}
+                        </Fragment>
+                      )}
+
+                      {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
+                      {forecast.some(
+                        (item) => item.date == format(date, "yyyy-MM-dd")
+                      )
+                        ? settings.forecasting &&
+                          ` (${(
+                            (getCost(date, 'p') / getAmount(date)) *
+                            100
+                          ).toFixed(2)}%)`
+                        : ""}
+                    </small>
+                  </div>
+                </Fragment>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    </Fragment>
   );
 };
 

@@ -44,7 +44,7 @@ const Employee = (props) => {
     return 0;
   }
 
-  const getHourly = (date) => {
+  const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == formatDate);
     let hourly = shifts_filtered
@@ -52,19 +52,19 @@ const Employee = (props) => {
         (item) =>
           item.employee && item.employee.id == employee.id &&
           item.absence == "None" &&
-          item.wage > 0 &&
-          +parseFloat(item.wage * item.length).toFixed(2)
+          item.wage > 0 && (type == 'p' ?
+          item.timeclock ? +parseFloat(item.wage * item.timeclock.length).toFixed(2) : 0 : +parseFloat(item.wage * item.length).toFixed(2))
       )
       .reduce((a, b) => a + b, 0.0);
 
     return hourly;
   }
 
-  const getTotalWage = () => {
+  const getTotalWage = (type) => {
     let total = 0;
     result.forEach(item => {
       total += getWage(item, employee);
-      total += getHourly(item)
+      total += getHourly(item, type)
     })
     return total.toFixed(2);
   }
@@ -102,7 +102,7 @@ const Employee = (props) => {
       <p className="employee__hours">
         {getHours(employee.id)} Hours{" "}
         {permissions.includes("manage_wages") && getTotalWage() != 0.00 &&
-          `(£${getTotalWage()})`}
+          `(£${getTotalWage()} / £${getTotalWage('p')})`}
       </p>
     </div>
   );

@@ -12,6 +12,8 @@ const RotaBar = (props) => {
     showAvailabilities,
     setShowAvailabilities,
     scrollPosition,
+    showFinancials,
+    setShowFinancials
   } = props;
 
   // Selectors
@@ -125,6 +127,22 @@ const RotaBar = (props) => {
                     }`}
                   ></i>
                   <p>Availabilities</p>
+                </div>
+              )}
+              {permissions.includes("manage_wages") &&
+              business.plan != "F" && (
+                <div
+                  onClick={() => {
+                    setShowFinancials(!showFinancials);
+                  }}
+                  className={`dates__mobile-item`}
+                >
+                  <i
+                    className={`fas ${
+                      showFinancials ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
+                  <p>Financials</p>
                 </div>
               )}
             {/* SEND APPROVAL SHIFTS */}
