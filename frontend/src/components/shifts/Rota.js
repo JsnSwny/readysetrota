@@ -45,6 +45,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   const [filterDate, setFilterDate] = useState("");
   const [currentDevice, setCurrentDevice] = useState("");
   const [showAvailabilities, setShowAvailabilities] = useState(false);
+  const [showFinancials, setShowFinancials] = useState(false);
   const [template, setTemplate] = useState(false);
   const [limit, setLimit] = useState("");
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -205,7 +206,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     if (positions.length > 0 && filterDate == "") {
       switch (staffSort) {
         case "position":
-          return employees.sort(
+          return employeesList.sort(
             (a, b) =>
               positions.find(
                 (pos) =>
@@ -224,10 +225,10 @@ const Rota = ({ modalProps, confirmProps }) => {
           );
 
         default:
-          return employees;
+          return employeesList;
       }
     } else {
-      return employees;
+      return employeesList;
     }
   };
 
@@ -267,6 +268,8 @@ const Rota = ({ modalProps, confirmProps }) => {
         scrollPosition={scrollPosition}
         setTemplate={setTemplate}
         template={template}
+        showFinancials={showFinancials}
+        setShowFinancials={setShowFinancials}
       />
       <div>
         <Dates
@@ -276,6 +279,7 @@ const Rota = ({ modalProps, confirmProps }) => {
           template={template}
           shifts={shifts_list}
           filterDate={filterDate}
+          showFinancials={showFinancials}
           {...modalProps}
         />
         {isLoading && <Loading />}

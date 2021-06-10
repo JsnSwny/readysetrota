@@ -4,17 +4,12 @@ import { useSelector } from "react-redux";
 import TimePicker from 'react-time-picker'
 
 const Timeclock = ({
-  employee,
-  shiftEmployee,
-  setShiftEmployee,
-  startTime,
-  setStartTime,
-  endTime,
-  setEndTime,
-  breakLength,
-  setBreakLength,
-  openEmployee,
-  setOpenEmployee,
+  startTimeClock,
+  setStartTimeClock,
+  endTimeClock,
+  setEndTimeClock,
+  breakLengthClock,
+  setBreakLengthClock,
 }) => {
   let popular_times = useSelector((state) => state.shifts.popular_times);
   let employees = useSelector((state) => state.employees.employees);
@@ -68,9 +63,9 @@ const Timeclock = ({
           <label className="form__label">Start Time:</label>
           <input
             className="form__input"
-            onChange={(e) => setStartTime(e.target.value)}
+            onChange={(e) => setStartTimeClock(e.target.value)}
             name="starttime"
-            value={startTime}
+            value={startTimeClock}
             type="time"
           />
           <p className="error">{errors.start_time}</p>
@@ -79,18 +74,18 @@ const Timeclock = ({
           <label className="form__label">Break:</label>
           <input 
             type="number" 
-            onChange={(e) => setBreakLength(e.target.value)}
+            onChange={(e) => setBreakLengthClock(e.target.value)}
             className="form__input"
-            value={breakLength}
+            value={breakLengthClock}
         />
         </div>
         <div className="form__control--third">
           <label className="form__label">End Time:</label>
           <input
             className="form__input"
-            onChange={(e) => setEndTime(e.target.value)}
+            onChange={(e) => setEndTimeClock(e.target.value)}
             name="starttime"
-            value={endTime}
+            value={endTimeClock}
             type="time"
           />
           <p className="error">{errors.end_time}</p>

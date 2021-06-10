@@ -37,6 +37,10 @@ const ShiftModal = (props) => {
   const [absenceInfo, setAbsenceInfo] = useState("");
   const [currentTab, setCurrentTab] = useState("Shift Details");
 
+  const [startTimeClock, setStartTimeClock] = useState("");
+  const [endTimeClock, setEndTimeClock] = useState("");
+  const [breakLengthClock, setBreakLengthClock] = useState(0);
+
   let error_obj = {};
 
   const dispatch = useDispatch();
@@ -52,10 +56,19 @@ const ShiftModal = (props) => {
       setBreakLength(update.break_length);
       setAbsence(update.absence);
       setAbsenceInfo(update.absence_info);
+
+      if(update.timeclock) {
+        setStartTimeClock(update.timeclock.clock_in)
+        setEndTimeClock(update.timeclock.clock_out)
+        setBreakLengthClock(update.timeclock.break_length)
+      }
+      
     }
   }, [update]);
 
   const compareShift = (shift1, shift2) => {
+    console.log(shift1)
+    console.log(shift2)
     return (
       shift1.start_time == shift2.start_time &&
         shift1.end_time == shift2.end_time &&
@@ -64,7 +77,7 @@ const ShiftModal = (props) => {
         shift1.employee.id == shift2.employee_id &&
         (shift2.position_id.length > 0 || shift1.positions.length > 0
           ? shift1.positions == shift2.positions
-          : true)
+          : true) && shift1.timeclock == shift2.timeclock
     );
   };
 
@@ -89,7 +102,7 @@ const ShiftModal = (props) => {
           : "Creation"
         : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
-      timeclock: {clock_in: startTime, clock_out: endTime, break_length: breakLength, employee_id: shiftEmployee ? shiftEmployee : null}
+      timeclock: startTimeClock && endTimeClock ? {clock_in: startTimeClock, clock_out: endTimeClock, break_length: breakLengthClock, employee_id: shiftEmployee ? shiftEmployee : null} : undefined
     };
     error_obj = {
       start_time: startTime != "" ? true : "This field is required",
@@ -141,6 +154,15 @@ const ShiftModal = (props) => {
     setBreakLength,
   }
 
+  let timeClockProps = {
+    startTimeClock,
+    setStartTimeClock,
+    endTimeClock,
+    setEndTimeClock,
+    breakLengthClock,
+    setBreakLengthClock,
+  }
+
   let currentTabProps = {
     setCurrentTab,
     currentTab
@@ -168,7 +190,7 @@ const ShiftModal = (props) => {
             shift={update}
           />
       case 'Timeclock':
-        return <Timeclock {...shiftDetailsProps} />
+        return <Timeclock {...timeClockProps} />
       default:
         return 'Invalid Tab';
     }
