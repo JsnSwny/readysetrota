@@ -160,7 +160,7 @@ const StaffPicker = (props) => {
               Sort by Position
             </span>
             <div>
-              <p>Show All Employees</p>
+              <p>Show Inactive Employees</p>
               <Switch
                 onChange={() => {
                   localStorage.setItem("show_all_employees", !showAll);

@@ -90,6 +90,15 @@ const Shift = (props) => {
                     }`}
                   >
                     {shift.start_time} - {shift.end_time}{" "}
+                    <i
+                      className={`fas fa-clock ${
+                        shift.stage == "Published"
+                          ? shift.timeclock
+                            ? "active"
+                            : ""
+                          : "hide"
+                      }`}
+                    ></i>
                   </p>
                 </div>
                 {shift.break_length > 0 && (

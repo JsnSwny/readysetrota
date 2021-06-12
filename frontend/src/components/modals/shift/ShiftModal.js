@@ -11,6 +11,7 @@ import Positions from "../Positions";
 import Timeclock from "./tabs/Timeclock";
 import useref from "gulp-useref";
 import Tab from "../Tab";
+import { parseISO } from "date-fns";
 
 const ShiftModal = (props) => {
   const { date, employee, onClose, update } = props;
@@ -57,28 +58,42 @@ const ShiftModal = (props) => {
       setAbsence(update.absence);
       setAbsenceInfo(update.absence_info);
 
-      if(update.timeclock) {
-        setStartTimeClock(update.timeclock.clock_in)
-        setEndTimeClock(update.timeclock.clock_out)
-        setBreakLengthClock(update.timeclock.break_length)
+      if (update.timeclock) {
+        setStartTimeClock(update.timeclock.clock_in);
+        setEndTimeClock(update.timeclock.clock_out);
+        setBreakLengthClock(update.timeclock.break_length);
       }
-      
     }
   }, [update]);
 
   const compareShift = (shift1, shift2) => {
-    console.log(shift1)
-    console.log(shift2)
     return (
       shift1.start_time == shift2.start_time &&
-        shift1.end_time == shift2.end_time &&
-        shift1.absence == shift2.absence &&
-      shift1.info == shift2.info && shift1.break_length == shift2.break_length &&
-        shift1.employee.id == shift2.employee_id &&
-        (shift2.position_id.length > 0 || shift1.positions.length > 0
-          ? shift1.positions == shift2.positions
-          : true) && shift1.timeclock == shift2.timeclock
+      shift1.end_time == shift2.end_time &&
+      shift1.absence == shift2.absence &&
+      shift1.info == shift2.info &&
+      shift1.break_length == shift2.break_length &&
+      shift1.employee.id == shift2.employee_id &&
+      (shift2.position_id.length > 0 || shift1.positions.length > 0
+        ? shift1.positions == shift2.positions
+        : true) &&
+      shift1.timeclock == shift2.timeclock
     );
+  };
+
+  const isUpdated = () => {
+    if (parseISO(update.date) < new Date()) {
+      return false;
+    }
+    if (
+      startTime == update.start_time &&
+      endTime == update.end_time &&
+      info == update.info &&
+      update.stage == "Published"
+    ) {
+      return false;
+    }
+    return true;
   };
 
   const onSubmit = (e) => {
@@ -95,14 +110,22 @@ const ShiftModal = (props) => {
       open_shift: shiftEmployee ? false : true,
       department_id: current.department.id,
       stage: shiftEmployee
-        ? absence != "None"
-          ? "Published"
-          : !settings.shift_approval || user.business
-          ? "Unpublished"
-          : "Creation"
+        ? isUpdated()
+          ? !settings.shift_approval || user.business
+            ? "Unpublished"
+            : "Creation"
+          : "Published"
         : "Published",
       position_id: shiftEmployee ? [] : position.map((pos) => pos.id),
-      timeclock: startTimeClock && endTimeClock ? {clock_in: startTimeClock, clock_out: endTimeClock, break_length: breakLengthClock, employee_id: shiftEmployee ? shiftEmployee : null} : undefined
+      timeclock:
+        startTimeClock && endTimeClock
+          ? {
+              clock_in: startTimeClock,
+              clock_out: endTimeClock,
+              break_length: breakLengthClock,
+              employee_id: shiftEmployee ? shiftEmployee : null,
+            }
+          : undefined,
     };
     error_obj = {
       start_time: startTime != "" ? true : "This field is required",
@@ -152,7 +175,7 @@ const ShiftModal = (props) => {
     setShiftEmployee,
     breakLength,
     setBreakLength,
-  }
+  };
 
   let timeClockProps = {
     startTimeClock,
@@ -161,40 +184,44 @@ const ShiftModal = (props) => {
     setEndTimeClock,
     breakLengthClock,
     setBreakLengthClock,
-  }
+  };
 
   let currentTabProps = {
     setCurrentTab,
-    currentTab
-  }
+    currentTab,
+  };
 
   const renderSwitch = () => {
-    switch(currentTab) {
-      case 'Shift Details':
-        return <ShiftDetails {...shiftDetailsProps} />
-      case 'Extra Info':
-        return <ExtraInfo info={info} setInfo={setInfo} />
-      case 'Absence':
-        return <Absence
+    switch (currentTab) {
+      case "Shift Details":
+        return <ShiftDetails {...shiftDetailsProps} />;
+      case "Extra Info":
+        return <ExtraInfo info={info} setInfo={setInfo} />;
+      case "Absence":
+        return (
+          <Absence
             update={update}
             absence={absence}
             setAbsence={setAbsence}
             absenceInfo={absenceInfo}
             setAbsenceInfo={setAbsenceInfo}
           />
-      case 'Positions':
-        return <Positions
+        );
+      case "Positions":
+        return (
+          <Positions
             position={position}
             setPosition={setPosition}
             many={true}
             shift={update}
           />
-      case 'Timeclock':
-        return <Timeclock {...timeClockProps} />
+        );
+      case "Timeclock":
+        return <Timeclock {...timeClockProps} />;
       default:
-        return 'Invalid Tab';
+        return "Invalid Tab";
     }
-  }
+  };
 
   return (
     <div className="form">
@@ -206,15 +233,16 @@ const ShiftModal = (props) => {
         {update ? "Update Shift" : "Create Shift"}
       </h1>
       <div className="flex-container--center form__tabs">
-        <Tab title='Shift Details' {...currentTabProps} />
-        <Tab title='Extra Info' {...currentTabProps} />
-        <Tab title='Timeclock' {...currentTabProps} />
+        <Tab title="Shift Details" {...currentTabProps} />
+        <Tab title="Extra Info" {...currentTabProps} />
+        {current.business.plan != "F" && (
+          <Tab title="Timeclock" {...currentTabProps} />
+        )}
+
         {employee && update && update.stage == "Published" && (
-          <Tab title='Absence' {...currentTabProps} />
+          <Tab title="Absence" {...currentTabProps} />
         )}
-        {!employee && (
-          <Tab title='Positions' {...currentTabProps} />
-        )}
+        {!employee && <Tab title="Positions" {...currentTabProps} />}
       </div>
       <form onSubmit={onSubmit} className="form__form">
         {renderSwitch()}

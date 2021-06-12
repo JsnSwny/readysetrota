@@ -440,6 +440,17 @@
     font-size: 16px;
     margin-right: 10px;
     position: relative;
+    .fa-clock {
+      opacity: 0.5;
+      font-size: 10px;
+      margin-left: 3px;
+      &.active {
+        opacity: 1;
+      }
+      &.hide {
+        display: none;
+      }
+    }
     &.open-shift {
       cursor: pointer;
     }

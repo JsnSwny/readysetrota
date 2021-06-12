@@ -43,7 +43,7 @@ const StaffProfile = (props) => {
       )
     );
     dispatch(getOpenShifts(format(new Date(), "yyyy-MM-dd")));
-  }, []);
+  }, [current]);
 
   useEffect(() => {
     if (typeof employee !== "undefined") {
