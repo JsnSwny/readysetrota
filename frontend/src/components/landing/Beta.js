@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const Beta = ({ setOpen, setType, test }) => {
   const [showVideo, setShowVideo] = useState(false);
-  console.log(test);
   return (
     <div className="beta">
       {showVideo && (

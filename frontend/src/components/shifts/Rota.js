@@ -177,8 +177,6 @@ const Rota = ({ modalProps, confirmProps }) => {
       (item) => item.employee.id == employee && item.date == date
     )[0];
     if (!available) {
-      console.log(employee);
-      console.log(employees);
       date = parseISO(date);
       available = employeesList.find((item) => item.id == employee)
         .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
