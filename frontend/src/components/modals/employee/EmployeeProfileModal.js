@@ -250,7 +250,7 @@ const EmployeeProfileModal = (props) => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              console.log("Test")
+              console.log("Test");
               if (update) {
                 setConfirmOpen(true);
                 setMessage(
@@ -258,8 +258,20 @@ const EmployeeProfileModal = (props) => {
                 );
                 setOnConfirm(() => () => {
                   setConfirmOpen(false);
-                  dispatch(updateEmployee(update.id, {...update, user: null, archived: true, start_working_date: update.current_status.start_date, end_working_date: !update.current_status.end_date ? format(new Date(), "yyyy-MM-dd") : "", business_id: update.business.id, position_id: update.position.map(item => item.id)}))
-    
+                  dispatch(
+                    updateEmployee(update.id, {
+                      ...update,
+                      user: null,
+                      archived: true,
+                      start_working_date: update.current_status.start_date,
+                      end_working_date: !update.current_status.end_date
+                        ? format(new Date(), "yyyy-MM-dd")
+                        : "",
+                      business_id: update.business.id,
+                      position_id: update.position.map((item) => item.id),
+                    })
+                  );
+
                   // dispatch(deleteEmployee(update.id));
                 });
               }

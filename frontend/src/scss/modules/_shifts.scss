@@ -1,5 +1,10 @@
 .dates {
   &--stats {
+    &.container {
+      @include wi-mq(mobile) {
+        margin-top: 0 !important;
+      }
+    }
     .dates__date {
       background-color: lighten($blue, 5%);
       border-bottom-left-radius: 7px;
@@ -599,7 +604,7 @@
           border-left: none;
         }
         i {
-          font-size: 28px;
+          font-size: 24px;
         }
       }
       p {
@@ -637,7 +642,7 @@
   .dates {
     &__mobile {
       &-item {
-        height: 80px;
+        height: 50px;
       }
       p {
         display: none;

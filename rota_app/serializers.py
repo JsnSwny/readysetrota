@@ -117,7 +117,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
-    site_permissions = serializers.SerializerMethodField()
+    # site_permissions = serializers.SerializerMethodField()
 
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
@@ -148,12 +148,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('__all__')
 
-    def get_site_permissions(self, obj):
-        if(obj.user != None):
-            user = obj.user
-            site = obj.position.all().first().department.site
-            return get_perms(user, site)
-        return []
+    # def get_site_permissions(self, obj):
+    #     print("TEST")
+    #     if(obj.)
+    #     if(obj.user != None):
+    #         user = obj.user
+    #         site = obj.position.all().first().department.site
+    #         return get_perms(user, site)
+    #     return []
 
     def update(self, instance, validated_data):
         last_archived_employee = Employee.objects.filter(
@@ -303,6 +305,8 @@ class EmployeeListSerializer(serializers.ModelSerializer):
                   'position', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
 
     def get_site_permissions(self, obj):
+        print("TEST 2")
+        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -342,6 +346,8 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return f'{obj.first_name} {obj.last_name}'
 
     def get_site_permissions(self, obj):
+        print("TEST 3")
+        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -442,24 +448,19 @@ class ShiftListSerializer(serializers.ModelSerializer):
         if(timeclock):
             tc, created = TimeClock.objects.get_or_create(
                 shift=instance, defaults=timeclock)
-            print(tc)
-            print(created)
-            print(timeclock)
             if not created:
                 for attr, value in timeclock.items():
                     setattr(tc, attr, value)
             tc.save()
-        print(timeclock)
 
         return instance
 
     def update(self, instance, validated_data):
-        print("UPDATING")
         timeclock = validated_data.pop('timeclock', [])
-        print(timeclock)
         instance = super().update(instance, validated_data)
+        print("TEST")
+        print(timeclock)
         if(timeclock):
-            print("UPDATING 2")
             tc, created = TimeClock.objects.get_or_create(
                 shift=instance, defaults=timeclock)
             if not created:

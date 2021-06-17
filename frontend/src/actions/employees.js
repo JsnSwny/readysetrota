@@ -296,7 +296,6 @@ export const getEmployees = (archived = false, start_date, end_date) => (
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_EMPLOYEES,
         payload: res.data,

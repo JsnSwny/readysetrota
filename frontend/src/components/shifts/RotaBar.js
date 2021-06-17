@@ -13,7 +13,7 @@ const RotaBar = (props) => {
     setShowAvailabilities,
     scrollPosition,
     showFinancials,
-    setShowFinancials
+    setShowFinancials,
   } = props;
 
   // Selectors
@@ -129,22 +129,21 @@ const RotaBar = (props) => {
                   <p>Availabilities</p>
                 </div>
               )}
-              {permissions.includes("manage_wages") &&
-              business.plan != "F" && (
-                <div
-                  onClick={() => {
-                    setShowFinancials(!showFinancials);
-                  }}
-                  className={`dates__mobile-item`}
-                >
-                  <i
-                    className={`fas ${
-                      showFinancials ? "fa-eye-slash" : "fa-eye"
-                    }`}
-                  ></i>
-                  <p>Financials</p>
-                </div>
-              )}
+            {permissions.includes("manage_wages") && business.plan != "F" && (
+              <div
+                onClick={() => {
+                  setShowFinancials(!showFinancials);
+                }}
+                className={`dates__mobile-item`}
+              >
+                <i
+                  className={`${
+                    showFinancials ? "fas" : "far"
+                  } fa-money-bill-alt`}
+                ></i>
+                <p>Financials</p>
+              </div>
+            )}
             {/* SEND APPROVAL SHIFTS */}
             {permissions.includes("approve_shifts") && settings.shift_approval && (
               <div

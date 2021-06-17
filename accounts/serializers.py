@@ -9,6 +9,7 @@ import json
 import stripe
 from guardian.shortcuts import get_perms, remove_perm, assign_perm
 from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
+import datetime
 
 from rotaready.settings import STRIPE_SECRET_KEY
 
@@ -147,7 +148,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     email=validated_data['email']
                 )
                 business = Business(
-                    owner=user, name=validated_data['businessName'])
+                    owner=user, name=validated_data['businessName'], plan="T", trial_end=datetime.datetime(2021, 9, 1).date())
                 business.save()
                 profile = UserProfile(
                     user=user, role=validated_data['role'], stripe_id=customer.id)

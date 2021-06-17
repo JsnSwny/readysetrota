@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Employee, Shift, UserProfile, Business
+from .models import Employee, Shift, UserProfile, Business, Wage
 from django.db.models import Count
 from .serializers import ShiftSerializer
 from operator import attrgetter
@@ -135,9 +135,10 @@ class Publish(APIView):
         return Response(ids)
 
 
-def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, user_id=False):
+def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
     hours = 0
     wage = 0
+    days_difference = (end_date - start_date) + timedelta(days=1)
     for i in shifts:
         if i.end_time != "Finish":
             wage_obj = Wage.objects.filter(
@@ -164,9 +165,20 @@ def getHoursAndWage(shifts, days_difference=timedelta(days=0), site_id=False, us
     if site_id:
         employees = Employee.objects.filter(
             position__department__site=site_id).distinct()
-    for i in employees:
-        if i.wage_type == "S":
-            wage += float(i.wage/365) * float(days_difference.days)
+    # if business_id:
+    #     employees = Employee.objects.filter(
+    #         position__department__site__business=business_id).distinct()
+    
+    # Check for employee end date
+    while start_date <= end_date:
+        for i in employees:
+            wage_obj = Wage.objects.filter(employee=i, start_date__lte=start_date).order_by('-start_date').first()
+            
+            if wage_obj:
+                if wage_obj.wage_type == "S":
+                    wage += float(wage_obj.wage/52/7)
+
+        start_date += timedelta(days=1)
 
     return hours, wage
 
@@ -222,8 +234,8 @@ class GetStats(APIView):
         shifts = shifts.filter(absence="None").exclude(open_shift=True)
         before_shifts = before_shifts.filter(
             absence="None").exclude(open_shift=True)
-        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts)[0], "before": getHoursAndWage(before_shifts)[
-            0]}, "wage": {"current": getHoursAndWage(shifts, days_difference, id, user_id)[1], "before": getHoursAndWage(before_shifts, days_difference, id, user_id)[1]}}
+        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts, start_date, end_date,)[0], "before": getHoursAndWage(before_shifts, start_date, end_date,)[
+            0]}, "wage": {"current": getHoursAndWage(shifts, start_date, end_date, id, user_id)[1], "before": getHoursAndWage(before_shifts, start_date, end_date, id, user_id)[1]}}
 
         return HttpResponse(json.dumps(data))
 

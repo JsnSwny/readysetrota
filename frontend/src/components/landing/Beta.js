@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-const Beta = ({ setOpen, setType }) => {
+const Beta = ({ setOpen, setType, test }) => {
   const [showVideo, setShowVideo] = useState(false);
+  console.log(test);
   return (
     <div className="beta">
       {showVideo && (
@@ -21,11 +22,14 @@ const Beta = ({ setOpen, setType }) => {
 
       <img src="/static/media/readysetcore-01.svg"></img>
 
-      <h1>THE BETA</h1>
+      <h1>readysetrota BETA</h1>
       <p>
-        You have been invited to join the <strong>Free Beta</strong> for{" "}
+        Welcome to the <strong>Free Beta</strong> for{" "}
         <strong>readysetrota</strong>, an easy-to-use application which aims to
         improve the way you manage rotas.
+        <br />
+        <br /> Watch the demo below to learn how you can get started in less
+        than 3 minutes.
       </p>
       <div className="flex-container--betwen">
         <button onClick={() => setShowVideo(true)}>Watch the Demo</button>

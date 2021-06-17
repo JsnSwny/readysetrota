@@ -6,6 +6,7 @@ import Loading from "../common/Loading";
 import Landing from "../landing/Landing";
 import { getSites } from "../../actions/employees";
 import EnterID from "./EnterID";
+import Beta from "../landing/Beta";
 
 const PrivateRoute = ({
   component: Component,
@@ -49,7 +50,7 @@ const PrivateRoute = ({
           return <Loading />;
         } else if (!auth.isAuthenticated) {
           if (url == "/") {
-            return <Landing />;
+            return <Beta {...modalProps} />;
           } else {
             if (url.includes("/join")) {
               return (

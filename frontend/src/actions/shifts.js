@@ -155,7 +155,6 @@ export const addShift = (shift) => (dispatch, getState) => {
 };
 
 export const updateShift = (id, shift) => (dispatch, getState) => {
-  console.log(shift);
   axios
     .put(`/api/shifts/${id}/`, shift, tokenConfig(getState))
     .then((res) => {

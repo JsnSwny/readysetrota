@@ -67,8 +67,6 @@ const StaffPicker = (props) => {
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":
-          console.log(employees);
-          console.log(positions);
           return employees.sort(
             (a, b) =>
               positions.find(

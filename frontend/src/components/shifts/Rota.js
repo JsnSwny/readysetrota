@@ -177,8 +177,10 @@ const Rota = ({ modalProps, confirmProps }) => {
       (item) => item.employee.id == employee && item.date == date
     )[0];
     if (!available) {
+      console.log(employee);
+      console.log(employees);
       date = parseISO(date);
-      available = employees.filter((item) => item.id == employee)[0]
+      available = employeesList.find((item) => item.id == employee)
         .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
     }
     return available;
@@ -302,47 +304,54 @@ const Rota = ({ modalProps, confirmProps }) => {
                 }
               />
             )}
-            {sortEmployees().map((employee, i) => (
-              (!employee.archived || shifts_list.find(item => item.employee && item.employee.id == employee.id)) &&
-              <div key={employee.id} className="rota__container">
-                {console.log(shifts_list)}
-                <Employee
-                  employee={employee}
-                  current_employee={current_employee}
-                  shifts={shifts_list}
-                  user={user}
-                  currentDepartment={current.department.id}
-                  result={result}
-                />
-                <div className="container-right">
-                  {result.map((result) => {
-                    const format_date = format(result, "yyyy-MM-dd");
-                    const shifts = getEmployeeShift(employee.id, format_date);
-                    let props = {
-                      format_date,
-                      result,
-                      available: isAvailable(employee.id, format_date),
-                      limit,
-                      employee,
-                      showAvailabilities,
-                      filterDate,
-                      admin: shiftPerm,
-                    };
+            {sortEmployees().map(
+              (employee, i) =>
+                (!employee.archived ||
+                  shifts_list.find(
+                    (item) => item.employee && item.employee.id == employee.id
+                  )) && (
+                  <div key={employee.id} className="rota__container">
+                    <Employee
+                      employee={employee}
+                      current_employee={current_employee}
+                      shifts={shifts_list}
+                      user={user}
+                      currentDepartment={current.department.id}
+                      result={result}
+                    />
+                    <div className="container-right">
+                      {result.map((result) => {
+                        const format_date = format(result, "yyyy-MM-dd");
+                        const shifts = getEmployeeShift(
+                          employee.id,
+                          format_date
+                        );
+                        let props = {
+                          format_date,
+                          result,
+                          available: isAvailable(employee.id, format_date),
+                          limit,
+                          employee,
+                          showAvailabilities,
+                          filterDate,
+                          admin: shiftPerm,
+                        };
 
-                    return shifts.length > 0 ? (
-                      <Shift
-                        key={result}
-                        {...modalProps}
-                        {...props}
-                        shifts={shifts}
-                      />
-                    ) : (
-                      <NoShift key={result} {...modalProps} {...props} />
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+                        return shifts.length > 0 ? (
+                          <Shift
+                            key={result}
+                            {...modalProps}
+                            {...props}
+                            shifts={shifts}
+                          />
+                        ) : (
+                          <NoShift key={result} {...modalProps} {...props} />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )
+            )}
           </div>
         )}
       </div>

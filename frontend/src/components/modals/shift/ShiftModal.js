@@ -88,10 +88,13 @@ const ShiftModal = (props) => {
     if (
       startTime == update.start_time &&
       endTime == update.end_time &&
-      info == update.info &&
-      update.stage == "Published"
+      info == update.info
     ) {
-      return false;
+      if (update.stage == "Published") {
+        return false;
+      } else {
+        return true;
+      }
     }
     return true;
   };
@@ -247,6 +250,9 @@ const ShiftModal = (props) => {
       <form onSubmit={onSubmit} className="form__form">
         {renderSwitch()}
         <div className="flex-container--between form__actions">
+          <button className="form__save" type="submit">
+            Save
+          </button>
           <button
             onClick={() => {
               update ? deleteShiftByID(update.id) : onClose();
@@ -254,9 +260,6 @@ const ShiftModal = (props) => {
             className="form__delete"
           >
             {update ? "Delete" : "Cancel"}
-          </button>
-          <button className="form__save" type="submit">
-            Save
           </button>
         </div>
       </form>

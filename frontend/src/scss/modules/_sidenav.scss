@@ -131,6 +131,7 @@
     color: rgb(212, 212, 212);
     transition: 0.2s color ease-in-out, 0.2s background-color ease-in-out;
     margin-bottom: 3px;
+
     a,
     .no-link,
     &.no-link {
@@ -141,9 +142,16 @@
       }
     }
 
+    .fa-chevron-down {
+      transition: 0.4s ease transform;
+    }
+
     &:hover {
       color: #fff;
       background-color: lighten($blue, 20%);
+      .fa-chevron-down {
+        transform: rotate(270deg);
+      }
     }
     &-text {
       margin: 0 10px;
