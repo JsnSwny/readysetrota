@@ -250,7 +250,6 @@ const EmployeeProfileModal = (props) => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              console.log("Test");
               if (update) {
                 setConfirmOpen(true);
                 setMessage(

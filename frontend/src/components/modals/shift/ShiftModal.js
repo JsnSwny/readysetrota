@@ -11,7 +11,7 @@ import Positions from "../Positions";
 import Timeclock from "./tabs/Timeclock";
 import useref from "gulp-useref";
 import Tab from "../Tab";
-import { parseISO } from "date-fns";
+import { parseISO, addDays } from "date-fns";
 
 const ShiftModal = (props) => {
   const { date, employee, onClose, update } = props;
@@ -82,20 +82,24 @@ const ShiftModal = (props) => {
   };
 
   const isUpdated = () => {
-    if (parseISO(update.date) < new Date()) {
+    console.log("Updating")
+    if (parseISO(update.date) < addDays(new Date(), -1)) {
       return false;
     }
+    console.log("Update 1")
     if (
       startTime == update.start_time &&
       endTime == update.end_time &&
       info == update.info
     ) {
+      console.log("Update 2")
       if (update.stage == "Published") {
         return false;
       } else {
         return true;
       }
     }
+    console.log("Update 3")
     return true;
   };
 
@@ -113,7 +117,7 @@ const ShiftModal = (props) => {
       open_shift: shiftEmployee ? false : true,
       department_id: current.department.id,
       stage: shiftEmployee
-        ? isUpdated()
+        ? (isUpdated() && !(startTimeClock && endTimeClock))
           ? !settings.shift_approval || user.business
             ? "Unpublished"
             : "Creation"
