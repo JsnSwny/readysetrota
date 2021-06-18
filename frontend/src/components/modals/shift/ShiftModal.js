@@ -82,24 +82,20 @@ const ShiftModal = (props) => {
   };
 
   const isUpdated = () => {
-    console.log("Updating")
     if (parseISO(update.date) < addDays(new Date(), -1)) {
       return false;
     }
-    console.log("Update 1")
     if (
       startTime == update.start_time &&
       endTime == update.end_time &&
       info == update.info
     ) {
-      console.log("Update 2")
       if (update.stage == "Published") {
         return false;
       } else {
         return true;
       }
     }
-    console.log("Update 3")
     return true;
   };
 
@@ -117,7 +113,7 @@ const ShiftModal = (props) => {
       open_shift: shiftEmployee ? false : true,
       department_id: current.department.id,
       stage: shiftEmployee
-        ? (isUpdated() && !(startTimeClock && endTimeClock))
+        ? isUpdated() && !(startTimeClock && endTimeClock)
           ? !settings.shift_approval || user.business
             ? "Unpublished"
             : "Creation"

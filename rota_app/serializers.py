@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, NewAvailability
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -492,6 +492,16 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Availability
+        fields = '__all__'
+        depth = 1
+
+class NewAvailabilitySerializer(serializers.ModelSerializer):
+    employee_id = serializers.PrimaryKeyRelatedField(
+        queryset=Employee.objects.all(), required=False, source='employee', write_only=True)
+    employee = ShiftEmployeeSerializer(read_only=True)
+
+    class Meta:
+        model = NewAvailability
         fields = '__all__'
         depth = 1
 

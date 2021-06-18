@@ -249,6 +249,29 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date',)
     queryset = Availability.objects.all().distinct()
 
+class NewAvailabilityFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
+    unmarked = django_filters.BooleanFilter(
+        field_name='approved', lookup_expr='isnull')
+
+    class Meta:
+        model = Availability
+        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'unmarked', 'employee__business',
+                  'unmarked', 'date', 'name', 'approved', 'employee__position__department__site']
+
+
+class NewAvailabilityViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    serializer_class = AvailabilitySerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = AvailabilityFilter
+    filter_fields = {'approved': ['isnull']}
+    ordering_fields = ('date',)
+    queryset = Availability.objects.all().distinct()
+
 
 class SiteFilter(django_filters.FilterSet):
     class Meta:

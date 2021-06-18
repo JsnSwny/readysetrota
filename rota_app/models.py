@@ -247,6 +247,27 @@ class Availability(models.Model):
     def __str__(self):
         return f'{self.id}. {self.date} - {self.name} - {self.employee}'
 
+class NewAvailability(models.Model):
+    AVAILABILITY_TYPES = [
+        ("Holiday", 'Holiday'),
+        ("Unavailable", 'Unavailable'),
+    ]
+    availability_type = models.CharField(
+        max_length=14,
+        choices=AVAILABILITY_TYPES,
+        default="Holiday",
+    )
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    reason = models.TextField(blank=True, null=True)
+    employee = models.ForeignKey(Employee, related_name="employee_availability", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.id}. {self.start_date} - {self.end_date} ({self.availability_type}) [{self.employee}]'
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
