@@ -305,8 +305,6 @@ class EmployeeListSerializer(serializers.ModelSerializer):
                   'position', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
 
     def get_site_permissions(self, obj):
-        print("TEST 2")
-        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -346,8 +344,6 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return f'{obj.first_name} {obj.last_name}'
 
     def get_site_permissions(self, obj):
-        print("TEST 3")
-        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -458,8 +454,6 @@ class ShiftListSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         timeclock = validated_data.pop('timeclock', [])
         instance = super().update(instance, validated_data)
-        print("TEST")
-        print(timeclock)
         if(timeclock):
             tc, created = TimeClock.objects.get_or_create(
                 shift=instance, defaults=timeclock)
@@ -494,6 +488,7 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         model = Availability
         fields = '__all__'
         depth = 1
+
 
 class NewAvailabilitySerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(

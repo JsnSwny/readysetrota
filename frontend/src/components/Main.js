@@ -43,6 +43,8 @@ import Confirm from "./layout/Confirm";
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
 
+import AvailabilityDashboard from "./availability/AvailabilityDashboard";
+
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -181,6 +183,15 @@ const Main = () => {
             modalProps={modalProps}
             confirmProps={confirmProps}
           />
+
+          <PrivateRoute
+            path="/availability"
+            exact
+            component={AvailabilityDashboard}
+            modalProps={modalProps}
+            confirmProps={confirmProps}
+          />
+
           <PrivateRoute
             admin={true}
             perms={[
