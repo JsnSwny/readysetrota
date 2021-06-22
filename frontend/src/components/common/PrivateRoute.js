@@ -33,7 +33,9 @@ const PrivateRoute = ({
   useEffect(() => {
     if (auth.user) {
       dispatch(getSites());
-      modalProps.setOpen(false);
+      if (modalProps) {
+        modalProps.setOpen(false);
+      }
     }
   }, [auth]);
 
