@@ -247,6 +247,7 @@ class Availability(models.Model):
     def __str__(self):
         return f'{self.id}. {self.date} - {self.name} - {self.employee}'
 
+
 class NewAvailability(models.Model):
     AVAILABILITY_TYPES = [
         ("Holiday", 'Holiday'),
@@ -262,7 +263,21 @@ class NewAvailability(models.Model):
     end_date = models.DateField()
 
     reason = models.TextField(blank=True, null=True)
-    employee = models.ForeignKey(Employee, related_name="employee_availability", on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        Employee, related_name="employee_availability", on_delete=models.CASCADE)
+
+    STAGE_TYPES = [
+        ("Unmarked", 'Unmarked'),
+        ("Rejected", 'Rejected'),
+        ("Approved", 'Approved'),
+    ]
+
+    stage = models.CharField(
+        max_length=14,
+        choices=STAGE_TYPES,
+        default="Unmarked",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

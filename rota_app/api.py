@@ -1,9 +1,9 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, NewAvailability
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
                           DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
                           ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer)
+                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, NewAvailabilitySerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -94,10 +94,10 @@ class EmployeeFilter(django_filters.FilterSet):
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-
     permission_classes = [
         permissions.AllowAny
     ]
+    
     serializer_class = EmployeeSerializer
 
     queryset = Employee.objects.all()
@@ -249,15 +249,14 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date',)
     queryset = Availability.objects.all().distinct()
 
+
 class NewAvailabilityFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
-    unmarked = django_filters.BooleanFilter(
-        field_name='approved', lookup_expr='isnull')
 
     class Meta:
-        model = Availability
-        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'unmarked', 'employee__business',
-                  'unmarked', 'date', 'name', 'approved', 'employee__position__department__site']
+        model = NewAvailability
+        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'stage', 'employee__business',
+                  'start_date', 'availability_type', 'employee__position__department__site']
 
 
 class NewAvailabilityViewSet(viewsets.ModelViewSet):
@@ -265,12 +264,11 @@ class NewAvailabilityViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
 
-    serializer_class = AvailabilitySerializer
+    serializer_class = NewAvailabilitySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = AvailabilityFilter
-    filter_fields = {'approved': ['isnull']}
-    ordering_fields = ('date',)
-    queryset = Availability.objects.all().distinct()
+    filter_class = NewAvailabilityFilter
+    ordering_fields = ('start_date',)
+    queryset = NewAvailability.objects.all().distinct()
 
 
 class SiteFilter(django_filters.FilterSet):
