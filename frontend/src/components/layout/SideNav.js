@@ -120,11 +120,11 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
           className={`fas fa-bars`}
         ></i>
         <div className="sidenav__content">
-          <div className="sidenav__profile-pic flex-container--center-vh">
+          {/* <div className="sidenav__profile-pic flex-container--center-vh">
             {user.business
               ? user.business.name[0]
               : `${user.first_name[0]}${user.last_name[0]}`}
-          </div>
+          </div> */}
           <p className="sidenav__name">{userName}</p>
           {user.business && (
             <Fragment>
@@ -372,7 +372,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 </div>
               )}
 
-            {user.business &&
+            {/* {user.business &&
               user.profile &&
               user.business.plan != "P" &&
               user.business.trial_end && (
@@ -382,7 +382,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   icon="fas fa-gem"
                   title="Premium"
                 />
-              )}
+              )} */}
             <div
               onClick={() => {
                 dispatch(logout());
