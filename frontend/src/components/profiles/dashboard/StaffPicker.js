@@ -186,7 +186,7 @@ const StaffPicker = (props) => {
               </Link>
 
               <div className="flex dashboard__icons">
-                {item.user && (
+                {/* {item.user && (
                   <i
                     className={`fas fa-crown ${
                       isSiteAdmin(item.user)
@@ -196,7 +196,7 @@ const StaffPicker = (props) => {
                         : ""
                     }`}
                   ></i>
-                )}
+                )} */}
 
                 {permissions.includes("manage_employees") && !item.user && (
                   <CopyUUID employee={item} />

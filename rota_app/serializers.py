@@ -137,8 +137,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         # return (wage.wage_type, wage.wage)
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
+        print(status)
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
@@ -368,8 +368,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return None
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
