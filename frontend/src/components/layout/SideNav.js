@@ -208,12 +208,12 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   title="Staff Management"
                 />
                 <div className="sidenav__sublinks">
-                  <NavLink
+                  {/* <NavLink
                     toggleNav={toggleNav}
                     link="/list/employees"
                     icon="fas fa-list"
                     title="Employees"
-                  />
+                  /> */}
                   <NavLink
                     toggleNav={toggleNav}
                     link="/list/holidays"
@@ -344,30 +344,33 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               </div>
             </div>
 
-            {user.business && !user.business.trial_end && user.business.plan != "P" && (
-              <div className={`sidenav__link-container`}>
-                <div
-                  onClick={() => {
-                    setConfirmOpen(true);
-                    setMessage(
-                      "Are you sure you want to start your 30 day free trial?"
-                    );
-                    setOnConfirm(() => () => {
-                      setConfirmOpen(false);
-                      dispatch(startTrial(user.business.id));
-                      toast.success(
-                        "Your free premium trial has been activated"
+            {user.business &&
+              !user.business.trial_end &&
+              user.business.plan != "P" && (
+                <div className={`sidenav__link-container`}>
+                  <div
+                    onClick={() => {
+                      setConfirmOpen(true);
+                      setMessage(
+                        "Are you sure you want to start your 30 day free trial?"
                       );
-                    });
-                  }}
-                  className="sidenav__link no-link"
-                >
-                  <div className="sidenav__link-text">
-                    <i className="fas fas fa-gem"></i> Start Premium Free Trial
+                      setOnConfirm(() => () => {
+                        setConfirmOpen(false);
+                        dispatch(startTrial(user.business.id));
+                        toast.success(
+                          "Your free premium trial has been activated"
+                        );
+                      });
+                    }}
+                    className="sidenav__link no-link"
+                  >
+                    <div className="sidenav__link-text">
+                      <i className="fas fas fa-gem"></i> Start Premium Free
+                      Trial
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {user.business &&
               user.profile &&
