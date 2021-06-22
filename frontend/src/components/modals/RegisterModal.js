@@ -43,9 +43,6 @@ const RegisterModal = ({ onClose }) => {
   } else {
     return (
       <div className="form form-beta">
-        <div className="form__image">
-          <i class="fas fa-user-edit"></i>
-        </div>
         <p className="form__subheading">Register</p>
         <h1 className="form__heading">Join the Free Beta</h1>
         <form onSubmit={onSubmit} className="form__form">

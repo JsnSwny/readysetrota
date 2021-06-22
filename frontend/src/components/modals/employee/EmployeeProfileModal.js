@@ -173,13 +173,13 @@ const EmployeeProfileModal = (props) => {
 
   return (
     <div className="form">
-      <div className="form__image">
+      {/* <div className="form__image">
         {firstName ? (
           `${firstName[0]}${lastName && lastName[0]}`
         ) : (
           <i className="fas fa-user"></i>
         )}
-      </div>
+      </div> */}
       <p className="form__subheading">Employee Profile</p>
       <h1 className="form__heading">
         {firstName

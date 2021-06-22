@@ -29,6 +29,16 @@ const CreateShift = (props) => {
     "Site",
   ];
 
+  const imageTypes = {
+    shift: "fas fa-briefcase",
+    forecast: "fas fa-coins",
+    register: "fas fa-user-edit",
+    employeeprofile: "fas fa-user",
+    Department: "fas fa-users-cog",
+    Site: "fas fa-users-cog",
+    Position: "fas fa-users-cog",
+  };
+
   const modalProps = { onClose, update, confirmProps };
 
   const getModal = () => {
@@ -54,6 +64,12 @@ const CreateShift = (props) => {
   return (
     open && (
       <div className={`modal App ${sidebarOpen ? "open" : ""}`}>
+        {imageTypes[type] && (
+          <div className="form__image">
+            <i className={`${imageTypes[type]}`}></i>
+          </div>
+        )}
+
         <div
           className={`modal__container ${
             type == "register" ? "modal__container--sm" : ""
