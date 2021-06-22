@@ -6,11 +6,6 @@ import StaffManagement from "./StaffManagement";
 
 const Home = (props) => {
   let user = useSelector((state) => state.auth.user);
-  const { modalProps } = props;
-  const { setOpen } = modalProps;
-  useEffect(() => {
-    setOpen(false);
-  }, []);
   if (user.business && user.business.plan == "F") {
     return <StaffManagement modalProps={modalProps} />;
   }

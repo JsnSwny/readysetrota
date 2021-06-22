@@ -39,7 +39,7 @@ const RegisterModal = ({ onClose }) => {
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/" />;
+    return <Redirect to="/staff-management" />;
   } else {
     return (
       <div className="form form-beta">
