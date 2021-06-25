@@ -117,7 +117,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
-    # site_permissions = serializers.SerializerMethodField()
+    site_permissions = serializers.SerializerMethodField()
 
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
@@ -137,8 +137,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         # return (wage.wage_type, wage.wage)
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
+        print(status)
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
@@ -148,14 +148,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('__all__')
 
-    # def get_site_permissions(self, obj):
-    #     print("TEST")
-    #     if(obj.)
-    #     if(obj.user != None):
-    #         user = obj.user
-    #         site = obj.position.all().first().department.site
-    #         return get_perms(user, site)
-    #     return []
+    def get_site_permissions(self, obj):
+        if(obj.user != None):
+            user = obj.user
+            site = obj.position.all().first().department.site
+            return get_perms(user, site)
+        return []
 
     def update(self, instance, validated_data):
         last_archived_employee = Employee.objects.filter(
@@ -305,8 +303,6 @@ class EmployeeListSerializer(serializers.ModelSerializer):
                   'position', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
 
     def get_site_permissions(self, obj):
-        print("TEST 2")
-        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -346,8 +342,6 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return f'{obj.first_name} {obj.last_name}'
 
     def get_site_permissions(self, obj):
-        print("TEST 3")
-        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -368,8 +362,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return None
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}

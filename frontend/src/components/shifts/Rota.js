@@ -289,7 +289,7 @@ const Rota = ({ modalProps, confirmProps }) => {
               scrollPosition >= 250 ? " fixed" : ""
             }`}
           >
-            {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
+            {/* {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
               <OpenShifts
                 current_employee={current_employee}
                 modalProps={modalProps}
@@ -301,7 +301,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                     : openShifts
                 }
               />
-            )}
+            )} */}
             {sortEmployees().map(
               (employee, i) =>
                 (!employee.archived ||

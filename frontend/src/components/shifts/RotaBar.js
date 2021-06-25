@@ -21,7 +21,7 @@ const RotaBar = (props) => {
   let date = useSelector((state) => state.shifts.date);
   let business = useSelector((state) => state.employees.business);
   let shifts = useSelector((state) => state.shifts.shifts);
-  let published_shifts = shifts.filter((item) => item.published);
+  let published_shifts = shifts.filter((item) => item.stage == "Published");
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
   let permissions = useSelector(

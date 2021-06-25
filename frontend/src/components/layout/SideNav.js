@@ -120,11 +120,11 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
           className={`fas fa-bars`}
         ></i>
         <div className="sidenav__content">
-          <div className="sidenav__profile-pic flex-container--center-vh">
+          {/* <div className="sidenav__profile-pic flex-container--center-vh">
             {user.business
               ? user.business.name[0]
               : `${user.first_name[0]}${user.last_name[0]}`}
-          </div>
+          </div> */}
           <p className="sidenav__name">{userName}</p>
           {user.business && (
             <Fragment>
@@ -208,12 +208,12 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   title="Staff Management"
                 />
                 <div className="sidenav__sublinks">
-                  <NavLink
+                  {/* <NavLink
                     toggleNav={toggleNav}
                     link="/list/employees"
                     icon="fas fa-list"
                     title="Employees"
-                  />
+                  /> */}
                   <NavLink
                     toggleNav={toggleNav}
                     link="/list/holidays"
@@ -344,32 +344,35 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               </div>
             </div>
 
-            {user.business && !user.business.trial_end && user.business.plan != "P" && (
-              <div className={`sidenav__link-container`}>
-                <div
-                  onClick={() => {
-                    setConfirmOpen(true);
-                    setMessage(
-                      "Are you sure you want to start your 30 day free trial?"
-                    );
-                    setOnConfirm(() => () => {
-                      setConfirmOpen(false);
-                      dispatch(startTrial(user.business.id));
-                      toast.success(
-                        "Your free premium trial has been activated"
+            {user.business &&
+              !user.business.trial_end &&
+              user.business.plan != "P" && (
+                <div className={`sidenav__link-container`}>
+                  <div
+                    onClick={() => {
+                      setConfirmOpen(true);
+                      setMessage(
+                        "Are you sure you want to start your 30 day free trial?"
                       );
-                    });
-                  }}
-                  className="sidenav__link no-link"
-                >
-                  <div className="sidenav__link-text">
-                    <i className="fas fas fa-gem"></i> Start Premium Free Trial
+                      setOnConfirm(() => () => {
+                        setConfirmOpen(false);
+                        dispatch(startTrial(user.business.id));
+                        toast.success(
+                          "Your free premium trial has been activated"
+                        );
+                      });
+                    }}
+                    className="sidenav__link no-link"
+                  >
+                    <div className="sidenav__link-text">
+                      <i className="fas fas fa-gem"></i> Start Premium Free
+                      Trial
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {user.business &&
+            {/* {user.business &&
               user.profile &&
               user.business.plan != "P" &&
               user.business.trial_end && (
@@ -379,7 +382,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   icon="fas fa-gem"
                   title="Premium"
                 />
-              )}
+              )} */}
             <div
               onClick={() => {
                 dispatch(logout());

@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addDays } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import { updateShift } from "../../actions/shifts";
@@ -28,6 +28,10 @@ const Shift = (props) => {
   const [shiftDate, setShiftDate] = useState("");
 
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
+
   return (
     <Fragment>
       <div
@@ -90,15 +94,17 @@ const Shift = (props) => {
                     }`}
                   >
                     {shift.start_time} - {shift.end_time}{" "}
-                    <i
-                      className={`fas fa-clock ${
-                        shift.stage == "Published"
-                          ? shift.timeclock
-                            ? "active"
-                            : ""
-                          : "hide"
-                      }`}
-                    ></i>
+                    {permissions.includes("manage_shifts") && (
+                      <i
+                        className={`fas fa-clock ${
+                          shift.stage == "Published"
+                            ? shift.timeclock
+                              ? "active"
+                              : ""
+                            : "hide"
+                        }`}
+                      ></i>
+                    )}
                   </p>
                 </div>
                 {shift.break_length > 0 && (

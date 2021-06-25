@@ -13,10 +13,6 @@ const StaffManagement = ({ modalProps }) => {
   let business = useSelector((state) => state.employees.business);
   let user = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    dispatch(getEmployees());
-  }, []);
-
   return (
     <Fragment>
       <div className="banner">

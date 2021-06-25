@@ -163,7 +163,7 @@ const Main = () => {
           />
           <Route
             path="/beta"
-            render={(props) => <Beta {...props} {...modalProps} test="TEST" />}
+            render={(props) => <Beta {...props} {...modalProps} />}
           />
           <PrivateRoute
             path="/list/:type"

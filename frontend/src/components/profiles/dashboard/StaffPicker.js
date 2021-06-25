@@ -64,6 +64,8 @@ const StaffPicker = (props) => {
   );
 
   const sortEmployees = () => {
+    console.log(employees);
+    console.log(positions);
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":
@@ -186,7 +188,7 @@ const StaffPicker = (props) => {
               </Link>
 
               <div className="flex dashboard__icons">
-                {item.user && (
+                {/* {item.user && (
                   <i
                     className={`fas fa-crown ${
                       isSiteAdmin(item.user)
@@ -196,7 +198,7 @@ const StaffPicker = (props) => {
                         : ""
                     }`}
                   ></i>
-                )}
+                )} */}
 
                 {permissions.includes("manage_employees") && !item.user && (
                   <CopyUUID employee={item} />

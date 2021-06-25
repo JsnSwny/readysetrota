@@ -17,7 +17,7 @@ const Dates = (props) => {
     setForecastDate,
     forecastDate,
     filterDate,
-    showFinancials
+    showFinancials,
   } = props;
   let employees = useSelector((state) => state.employees.employees);
   let current = useSelector((state) => state.employees.current);
@@ -40,22 +40,25 @@ const Dates = (props) => {
 
   const getWage = (date, employee) => {
     let result = employee.wage;
-    if(result) {
+    if (result) {
       result.sort((a, b) => {
-          return Math.abs(date - parseISO(a.start_date)) - Math.abs(date - parseISO(b.start_date)); // sort a before b when the distance is smaller
+        return (
+          Math.abs(date - parseISO(a.start_date)) -
+          Math.abs(date - parseISO(b.start_date))
+        ); // sort a before b when the distance is smaller
       });
       result = result.filter((item) => parseISO(item.start_date) <= date);
-      if(result.length > 0) {
-        result = result[0]
+      if (result.length > 0) {
+        result = result[0];
       }
-      if(result.wage_type == "S") {
+      if (result.wage_type == "S") {
         return parseFloat((result.wage / 52 / 5).toFixed(2));
       } else if (result.wage_type == "H") {
         return 0;
       }
     }
     return 0;
-  }
+  };
 
   const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
@@ -65,21 +68,25 @@ const Dates = (props) => {
         (item) =>
           item.employee &&
           item.absence == "None" &&
-          item.wage > 0 && (type == 'p' ?
-          item.timeclock ? +parseFloat(item.wage * item.timeclock.length).toFixed(2) : 0 : +parseFloat(item.wage * item.length).toFixed(2))
+          item.wage > 0 &&
+          (type == "p"
+            ? item.timeclock
+              ? +parseFloat(item.wage * item.timeclock.length).toFixed(2)
+              : 0
+            : +parseFloat(item.wage * item.length).toFixed(2))
       )
       .reduce((a, b) => a + b, 0.0);
-    
+
     return hourly;
-  }
+  };
 
   const getCost = (date, type) => {
-    let total = employees.map(item => getWage(date, item))
-    if(total.length == 0) return 0;
+    let total = employees.map((item) => getWage(date, item));
+    if (total.length == 0) return 0;
     total = total.reduce((a, b) => a + b);
 
     total += getHourly(date, type);
-    
+
     return total.toFixed(2);
   };
 
@@ -94,155 +101,98 @@ const Dates = (props) => {
     }
   };
 
-
-
-
   return (
     <Fragment>
-    <section
-      className={`dates container ${filterDate ? "filtered" : ""} ${
-        scrollPosition >= 250 ? " fixed" : ""
-      }`}
-    >
-      <div className="dates__container">
-        <div className="container-left">
-          <div className="item-block dates__date">
-            <p className="item-block__title">
-              {format(dates[0], "do MMMM")} -{" "}
-              {format(dates[dates.length - 1], "do MMMM")}
-            </p>
+      <section
+        className={`dates container ${filterDate ? "filtered" : ""} ${
+          scrollPosition >= 250 ? " fixed" : ""
+        }`}
+      >
+        <div className="dates__container">
+          <div className="container-left">
+            <div className="item-block dates__date">
+              <p className="item-block__title">
+                {format(dates[0], "do MMMM")} -{" "}
+                {format(dates[dates.length - 1], "do MMMM")}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="container-right">
-          {dates.map((date) => (
-            
-            <div
-              key={date}
-              className={`item-block dates__date ${
-                filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
-              }`}
-            >
-              {settings.forecasting &&
-                permissions.includes("create_forecasts") &&
-                business.plan != "F" && (
+          <div className="container-right">
+            {dates.map((date) => (
+              <div
+                key={date}
+                className={`item-block dates__date ${
+                  filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
+                }`}
+              >
+                {settings.forecasting &&
+                  permissions.includes("create_forecasts") &&
+                  business.plan != "F" && (
+                    <i
+                      onClick={() => {
+                        setOpen(true);
+                        setType("forecast");
+                        setUpdate(
+                          forecast.find(
+                            (item) => item.date == format(date, "yyyy-MM-dd")
+                          )
+                        );
+                        setForecastDate(date);
+                      }}
+                      class="fas fa-coins"
+                    ></i>
+                  )}
+                <p className="item-block__title">
+                  {format(date, "ccc do MMM").split(" ")[0]}
+                  <br></br>
+                  {format(date, "ccc do MMM").split(" ")[1]}{" "}
+                  {format(date, "ccc do MMM").split(" ")[2]}
+                </p>
+                {template ? (
+                  <AddShiftButton
+                    date={format(date, "yyyy-MM-dd")}
+                    white={true}
+                    template={true}
+                  />
+                ) : (
                   <i
-                    onClick={() => {
-                      setOpen(true);
-                      setType("forecast");
-                      setUpdate(
-                        forecast.find(
-                          (item) => item.date == format(date, "yyyy-MM-dd")
-                        )
-                      );
-                      setForecastDate(date);
-                    }}
-                    class="fas fa-coins"
+                    className="dates__sort fas fa-sort-down"
+                    onClick={() => filterEmployees(format(date, "yyyy-MM-dd"))}
                   ></i>
                 )}
-              <p className="item-block__title">
-                {format(date, "ccc do MMM").split(" ")[0]}
-                <br></br>
-                {format(date, "ccc do MMM").split(" ")[1]}{" "}
-                {format(date, "ccc do MMM").split(" ")[2]}
-              </p>
-              {template ? (
-                <AddShiftButton
-                  date={format(date, "yyyy-MM-dd")}
-                  white={true}
-                  template={true}
-                />
-              ) : (
-                <i
-                  className="dates__sort fas fa-sort-down"
-                  onClick={() => filterEmployees(format(date, "yyyy-MM-dd"))}
-                ></i>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section
-      className={`dates dates--stats container ${filterDate ? "filtered" : ""} ${
-        scrollPosition >= 250 ? " fixed" : ""
-      }`}
-    >
-      <div className={`dates__container dates__container--stats ${showFinancials ? 'active' : ""}`}>
-        <div className="container-left">
-          <div className="item-block dates__date">
-            {permissions.includes("manage_wages") && business.plan != "F" && (
-              <Fragment>
-              <div>
-                <small>
-                <strong>Predicted:</strong> £
-                <CountUp
-                  duration={1}
-                  decimals={2}
-                  end={getWeeklyCost(dates, getCost)}
-                />
-                {forecast.length > 0
-                  ? ` (${(
-                      (getWeeklyCost(dates, getCost) /
-                        getWeeklyCost(dates, getAmount)) *
-                      100
-                    ).toFixed(2)}%)`
-                  : ""}
-              </small>
               </div>
-              <div>
-              <small>
-              <strong>Accurate:</strong> £
-              <CountUp
-                duration={1}
-                decimals={2}
-                end={getWeeklyCost(dates, getCost, 'p')}
-              />
-              {forecast.length > 0
-                ? ` (${(
-                    (getWeeklyCost(dates, getCost, 'p') /
-                      getWeeklyCost(dates, getAmount)) *
-                    100
-                  ).toFixed(2)}%)`
-                : ""}
-            </small>
-            </div>
-            </Fragment>
-            )}
+            ))}
           </div>
         </div>
+      </section>
 
-        <div className="container-right">
-          {dates.map((date) => (
-            
-            <div
-              key={date}
-              className={`item-block dates__date ${
-                filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
-              }`}
-            >
+      <section
+        className={`dates dates--stats container ${
+          filterDate ? "filtered" : ""
+        } ${scrollPosition >= 250 ? " fixed" : ""}`}
+      >
+        <div
+          className={`dates__container dates__container--stats ${
+            showFinancials ? "active" : ""
+          }`}
+        >
+          <div className="container-left">
+            <div className="item-block dates__date">
               {permissions.includes("manage_wages") && business.plan != "F" && (
                 <Fragment>
                   <div>
                     <small>
-                      {permissions.includes("manage_wages") && (
-                        <Fragment>
-                          £{getCost(date)}
-                        </Fragment>
-                        
-                        
-                       )
-                      }
-
-                      {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
-
-                      {forecast.some(
-                        (item) => item.date == format(date, "yyyy-MM-dd")
-                      )
-                        ? settings.forecasting &&
-                          ` (${(
-                            (getCost(date) / getAmount(date)) *
+                      <strong>Predicted:</strong> £
+                      <CountUp
+                        duration={1}
+                        decimals={2}
+                        end={getWeeklyCost(dates, getCost)}
+                      />
+                      {forecast.length > 0 && settings.forecasting
+                        ? ` (${(
+                            (getWeeklyCost(dates, getCost) /
+                              getWeeklyCost(dates, getAmount)) *
                             100
                           ).toFixed(2)}%)`
                         : ""}
@@ -250,20 +200,16 @@ const Dates = (props) => {
                   </div>
                   <div>
                     <small>
-                      {permissions.includes("manage_wages") && (
-                        <Fragment>
-                          £{getCost(date, 'p')}
-                        </Fragment>
-                      )}
-
-                      {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
-
-                      {forecast.some(
-                        (item) => item.date == format(date, "yyyy-MM-dd")
-                      )
-                        ? settings.forecasting &&
-                          ` (${(
-                            (getCost(date, 'p') / getAmount(date)) *
+                      <strong>Accurate:</strong> £
+                      <CountUp
+                        duration={1}
+                        decimals={2}
+                        end={getWeeklyCost(dates, getCost, "p")}
+                      />
+                      {forecast.length > 0 && settings.forecasting
+                        ? ` (${(
+                            (getWeeklyCost(dates, getCost, "p") /
+                              getWeeklyCost(dates, getAmount)) *
                             100
                           ).toFixed(2)}%)`
                         : ""}
@@ -272,10 +218,63 @@ const Dates = (props) => {
                 </Fragment>
               )}
             </div>
-          ))}
+          </div>
+
+          <div className="container-right">
+            {dates.map((date) => (
+              <div
+                key={date}
+                className={`item-block dates__date ${
+                  filterDate == format(date, "yyyy-MM-dd") ? "filtered" : ""
+                }`}
+              >
+                {permissions.includes("manage_wages") && business.plan != "F" && (
+                  <Fragment>
+                    <div>
+                      <small>
+                        {permissions.includes("manage_wages") && (
+                          <Fragment>£{getCost(date)}</Fragment>
+                        )}
+
+                        {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
+                        {forecast.some(
+                          (item) => item.date == format(date, "yyyy-MM-dd")
+                        )
+                          ? settings.forecasting &&
+                            ` (${(
+                              (getCost(date) / getAmount(date)) *
+                              100
+                            ).toFixed(2)}%)`
+                          : ""}
+                      </small>
+                    </div>
+                    <div>
+                      <small>
+                        {permissions.includes("manage_wages") && (
+                          <Fragment>£{getCost(date, "p")}</Fragment>
+                        )}
+
+                        {/* <CountUp duration={1} decimals={2} end={getCost(date)} /> */}
+
+                        {forecast.some(
+                          (item) => item.date == format(date, "yyyy-MM-dd")
+                        )
+                          ? settings.forecasting &&
+                            ` (${(
+                              (getCost(date, "p") / getAmount(date)) *
+                              100
+                            ).toFixed(2)}%)`
+                          : ""}
+                      </small>
+                    </div>
+                  </Fragment>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </Fragment>
   );
 };
