@@ -11,7 +11,7 @@ const Beta = ({ setOpen, setType, test }) => {
             onClick={() => setShowVideo(false)}
           ></i>
           <iframe
-            src="https://www.youtube.com/embed/vLT36DLVaSo"
+            src="https://www.youtube.com/embed/SEhEmfoQNT8"
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
