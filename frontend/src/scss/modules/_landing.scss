@@ -399,13 +399,26 @@ footer {
   color: white;
   background-position: center;
   background-size: cover;
+  padding: 0 1.5rem;
+  @include wi-mq(mobile) {
+    height: calc(100vh - 60px);
+    margin: -10px 0;
+  }
   h1 {
     font-size: 64px;
+    @include wi-mq(mobile) {
+      font-size: 40px;
+      text-align: center;
+    }
   }
   p {
     max-width: 600px;
     width: 100%;
     text-align: center;
+    @include wi-mq(mobile) {
+      font-size: 14px;
+      margin-top: 20px;
+    }
   }
   img {
     width: 150px;
@@ -415,7 +428,7 @@ footer {
     color: white;
     border-radius: 10px;
     padding: 10px 15px;
-    margin: 0 10px;
+    margin: 0 5px;
     margin-top: 20px;
     cursor: pointer;
     transition: 0.2s ease background-color, 0.5s ease color;
@@ -452,6 +465,10 @@ footer {
     iframe {
       width: 80%;
       height: 80vh;
+      @include wi-mq(mobile) {
+        width: 90%;
+        height: 50vh;
+      }
     }
     &__close {
       align-self: flex-end;
@@ -463,6 +480,9 @@ footer {
       &:hover {
         transform: rotate(90deg);
         color: $pink;
+      }
+      @include wi-mq(mobile) {
+        margin-right: 5%;
       }
     }
   }
