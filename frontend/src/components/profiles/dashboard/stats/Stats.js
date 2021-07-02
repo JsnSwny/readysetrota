@@ -101,7 +101,7 @@ const Stats = ({ type, employee, title }) => {
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
           title={type == "business" ? "Estimated Outcome" : "Estimated Pay"}
-          value={stats.wage.current}
+          value={"Coming Soon"}
           money={true}
           difference={getDif(stats.wage.current, stats.wage.before)}
           decimal={2}
