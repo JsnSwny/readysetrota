@@ -18,7 +18,9 @@ const SitePicker = (props) => {
     <DashboardBlock disabled={disabled} disabledText={"add more sites"}>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
-          <p className="dashboard__block-title">Sites</p>
+          <p className="dashboard__block-title">
+            <i class="fas fa-store"></i> Sites
+          </p>
           {admin && (
             <i
               onClick={() => {
@@ -79,16 +81,18 @@ const SitePicker = (props) => {
                     className="fas fa-edit"
                   ></i>
                 )}
-                {current.site.id != item.id && (
-                  <i
-                    onClick={() => {
-                      if (current.site.id != item.id) {
-                        dispatch(setSite(item));
-                      }
-                    }}
-                    className="fas fa-check-circle"
-                  ></i>
-                )}
+                <i
+                  onClick={() => {
+                    if (current.site.id != item.id) {
+                      dispatch(setSite(item));
+                    }
+                  }}
+                  className={`${
+                    current.site.id != item.id
+                      ? "far fa-check-square"
+                      : "fas fa-check-square"
+                  }`}
+                ></i>
               </div>
             </div>
             <p className="subtitle-sm" style={{ marginBottom: "10px" }}>

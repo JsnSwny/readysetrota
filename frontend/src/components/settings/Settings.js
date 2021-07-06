@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
 import { updateSite } from "../../actions/employees";
 import { toast } from "react-toastify";
+import Title from "../common/Title";
 
 const Settings = () => {
   let sites = useSelector((state) => state.employees.sites);
@@ -44,14 +45,13 @@ const Settings = () => {
   return (
     <Fragment>
       <div className="banner">
-        <div className="wrapper">
+        <div className="wrapper--md">
           <h1 className="header">
-            Site Settings [
-            {sites.find((item) => item.id == current.site.id).name}]
+            <Title name="Site Settings" breakWord={true} />
           </h1>
         </div>
       </div>
-      <div className="settings wrapper">
+      <div className="settings wrapper--md">
         <div className="flex-container--between settings__wrapper">
           <div className="settings__item">
             <h2>Shift Approval</h2>

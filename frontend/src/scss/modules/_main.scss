@@ -12,6 +12,35 @@
     @extend .title;
     font-size: 18px;
   }
+  &-container {
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      width: 5px;
+      height: 100%;
+      background-color: $pink;
+      margin-right: 10px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+  }
+  &--lg {
+    font-size: 36px;
+    margin-left: 30px;
+    // font-family: "Quicksand", sans-serif;
+    font-weight: 300;
+
+    line-height: 40px;
+    // &.break {
+    //   word-spacing: 9999999px;
+    // }
+  }
+  &--sub {
+    font-size: 18px;
+    margin-left: 30px;
+  }
 }
 
 .bold {

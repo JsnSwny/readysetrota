@@ -4,6 +4,7 @@ import { getHolidays, getSites } from "../../../actions/employees";
 import HolidayRequest from "./HolidayRequest";
 import Stats from "./stats/Stats";
 import SiteOverview from "./SiteOverview";
+import Title from "../../common/Title";
 
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
@@ -24,9 +25,23 @@ const AdminPanel = (props) => {
 
   return (
     <Fragment>
-      {permissions.includes("view_stats") && (
+      <div className="banner">
+        <div className="wrapper--md flex-container--between-start">
+          <h1 className="header">
+            <Title
+              name="Welcome Back, Jason"
+              subtitle="Dashboard"
+              breakWord={false}
+            />
+          </h1>
+          <div className="profile-icon">
+            <i className="fas fa-user"></i>
+          </div>
+        </div>
+      </div>
+      {/* {permissions.includes("view_stats") && (
         <Stats title="Admin Panel" type="business" />
-      )}
+      )} */}
       <div className="dashboard container-2">
         {user.business && <SiteOverview />}
         {business.plan != "F" &&

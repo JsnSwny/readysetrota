@@ -102,7 +102,8 @@ const StaffPicker = (props) => {
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
           <p className="dashboard__block-title">
-            Staff ({business.number_of_employees} / {total_employees})
+            <i class="fas fa-users"></i> Staff ({business.number_of_employees} /{" "}
+            {total_employees})
           </p>
           {permissions.includes("manage_employees") && (
             <i

@@ -44,3 +44,29 @@
     }
   }
 }
+
+.shadow {
+  -webkit-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  -moz-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  &--lg {
+    -webkit-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+    -moz-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+    box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+  }
+}
+
+.profile-icon {
+  background-color: $blue;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @extend .shadow--lg;
+  i {
+    font-size: 20px;
+  }
+}

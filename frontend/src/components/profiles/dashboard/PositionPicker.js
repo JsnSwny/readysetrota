@@ -146,7 +146,9 @@ const PositionPicker = (props) => {
     <DashboardBlock>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
-          <p className="dashboard__block-title">Positions</p>
+          <p className="dashboard__block-title">
+            <i class="fas fa-chess-queen"></i> Positions
+          </p>
           {permissions.includes("manage_positions") && (
             <i
               onClick={() => {

@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'slrae8_tml#^9=@(htas#d18%w^d&3!s7!wd)toc=(pltaqzj&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = (os.environ.get("DEBUG") == "True")
 
 ALLOWED_HOSTS = ['rotaready.herokuapp.com', 'localhost']
 

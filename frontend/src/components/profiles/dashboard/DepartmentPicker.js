@@ -26,7 +26,9 @@ const DepartmentPicker = (props) => {
     <DashboardBlock disabled={disabled} disabledText={"add more departments"}>
       <div className="dashboard__block-title-container">
         <div className="flex-container--align-center">
-          <p className="dashboard__block-title">Departments</p>
+          <p className="dashboard__block-title">
+            <i class="fas fa-sitemap"></i> Departments
+          </p>
           {permissions.includes("manage_departments") && (
             <i
               onClick={() => {
@@ -73,28 +75,29 @@ const DepartmentPicker = (props) => {
                     className="fas fa-edit"
                   ></i>
                 )}
-
-                {current.department.id != item.id && (
-                  <i
-                    onClick={() => {
-                      if (
-                        plan == "F" &&
-                        i > 0 &&
-                        item.business.id == current.business.id
-                      ) {
-                        toast.warning(
-                          "Upgrade to premium to unlock unlimited departments"
-                        );
-                        return false;
-                      } else {
-                        if (current.department.id != item.id) {
-                          setDep(item);
-                        }
+                <i
+                  onClick={() => {
+                    if (
+                      plan == "F" &&
+                      i > 0 &&
+                      item.business.id == current.business.id
+                    ) {
+                      toast.warning(
+                        "Upgrade to premium to unlock unlimited departments"
+                      );
+                      return false;
+                    } else {
+                      if (current.department.id != item.id) {
+                        setDep(item);
                       }
-                    }}
-                    className="fas fa-check-circle"
-                  ></i>
-                )}
+                    }
+                  }}
+                  className={`${
+                    current.department.id != item.id
+                      ? "far fa-check-square"
+                      : "fas fa-check-square"
+                  }`}
+                ></i>
               </div>
             </div>
             <p className="subtitle-sm" style={{ flex: "0" }}>
