@@ -384,7 +384,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'full_name',)
+        fields = ('id', 'full_name', 'position')
 
 
 class TimeClockSerializer(serializers.ModelSerializer):

@@ -49,10 +49,20 @@
   -webkit-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
   -moz-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
   box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  &--md {
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  }
   &--lg {
     -webkit-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
     -moz-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
     box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+  }
+  &--pink {
+    -webkit-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+    -moz-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+    box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
   }
 }
 
@@ -69,4 +79,11 @@
   i {
     font-size: 20px;
   }
+}
+
+.separator {
+  margin: 25px 0;
+  background-color: $light-gray;
+  border: 0;
+  height: 1px;
 }

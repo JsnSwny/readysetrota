@@ -28,7 +28,7 @@ const StaffManagement = ({ modalProps }) => {
         <Title name="Staff Management" />
       </div> */}
 
-      <div className="dashboard container-2">
+      <div className="list-block wrapper--md">
         {business.plan != "F" && (
           <Fragment>
             <SitePicker {...modalProps} admin={user.business ? true : false} />

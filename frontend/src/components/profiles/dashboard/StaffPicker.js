@@ -99,35 +99,34 @@ const StaffPicker = (props) => {
 
   return (
     <DashboardBlock>
-      <div className="dashboard__block-title-container">
-        <div className="flex-container--align-center">
-          <p className="dashboard__block-title">
-            <i class="fas fa-users"></i> Staff ({business.number_of_employees} /{" "}
-            {total_employees})
-          </p>
-          {permissions.includes("manage_employees") && (
-            <i
-              onClick={() => {
-                if (plan == "F" && business.number_of_employees >= 15) {
-                  toast.warning(
-                    "Upgrade to premium to create more than 15 employees"
-                  );
-                  return false;
-                } else if (business.number_of_employees >= total_employees) {
-                  toast.warning(
-                    `You have reached your max number of ${total_employees} employees!`
-                  );
-                  return false;
-                }
-                setOpen(true);
-                setUpdate(false);
-                setType("employeeprofile");
-              }}
-              className="fas fa-plus"
-            ></i>
-          )}
-        </div>
+      <div className="flex-container--align-center">
+        <p className="list-block__title">
+          <i class="fas fa-users"></i> Staff ({business.number_of_employees} /{" "}
+          {total_employees})
+        </p>
+        {permissions.includes("manage_employees") && (
+          <i
+            onClick={() => {
+              if (plan == "F" && business.number_of_employees >= 15) {
+                toast.warning(
+                  "Upgrade to premium to create more than 15 employees"
+                );
+                return false;
+              } else if (business.number_of_employees >= total_employees) {
+                toast.warning(
+                  `You have reached your max number of ${total_employees} employees!`
+                );
+                return false;
+              }
+              setOpen(true);
+              setUpdate(false);
+              setType("employeeprofile");
+            }}
+            className="fas fa-plus"
+          ></i>
+        )}
       </div>
+      <hr className="separator" />
       <small className="helper-text">
         <i class="fas fa-info-circle"></i> Click the clipboard icon to copy the
         employee's unique ID which you can send to them to sign up.
@@ -176,9 +175,9 @@ const StaffPicker = (props) => {
         </Fragment>
       )}
 
-      <div className="dashboard__wrapper">
+      <div className="list-block__wrapper">
         {sortEmployees().map((item) => (
-          <div key={item.id} className="dashboard__item--sm">
+          <div key={item.id} className="list-block__item--sm">
             <div
               className={`title-md bold flex-container--between-center ${
                 isSiteAdmin(item.user) ? "admin" : ""
@@ -188,7 +187,7 @@ const StaffPicker = (props) => {
                 {item.first_name} <strong>{item.last_name}</strong>
               </Link>
 
-              <div className="flex dashboard__icons">
+              <div className="flex list-block__icons">
                 {/* {item.user && (
                   <i
                     className={`fas fa-crown ${

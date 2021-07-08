@@ -70,23 +70,15 @@ const Stats = ({ type, employee, title }) => {
 
   return (
     <div className="stats">
-      <StatsHeader
-        title={title}
-        setCurrentFilter={setCurrentFilter}
-        currentFilter={currentFilter}
-        setBeforeDate={setBeforeDate}
-        setAfterDate={setAfterDate}
-        type={type}
-        {...dateProps}
-      />
       <div className="flex-container--between">
         <StatsItem
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
-          title="Shifts"
+          title="Shifts Worked"
           value={stats.shifts.current}
           difference={getDif(stats.shifts.current, stats.shifts.before)}
           dateDifference={dateDifference}
+          color="teal"
         />
         <StatsItem
           setBeforeDate={setBeforeDate}
@@ -96,16 +88,26 @@ const Stats = ({ type, employee, title }) => {
           difference={getDif(stats.hours.current, stats.hours.before)}
           decimal={2}
           dateDifference={dateDifference}
+          color="orange"
         />
         <StatsItem
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
           title={type == "business" ? "Estimated Outcome" : "Estimated Pay"}
-          value={"Coming Soon"}
+          value={3200}
           money={true}
           difference={getDif(stats.wage.current, stats.wage.before)}
           decimal={2}
           dateDifference={dateDifference}
+          color="pink"
+        />
+        <StatsItem
+          setBeforeDate={setBeforeDate}
+          setAfterDate={setAfterDate}
+          title={"Absences"}
+          value={0}
+          decimal={2}
+          color="purple"
         />
       </div>
     </div>

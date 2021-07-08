@@ -1,4 +1,22 @@
-.dashboard {
+.list-block {
+  &__title {
+    font-weight: bold;
+    font-size: 32px;
+    i {
+      color: $blue;
+      width: 40px;
+    }
+    @include wi-mq(laptop) {
+      font-size: 24px;
+    }
+    &--sm {
+      @extend .list-block__title;
+      font-size: 24px;
+      @include wi-mq(laptop) {
+        font-size: 18px;
+      }
+    }
+  }
   &__plan {
     font-size: 18px;
     line-height: 35px;
@@ -151,13 +169,13 @@
       }
     }
     &--banner {
-      @extend .dashboard__block;
-      .dashboard__block-title,
-      .dashboard__picker {
+      @extend .list-block__block;
+      .list-block__title,
+      .list-block__picker {
         max-width: 200px;
         width: 100%;
       }
-      .dashboard__picker {
+      .list-block__picker {
         color: rgb(87, 87, 87);
         font-size: 16px;
         @include wi-mq(tablet) {
@@ -186,34 +204,6 @@
         }
       }
     }
-    &-title {
-      font-weight: bold;
-      font-size: 32px;
-      i {
-        color: $blue;
-        width: 40px;
-      }
-      @include wi-mq(laptop) {
-        font-size: 24px;
-      }
-      &-container {
-        &::after {
-          content: "";
-          width: 100%;
-          height: 2px;
-          background-color: $light-gray;
-          margin: 10px 0;
-          display: block;
-        }
-      }
-      &--sm {
-        @extend .dashboard__block-title;
-        font-size: 24px;
-        @include wi-mq(laptop) {
-          font-size: 18px;
-        }
-      }
-    }
 
     &-container {
       &-sm {
@@ -225,7 +215,7 @@
       }
     }
     &--half {
-      @extend .dashboard__block;
+      @extend .list-block__block;
       width: 48.5%;
       min-height: 0;
       &-container {
@@ -235,7 +225,7 @@
       }
     }
     &--third {
-      @extend .dashboard__block;
+      @extend .list-block__block;
       width: calc(33.33% - 20px);
       height: 300px;
       margin-bottom: 0;
@@ -308,7 +298,7 @@
       color: white;
     }
     &--sm {
-      @extend .dashboard__item;
+      @extend .list-block__item;
       // min-height: 100%;
       i {
         margin: 0 5px;
@@ -597,7 +587,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .dashboard {
+  .list-block {
     &__header {
       .title {
         font-size: 32px;
@@ -611,7 +601,7 @@
 }
 
 @media only screen and (max-width: 1000px) {
-  .dashboard {
+  .list-block {
     &__header {
       padding: 40px 0;
       .title {
@@ -649,7 +639,7 @@
           display: block;
         }
       }
-      &.dashboard__table-heading {
+      &.list-block__table-heading {
         display: none;
       }
     }
@@ -671,7 +661,7 @@
         &-container {
           flex-direction: column;
         }
-        .dashboard__block-container {
+        .list-block__block-container {
           display: block;
         }
       }

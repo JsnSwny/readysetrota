@@ -24,40 +24,38 @@ const DepartmentPicker = (props) => {
 
   return (
     <DashboardBlock disabled={disabled} disabledText={"add more departments"}>
-      <div className="dashboard__block-title-container">
-        <div className="flex-container--align-center">
-          <p className="dashboard__block-title">
-            <i class="fas fa-sitemap"></i> Departments
-          </p>
-          {permissions.includes("manage_departments") && (
-            <i
-              onClick={() => {
-                if (plan == "F" && departments.length >= 1) {
-                  toast.warning(
-                    "Upgrade to premium to unlock unlimited departments"
-                  );
-                  return false;
-                }
+      <div className="flex-container--align-center">
+        <p className="list-block__title">
+          <i class="fas fa-sitemap"></i> Departments
+        </p>
+        {permissions.includes("manage_departments") && (
+          <i
+            onClick={() => {
+              if (plan == "F" && departments.length >= 1) {
+                toast.warning(
+                  "Upgrade to premium to unlock unlimited departments"
+                );
+                return false;
+              }
 
-                setOpen(true);
-                setType("Department");
-                setUpdate(false);
-              }}
-              className="fas fa-plus"
-            ></i>
-          )}
-        </div>
+              setOpen(true);
+              setType("Department");
+              setUpdate(false);
+            }}
+            className="fas fa-plus"
+          ></i>
+        )}
       </div>
-
+      <hr className="separator" />
       {loading.departments && (
         <small className="loading-text">Loading departments...</small>
       )}
 
-      <div className="dashboard__wrapper">
+      <div className="list-block__wrapper">
         {departments.map((item, i) => (
           <div
             key={item.id}
-            className={`dashboard__item--sm ${
+            className={`list-block__item--sm ${
               (current.department.id == item.id || current.department == 0) &&
               "current"
             }`}

@@ -1,138 +1,43 @@
 .stats {
   width: 100%;
-  background-color: white;
-  padding: 40px;
-  margin-top: -20px;
-  margin-bottom: 40px;
-  -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-  box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    @include wi-mq(tablet) {
-      display: inline-block;
-    }
-  }
-  &__banner {
-    margin-bottom: 30px;
-    .dashboard__block-title {
-      font-size: 36px;
-      @include wi-mq(tablet) {
-        font-size: 28px;
-        margin-bottom: 10px;
-      }
-    }
-    .stats__picker {
-      color: rgb(87, 87, 87);
-      font-size: 14px;
-      @include wi-mq(tablet) {
-        text-align: center;
-        margin-top: 10px;
-      }
-      &-selected {
-        display: flex;
-        i {
-          margin-left: 10px;
-        }
-      }
-    }
-  }
-  .fa-chevron-right,
-  .fa-chevron-left {
-    cursor: pointer;
-    transition: 0.2s ease color;
-    margin: 0 10px;
-    font-size: 14px;
-    color: rgb(87, 87, 87);
-    &:hover {
-      color: $pink;
-    }
-  }
-  .fa-chevron-left {
-    margin-left: 30px;
-    @include wi-mq(tablet) {
-      margin-left: 0;
-    }
-  }
-  .react-datepicker-wrapper {
-    input {
-      border: none;
-      text-align: center;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s ease color;
-      width: 100px;
-      &:focus {
-        outline: none;
-        color: $pink;
-      }
-      &:hover {
-        color: $pink;
-      }
-    }
-  }
-  &__picker {
-    position: relative;
-    @include wi-mq(not-tablet) {
-      &:hover {
-        .stats__dropper {
-          max-height: 400px;
-        }
-      }
-    }
-
-    cursor: pointer;
-  }
-  &__dropper {
-    font-size: 16px;
-    position: absolute;
+  &__item {
     background-color: white;
-    -webkit-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    -moz-box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.25);
-    z-index: 10;
-    max-height: 0;
-    transition: 0.4s ease max-height;
-    overflow: hidden;
-    @include wi-mq(tablet) {
-      top: 15px;
-    }
-    &.open {
-      max-height: 400px;
-    }
-    p {
-      padding: 5px 10px;
-      transition: 0.2s ease background-color;
-      cursor: pointer;
-      &:hover {
-        background-color: rgb(238, 238, 238);
-      }
-      &.active {
-        color: $pink;
-      }
-    }
-  }
-  &__values {
-    flex: 1;
+    width: calc(25% - 20px);
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    padding: 30px;
+    @extend .shadow--md;
+    &.teal {
+      background-color: #039798;
+    }
+    &.orange {
+      background-color: #fb836f;
+    }
+    &.pink {
+      background-color: #c1549c;
+    }
+    &.purple {
+      background-color: #7e549f;
+    }
+    color: white;
+    text-align: center;
+  }
+  &__values {
     h2 {
-      font-size: 48px;
+      font-size: 40px;
       font-weight: bold;
+      line-height: 45px;
       @include wi-mq(tablet) {
         font-size: 36px;
       }
     }
     h3 {
-      font-size: 24px;
+      font-size: 18px;
       @include wi-mq(tablet) {
         font-size: 18px;
       }
-      color: $pink;
-      cursor: pointer;
       font-weight: normal;
     }
   }
