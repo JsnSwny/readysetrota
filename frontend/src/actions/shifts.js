@@ -52,32 +52,54 @@ export const batchDeleteShifts = (shifts) => (dispatch, getState) => {
 };
 
 // Get Bookings
-export const getShifts = (
-  startdate,
-  enddate,
-  list = false,
-  user = false,
-  id = ""
-) => (dispatch, getState) => {
+export const getShifts =
+  (startdate, enddate, list = false, user = false, id = "") =>
+  (dispatch, getState) => {
+    dispatch({
+      type: SHIFTS_LOADING,
+    });
+    axios
+      .get(
+        `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
+          getState().employees.current.department.id
+        }${
+          user ? `&employee__user__id=${id}` : `&employee=${id}`
+        }&ordering=date,start_time`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        dispatch({
+          type: GET_ALL_SHIFTS,
+          payload: res.data,
+          date: startdate,
+          enddate: enddate,
+          list,
+        });
+      })
+      .catch((err) => console.log(err.response));
+  };
+
+// Get Bookings
+export const getTodayShifts = () => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
   axios
     .get(
-      `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
-        getState().employees.current.department.id
-      }${
-        user ? `&employee__user__id=${id}` : `&employee=${id}`
-      }&ordering=date,start_time`,
+      `/api/shiftlist/?date_after=${format(
+        new Date(),
+        "yyyy-MM-dd"
+      )}&date_before=${format(new Date(), "yyyy-MM-dd")}&department__site=${
+        getState().employees.current.site.id
+      }
+      &ordering=date,start_time`,
       tokenConfig(getState)
     )
     .then((res) => {
       dispatch({
         type: GET_ALL_SHIFTS,
         payload: res.data,
-        date: startdate,
-        enddate: enddate,
-        list,
+        list: true,
       });
     })
     .catch((err) => console.log(err.response));
@@ -137,12 +159,17 @@ export const getShiftsByID = (id, user) => (dispatch, getState) => {
 
 // Add Employee
 export const addShift = (shift) => (dispatch, getState) => {
+  console.log(shift);
   axios
     .post("/api/shifts/", shift, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_SHIFT,
-        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
+        payload: {
+          ...res.data,
+          start_time: res.data.start_time.substr(0, 5),
+          end_time: res.data.end_time.substr(0, 5),
+        },
       });
       dispatch(getPopularTimes());
 
@@ -160,7 +187,11 @@ export const updateShift = (id, shift) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: UPDATE_SHIFT,
-        payload: { ...res.data, start_time: res.data.start_time.substr(0, 5) },
+        payload: {
+          ...res.data,
+          start_time: res.data.start_time.substr(0, 5),
+          end_time: res.data.end_time.substr(0, 5),
+        },
       });
       dispatch(resetErrors());
       dispatch(getPopularTimes());

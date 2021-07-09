@@ -86,4 +86,7 @@
   background-color: $light-gray;
   border: 0;
   height: 1px;
+  @include wi-mq(mobile) {
+    margin: 20px 0;
+  }
 }

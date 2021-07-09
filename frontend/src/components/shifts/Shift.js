@@ -93,7 +93,8 @@ const Shift = (props) => {
                       shift.stage
                     }`}
                   >
-                    {shift.start_time} - {shift.end_time}{" "}
+                    {shift.start_time} -{" "}
+                    {shift.end_time ? shift.end_time : "Finish"}{" "}
                     {permissions.includes("manage_shifts") && (
                       <i
                         className={`fas fa-clock ${

@@ -3,7 +3,7 @@ import React from "react";
 const Loading = () => {
   return (
     <div className="loader">
-      <span className="loader__circle"></span>
+      <div className="dot-spin"></div>
     </div>
   );
 };

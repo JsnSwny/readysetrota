@@ -68,6 +68,8 @@ const Stats = ({ type, employee, title }) => {
     setEndDate(endDateAfter);
   };
 
+  console.log(stats.hours);
+
   return (
     <div className="stats">
       <div className="flex-container--between">
@@ -75,26 +77,27 @@ const Stats = ({ type, employee, title }) => {
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
           title="Shifts Worked"
-          value={stats.shifts.current}
-          difference={getDif(stats.shifts.current, stats.shifts.before)}
+          value={stats.hours.map((item) => item.c).reduce((a, b) => a + b, 0)}
+          // difference={getDif(stats.shifts.current, stats.shifts.before)}
           dateDifference={dateDifference}
           color="teal"
         />
-        <StatsItem
+        {/* <StatsItem
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
           title="Hours Worked"
-          value={stats.hours.current}
-          difference={getDif(stats.hours.current, stats.hours.before)}
+          value={stats.hours.map((item) => item.c).reduce((a, b) => a + b, 0)}
+          // difference={getDif(stats.hours.current, stats.hours.before)}
           decimal={2}
           dateDifference={dateDifference}
           color="orange"
-        />
+        /> */}
+        {/*
         <StatsItem
           setBeforeDate={setBeforeDate}
           setAfterDate={setAfterDate}
           title={type == "business" ? "Estimated Outcome" : "Estimated Pay"}
-          value={3200}
+          value={stats.wage.current}
           money={true}
           difference={getDif(stats.wage.current, stats.wage.before)}
           decimal={2}
@@ -108,7 +111,7 @@ const Stats = ({ type, employee, title }) => {
           value={0}
           decimal={2}
           color="purple"
-        />
+        /> */}
       </div>
     </div>
   );

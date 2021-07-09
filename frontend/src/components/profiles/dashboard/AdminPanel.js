@@ -5,8 +5,10 @@ import HolidayRequest from "./HolidayRequest";
 import Stats from "./stats/Stats";
 import SiteOverview from "./SiteOverview";
 import Title from "../../common/Title";
+import { Link } from "react-router-dom";
 import { format, differenceInMinutes, differenceInHours } from "date-fns";
-import { getShifts } from "../../../actions/shifts";
+import { getTodayShifts } from "../../../actions/shifts";
+import { Bar, Line } from "react-chartjs-2";
 
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
@@ -19,7 +21,9 @@ const AdminPanel = (props) => {
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
+  let stats = useSelector((state) => state.stats.stats);
   let shifts = useSelector((state) => state.shifts.shifts);
+  let isLoading = useSelector((state) => state.shifts.isLoading);
   let notifications = [];
 
   const [beforeIncrement, setBeforeIncrement] = useState(0);
@@ -33,17 +37,45 @@ const AdminPanel = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(`TEST: ${afterIncrement} - ${beforeIncrement}`);
-  }, [afterIncrement, beforeIncrement]);
-
-  useEffect(() => {
     dispatch(
-      getShifts(
+      getTodayShifts(
         format(new Date(), "yyyy-MM-dd"),
         format(new Date(), "yyyy-MM-dd")
       )
     );
   }, [current.department]);
+
+  const data = {
+    labels: stats.hours.map((item, idx) => item.day),
+    datasets: [
+      {
+        label: "Hours Worked",
+        data: stats.hours.map((item) => item.c),
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
 
   const getPositionByDepartment = (shift) => {
     return shift.employee.position.find(
@@ -147,10 +179,35 @@ const AdminPanel = (props) => {
         <hr class="separator" />
         <div className="notifications">
           <div className="flex-container">
-            <div class="notifications__item">
-              You have <strong>4 unpublished shifts</strong> to publish{" "}
-              <i class="fas fa-chevron-right"></i>
-            </div>
+            {current.site.unpublished_shifts > 0 && (
+              <Link to="/rota" className="notifications__item">
+                You have{" "}
+                <strong>
+                  {current.site.unpublished_shifts} unpublished shifts
+                </strong>{" "}
+                to publish
+                <i class="fas fa-chevron-right"></i>
+              </Link>
+            )}
+
+            {current.site.unmarked_holidays > 0 && (
+              <Link to="/availability" className="notifications__item">
+                You have{" "}
+                <strong>
+                  {current.site.unmarked_holidays} availability requests
+                </strong>{" "}
+                to review
+                <i class="fas fa-chevron-right"></i>
+              </Link>
+            )}
+
+            {current.site.number_of_employees == 0 && (
+              <Link to="/staff-management" className="notifications__item">
+                Create your
+                <strong> first employee</strong>
+                <i class="fas fa-chevron-right"></i>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -159,52 +216,70 @@ const AdminPanel = (props) => {
         </div>
         <hr class="separator" />
         <div className="todayShifts">
-          <div className="todayShifts__container">
-            <h3 className="todayShifts__title">Previous Shifts</h3>
+          {isLoading ? (
+            <div class="dot-pulse"></div>
+          ) : (
+            <Fragment>
+              <div className="todayShifts__container">
+                <h3 className="todayShifts__title">Previous Shifts</h3>
+                {getBeforeAfterShifts(true, beforeIncrement).length > 0 ? (
+                  <Fragment>
+                    {sortArrow({
+                      before: true,
+                      direction: "up",
+                      increment: beforeIncrement,
+                      value: 1,
+                      setIncrement: setBeforeIncrement,
+                    })}
 
-            {sortArrow({
-              before: true,
-              direction: "up",
-              increment: beforeIncrement,
-              value: 1,
-              setIncrement: setBeforeIncrement,
-            })}
+                    <div className="todayShifts__list">
+                      {getBeforeAfterShifts(true, beforeIncrement)}
+                    </div>
 
-            <div className="todayShifts__list">
-              {getBeforeAfterShifts(true, beforeIncrement)}
-            </div>
+                    {sortArrow({
+                      before: true,
+                      direction: "down",
+                      increment: beforeIncrement,
+                      value: -1,
+                      setIncrement: setBeforeIncrement,
+                    })}
+                  </Fragment>
+                ) : (
+                  <p className="error--lg">No shifts have passed today</p>
+                )}
+              </div>
+              <div className="todayShifts__container">
+                <h3 className="todayShifts__title">Upcoming Shifts</h3>
+                {getBeforeAfterShifts(false, afterIncrement).length > 0 ? (
+                  <Fragment>
+                    {sortArrow({
+                      before: false,
+                      direction: "up",
+                      increment: afterIncrement,
+                      value: -1,
+                      setIncrement: setAfterIncrement,
+                    })}
 
-            {sortArrow({
-              before: true,
-              direction: "down",
-              increment: beforeIncrement,
-              value: -1,
-              setIncrement: setBeforeIncrement,
-            })}
-          </div>
-          <div className="todayShifts__container">
-            <h3 className="todayShifts__title">Upcoming Shifts</h3>
+                    <div className="todayShifts__list">
+                      {getBeforeAfterShifts(false, afterIncrement)}
+                    </div>
 
-            {sortArrow({
-              before: false,
-              direction: "up",
-              increment: afterIncrement,
-              value: -1,
-              setIncrement: setAfterIncrement,
-            })}
-
-            <div className="todayShifts__list">
-              {getBeforeAfterShifts(false, afterIncrement)}
-            </div>
-
-            {sortArrow({
-              before: false,
-              direction: "down",
-              increment: afterIncrement,
-              value: 1,
-              setIncrement: setAfterIncrement,
-            })}
-          </div>
+                    {sortArrow({
+                      before: false,
+                      direction: "down",
+                      increment: afterIncrement,
+                      value: 1,
+                      setIncrement: setAfterIncrement,
+                    })}
+                  </Fragment>
+                ) : (
+                  <p className="error--lg">
+                    There are no upcoming shifts today
+                  </p>
+                )}
+              </div>
+            </Fragment>
+          )}
         </div>
 
         <div className="dashboard__header">
@@ -214,6 +289,11 @@ const AdminPanel = (props) => {
         {permissions.includes("view_stats") && (
           <Stats title="Admin Panel" type="business" />
         )}
+        <div className="stats-graph">
+          <div className="stats-graph__item">
+            <Line data={data} options={options} />
+          </div>
+        </div>
       </div>
     </Fragment>
   );
