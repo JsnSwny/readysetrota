@@ -9,6 +9,21 @@
     align-items: center;
     padding: 30px;
     @extend .shadow--md;
+    @include wi-mq(tablet) {
+      width: calc(50% - 10px);
+      margin-bottom: 20px;
+    }
+    @include wi-mq(mobile) {
+      width: calc(50% - 5px);
+      margin-bottom: 10px;
+    }
+    // @include wi-mq(mobile) {
+    //   width: calc(100%);
+    //   padding: 20px;
+    //   &:not(:first-child) {
+    //     margin-top: 20px;
+    //   }
+    // }
     &.teal {
       background-color: #039798;
     }
@@ -32,13 +47,37 @@
       @include wi-mq(tablet) {
         font-size: 36px;
       }
+      @include wi-mq(mobile) {
+        font-size: 24px;
+      }
+      @include wi-mq(stamp) {
+        font-size: 18px;
+      }
     }
     h3 {
       font-size: 18px;
       @include wi-mq(tablet) {
-        font-size: 18px;
+        font-size: 16px;
+      }
+      @include wi-mq(mobile) {
+        font-size: 14px;
+      }
+      @include wi-mq(stamp) {
+        font-size: 12px;
       }
       font-weight: normal;
     }
+  }
+}
+
+.stats-graph {
+  margin: 50px 0;
+  &__item {
+    width: calc(50% - 20px);
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 10px;
+    height: 300px;
+    @extend .shadow;
   }
 }

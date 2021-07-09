@@ -67,6 +67,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   // Update shifts based on width
   const widthUpdate = (force = false) => {
     let currentDate = format(new Date(), "yyyy-MM-dd");
+    console.log("WIDTH UPDATE");
     if (width > 1200) {
       if (currentDevice != "Desktop" || force) {
         updateShifts(
@@ -232,10 +233,6 @@ const Rota = ({ modalProps, confirmProps }) => {
     }
   };
 
-  if (loading.employees) {
-    return <Loading />;
-  }
-
   // if (!loading.employees && employees.length == 0) {
   //   toast.warning(
   //     "You do not currently have any employees to manage in this department"
@@ -282,7 +279,7 @@ const Rota = ({ modalProps, confirmProps }) => {
           showFinancials={showFinancials}
           {...modalProps}
         />
-        {isLoading && <Loading />}
+        {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
           <div
             className={`shiftList container ${filterDate ? "filtered" : ""} ${

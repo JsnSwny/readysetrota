@@ -148,7 +148,7 @@ class Shift(models.Model):
         Employee, related_name="shifts", on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     start_time = models.TimeField()
-    end_time = models.CharField(max_length=20)
+    end_time = models.TimeField(null=True)
     info = models.TextField(blank=True)
     department = models.ForeignKey(
         Department, related_name="shift_department", on_delete=models.SET_NULL, null=True, blank=True)
@@ -204,7 +204,7 @@ class Shift(models.Model):
     absence_info = models.TextField(blank=True)
 
     def __str__(self):
-        return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {self.end_time} ({self.owner.email})'
+        return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {str(self.end_time)[0:5]} ({self.owner.email})'
 
     def save(self, *args, **kwargs):
         wage_obj = Wage.objects.filter(

@@ -104,7 +104,7 @@ const ShiftModal = (props) => {
     const shiftObj = {
       employee_id: shiftEmployee ? shiftEmployee : null,
       start_time: startTime,
-      end_time: endTime,
+      end_time: endTime == "Finish" ? null : endTime,
       info,
       date: update ? update.date : date,
       break_length: breakLength,

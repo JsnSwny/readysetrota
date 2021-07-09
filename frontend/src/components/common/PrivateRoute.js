@@ -50,7 +50,7 @@ const PrivateRoute = ({
       {...rest}
       render={(props) => {
         if (auth.isLoading) {
-          return <Loading />;
+          return false;
         } else if (!auth.isAuthenticated) {
           if (url == "/") {
             return <Beta {...modalProps} />;

@@ -12,6 +12,7 @@
   }
   @include wi-mq(mobile) {
     height: 20vh;
+    margin-top: 0;
   }
   .header {
     z-index: 10;

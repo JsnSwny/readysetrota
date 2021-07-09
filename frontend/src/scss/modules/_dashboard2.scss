@@ -6,6 +6,15 @@
     &-title {
       font-size: 32px;
       line-height: 25px;
+      @include wi-mq(tablet) {
+        font-size: 24px;
+      }
+      @include wi-mq(mobile) {
+        font-size: 22px;
+      }
+      @include wi-mq(stamp) {
+        font-size: 20px;
+      }
     }
   }
 }
@@ -41,11 +50,22 @@
 .todayShifts {
   display: flex;
   justify-content: space-between;
+  @include wi-mq(tablet) {
+    flex-direction: column;
+  }
   &__container {
     width: calc(50% - 20px);
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include wi-mq(tablet) {
+      width: 100%;
+      &:nth-child(2) {
+        .todayShifts__title {
+          margin-top: 50px;
+        }
+      }
+    }
   }
   &__item {
     background-color: white;
@@ -56,9 +76,23 @@
     &-right {
       text-align: right;
     }
+    &-title {
+      @include wi-mq(mobile) {
+        font-size: 14px;
+      }
+      @include wi-mq(stamp) {
+        font-size: 12px;
+      }
+    }
     &-subtitle {
       color: $light-gray-2;
       font-size: 14px;
+      @include wi-mq(mobile) {
+        font-size: 12px;
+      }
+      @include wi-mq(stamp) {
+        font-size: 10px;
+      }
     }
   }
   &__list {
@@ -81,6 +115,9 @@
     text-align: center;
     letter-spacing: 1px;
     font-weight: normal;
+    @include wi-mq(mobile) {
+      font-size: 16px;
+    }
   }
   .fa-sort-up,
   .fa-sort-down {

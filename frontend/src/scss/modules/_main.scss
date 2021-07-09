@@ -29,13 +29,14 @@
   &--lg {
     font-size: 36px;
     margin-left: 30px;
-    // font-family: "Quicksand", sans-serif;
     font-weight: 300;
-
     line-height: 40px;
-    // &.break {
-    //   word-spacing: 9999999px;
-    // }
+    @include wi-mq(tablet) {
+      font-size: 28px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 18px;
+    }
   }
   &--sub {
     font-size: 18px;
@@ -66,6 +67,10 @@
 .error {
   font-size: 12px;
   color: $red;
+  &--lg {
+    @extend .error;
+    font-size: 16px;
+  }
 }
 
 .success {

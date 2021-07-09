@@ -422,11 +422,10 @@ class ShiftListSerializer(serializers.ModelSerializer):
     timeclock = TimeClockSerializer(required=False)
 
     def get_length(self, obj):
-        if obj.end_time != "Finish":
+        if obj.end_time:
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
-            end_time = datetime.strptime(obj.end_time, '%H:%M')
-            end = datetime.combine(current_date, end_time.time())
+            end = datetime.combine(current_date, obj.end_time)
             if (end < start):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
@@ -451,8 +450,6 @@ class ShiftListSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         timeclock = validated_data.pop('timeclock', [])
         instance = super().update(instance, validated_data)
-        print("TEST")
-        print(timeclock)
         if(timeclock):
             tc, created = TimeClock.objects.get_or_create(
                 shift=instance, defaults=timeclock)
@@ -470,10 +467,14 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField(read_only=True)
+    end_time = serializers.SerializerMethodField(read_only=True)
 
     def get_start_time(self, obj):
         if obj.start_time:
             return str(obj.start_time)[0:5]
+    def get_end_time(self, obj):
+        if obj.end_time:
+            return str(obj.end_time)[0:5]
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):
