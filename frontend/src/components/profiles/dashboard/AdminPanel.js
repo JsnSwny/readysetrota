@@ -6,12 +6,26 @@ import Stats from "./stats/Stats";
 import SiteOverview from "./SiteOverview";
 import Title from "../../common/Title";
 import { Link } from "react-router-dom";
-import { format, differenceInMinutes, differenceInHours } from "date-fns";
+import {
+  format,
+  differenceInMinutes,
+  differenceInHours,
+  addDays,
+  startOfWeek,
+  addMonths,
+  eachDayOfInterval,
+} from "date-fns";
 import { getTodayShifts } from "../../../actions/shifts";
 import { Bar, Line } from "react-chartjs-2";
+import { getStats } from "../../../actions/stats";
 
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
+
+  const [startDate, setStartDate] = useState(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
+  const [endDate, setEndDate] = useState(new Date());
 
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
@@ -25,6 +39,25 @@ const AdminPanel = (props) => {
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let notifications = [];
+  const [interval, setInterval] = useState([]);
+
+  useEffect(() => {
+    setInterval(
+      eachDayOfInterval({
+        start: startDate,
+        end: endDate,
+      })
+    );
+    dispatch(
+      getStats(
+        "business",
+        current.site.id,
+        format(startDate, "dd/MM/yyyy"),
+        format(endDate, "dd/MM/yyyy"),
+        "site"
+      )
+    );
+  }, [startDate, endDate, current.site]);
 
   const [beforeIncrement, setBeforeIncrement] = useState(0);
   const [afterIncrement, setAfterIncrement] = useState(0);
@@ -46,35 +79,60 @@ const AdminPanel = (props) => {
   }, [current.department]);
 
   const data = {
-    labels: stats.hours.map((item, idx) => item.day),
+    // labels: stats.hours.map((item, idx) => item.day),
+    labels: interval.map((item) => format(item, "d MMM yyyy")),
     datasets: [
       {
         label: "Hours Worked",
-        data: stats.hours.map((item) => item.c),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
+        data: interval.map((item) =>
+          stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
+            ? stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
+                .c
+            : 0
+        ),
+        backgroundColor: ["rgba(236, 112, 201, 1)"],
+        borderColor: ["rgba(236, 112, 201, 1)"],
+        borderWidth: 2,
       },
     ],
   };
 
+  let maxValueOfY = Math.max(...stats.hours.map((o) => o.c), 0);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    legend: {
+      display: false,
+    },
+    interaction: {
+      intersect: false,
+    },
+    // tooltips: {
+    //   mode: "nearest",
+    // },
+    plugins: {
+      legend: false,
+      title: {
+        display: true,
+        text: "Shifts Worked",
+      },
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
+    scales: {
+      y: {
+        suggestedMax: maxValueOfY + maxValueOfY / 10,
+      },
+      x: {
+        ticks: {
+          stepSize: 4,
+        },
+      },
+    },
   };
 
   const getPositionByDepartment = (shift) => {
@@ -167,9 +225,9 @@ const AdminPanel = (props) => {
               breakWord={false}
             />
           </h1>
-          <div className="profile-icon">
+          {/* <div className="profile-icon">
             <i className="fas fa-user"></i>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="dashboard wrapper--md">
@@ -284,10 +342,31 @@ const AdminPanel = (props) => {
 
         <div className="dashboard__header">
           <h2 className="dashboard__header-title">Analytics Overview</h2>
+          <select
+            onChange={(e) => {
+              let values = e.target.value.split(" ");
+              if (values[1] == "D") {
+                setStartDate(addDays(new Date(), -values[0]));
+              } else if (values[1] == "M") {
+                setStartDate(addMonths(new Date(), -values[0]));
+              }
+            }}
+          >
+            <option value="14 D">Last 2 weeks</option>
+            <option value="30 D">Last 30 Days</option>
+            <option value="3 M">Last 3 Months</option>
+            <option value="6 M">Last 6 Months</option>
+            <option value="12 M">Last 12 Months</option>
+          </select>
         </div>
         <hr class="separator" />
         {permissions.includes("view_stats") && (
-          <Stats title="Admin Panel" type="business" />
+          <Stats
+            title="Admin Panel"
+            type="business"
+            startDate={startDate}
+            endDate={endDate}
+          />
         )}
         <div className="stats-graph">
           <div className="stats-graph__item">

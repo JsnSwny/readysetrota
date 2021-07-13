@@ -11,12 +11,8 @@ import {
 } from "date-fns";
 import { getStats } from "../../../../actions/stats";
 
-const Stats = ({ type, employee, title }) => {
+const Stats = ({ type, employee, title, startDate, endDate }) => {
   let stats = useSelector((state) => state.stats.stats);
-  const [startDate, setStartDate] = useState(
-    startOfWeek(new Date(), { weekStartsOn: 1 })
-  );
-  const [endDate, setEndDate] = useState(addDays(startDate, 6));
   let current = useSelector((state) => state.employees.current);
   let user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -30,19 +26,7 @@ const Stats = ({ type, employee, title }) => {
       ? employee
       : user.id;
 
-  const dateProps = { startDate, setStartDate, endDate, setEndDate };
-
-  useEffect(() => {
-    dispatch(
-      getStats(
-        type,
-        id,
-        format(startDate, "dd/MM/yyyy"),
-        format(endDate, "dd/MM/yyyy"),
-        currentFilter
-      )
-    );
-  }, [startDate, endDate, id]);
+  // const dateProps = { startDate, setStartDate, endDate, setEndDate };
 
   let dateDifference = differenceInDays(endDate, startDate);
   let startDateBefore = subDays(startDate, dateDifference + 1);
@@ -58,24 +42,22 @@ const Stats = ({ type, employee, title }) => {
     return (a / b) * 100 - 100;
   };
 
-  const setBeforeDate = () => {
-    setStartDate(startDateBefore);
-    setEndDate(endDateBefore);
-  };
+  // const setBeforeDate = () => {
+  //   setStartDate(startDateBefore);
+  //   setEndDate(endDateBefore);
+  // };
 
-  const setAfterDate = () => {
-    setStartDate(startDateAfter);
-    setEndDate(endDateAfter);
-  };
-
-  console.log(stats.hours);
+  // const setAfterDate = () => {
+  //   setStartDate(startDateAfter);
+  //   setEndDate(endDateAfter);
+  // };
 
   return (
     <div className="stats">
       <div className="flex-container--between">
         <StatsItem
-          setBeforeDate={setBeforeDate}
-          setAfterDate={setAfterDate}
+          // setBeforeDate={setBeforeDate}
+          // setAfterDate={setAfterDate}
           title="Shifts Worked"
           value={stats.hours.map((item) => item.c).reduce((a, b) => a + b, 0)}
           // difference={getDif(stats.shifts.current, stats.shifts.before)}

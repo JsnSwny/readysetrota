@@ -1,5 +1,13 @@
 .dashboard {
   &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    select {
+      @extend .form__input;
+      width: 200px !important;
+      padding: 10px 15px !important;
+    }
     &:not(:first-child) {
       margin-top: 100px;
     }

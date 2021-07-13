@@ -19,9 +19,9 @@ const StaffManagement = ({ modalProps }) => {
       <div className="banner">
         <div className="wrapper--md flex-container--between-start">
           <Title name="Staff Management" breakWord={false} />
-          <div className="profile-icon">
+          {/* <div className="profile-icon">
             <i className="fas fa-user"></i>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* <div className="container-2">

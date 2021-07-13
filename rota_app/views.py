@@ -199,14 +199,11 @@ class GetStats(APIView):
 
         id = request.query_params.get('id')
         # shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(month=TruncMonth('date')).values('month').annotate(c=Count('id')).values('month', 'c')
-        shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
-        # test = Shift.objects.order_by().annotate(d=TruncDay('date')).values('d').annotate(c=Count('id'))
-        
-        print(shifts_worked)
-        # stat_shifts2 = Shift.objects.filter(department__site=id).exclude(end_time__isnull=False).annotate(month=TruncMonth('date')).values('month').annotate(duration=TimeDiff('end_time', 'start_time')).values('month', 'duration')
-        # test = Shift.objects.all().exclude(end_time__isnull=True).annotate(duration=ExpressionWrapper(F('end_time') - F('start_time'),
-        #                                           output_field=fields.DurationField()))
-        # print(test)          
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        start_date = datetime.strptime(start_date, '%d/%m/%Y')
+        end_date = datetime.strptime(end_date, '%d/%m/%Y')
+        shifts_worked = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
 
         return JsonResponse({"hours": list(shifts_worked)}, safe=False)
 
