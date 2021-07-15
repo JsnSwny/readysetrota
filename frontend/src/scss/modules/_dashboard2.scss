@@ -141,3 +141,80 @@
     }
   }
 }
+
+.userShifts {
+  &__today {
+    background-color: white;
+    border-radius: 10px;
+    @extend .shadow;
+    padding: 10px 20px;
+    width: fit-content;
+    margin-top: 10px;
+    &-time {
+      margin-left: 40px;
+      text-align: right;
+      h4 {
+        font-weight: normal;
+      }
+      p {
+        font-size: 14px;
+        color: $light-gray-2;
+      }
+    }
+  }
+}
+
+.dashboardShiftList {
+  margin-top: 50px;
+  &__list {
+    list-style-type: none;
+    display: flex;
+    padding: 0 20px;
+    li {
+      &.sm {
+        width: calc(15% - 10px);
+      }
+      &:not(.sm) {
+        flex: 1;
+      }
+    }
+  }
+  &__header {
+    margin-bottom: 10px;
+    p {
+      color: $light-gray-2;
+    }
+  }
+  &__shifts {
+    flex: 1;
+    margin-right: 40px;
+  }
+  &__item {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    @extend .shadow;
+    &:not(:first-child) {
+      margin-top: 8px;
+    }
+    @include wi-mq(laptop) {
+      font-size: 14px;
+    }
+    li {
+      &.today {
+        font-weight: bold;
+      }
+    }
+  }
+  &__shiftsAndDate {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__datePicker {
+    max-width: 400px;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    @extend .shadow;
+  }
+}
