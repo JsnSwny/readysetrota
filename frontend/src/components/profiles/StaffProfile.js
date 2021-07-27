@@ -7,7 +7,16 @@ import Availability from "./Availability";
 import HolidayRequest from "./dashboard/HolidayRequest";
 import UpcomingShifts from "./UpcomingShifts";
 import Stats from "./dashboard/stats/Stats";
-import { format, differenceInCalendarDays, parseISO, isToday } from "date-fns";
+import {
+  format,
+  differenceInCalendarDays,
+  parseISO,
+  isToday,
+  addDays,
+  eachDayOfInterval,
+  startOfWeek,
+  endOfWeek,
+} from "date-fns";
 import Title from "../common/Title";
 
 const StaffProfile = (props) => {
@@ -65,6 +74,53 @@ const StaffProfile = (props) => {
     return <Redirect to="" />;
   }
 
+  let startRange = startOfWeek(new Date(), {
+    weekStartsOn: 1,
+  });
+  let endRange = endOfWeek(new Date(), {
+    weekStartsOn: 1,
+  });
+
+  let shiftRanges = [];
+  let tempShifts = [...shifts];
+
+  while (tempShifts.length > 0) {
+    let range = eachDayOfInterval({
+      start: startRange,
+      end: endRange,
+    });
+    let filteredShifts = tempShifts.filter(
+      (item) =>
+        parseISO(item.date) >= startRange && parseISO(item.date) <= endRange
+    );
+
+    shiftRanges.push([
+      [`${format(startRange, "dd MMM")} - ${format(endRange, "dd MMM")}`],
+      range.map((item, idx) =>
+        filteredShifts.find((shift) => shift.date == format(item, "yyyy-MM-dd"))
+      ),
+      range,
+    ]);
+
+    tempShifts = tempShifts.filter(
+      (item) => !filteredShifts.some((shift) => shift.id == item.id)
+    );
+    startRange = addDays(startRange, 7);
+    endRange = addDays(endRange, 7);
+  }
+
+  let daysList = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  // console.log(shiftRanges);
+
   return (
     <Fragment>
       <div className="banner">
@@ -118,44 +174,53 @@ const StaffProfile = (props) => {
               </div>
             </div>
             {/* <p className="title--wide">Upcoming Shifts</p> */}
-
             <div className="dashboardShiftList">
-              <ul className="dashboardShiftList__header dashboardShiftList__list">
-                <li>Date</li>
-                <li>Time</li>
-                <li>Break (mins)</li>
-                <li>Total Length (hrs)</li>
+              <ul className="dashboardShiftList__list--heading">
+                <li></li>
+                {daysList.map((item) => (
+                  <li
+                    className={`${
+                      format(new Date(), "iiii") == item ? "active" : ""
+                    }`}
+                  >
+                    {item}
+                  </li>
+                ))}
               </ul>
-              <div className="dashboardShiftList__shiftsAndDate">
-                <div className="dashboardShiftList__shifts">
-                  {shifts.map((item) => (
-                    <ul className="dashboardShiftList__item dashboardShiftList__list">
-                      <li
-                        className={`${
-                          isToday(parseISO(item.date)) ? "today" : ""
-                        }`}
-                      >
-                        {format(parseISO(item.date), "ccc dd MMM")}
+              {shiftRanges.map((item) => (
+                <ul className="dashboardShiftList__list--content">
+                  <li>{item[0]}</li>
+                  {item[1].map((shift, idx) =>
+                    shift ? (
+                      <li className="dashboardShiftList__shift active">
+                        <span className="dashboardShiftList__date active">
+                          {format(item[2][idx], "d")}
+                          <sup>{format(item[2][idx], "do").slice(-2)}</sup>
+                        </span>
+                        {shift.start_time}{" "}
+                        <i className="fas fa-long-arrow-alt-right"></i>{" "}
+                        {shift.end_time}
                       </li>
-                      <li>
-                        {item.start_time} - {item.end_time}
+                    ) : (
+                      <li className="dashboardShiftList__shift">
+                        <span className="dashboardShiftList__date">
+                          {format(item[2][idx], "d")}
+                          <sup>{format(item[2][idx], "do").slice(-2)}</sup>
+                        </span>
                       </li>
-                      <li className="sm">
-                        {item.break_length == 0
-                          ? "N/A"
-                          : `${item.break_length}`}
-                      </li>
-                      <li className="sm">{item.length}</li>
-                    </ul>
-                  ))}
-                </div>
-                <div className="dashboardShiftList__datePicker"></div>
-              </div>
+                    )
+                  )}
+                </ul>
+              ))}
             </div>
           </Fragment>
         ) : (
           <p>You have no upcoming shifts</p>
         )}
+        <div className="dashboard__header">
+          <h2 className="dashboard__header-title">Availability</h2>
+        </div>
+        <hr class="separator" />
       </div>
     </Fragment>
   );

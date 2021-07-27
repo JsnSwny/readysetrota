@@ -169,52 +169,93 @@
   &__list {
     list-style-type: none;
     display: flex;
-    padding: 0 20px;
-    li {
-      &.sm {
-        width: calc(15% - 10px);
-      }
-      &:not(.sm) {
-        flex: 1;
-      }
-    }
-  }
-  &__header {
-    margin-bottom: 10px;
-    p {
-      color: $light-gray-2;
-    }
-  }
-  &__shifts {
-    flex: 1;
-    margin-right: 40px;
-  }
-  &__item {
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px 20px;
-    @extend .shadow;
-    &:not(:first-child) {
-      margin-top: 8px;
-    }
-    @include wi-mq(laptop) {
-      font-size: 14px;
-    }
-    li {
-      &.today {
-        font-weight: bold;
-      }
-    }
-  }
-  &__shiftsAndDate {
-    display: flex;
     justify-content: space-between;
+    li {
+      width: calc(12.5% - 6px);
+      text-align: center;
+    }
+    &--content {
+      @extend .dashboardShiftList__list;
+      margin: 10px 0;
+      align-items: center;
+      li {
+        &:first-child {
+          // font-weight: bold;
+          text-align: left;
+          &.active {
+            font-weight: bold;
+          }
+          background-color: $blue;
+          color: white;
+          text-align: center;
+          min-height: 50px;
+          display: flex;
+          align-items: center;
+          padding-left: 20px;
+        }
+      }
+    }
+    &--heading {
+      @extend .dashboardShiftList__list;
+      // margin-bottom: 20px;
+      li {
+        &.active {
+          font-weight: bold;
+        }
+        background-color: $blue;
+        color: white;
+        text-align: center;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:first-child {
+          visibility: hidden;
+        }
+      }
+    }
   }
-  &__datePicker {
-    max-width: 400px;
-    width: 100%;
-    background-color: white;
+  &__shift {
+    background-color: #c4c4c4;
+    color: white;
     border-radius: 10px;
-    @extend .shadow;
+    text-align: center;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .fa-long-arrow-alt-right {
+      margin: 0 10px;
+    }
+    &.active {
+      background-color: $green;
+    }
+  }
+  &__date {
+    // width: 25px;
+    // height: 25px;
+    border-radius: 5px;
+    background-color: lighten(#c4c4c4, 5%);
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    font-size: 12px;
+    padding: 5px;
+    min-width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.active {
+      background-color: lighten($green, 5%);
+    }
+    sup {
+      font-size: 8px;
+      align-self: flex-start;
+      padding-top: 3px;
+    }
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
   }
 }
