@@ -10,6 +10,8 @@ import {
   RESET_LOADING,
   CHARGE_START,
   CHARGE_COMPLETE,
+  START_AVAILABILITY,
+  GET_AVAILABILITY,
 } from "../actions/types";
 
 const initialState = {
@@ -19,6 +21,7 @@ const initialState = {
   positions: true,
   employees: true,
   charge: false,
+  availability: true,
 };
 
 export default function (state = initialState, action) {
@@ -87,6 +90,16 @@ export default function (state = initialState, action) {
         sites: false,
         positions: false,
         employees: false,
+      };
+    case START_AVAILABILITY:
+      return {
+        ...state,
+        availability: true,
+      };
+    case GET_AVAILABILITY:
+      return {
+        ...state,
+        availability: false,
       };
     default:
       return state;

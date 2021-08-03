@@ -33,6 +33,7 @@ import {
   ADD_FORECAST,
   UPDATE_FORECAST,
   UPDATE_SETTINGS,
+  START_AVAILABILITY,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -263,46 +264,45 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
     });
 };
 
-export const getEmployees = (archived = false, start_date, end_date) => (
-  dispatch,
-  getState
-) => {
-  let current = getState().employees.current;
-  let site_admin = true;
-  let query = "";
+export const getEmployees =
+  (archived = false, start_date, end_date) =>
+  (dispatch, getState) => {
+    let current = getState().employees.current;
+    let site_admin = true;
+    let query = "";
 
-  if (current.site.id > 0) {
-    query += `&position__department__site=${current.site.id}`;
-  }
-  if (current.department.id > 0) {
-    query += `&position__department=${current.department.id}`;
-  }
-  if (localStorage.getItem("show_all_employees") == "false") {
-    if (!start_date) {
-      start_date = format(new Date(), "yyyy-MM-dd");
-      end_date = format(new Date(), "yyyy-MM-dd");
+    if (current.site.id > 0) {
+      query += `&position__department__site=${current.site.id}`;
+    }
+    if (current.department.id > 0) {
+      query += `&position__department=${current.department.id}`;
+    }
+    if (localStorage.getItem("show_all_employees") == "false") {
+      if (!start_date) {
+        start_date = format(new Date(), "yyyy-MM-dd");
+        end_date = format(new Date(), "yyyy-MM-dd");
+      }
+
+      if (start_date && end_date) {
+        query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
+      }
     }
 
-    if (start_date && end_date) {
-      query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
-    }
-  }
-
-  axios
-    .get(
-      `/api/employeelist${site_admin ? "admin" : ""}/?${query}&archived=${
-        !archived ? false : ""
-      }&ordering=archived,first_name,last_name`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: GET_EMPLOYEES,
-        payload: res.data,
-      });
-    })
-    .catch((err) => console.log(err.response));
-};
+    axios
+      .get(
+        `/api/employeelist${site_admin ? "admin" : ""}/?${query}&archived=${
+          !archived ? false : ""
+        }&ordering=archived,first_name,last_name`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        dispatch({
+          type: GET_EMPLOYEES,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log(err.response));
+  };
 
 export const setDepartment = (id) => (dispatch, getState) => {
   let isLoading = Object.keys(getState().loading).some(
@@ -335,57 +335,57 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
     });
 };
 
-export const updateEmployee = (update, employee, siteAdmin, current_site) => (
-  dispatch,
-  getState
-) => {
-  let current = getState().employees.current;
-  let query = "";
-  if (employee.wage_type) {
-    query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`;
-  }
-  if (employee.start_working_date) {
-    query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
-  }
-  axios
-    .put(
-      `/api/employees/${update}/?${query}${
-        employee.hasOwnProperty("permissions")
-          ? `&permissions=${employee.permissions}`
-          : ""
-      }`,
-      employee,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: UPDATE_EMPLOYEE,
-        payload: res.data,
-      });
-      if (update.user) {
-        if (siteAdmin) {
-          dispatch(
-            updateSite(current.site.id, {
-              ...current_site,
-              admins: [...current_site.admins, update.user],
-              business_id: current_site.business.id,
-            })
-          );
-        } else {
-          dispatch(
-            updateSite(current.site.id, {
-              ...current_site,
-              admins: current_site.admins.filter((item) => item != update.user),
-              business_id: current_site.business.id,
-            })
-          );
+export const updateEmployee =
+  (update, employee, siteAdmin, current_site) => (dispatch, getState) => {
+    let current = getState().employees.current;
+    let query = "";
+    if (employee.wage_type) {
+      query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`;
+    }
+    if (employee.start_working_date) {
+      query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
+    }
+    axios
+      .put(
+        `/api/employees/${update}/?${query}${
+          employee.hasOwnProperty("permissions")
+            ? `&permissions=${employee.permissions}`
+            : ""
+        }`,
+        employee,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        dispatch({
+          type: UPDATE_EMPLOYEE,
+          payload: res.data,
+        });
+        if (update.user) {
+          if (siteAdmin) {
+            dispatch(
+              updateSite(current.site.id, {
+                ...current_site,
+                admins: [...current_site.admins, update.user],
+                business_id: current_site.business.id,
+              })
+            );
+          } else {
+            dispatch(
+              updateSite(current.site.id, {
+                ...current_site,
+                admins: current_site.admins.filter(
+                  (item) => item != update.user
+                ),
+                business_id: current_site.business.id,
+              })
+            );
+          }
         }
-      }
-      dispatch(resetErrors());
-    })
+        dispatch(resetErrors());
+      })
 
-    .catch((err) => console.log(err.response));
-};
+      .catch((err) => console.log(err.response));
+  };
 
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {
@@ -412,39 +412,41 @@ export const addEmployee = (employee) => (dispatch, getState) => {
     .catch((err) => console.log(err.response));
 };
 // Get Positions
-export const getPositions = (all = false) => (dispatch, getState) => {
-  let current = getState().employees.current;
-  let site_admin = getState().employees.site_admin;
+export const getPositions =
+  (all = false) =>
+  (dispatch, getState) => {
+    let current = getState().employees.current;
+    let site_admin = getState().employees.site_admin;
 
-  let query = "";
-  if (current.site.id > 0) {
-    query += `&department__site=${current.site.id}`;
-  }
-  if (current.department.id > 0) {
-    query += `&department=${current.department.id}`;
-  }
-  axios
-    .get(
-      `/api/positionslist/${
-        all ? `?department__site=${current.site.id}` : `?${query}`
-      }`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      if (all) {
-        dispatch({
-          type: GET_ALL_POSITIONS,
-          payload: res.data,
-        });
-      } else {
-        dispatch({
-          type: GET_POSITIONS,
-          payload: res.data,
-        });
-      }
-    })
-    .catch((err) => console.log(err.response));
-};
+    let query = "";
+    if (current.site.id > 0) {
+      query += `&department__site=${current.site.id}`;
+    }
+    if (current.department.id > 0) {
+      query += `&department=${current.department.id}`;
+    }
+    axios
+      .get(
+        `/api/positionslist/${
+          all ? `?department__site=${current.site.id}` : `?${query}`
+        }`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        if (all) {
+          dispatch({
+            type: GET_ALL_POSITIONS,
+            payload: res.data,
+          });
+        } else {
+          dispatch({
+            type: GET_POSITIONS,
+            payload: res.data,
+          });
+        }
+      })
+      .catch((err) => console.log(err.response));
+  };
 
 // Delete Position
 export const deletePosition = (id) => (dispatch, getState) => {
@@ -610,6 +612,9 @@ export const uuidReset = () => (dispatch, getState) => {
 
 // Get Department
 export const getAvailability = (employee, business) => (dispatch, getState) => {
+  dispatch({
+    type: START_AVAILABILITY,
+  });
   axios
     .get(
       `/api/availability/?employee__id=${employee}&business=${business}&ordering=date`,
@@ -623,59 +628,56 @@ export const getAvailability = (employee, business) => (dispatch, getState) => {
     });
 };
 
-export const getAllAvailability = (site, startdate, enddate) => (
-  dispatch,
-  getState
-) => {
-  axios
-    .get(
-      `/api/availability/?employee__position__department__site=${site}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: GET_AVAILABILITY,
-        payload: res.data,
-      });
-    });
-};
-
-export const getHolidays = (site, user = false, filter = "") => (
-  dispatch,
-  getState
-) => {
-  axios
-    .get(
-      `/api/availability/${
-        user
-          ? `?employee__id=${user}`
-          : `?employee__position__department__site=${site}`
-      }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=holiday&${
-        filter == null ? `unmarked=True` : `approved=${filter}`
-      }&ordering=date`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      axios
-        .get(
-          `/api/availability/${
-            user
-              ? `?employee__id=${user}`
-              : `?employee__position__department__site=${site}`
-          }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=unavailable&${
-            filter == null ? `unmarked=True` : `approved=${filter}`
-          }&ordering=date`,
-          tokenConfig(getState)
-        )
-        .then((res2) => {
-          dispatch({
-            type: GET_HOLIDAYS,
-            payload: res.data.concat(res2.data),
-          });
+export const getAllAvailability =
+  (site, startdate, enddate) => (dispatch, getState) => {
+    axios
+      .get(
+        `/api/availability/?employee__position__department__site=${site}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        dispatch({
+          type: GET_AVAILABILITY,
+          payload: res.data,
         });
-    })
-    .catch((err) => console.log(err.response));
-};
+      });
+  };
+
+export const getHolidays =
+  (site, user = false, filter = "") =>
+  (dispatch, getState) => {
+    axios
+      .get(
+        `/api/availability/${
+          user
+            ? `?employee__id=${user}`
+            : `?employee__position__department__site=${site}`
+        }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=holiday&${
+          filter == null ? `unmarked=True` : `approved=${filter}`
+        }&ordering=date`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        axios
+          .get(
+            `/api/availability/${
+              user
+                ? `?employee__id=${user}`
+                : `?employee__position__department__site=${site}`
+            }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=unavailable&${
+              filter == null ? `unmarked=True` : `approved=${filter}`
+            }&ordering=date`,
+            tokenConfig(getState)
+          )
+          .then((res2) => {
+            dispatch({
+              type: GET_HOLIDAYS,
+              payload: res.data.concat(res2.data),
+            });
+          });
+      })
+      .catch((err) => console.log(err.response));
+  };
 
 export const addAvailability = (obj) => (dispatch, getState) => {
   axios

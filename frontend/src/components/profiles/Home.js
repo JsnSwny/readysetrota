@@ -4,7 +4,7 @@ import StaffProfile from "./StaffProfile";
 import AdminPanel from "../profiles/dashboard/AdminPanel";
 import StaffManagement from "./StaffManagement";
 
-const Home = (props) => {
+const Home = ({ modalProps }) => {
   let user = useSelector((state) => state.auth.user);
   if (user.business && user.business.plan == "F") {
     return <StaffManagement modalProps={modalProps} />;
@@ -12,7 +12,7 @@ const Home = (props) => {
   if (user.business) {
     return <AdminPanel />;
   }
-  return <StaffProfile />;
+  return <StaffProfile modalProps={modalProps} />;
 };
 
 export default Home;

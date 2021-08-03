@@ -52,6 +52,7 @@ const Main = () => {
   const [forecastDate, setForecastDate] = useState(false);
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
+  const [holidayEmployee, setHolidayEmployee] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirm, setOnConfirm] = useState(false);
   const [message, setMessage] = useState(false);
@@ -103,6 +104,7 @@ const Main = () => {
     setType,
     setShiftInfo,
     setForecastDate,
+    setHolidayEmployee,
   };
 
   const confirmProps = {
@@ -129,6 +131,7 @@ const Main = () => {
         {...shiftInfo}
         forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
         confirmProps={confirmProps}
+        holidayEmployee={holidayEmployee}
       />
       <Confirm
         open={confirmOpen}

@@ -244,8 +244,56 @@ class Availability(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # STATUS_TYPES = [
+    #     ("Unsubmitted", 'Unsubmitted'),
+    #     ("Pending", 'Pending'),
+    #     ("Approved", 'Approved'),
+    #     ("Denied", 'Denied'),
+    # ]
+    # status = models.CharField(
+    #     max_length=11,
+    #     choices=STATUS_TYPES,
+    #     default="Unsubmitted",
+    # )
+
     def __str__(self):
         return f'{self.id}. {self.date} - {self.name} - {self.employee}'
+
+class Leave(models.Model):
+    LEAVE_TYPES = [
+        ("Holiday", 'Holiday'),
+        ("Sick", 'Sick'),
+    ]
+    leave_type = models.CharField(
+        max_length=11,
+        choices=LEAVE_TYPES,
+        default="Holiday",
+    )
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.CharField(max_length=100, blank=True, null=True)
+
+    STATUS_TYPES = [
+        ("Pending", 'Pending'),
+        ("Approved", 'Approved'),
+        ("Denied", 'Denied'),
+    ]
+    status = models.CharField(
+        max_length=11,
+        choices=STATUS_TYPES,
+        default="Pending",
+    )
+
+    employee = models.ForeignKey(
+        Employee, related_name="employee_leave", on_delete=models.CASCADE)
+
+    site = models.ForeignKey(Site, related_name="site_leave",
+                             on_delete=models.CASCADE, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 
 class UserProfile(models.Model):

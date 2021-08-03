@@ -4,6 +4,7 @@ import StaffManagementModal from "./StaffManagementModal";
 import ShiftModal from "./shift/ShiftModal";
 import ForecastModal from "./ForecastModal";
 import RegisterModal from "./RegisterModal";
+import HolidayModal from "./HolidayModal";
 
 const CreateShift = (props) => {
   const {
@@ -34,6 +35,7 @@ const CreateShift = (props) => {
     forecast: "fas fa-coins",
     register: "fas fa-user-edit",
     employeeprofile: "fas fa-user",
+    holiday: "fas fa-umbrella-beach",
     Department: "fas fa-users-cog",
     Site: "fas fa-users-cog",
     Position: "fas fa-users-cog",
@@ -50,6 +52,8 @@ const CreateShift = (props) => {
       return <ForecastModal date={forecastDate} {...modalProps} />;
     } else if (type == "register") {
       return <RegisterModal {...modalProps} />;
+    } else if (type == "holiday") {
+      return <HolidayModal {...modalProps} />;
     } else if (staffTypes.includes(type)) {
       return (
         <StaffManagementModal
