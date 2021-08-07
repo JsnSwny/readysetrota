@@ -20,8 +20,8 @@ const NoShift = (props) => {
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
   let showAdd = true;
   if (available) {
-    if (available.name == "holiday" || available.name == "unavailable") {
-      if (available.approved == true) {
+    if (available.name == "unavailable") {
+      if (available.status == "Approved") {
         showAdd = false;
       }
     }
@@ -33,9 +33,9 @@ const NoShift = (props) => {
       className={`item-block shift__shift-noshift ${
         showAvailabilities &&
         ((available.name == "holiday" || available.name == "unmarked") &&
-        available.approved == null
+        available.status == "Pending"
           ? "unmarked"
-          : available.approved == false
+          : available.status == "Denied"
           ? "not-approved"
           : available.name)
       } ${filterDate == format_date ? "filtered" : ""} ${
@@ -55,11 +55,11 @@ const NoShift = (props) => {
         <Fragment>
           <p className={`shift__text`}>
             {available.name != "unselected" &&
-              available.approved != false &&
+              available.status != "Denied" &&
               available.name}
           </p>
           {(available.name == "holiday" || available.name == "unavailable") &&
-            available.approved == null && (
+            available.status == "Pending" && (
               <p className="shift__text">Unmarked</p>
             )}
           {available.start_time && (

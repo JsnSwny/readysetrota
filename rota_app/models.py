@@ -238,7 +238,16 @@ class Availability(models.Model):
     info = models.TextField(blank=True, null=True)
     employee = models.ForeignKey(
         Employee, related_name="availability", on_delete=models.CASCADE)
-    approved = models.BooleanField(null=True, blank=True)
+    STATUS_TYPES = [
+        ("Pending", 'Pending'),
+        ("Approved", 'Approved'),
+        ("Denied", 'Denied'),
+    ]
+    status = models.CharField(
+        max_length=11,
+        choices=STATUS_TYPES,
+        default="Pending",
+    )
     site = models.ForeignKey(Site, related_name="availability_site",
                              on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

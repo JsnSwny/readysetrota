@@ -508,7 +508,6 @@ class SiteSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
-    unmarked_holidays = serializers.SerializerMethodField(read_only=True)
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
     permissions = serializers.SerializerMethodField(read_only=True)
@@ -516,7 +515,7 @@ class SiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
-                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings', 'permissions',)
+                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -569,11 +568,6 @@ class SiteSerializer(serializers.ModelSerializer):
         shifts = Shift.objects.filter(
             department__site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
-
-    def get_unmarked_holidays(self, obj):
-        holidays = Availability.objects.filter(Q(name="holiday") | Q(
-            name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
-        return len(holidays)
 
 
 class ForecastSerializer(serializers.ModelSerializer):

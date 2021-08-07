@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_LEAVE, ADD_LEAVE, DELETE_LEAVE } from "./types";
+import { GET_LEAVE, ADD_LEAVE, DELETE_LEAVE, UPDATE_LEAVE } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
 import { loadUser } from "./auth";
@@ -24,6 +24,21 @@ export const getUserLeave = (employee_id) => (dispatch, getState) => {
     });
 };
 
+export const getLeave = (start_date, end_date) => (dispatch, getState) => {
+  let current = getState().employees.current;
+  axios
+    .get(
+      `/api/leave/?site__id=${current.site.id}&start_date__lte=${end_date}&end_date__gte${start_date}&ordering=-created_at`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_LEAVE,
+        payload: res.data,
+      });
+    });
+};
+
 export const addLeave = (obj) => (dispatch, getState) => {
   axios
     .post("/api/leave/", obj, tokenConfig(getState))
@@ -34,6 +49,20 @@ export const addLeave = (obj) => (dispatch, getState) => {
         payload: res.data,
       });
     })
+    .catch((err) => console.log(err.response));
+};
+
+export const updateLeave = (id, obj) => (dispatch, getState) => {
+  axios
+    .put(`/api/leave/${id}/`, obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_LEAVE,
+        payload: res.data,
+      });
+      dispatch(resetErrors());
+    })
+
     .catch((err) => console.log(err.response));
 };
 
@@ -50,19 +79,3 @@ export const deleteLeave = (id) => (dispatch, getState) => {
       console.log(error);
     });
 };
-
-// export const getLeave = (startDate, endDate) => (dispatch, getState) => {
-//   axios
-//     .get(
-//       `/api/forecast/?site__id=${
-//         getState().employees.current.site.id
-//       }&date_after=${startDate}&date_before=${endDate}&ordering=date`,
-//       tokenConfig(getState)
-//     )
-//     .then((res) => {
-//       dispatch({
-//         type: GET_FORECAST,
-//         payload: res.data,
-//       });
-//     });
-// };

@@ -4,7 +4,6 @@ import {
   getEmployees,
   getDepartments,
   getPositions,
-  getHolidays,
   getSites,
   updateSettings,
 } from "../actions/employees";
@@ -42,6 +41,8 @@ import Confirm from "./layout/Confirm";
 
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
+
+import Availability from "./availability/Availability";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -183,7 +184,18 @@ const Main = () => {
             component={Rota}
             modalProps={modalProps}
             confirmProps={confirmProps}
+            title="Rota"
           />
+
+          <PrivateRoute
+            path="/availability"
+            exact
+            component={Availability}
+            modalProps={modalProps}
+            confirmProps={confirmProps}
+            title="Availability"
+          />
+
           <PrivateRoute
             admin={true}
             perms={[
@@ -195,6 +207,7 @@ const Main = () => {
             exact
             component={StaffManagement}
             modalProps={modalProps}
+            title="Staff Management"
           />
           <PrivateRoute
             admin={true}

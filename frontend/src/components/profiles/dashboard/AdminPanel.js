@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getHolidays, getSites } from "../../../actions/employees";
+import { getSites } from "../../../actions/employees";
 import HolidayRequest from "./HolidayRequest";
 import Stats from "./stats/Stats";
 import SiteOverview from "./SiteOverview";
@@ -65,7 +65,6 @@ const AdminPanel = (props) => {
   let today = new Date();
 
   useEffect(() => {
-    dispatch(getHolidays(current.site.id));
     dispatch(getSites());
   }, []);
 
@@ -231,117 +230,92 @@ const AdminPanel = (props) => {
         </div>
       </div>
       <div className="dashboard wrapper--md">
-        <div className="dashboard__header">
-          <h2 className="dashboard__header-title">Notifications</h2>
-        </div>
-        <hr class="separator" />
-        <div className="notifications">
-          <div className="flex-container">
-            {current.site.unpublished_shifts > 0 && (
-              <Link to="/rota" className="notifications__item">
-                You have{" "}
-                <strong>
-                  {current.site.unpublished_shifts} unpublished shifts
-                </strong>{" "}
-                to publish
-                <i class="fas fa-chevron-right"></i>
-              </Link>
-            )}
+        <div className="flex-container--between">
+          <div class="dashboard__left">
+            <h2 className="title-sm">Previous Shifts</h2>
+            <hr class="separator" />
+            <div className="todayShifts">
+              {isLoading ? (
+                <div class="dot-pulse"></div>
+              ) : (
+                <Fragment>
+                  <div className="todayShifts__container">
+                    {getBeforeAfterShifts(true, beforeIncrement).length > 0 ? (
+                      <Fragment>
+                        {sortArrow({
+                          before: true,
+                          direction: "up",
+                          increment: beforeIncrement,
+                          value: 1,
+                          setIncrement: setBeforeIncrement,
+                        })}
 
-            {current.site.unmarked_holidays > 0 && (
-              <Link to="/availability" className="notifications__item">
-                You have{" "}
-                <strong>
-                  {current.site.unmarked_holidays} availability requests
-                </strong>{" "}
-                to review
-                <i class="fas fa-chevron-right"></i>
-              </Link>
-            )}
+                        <div className="todayShifts__list">
+                          {getBeforeAfterShifts(true, beforeIncrement)}
+                        </div>
 
-            {current.site.number_of_employees == 0 && (
-              <Link to="/staff-management" className="notifications__item">
-                Create your
-                <strong> first employee</strong>
-                <i class="fas fa-chevron-right"></i>
-              </Link>
-            )}
+                        {sortArrow({
+                          before: true,
+                          direction: "down",
+                          increment: beforeIncrement,
+                          value: -1,
+                          setIncrement: setBeforeIncrement,
+                        })}
+                      </Fragment>
+                    ) : (
+                      <p className="error--lg">No shifts have passed today</p>
+                    )}
+                  </div>
+                </Fragment>
+              )}
+            </div>
+          </div>
+
+          <div class="dashboard__right">
+            <h2 className="title-sm">Upcoming Shifts</h2>
+            <hr class="separator" />
+            <div className="todayShifts">
+              {isLoading ? (
+                <div class="dot-pulse"></div>
+              ) : (
+                <Fragment>
+                  <div className="todayShifts__container">
+                    <h3 className="todayShifts__title">Upcoming Shifts</h3>
+                    {getBeforeAfterShifts(false, afterIncrement).length > 0 ? (
+                      <Fragment>
+                        {sortArrow({
+                          before: false,
+                          direction: "up",
+                          increment: afterIncrement,
+                          value: -1,
+                          setIncrement: setAfterIncrement,
+                        })}
+
+                        <div className="todayShifts__list">
+                          {getBeforeAfterShifts(false, afterIncrement)}
+                        </div>
+
+                        {sortArrow({
+                          before: false,
+                          direction: "down",
+                          increment: afterIncrement,
+                          value: 1,
+                          setIncrement: setAfterIncrement,
+                        })}
+                      </Fragment>
+                    ) : (
+                      <p className="error--lg">
+                        There are no upcoming shifts today
+                      </p>
+                    )}
+                  </div>
+                </Fragment>
+              )}
+            </div>
           </div>
         </div>
-
-        <div className="dashboard__header">
-          <h2 className="dashboard__header-title">Today's Shifts</h2>
-        </div>
-        <hr class="separator" />
-        <div className="todayShifts">
-          {isLoading ? (
-            <div class="dot-pulse"></div>
-          ) : (
-            <Fragment>
-              <div className="todayShifts__container">
-                <h3 className="todayShifts__title">Previous Shifts</h3>
-                {getBeforeAfterShifts(true, beforeIncrement).length > 0 ? (
-                  <Fragment>
-                    {sortArrow({
-                      before: true,
-                      direction: "up",
-                      increment: beforeIncrement,
-                      value: 1,
-                      setIncrement: setBeforeIncrement,
-                    })}
-
-                    <div className="todayShifts__list">
-                      {getBeforeAfterShifts(true, beforeIncrement)}
-                    </div>
-
-                    {sortArrow({
-                      before: true,
-                      direction: "down",
-                      increment: beforeIncrement,
-                      value: -1,
-                      setIncrement: setBeforeIncrement,
-                    })}
-                  </Fragment>
-                ) : (
-                  <p className="error--lg">No shifts have passed today</p>
-                )}
-              </div>
-              <div className="todayShifts__container">
-                <h3 className="todayShifts__title">Upcoming Shifts</h3>
-                {getBeforeAfterShifts(false, afterIncrement).length > 0 ? (
-                  <Fragment>
-                    {sortArrow({
-                      before: false,
-                      direction: "up",
-                      increment: afterIncrement,
-                      value: -1,
-                      setIncrement: setAfterIncrement,
-                    })}
-
-                    <div className="todayShifts__list">
-                      {getBeforeAfterShifts(false, afterIncrement)}
-                    </div>
-
-                    {sortArrow({
-                      before: false,
-                      direction: "down",
-                      increment: afterIncrement,
-                      value: 1,
-                      setIncrement: setAfterIncrement,
-                    })}
-                  </Fragment>
-                ) : (
-                  <p className="error--lg">
-                    There are no upcoming shifts today
-                  </p>
-                )}
-              </div>
-            </Fragment>
-          )}
-        </div>
-
-        <div className="dashboard__header">
-          <h2 className="dashboard__header-title">Analytics Overview</h2>
+        <div className="flex-container--between">
+          <h2 className="title-sm title--margin-top">Analytics Overview</h2>
           <select
             onChange={(e) => {
               let values = e.target.value.split(" ");
@@ -352,6 +326,7 @@ const AdminPanel = (props) => {
               }
             }}
           >
+            <option value="7 D">Last week</option>
             <option value="14 D">Last 2 weeks</option>
             <option value="30 D">Last 30 Days</option>
             <option value="3 M">Last 3 Months</option>

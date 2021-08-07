@@ -113,7 +113,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = EmployeeFilter
-    ordering_fields = ('first_name', 'archived', 'last_name',)
+    ordering_fields = ('first_name', 'archived', 'last_name', 'position__department',)
 
 
 class EmployeeListViewSet(viewsets.ModelViewSet):
@@ -228,13 +228,10 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
 class AvailabilityFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
-    unmarked = django_filters.BooleanFilter(
-        field_name='approved', lookup_expr='isnull')
-
     class Meta:
         model = Availability
-        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'unmarked', 'employee__business',
-                  'unmarked', 'date', 'name', 'approved', 'employee__position__department__site']
+        fields = ['employee__id', 'employee__user', 'employee__owner__id', 'employee__business',
+                  'date', 'name', 'status', 'employee__position__department__site']
 
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
@@ -245,7 +242,6 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     serializer_class = AvailabilitySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = AvailabilityFilter
-    filter_fields = {'approved': ['isnull']}
     ordering_fields = ('date',)
     queryset = Availability.objects.all().distinct()
 
@@ -256,7 +252,7 @@ class LeaveFilter(django_filters.FilterSet):
 
     class Meta:
         model = Leave
-        fields = ['employee__id', 'employee__user', 'employee__business',
+        fields = ['employee__id', 'employee__user', 'status', 'employee__business',
                   'start_date', 'end_date']
 
 

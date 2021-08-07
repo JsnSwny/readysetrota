@@ -89,4 +89,69 @@
   @include wi-mq(mobile) {
     margin: 20px 0;
   }
+  &--alt {
+    @extend .separator;
+    margin: 20px 0;
+  }
+}
+
+.tooltip {
+  visibility: hidden;
+  min-width: 120px;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  @extend .shadow--md;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
+  &.active {
+    visibility: visible;
+  }
+  .flex-container--center-vh {
+    width: auto;
+  }
+  &__icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 8px;
+    }
+  }
+}
+
+.circle-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: $light-gray-2;
+  margin-right: 4px;
+  display: block;
+  &--green {
+    background-color: $green;
+  }
+  &--red {
+    background-color: $red;
+  }
+  &--blue {
+    background-color: $holiday;
+  }
 }

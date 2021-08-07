@@ -95,14 +95,14 @@ export const batchApprove = (holidays, val) => (dispatch, getState) => {
   axios
     .all(
       holidays.map((item) =>
-        axios.put(`/api/availability/${item.id}/`, { ...item, approved: val })
+        axios.put(`/api/availability/${item.id}/`, { ...item, status: val })
       )
     )
     .then((responseArr) => {
       for (let i = 0; i < holidays.length; i++) {
         dispatch({
           type: UPDATE_AVAILABILITY,
-          payload: { ...responseArr[i].data, approved: val },
+          payload: { ...responseArr[i].data, status: val },
         });
       }
     })
@@ -292,7 +292,7 @@ export const getEmployees =
       .get(
         `/api/employeelist${site_admin ? "admin" : ""}/?${query}&archived=${
           !archived ? false : ""
-        }&ordering=archived,first_name,last_name`,
+        }&ordering=archived,first_name,last_name,`,
         tokenConfig(getState)
       )
       .then((res) => {
@@ -641,42 +641,6 @@ export const getAllAvailability =
           payload: res.data,
         });
       });
-  };
-
-export const getHolidays =
-  (site, user = false, filter = "") =>
-  (dispatch, getState) => {
-    axios
-      .get(
-        `/api/availability/${
-          user
-            ? `?employee__id=${user}`
-            : `?employee__position__department__site=${site}`
-        }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=holiday&${
-          filter == null ? `unmarked=True` : `approved=${filter}`
-        }&ordering=date`,
-        tokenConfig(getState)
-      )
-      .then((res) => {
-        axios
-          .get(
-            `/api/availability/${
-              user
-                ? `?employee__id=${user}`
-                : `?employee__position__department__site=${site}`
-            }&date_after=${format(new Date(), "yyyy-MM-dd")}&name=unavailable&${
-              filter == null ? `unmarked=True` : `approved=${filter}`
-            }&ordering=date`,
-            tokenConfig(getState)
-          )
-          .then((res2) => {
-            dispatch({
-              type: GET_HOLIDAYS,
-              payload: res.data.concat(res2.data),
-            });
-          });
-      })
-      .catch((err) => console.log(err.response));
   };
 
 export const addAvailability = (obj) => (dispatch, getState) => {

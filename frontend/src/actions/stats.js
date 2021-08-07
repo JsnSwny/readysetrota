@@ -10,7 +10,7 @@ export const getStats =
           `/stats/?stat_type=${stat_type}${
             stat_type == "business"
               ? `&currentFilter=${currentFilter}&id=${id}`
-              : `&user_id=${id}`
+              : `&employee_id=${id}`
           }&start_date=${start_date}&end_date=${end_date}`
         )
         .then((res) => {

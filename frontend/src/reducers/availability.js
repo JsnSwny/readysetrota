@@ -1,4 +1,9 @@
-import { GET_LEAVE, ADD_LEAVE, DELETE_LEAVE } from "../actions/types";
+import {
+  GET_LEAVE,
+  ADD_LEAVE,
+  DELETE_LEAVE,
+  UPDATE_LEAVE,
+} from "../actions/types";
 
 const initialState = {
   leave: [],
@@ -15,6 +20,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         leave: [action.payload, ...state.leave],
+      };
+    case UPDATE_LEAVE:
+      return {
+        ...state,
+        leave: state.leave.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
       };
     case DELETE_LEAVE:
       return {
