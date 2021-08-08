@@ -17,6 +17,7 @@ import NoShift from "./NoShift";
 import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
 import Title from "../common/Title";
+import { getLeave } from "../../actions/availability";
 
 const Rota = ({ modalProps, confirmProps }) => {
   const dispatch = useDispatch();
@@ -134,6 +135,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     if (filterDate) {
       filterEmployees(filterDate, true);
     }
+    dispatch(getLeave(date, enddate));
   }, [shifts_list]);
 
   // Date range

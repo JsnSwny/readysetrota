@@ -307,65 +307,55 @@ const StaffProfile = ({ modalProps }) => {
         ) : (
           <p>You have no upcoming shifts</p>
         )}
-        {loading.availability ? (
-          <div class="dot-pulse"></div>
-        ) : (
-          <div className="flex-container--between">
-            {employees.length > 0 && (
-              <AvailabilityCalendar
-                employee={employees.find((item) => item.user == user.id)}
-              />
-            )}
-            <div className="dashboardHolidays">
-              <div className="flex-container--between">
-                <h3 className="title-sm title--margin-top">Requests</h3>
-                <button
-                  onClick={() => {
-                    setOpen(true);
-                    setType("holiday");
-                  }}
-                  class="dashboardHolidays__request"
-                >
-                  Make Request
-                </button>
-              </div>
+        <div className="flex-container--between">
+          <AvailabilityCalendar
+            employee={employees.find((item) => item.user == user.id)}
+          />
+          <div className="dashboardHolidays">
+            <div className="flex-container--between">
+              <h3 className="title-sm title--margin-top">Requests</h3>
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setType("holiday");
+                }}
+                class="dashboardHolidays__request"
+              >
+                Make Request
+              </button>
+            </div>
 
-              <hr className="separator"></hr>
+            <hr className="separator"></hr>
 
-              <div className="dashboardHolidays__list">
-                {leave.slice(0, 3).map((item) => (
-                  <div className="dashboardHolidays__item">
-                    <div>
-                      <h4 className="flex-container--align-center dashboardHolidays__type">
-                        <span className="dashboardHolidays__indicator--blue"></span>
-                        {item.leave_type}
-                      </h4>
-                      <p className="dashboardHolidays__date">
-                        <i class="fas fa-calendar-alt"></i>
-                        {format(parseISO(item.start_date), "do MMMM yyyy")} -
-                        {format(parseISO(item.end_date), "do MMMM yyyy")}
-                      </p>
-                    </div>
-                    <div>
-                      <h4
+            <div className="dashboardHolidays__list">
+              {leave.map((item) => (
+                <div className="dashboardHolidays__item">
+                  <div>
+                    <h4 className="flex-container--align-center dashboardHolidays__type">
+                      <span className="dashboardHolidays__indicator--blue"></span>
+                      {item.leave_type}{" "}
+                      <span
                         className={`dashboardHolidays__status--${item.status.toLowerCase()}`}
                       >
-                        {item.status}
-                      </h4>
-                      <p
-                        className="dashboardHolidays__delete"
-                        onClick={() => dispatch(deleteLeave(item.id))}
-                      >
-                        Delete
-                      </p>
-                    </div>
+                        ({item.status})
+                      </span>
+                    </h4>
+                    <p className="dashboardHolidays__date">
+                      <i class="fas fa-calendar-alt"></i>
+                      {format(parseISO(item.start_date), "do MMMM yyyy")} -
+                      {format(parseISO(item.end_date), "do MMMM yyyy")}
+                    </p>
                   </div>
-                ))}
-              </div>
+                  <i
+                    onClick={() => dispatch(deleteLeave(item.id))}
+                    className="dashboardHolidays__delete fas fa-times"
+                  ></i>
+                </div>
+              ))}
             </div>
           </div>
-        )}
-        <div className="flex-container--between">
+        </div>
+        <div className="dashboard__header">
           <h2 className="title-sm title--margin-top">Analytics Overview</h2>
           <select
             onChange={(e) => {

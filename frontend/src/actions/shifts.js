@@ -63,7 +63,7 @@ export const getShifts =
         `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
           getState().employees.current.department.id
         }${
-          user ? `&employee__user__id=${id}` : `&employee=${id}`
+          user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
         }&ordering=date,start_time`,
         tokenConfig(getState)
       )

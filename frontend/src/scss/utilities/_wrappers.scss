@@ -11,7 +11,7 @@
     max-width: calc(100% - 100px);
     padding: 0;
     @include wi-mq(mobile) {
-      max-width: calc(100% - 50px);
+      max-width: calc(100% - 30px);
     }
   }
   &--lg {

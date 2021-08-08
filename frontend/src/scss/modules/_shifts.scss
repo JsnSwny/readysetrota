@@ -298,7 +298,7 @@
         background-color: $red;
       }
       &.holiday {
-        background-color: #46cdda;
+        background-color: $holiday;
       }
     }
   }
@@ -390,7 +390,7 @@
       background-color: $yellow;
     }
     &.holiday {
-      background-color: #46cdda;
+      background-color: $holiday;
     }
     &.unavailable {
       background-color: $red;

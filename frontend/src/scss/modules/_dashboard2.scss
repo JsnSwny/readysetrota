@@ -264,9 +264,6 @@
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
     margin-bottom: 6px;
     margin-right: 6px;
-    @include wi-mq(laptop) {
-      font-size: 12px;
-    }
     .fa-long-arrow-alt-right {
       margin: 0 10px;
       @include wi-mq(laptop) {
@@ -289,7 +286,7 @@
     background-color: #ffffff;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    font-size: 12px;
+    font-size: 14px;
     padding: 5px;
     width: 100%;
     color: $blue;
@@ -330,6 +327,9 @@
     flex-wrap: wrap;
     margin-right: -6px;
     height: 336px;
+    @include wi-mq(stamp) {
+      height: 276px;
+    }
     li {
       width: calc(14.28% - 6px);
       background-color: #fdfdfd;
@@ -344,6 +344,17 @@
       box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
       transition: 0.2s ease background-color, 0.2s ease color;
       position: relative;
+      .fa-clock {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 12px;
+        @include wi-mq(stamp) {
+          font-size: 10px;
+          top: 3px;
+          right: 3px;
+        }
+      }
       &:hover {
         .tooltip {
           visibility: visible;
@@ -425,9 +436,59 @@
   }
   &__bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: 14px;
+    @include wi-mq(laptop) {
+      flex-wrap: wrap;
+    }
+    @include wi-mq(tablet) {
+      justify-content: center;
+    }
+  }
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
+    width: 100%;
+    margin-right: 20px;
+    @include wi-mq(laptop) {
+      margin-right: 0;
+      order: 1;
+      margin-top: 20px;
+    }
+    div {
+      position: relative;
+      width: 50%;
+      input {
+        width: 100%;
+      }
+    }
+    &.hide {
+      visibility: hidden;
+    }
+    .fa-times {
+      margin-left: 10px;
+      cursor: pointer;
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    input {
+      border: none;
+      width: 50%;
+      -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+      padding: 10px 30px;
+      border-radius: 5px;
+      &:focus {
+        outline: none;
+      }
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
   }
   &__submit {
     border-radius: 5px;
@@ -455,6 +516,10 @@
       background-color: $red;
       margin-left: 20px;
     }
+    @include wi-mq(laptop) {
+      width: calc(50% - 10px);
+      padding: 10px 30px;
+    }
   }
   &__bar {
     height: 5px;
@@ -478,10 +543,7 @@
     margin-top: 50px;
   }
   &__buttons {
-    flex: 1;
-    justify-self: flex-end;
-    display: flex;
-    justify-content: flex-end;
+    margin-top: 10px;
     &.approved {
       button:first-child {
         opacity: 1;
@@ -513,6 +575,9 @@
   }
   &__list {
     margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
   &__request {
     background-color: $pink;
@@ -525,21 +590,29 @@
   }
   &__item {
     background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
+    padding: 15px 30px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
+    position: relative;
+    width: calc(50% - 10px);
+    @include wi-mq(laptop) {
+      width: 100%;
+    }
     p {
       font-size: 14px;
     }
     i {
-      opacity: 0.5;
-      margin-right: 15px;
-      width: 16px;
-      font-size: 16px;
+      &:not(.dashboardHolidays__delete) {
+        opacity: 0.5;
+        margin-right: 15px;
+        width: 16px;
+        font-size: 16px;
+      }
+    }
+    @include wi-mq(tablet) {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
   &__indicator {
@@ -562,6 +635,7 @@
   }
   &__status {
     text-transform: uppercase;
+    margin-left: 10px;
     &--pending {
       @extend .dashboardHolidays__status;
       color: #ffa500;
@@ -576,13 +650,17 @@
     }
   }
   &__delete {
-    font-size: 12px;
+    font-size: 18px;
     cursor: pointer;
-    background-color: $red;
-    color: white;
-    width: 100%;
-    text-align: center;
-    padding: 2px;
-    border-radius: 5px;
+    color: $red;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    margin-right: 0;
+    opacity: 1;
+    transition: 0.2s ease color;
+    &:hover {
+      color: darken($red, 10%);
+    }
   }
 }

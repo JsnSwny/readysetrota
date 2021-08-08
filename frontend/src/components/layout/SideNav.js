@@ -209,15 +209,16 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 />
               </div>
             )}
-
-            <NavLink
-              toggleNav={toggleNav}
-              link="/availability"
-              icon="fas fa-calendar-check"
-              title="Availability"
-              disabled={employees.length == 0}
-              disabledMessage="You need to create employees to manage the rota"
-            />
+            {business.plan != "F" && adminPanelPerm && (
+              <NavLink
+                toggleNav={toggleNav}
+                link="/availability"
+                icon="fas fa-calendar-check"
+                title="Availability"
+                disabled={employees.length == 0}
+                disabledMessage="You need to create employees to manage the rota"
+              />
+            )}
 
             <NavLink
               toggleNav={toggleNav}

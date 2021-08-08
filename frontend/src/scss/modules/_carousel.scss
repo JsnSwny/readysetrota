@@ -7,7 +7,7 @@
     --card-width: calc((var(--vw) - 150px) / 3);
   }
   @include wi-mq(mobile) {
-    --card-width: calc((var(--vw) - 50px) / 2);
+    --card-width: calc((var(--vw) - 30px) / 2);
   }
 }
 
