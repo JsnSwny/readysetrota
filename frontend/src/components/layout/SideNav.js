@@ -125,18 +125,19 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               ? user.business.name[0]
               : `${user.first_name[0]}${user.last_name[0]}`}
           </div> */}
-          <p className="sidenav__name">{userName}</p>
-          {user.business && (
-            <Fragment>
-              <small className="flex-container--center">
-                Plan: {plans[user.business.plan]}
-              </small>
-              <small className="flex-container--center">
-                Employees: {business.number_of_employees}/
-                {business.total_employees}
-              </small>
-            </Fragment>
-          )}
+          <div className="sidenav__profile">
+            <p className="sidenav__name">{userName}</p>
+            {user.business && (
+              <Fragment>
+                <small>Plan: {plans[user.business.plan]}</small>
+                <small>
+                  Employees: {business.number_of_employees}/
+                  {business.total_employees}
+                </small>
+              </Fragment>
+            )}
+          </div>
+
           <div className="sidenav__links">
             {business.plan != "F" && (
               <div className="sidenav__pickers">
@@ -161,7 +162,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
 
             {business.plan != "F" && (
               <div
-                className={`sidenav__link-container ${
+                className={`sidenav__links-container ${
                   navOpen == "dashboard" ? "open" : ""
                 }`}
               >
@@ -189,12 +190,11 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
             )}
             {staffManagementPerm && (
               <div
-                className={`sidenav__link-container ${
+                className={`sidenav__links-container ${
                   navOpen == "staff-management" ? "open" : ""
                 }`}
               >
                 <NavLink
-                  dropdown={true}
                   toggleNav={toggleNav}
                   dropdownAction={() =>
                     setNavOpen(
@@ -205,72 +205,32 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                   }
                   link={`${business.plan == "F" ? "/" : "/staff-management"}`}
                   icon="fas fa-users-cog"
-                  title="Staff Management"
+                  title="Employees"
                 />
-                <div className="sidenav__sublinks">
-                  {/* <NavLink
-                    toggleNav={toggleNav}
-                    link="/list/employees"
-                    icon="fas fa-list"
-                    title="Employees"
-                  /> */}
-                  <NavLink
-                    toggleNav={toggleNav}
-                    link="/list/holidays"
-                    icon="fas fa-list"
-                    title="Holidays"
-                  />
-                  <NavLink
-                    toggleNav={toggleNav}
-                    link="/list/absences"
-                    icon="fas fa-list"
-                    title="Absences"
-                  />
-                </div>
               </div>
             )}
 
-            {permissions.includes["manage_shifts"] ? (
-              <div
-                className={`sidenav__link-container ${
-                  navOpen == "rota" ? "open" : ""
-                }`}
-              >
-                <NavLink
-                  dropdown={true}
-                  toggleNav={toggleNav}
-                  dropdownAction={() =>
-                    setNavOpen(`${navOpen != "rota" ? "rota" : ""}`)
-                  }
-                  link="/rota"
-                  icon="fas fa-briefcase"
-                  title="Rota"
-                  disabled={employees.length == 0}
-                  disabledMessage="You need to create employees to manage the rota"
-                />
-                <div className="sidenav__sublinks">
-                  <NavLink
-                    toggleNav={toggleNav}
-                    link="/list/shifts"
-                    icon="fas fa-list"
-                    title="Shifts"
-                  />
-                </div>
-              </div>
-            ) : (
-              <NavLink
-                toggleNav={toggleNav}
-                link="/rota"
-                icon="fas fa-briefcase"
-                title="Rota"
-                disabled={employees.length == 0}
-                disabledMessage="You need to create employees to manage the rota"
-              />
-            )}
+            <NavLink
+              toggleNav={toggleNav}
+              link="/availability"
+              icon="fas fa-calendar-check"
+              title="Availability"
+              disabled={employees.length == 0}
+              disabledMessage="You need to create employees to manage the rota"
+            />
+
+            <NavLink
+              toggleNav={toggleNav}
+              link="/rota"
+              icon="fas fa-calendar-alt"
+              title="Rota"
+              disabled={employees.length == 0}
+              disabledMessage="You need to create employees to manage the rota"
+            />
 
             {/* <div className={`sidenav__link-container ${location.pathname == "/profile" ? "current" : ""}`}> */}
             <div
-              className={`sidenav__link-container ${
+              className={`sidenav__links-container ${
                 navOpen == "settings" ? "open" : ""
               }`}
             >
@@ -316,7 +276,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 {subscription &&
                   !subscription.cancel_at_period_end &&
                   user.profile && (
-                    <div className={`sidenav__link-container`}>
+                    <div className={`sidenav__links-container`}>
                       <div
                         onClick={() => {
                           setConfirmOpen(true);
@@ -347,7 +307,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
             {user.business &&
               !user.business.trial_end &&
               user.business.plan != "P" && (
-                <div className={`sidenav__link-container`}>
+                <div className={`sidenav__links-container`}>
                   <div
                     onClick={() => {
                       setConfirmOpen(true);
@@ -395,7 +355,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 <i className="fas fa-sign-out-alt"></i> Logout
               </div>
             </div>
-            <Link
+            {/* <Link
               onClick={() => {
                 toggleNav();
               }}
@@ -403,7 +363,7 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
               to="/"
             >
               <img src="/static/media/readysetcore-01.svg"></img>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

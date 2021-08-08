@@ -25,12 +25,9 @@
   }
   z-index: 10;
   transition: 0.5s ease left, 0.5s ease background-color;
-  left: -200px;
+  left: -150px;
   @include wi-mq(laptop) {
     left: -150px;
-  }
-  @include wi-mq(tablet) {
-    left: calc(-50% + 50px);
   }
   @include wi-mq(mobile) {
     padding: 60px 0;
@@ -71,6 +68,14 @@
       }
     }
   }
+  &__profile {
+    small {
+      font-size: 12px;
+      display: block;
+      margin: 0 10px;
+      text-align: center;
+    }
+  }
   &__content {
     opacity: 0;
     transition: 0.5s ease opacity;
@@ -102,15 +107,16 @@
     }
   }
   &__name {
-    text-align: center;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 28px;
-    @include wi-mq(laptop) {
-      font-size: 24px;
-    }
+    font-size: 18px;
     margin: 0 10px;
     margin-top: 15px;
+    margin-bottom: 5px;
+    text-align: center;
+    @include wi-mq(tablet) {
+      font-size: 24px;
+    }
   }
   &__links {
     margin: 30px 0;
@@ -125,13 +131,9 @@
   &__link {
     display: flex;
     align-items: center;
-    background-color: lighten($blue, 10%);
-
     cursor: pointer;
     color: rgb(212, 212, 212);
     transition: 0.2s color ease-in-out, 0.2s background-color ease-in-out;
-    margin-bottom: 3px;
-
     a,
     .no-link,
     &.no-link {
@@ -148,7 +150,6 @@
 
     &:hover {
       color: #fff;
-      background-color: lighten($blue, 20%);
       .fa-chevron-down {
         transform: rotate(270deg);
       }
@@ -156,6 +157,7 @@
     &-text {
       margin: 0 10px;
       font-size: 14px;
+      font-family: "Signika Negative", sans-serif;
       display: flex;
       align-items: center;
       @include wi-mq(laptop) {
@@ -175,7 +177,7 @@
     }
   }
   &__sublinks {
-    left: 250px;
+    left: 200px;
     @include wi-mq(laptop) {
       left: 200px;
     }
@@ -208,39 +210,8 @@
   &__pickers {
     margin-bottom: 20px;
   }
-  &__link-container {
+  &__links-container {
     position: relative;
-    &.pink {
-      .sidenav__link {
-        background-color: darken($blue, 5%);
-        // color: rgb(138, 131, 131);
-        .no-link {
-          padding: 10px 0;
-        }
-      }
-    }
-    .fa-chevron-down {
-      margin-left: 5px;
-    }
-    &.current {
-      .sidenav__sublinks {
-        max-height: 100%;
-      }
-      .sidenav__link {
-        background-color: lighten($blue, 20%);
-        color: #fff;
-      }
-    }
-    &.disabled {
-      a {
-        pointer-events: none;
-      }
-      .sidenav__link {
-        background-color: darken($blue, 3%);
-
-        color: rgb(151, 151, 151);
-      }
-    }
     &.open {
       .sidenav__sublinks {
         max-height: 700px;
@@ -257,6 +228,59 @@
       // transition: 0.5s ease max-height;
       overflow: hidden;
       max-height: 0;
+    }
+    &.current {
+      .sidenav__sublinks {
+        max-height: 100%;
+      }
+      .sidenav__link {
+        background-color: lighten($blue, 20%);
+        color: #fff;
+      }
+    }
+  }
+  &__link-container {
+    position: relative;
+    // &::after {
+    //   content: "";
+    //   display: block;
+    //   width: 0;
+    //   height: 2px;
+    //   background-color: lighten($blue, 20%);
+    //   transition: 0.2s ease width;
+    // }
+    // &:hover {
+    //   &::after {
+    //     width: 100%;
+    //   }
+    // }
+    &.current {
+      .sidenav__link {
+        color: white;
+      }
+    }
+    &.pink {
+      .sidenav__link {
+        background-color: darken($blue, 5%);
+        // color: rgb(138, 131, 131);
+        .no-link {
+          padding: 10px 0;
+        }
+      }
+    }
+    .fa-chevron-down {
+      margin-left: 5px;
+    }
+
+    &.disabled {
+      a {
+        pointer-events: none;
+      }
+      .sidenav__link {
+        background-color: darken($blue, 3%);
+
+        color: rgb(151, 151, 151);
+      }
     }
   }
   &__logo {

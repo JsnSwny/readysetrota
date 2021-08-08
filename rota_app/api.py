@@ -25,7 +25,7 @@ class ShiftFilter(django_filters.FilterSet):
     class Meta:
         model = Shift
         fields = ['date', 'employee', 'department', 'department__site',
-                  'employee__user__id', 'absence__not', 'open_shift']
+                  'employee__user__id', 'absence__not', 'open_shift', 'stage',]
 
 
 class BusinessFilter(django_filters.FilterSet):

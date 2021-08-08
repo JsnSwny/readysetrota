@@ -2,14 +2,12 @@
   &__header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     select {
       @extend .form__input;
+      margin-right: 0 !important;
       width: 200px !important;
       padding: 10px 15px !important;
-    }
-    &:not(:first-child) {
-      margin-top: 70px;
     }
     &-title {
       font-size: 24px;

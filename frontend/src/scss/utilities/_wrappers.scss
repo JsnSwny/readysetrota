@@ -8,8 +8,11 @@
   }
   &--md {
     @extend .wrapper;
-    max-width: 92%;
+    max-width: calc(100% - 100px);
     padding: 0;
+    @include wi-mq(mobile) {
+      max-width: calc(100% - 50px);
+    }
   }
   &--lg {
     @extend .wrapper;

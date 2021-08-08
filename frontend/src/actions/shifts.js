@@ -80,16 +80,13 @@ export const getShifts =
   };
 
 // Get Bookings
-export const getTodayShifts = () => (dispatch, getState) => {
+export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
   dispatch({
     type: SHIFTS_LOADING,
   });
   axios
     .get(
-      `/api/shiftlist/?date_after=${format(
-        new Date(),
-        "yyyy-MM-dd"
-      )}&date_before=${format(new Date(), "yyyy-MM-dd")}&department__site=${
+      `/api/shiftlist/?date_after=${startDate}&date_before=${endDate}&stage=Published&department__site=${
         getState().employees.current.site.id
       }
       &ordering=date,start_time`,

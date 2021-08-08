@@ -7,8 +7,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 50px;
     @extend .shadow--md;
+    @include wi-mq(laptop) {
+      width: calc(33% - 20px);
+    }
     @include wi-mq(tablet) {
       width: calc(50% - 10px);
       margin-bottom: 20px;
@@ -48,7 +51,7 @@
         font-size: 36px;
       }
       @include wi-mq(mobile) {
-        font-size: 24px;
+        font-size: 36px;
       }
       @include wi-mq(stamp) {
         font-size: 18px;
@@ -60,7 +63,7 @@
         font-size: 16px;
       }
       @include wi-mq(mobile) {
-        font-size: 14px;
+        font-size: 16px;
       }
       @include wi-mq(stamp) {
         font-size: 12px;
@@ -73,11 +76,17 @@
 .stats-graph {
   margin: 50px 0;
   &__item {
-    width: calc(50% - 20px);
+    width: calc(33.33% - 20px);
     padding: 10px 20px;
     background-color: white;
     border-radius: 10px;
     height: 300px;
     @extend .shadow;
+    @include wi-mq(laptop) {
+      width: calc(50% - 20px);
+    }
+    @include wi-mq(tablet) {
+      width: 100%;
+    }
   }
 }

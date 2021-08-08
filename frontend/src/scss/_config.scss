@@ -47,12 +47,12 @@ $breakpoints: (
 }
 
 @mixin sidenav_size($prop) {
-  #{$prop}: 250px;
+  #{$prop}: 200px;
   @include wi-mq(laptop) {
     #{$prop}: 200px;
   }
   @include wi-mq(tablet) {
-    #{$prop}: 50%;
+    #{$prop}: 200px;
   }
   @include wi-mq(mobile) {
     #{$prop}: 100%;

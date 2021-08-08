@@ -1,3 +1,5 @@
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSites } from "../../../actions/employees";
@@ -18,6 +20,9 @@ import {
 import { getTodayShifts } from "../../../actions/shifts";
 import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../../actions/stats";
+
+import { Carousel } from "react-responsive-carousel";
+import DashboardShifts from "./DashboardShifts";
 
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
@@ -71,8 +76,8 @@ const AdminPanel = (props) => {
   useEffect(() => {
     dispatch(
       getTodayShifts(
-        format(new Date(), "yyyy-MM-dd"),
-        format(new Date(), "yyyy-MM-dd")
+        format(addDays(new Date(), -1), "yyyy-MM-dd"),
+        format(addDays(new Date(), 1), "yyyy-MM-dd")
       )
     );
   }, [current.department]);
@@ -230,93 +235,21 @@ const AdminPanel = (props) => {
         </div>
       </div>
       <div className="dashboard wrapper--md">
-        <div className="flex-container--between">
-          <div class="dashboard__left">
-            <h2 className="title-sm">Previous Shifts</h2>
-            <hr class="separator" />
-            <div className="todayShifts">
-              {isLoading ? (
-                <div class="dot-pulse"></div>
-              ) : (
-                <Fragment>
-                  <div className="todayShifts__container">
-                    {getBeforeAfterShifts(true, beforeIncrement).length > 0 ? (
-                      <Fragment>
-                        {sortArrow({
-                          before: true,
-                          direction: "up",
-                          increment: beforeIncrement,
-                          value: 1,
-                          setIncrement: setBeforeIncrement,
-                        })}
-
-                        <div className="todayShifts__list">
-                          {getBeforeAfterShifts(true, beforeIncrement)}
-                        </div>
-
-                        {sortArrow({
-                          before: true,
-                          direction: "down",
-                          increment: beforeIncrement,
-                          value: -1,
-                          setIncrement: setBeforeIncrement,
-                        })}
-                      </Fragment>
-                    ) : (
-                      <p className="error--lg">No shifts have passed today</p>
-                    )}
-                  </div>
-                </Fragment>
-              )}
-            </div>
-          </div>
-
-          <div class="dashboard__right">
-            <h2 className="title-sm">Upcoming Shifts</h2>
-            <hr class="separator" />
-            <div className="todayShifts">
-              {isLoading ? (
-                <div class="dot-pulse"></div>
-              ) : (
-                <Fragment>
-                  <div className="todayShifts__container">
-                    <h3 className="todayShifts__title">Upcoming Shifts</h3>
-                    {getBeforeAfterShifts(false, afterIncrement).length > 0 ? (
-                      <Fragment>
-                        {sortArrow({
-                          before: false,
-                          direction: "up",
-                          increment: afterIncrement,
-                          value: -1,
-                          setIncrement: setAfterIncrement,
-                        })}
-
-                        <div className="todayShifts__list">
-                          {getBeforeAfterShifts(false, afterIncrement)}
-                        </div>
-
-                        {sortArrow({
-                          before: false,
-                          direction: "down",
-                          increment: afterIncrement,
-                          value: 1,
-                          setIncrement: setAfterIncrement,
-                        })}
-                      </Fragment>
-                    ) : (
-                      <p className="error--lg">
-                        There are no upcoming shifts today
-                      </p>
-                    )}
-                  </div>
-                </Fragment>
-              )}
-            </div>
-          </div>
+        <h2 className="title-sm">Shifts</h2>
+        <hr class="separator" />
+        <div className="todayShifts">
+          {isLoading ? (
+            <div class="dot-pulse"></div>
+          ) : shifts.length > 0 ? (
+            <DashboardShifts />
+          ) : (
+            <p>No shifts to display</p>
+          )}
         </div>
-        <div className="flex-container--between">
+        <div className="dashboard__header">
           <h2 className="title-sm title--margin-top">Analytics Overview</h2>
           <select
+            className="dashboard__select"
             onChange={(e) => {
               let values = e.target.value.split(" ");
               if (values[1] == "D") {

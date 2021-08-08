@@ -6,7 +6,7 @@ const NavPicker = ({ items, current, name, action, navOpen, setNavOpen }) => {
   const dispatch = useDispatch();
   return (
     <div
-      className={`sidenav__link-container pink ${
+      className={`sidenav__links-container pink ${
         navOpen == name ? "open" : ""
       }`}
     >
