@@ -76,17 +76,16 @@ const AvailabilityCalendar = (props) => {
                 const availabilityDate = availability.find(
                   (item) => item.date == format_date
                 );
+                let isHoliday = leave.some(
+                  (leave) =>
+                    leave.status == "Approved" &&
+                    parseISO(leave.start_date) <= date &&
+                    parseISO(leave.end_date) >= date
+                );
                 return (
                   <li
                     onClick={() => {
-                      if (
-                        leave.some(
-                          (leave) =>
-                            leave.status == "Approved" &&
-                            parseISO(leave.start_date) <= date &&
-                            parseISO(leave.end_date) >= date
-                        )
-                      ) {
+                      if (isHoliday) {
                         return false;
                       }
                       let obj = {
@@ -152,12 +151,7 @@ const AvailabilityCalendar = (props) => {
                         ? ""
                         : currentSelector
                     } current-${
-                      leave.some(
-                        (leave) =>
-                          leave.status == "Approved" &&
-                          parseISO(leave.start_date) <= date &&
-                          parseISO(leave.end_date) >= date
-                      )
+                      isHoliday
                         ? "holiday"
                         : availabilityDate &&
                           availabilityDate.status != "Denied"
@@ -171,15 +165,17 @@ const AvailabilityCalendar = (props) => {
                           ].name
                     }`}
                   >
-                    {availabilityDate && availabilityDate.start_time && (
-                      <Fragment>
-                        <i class="fas fa-clock"></i>
-                        <div className="tooltip">
-                          {availabilityDate.start_time.substr(0, 5)} -{" "}
-                          {availabilityDate.end_time}
-                        </div>
-                      </Fragment>
-                    )}
+                    {!isHoliday &&
+                      availabilityDate &&
+                      availabilityDate.start_time && (
+                        <Fragment>
+                          <i class="fas fa-clock"></i>
+                          <div className="tooltip">
+                            {availabilityDate.start_time.substr(0, 5)} -{" "}
+                            {availabilityDate.end_time}
+                          </div>
+                        </Fragment>
+                      )}
                     {format(date, "d")}
                   </li>
                 );

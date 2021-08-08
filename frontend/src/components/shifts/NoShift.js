@@ -75,7 +75,7 @@ const NoShift = (props) => {
           {available.name == "unavailable" && available.status == "Pending" && (
             <p className="shift__text">Unmarked</p>
           )}
-          {available.start_time && (
+          {!isHoliday && available.start_time && (
             <p className="shift__text">
               {available.start_time.substr(0, 5)} - {available.end_time}
             </p>
