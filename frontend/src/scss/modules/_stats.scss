@@ -17,16 +17,13 @@
       margin-bottom: 20px;
     }
     @include wi-mq(mobile) {
-      width: calc(50% - 5px);
+      width: calc(50% - 10px);
       margin-bottom: 10px;
     }
-    // @include wi-mq(mobile) {
-    //   width: calc(100%);
-    //   padding: 20px;
-    //   &:not(:first-child) {
-    //     margin-top: 20px;
-    //   }
-    // }
+    @include wi-mq(stamp) {
+      width: 100%;
+      padding: 25px;
+    }
     &.teal {
       background-color: #039798;
     }
@@ -53,9 +50,6 @@
       @include wi-mq(mobile) {
         font-size: 36px;
       }
-      @include wi-mq(stamp) {
-        font-size: 18px;
-      }
     }
     h3 {
       font-size: 18px;
@@ -64,9 +58,6 @@
       }
       @include wi-mq(mobile) {
         font-size: 16px;
-      }
-      @include wi-mq(stamp) {
-        font-size: 12px;
       }
       font-weight: normal;
     }
