@@ -148,7 +148,7 @@ class Shift(models.Model):
         Employee, related_name="shifts", on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     start_time = models.TimeField()
-    end_time = models.TimeField(null=True)
+    end_time = models.CharField(max_length=10, null=True)
     info = models.TextField(blank=True)
     department = models.ForeignKey(
         Department, related_name="shift_department", on_delete=models.SET_NULL, null=True, blank=True)

@@ -425,7 +425,8 @@ class ShiftListSerializer(serializers.ModelSerializer):
         if obj.end_time:
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
-            end = datetime.combine(current_date, obj.end_time)
+            end_time = datetime.strptime(obj.end_time, '%H:%M')
+            end = datetime.combine(current_date, end_time.time())
             if (end < start):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
