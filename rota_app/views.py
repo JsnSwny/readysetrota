@@ -151,7 +151,7 @@ def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
     wage = 0
     days_difference = (end_date - start_date) + timedelta(days=1)
     for i in shifts:
-        if i.end_time != "Finish":
+        if i.end_time:
             wage_obj = Wage.objects.filter(
                 employee=i.employee).order_by('-start_date').first()
 
