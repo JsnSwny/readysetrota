@@ -198,3 +198,53 @@
     width: 90%;
   }
 }
+
+.modalDefaultAvailability {
+  margin: 20px 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  li {
+    background-color: $blue;
+    color: white;
+    text-align: center;
+    width: calc(100% / 7 - 4px);
+    padding: 20px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    @include wi-mq(tablet) {
+      padding: 15px 0;
+    }
+    @include wi-mq(mobile) {
+      padding: 12px 0;
+      font-size: 14px;
+    }
+    i {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 12px;
+    }
+    &:hover {
+      .tooltip {
+        visibility: visible;
+      }
+      &.available {
+        background-color: $green;
+      }
+      &.unavailable {
+        background-color: $red;
+      }
+    }
+
+    &.current {
+      &-available {
+        background-color: $green;
+      }
+      &-unavailable {
+        background-color: $red;
+      }
+    }
+  }
+}

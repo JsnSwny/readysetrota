@@ -1,6 +1,9 @@
 import React, { useState, Fragment } from "react";
 // import DropButton from "../../../lists/DropButton";
 import AvailabilityPicker from "../../../common/AvailabilityPicker";
+import { format } from "date-fns";
+import AvailabilityButtons from "../../../availability/AvailabilityButtons";
+import { toast } from "react-toastify";
 
 const DefaultAvailability = ({
   currentSelector,
@@ -49,21 +52,15 @@ const DefaultAvailability = ({
   const days = { 1: "M", 2: "T", 3: "W", 4: "T", 5: "F", 6: "S", 7: "S" };
   return (
     <Fragment>
-      <AvailabilityPicker
-        actions={{
-          resetAction,
-          availableAction,
-          partialAction,
-          unavailableAction,
-        }}
-        current={currentSelector}
-      />
-      <div className="dashboard__dates">
+      <ul className="modalDefaultAvailability">
         {[...Array(7)].map((e, i) => (
-          <div key={i} className="dashboard__dates-item">
-            <p
+          <Fragment>
+            <li
               onClick={() => {
-                if (currentSelector == "partial" && !(startTime && endTime)) {
+                if (
+                  (currentSelector == "available" && startTime && !endTime) ||
+                  (!startTime && endTime)
+                ) {
                   toast.warning(
                     "You must set a start and end time when creating a partial availability!"
                   );
@@ -71,25 +68,27 @@ const DefaultAvailability = ({
                   let temp_availability = availability;
                   temp_availability[i] = {
                     name: currentSelector,
-                    approved: currentSelector == "unavailable" ? true : null,
+                    status: "Approved",
                     start_time:
-                      currentSelector == "partial" && startTime
+                      currentSelector == "available" && startTime
                         ? startTime.substr(0, 5)
                         : null,
                     end_time:
-                      currentSelector == "partial" && endTime ? endTime : null,
+                      currentSelector == "available" && endTime
+                        ? endTime
+                        : null,
                   };
                   setAvailability({
                     ...availability,
                     [i]: {
                       name: currentSelector,
-                      approved: currentSelector == "unavailable" ? true : null,
+                      status: "Approved",
                       start_time:
-                        currentSelector == "partial" && startTime
+                        currentSelector == "available" && startTime
                           ? startTime.substr(0, 5)
                           : null,
                       end_time:
-                        currentSelector == "partial" && endTime
+                        currentSelector == "available" && endTime
                           ? endTime
                           : null,
                     },
@@ -98,52 +97,27 @@ const DefaultAvailability = ({
               }}
               className={`${currentSelector} current-${availability[i].name}`}
             >
+              {availability[i].start_time && (
+                <Fragment>
+                  <i class="fas fa-clock"></i>
+                  <div className="tooltip">
+                    {availability[i].start_time} - {availability[i].end_time}
+                  </div>
+                </Fragment>
+              )}
               {days[i + 1]}
-            </p>
-          </div>
+            </li>
+          </Fragment>
         ))}
-      </div>
-      {currentSelector == "partial" && (
-        <div className="flex-container--between">
-          <div className="form__control--half">
-            <label className="form__label">Start Time:</label>
-            <select
-              className="form__input"
-              onChange={(e) => setStartTime(e.target.value)}
-              name="starttime"
-              value={startTime}
-            >
-              <option value="" disabled>
-                Select a start time
-              </option>
-              {hours.map((time) => (
-                <option key={time} value={`${time}:00`}>
-                  {time}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form__control--half">
-            <label className="form__label">End Time:</label>
-            <select
-              className="form__input"
-              onChange={(e) => setEndTime(e.target.value)}
-              name="endtime"
-              value={endTime}
-            >
-              <option value="" disabled>
-                Select an end time
-              </option>
-              <option value="Finish">Finish</option>
-              {hours.map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
+      </ul>
+      <AvailabilityButtons
+        currentSelector={currentSelector}
+        setCurrentSelector={setCurrentSelector}
+        startTime={startTime}
+        endTime={endTime}
+        setStartTime={setStartTime}
+        setEndTime={setEndTime}
+      />
     </Fragment>
   );
 };
