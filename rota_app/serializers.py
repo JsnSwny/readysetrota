@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, Leave
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -496,6 +496,12 @@ class LeaveSerializer(serializers.ModelSerializer):
     site_id = serializers.PrimaryKeyRelatedField(
         queryset=Site.objects.all(), required=False, source='site', write_only=True)
     employee = ShiftEmployeeSerializer(read_only=True)
+
+    class Meta:
+        model = Leave
+        fields = '__all__'
+        depth = 1
+
 
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(

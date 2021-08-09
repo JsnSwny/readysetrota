@@ -73,3 +73,8 @@ export const RESET_LOADING = "RESET_LOADING";
 export const GET_STATS = "GET_STATS";
 
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+
+export const GET_LEAVE = "GET_LEAVE";
+export const ADD_LEAVE = "ADD_LEAVE";
+export const DELETE_LEAVE = "DELETE_LEAVE";
+export const UPDATE_LEAVE = "UPDATE_LEAVE";
