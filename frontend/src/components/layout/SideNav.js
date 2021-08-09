@@ -219,6 +219,14 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
                 disabledMessage="You need to create employees to manage the rota"
               />
             )}
+            {permissions.includes("manage_availabilities") && (
+              <NavLink
+                toggleNav={toggleNav}
+                link="/availability"
+                icon="fas fa-user-clock"
+                title="Availability"
+              />
+            )}
 
             <NavLink
               toggleNav={toggleNav}

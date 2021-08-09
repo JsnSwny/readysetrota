@@ -42,8 +42,6 @@ import Confirm from "./layout/Confirm";
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
 
-import Availability from "./availability/Availability";
-
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -185,15 +183,6 @@ const Main = () => {
             modalProps={modalProps}
             confirmProps={confirmProps}
             title="Rota"
-          />
-
-          <PrivateRoute
-            path="/availability"
-            exact
-            component={Availability}
-            modalProps={modalProps}
-            confirmProps={confirmProps}
-            title="Availability"
           />
 
           <PrivateRoute

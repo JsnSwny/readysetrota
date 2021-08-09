@@ -1,9 +1,9 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
                           DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
                           ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer)
+                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -94,10 +94,10 @@ class EmployeeFilter(django_filters.FilterSet):
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-
     permission_classes = [
         permissions.AllowAny
     ]
+    
     serializer_class = EmployeeSerializer
 
     queryset = Employee.objects.all()
@@ -244,29 +244,6 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     filter_class = AvailabilityFilter
     ordering_fields = ('date',)
     queryset = Availability.objects.all().distinct()
-
-
-class LeaveFilter(django_filters.FilterSet):
-    start_date = DateFilter(lookup_expr='lte')
-    end_date = DateFilter(lookup_expr='gte')
-
-    class Meta:
-        model = Leave
-        fields = ['employee__id', 'employee__user', 'status', 'employee__business',
-                  'start_date', 'end_date']
-
-
-class LeaveViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
-    serializer_class = LeaveSerializer
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = LeaveFilter
-    filter_fields = {'approved': ['isnull']}
-    ordering_fields = ('created_at',)
-    queryset = Leave.objects.all().distinct()
 
 
 class SiteFilter(django_filters.FilterSet):
