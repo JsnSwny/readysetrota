@@ -50,6 +50,7 @@ class Site(models.Model):
             ('create_forecasts', 'Create Forecasts'),
             ('manage_availabilities', 'Manage Availabilities'),
             ('view_stats', 'View Stats'),
+            ('approve_shifts', 'Approve Shifts'),
         ]
 
 
