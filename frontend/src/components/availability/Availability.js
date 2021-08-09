@@ -70,7 +70,7 @@ const Availability = ({ modalProps }) => {
       tempArr[format(date, "yyyy-MM-dd")] = values;
       setAvailabilityByDate({ ...tempArr });
     });
-  }, [availability, leave]);
+  }, [employees, availability, leave]);
 
   const getAvailability = (employee, date, values) => {
     if (

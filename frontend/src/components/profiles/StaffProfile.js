@@ -221,7 +221,7 @@ const StaffProfile = ({ modalProps }) => {
         <div className="flex-container--between-start">
           <h1 className="header">
             <Title
-              name={`${employee.first_name}`}
+              name={`${employee ? `Welcome, ${employee.first_name}` : ""}`}
               subtitle="Staff Dashboard"
               breakWord={false}
             />
