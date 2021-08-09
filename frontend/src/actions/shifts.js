@@ -60,8 +60,8 @@ export const getShifts =
     });
     axios
       .get(
-        `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department=${
-          getState().employees.current.department.id
+        `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department__site=${
+          getState().employees.current.site.id
         }${
           user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
         }&ordering=date,start_time`,

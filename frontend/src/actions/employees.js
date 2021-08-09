@@ -274,9 +274,9 @@ export const getEmployees =
     if (current.site.id > 0) {
       query += `&position__department__site=${current.site.id}`;
     }
-    if (current.department.id > 0) {
-      query += `&position__department=${current.department.id}`;
-    }
+    // if (current.department.id > 0) {
+    //   query += `&position__department=${current.department.id}`;
+    // }
     if (localStorage.getItem("show_all_employees") == "false") {
       if (!start_date) {
         start_date = format(new Date(), "yyyy-MM-dd");

@@ -19,6 +19,7 @@ from django.db.models import F, Case, When, Q
 class ShiftFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
     department = django_filters.NumberFilter(distinct=True)
+    department__site = django_filters.NumberFilter(distinct=True)
     absence__not = django_filters.CharFilter(
         field_name='absence', exclude=True)
 
@@ -81,6 +82,7 @@ class ShiftViewSet(viewsets.ModelViewSet):
 
 class EmployeeFilter(django_filters.FilterSet):
     position__department = django_filters.NumberFilter(distinct=True)
+    position__department__site = django_filters.NumberFilter(distinct=True)
     status__start_date = DateFilter(lookup_expr='lte')
     status__end_date = DateFilter(method='check_end_date')
 

@@ -104,7 +104,7 @@ const Dates = (props) => {
   return (
     <Fragment>
       <section
-        className={`dates container ${filterDate ? "filtered" : ""} ${
+        className={`dates wrapper--md ${filterDate ? "filtered" : ""} ${
           scrollPosition >= 250 ? " fixed" : ""
         }`}
       >

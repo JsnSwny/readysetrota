@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getShifts, getPopularTimes } from "../../actions/shifts";
 import {
   getAllAvailability,
   getForecast,
   getEmployees,
+  getDepartments,
 } from "../../actions/employees";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
@@ -35,6 +36,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
+  let departments = useSelector((state) => state.employees.departments);
 
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
@@ -177,12 +179,11 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   const isAvailable = (employee, date) => {
     let available = availability.filter(
-      (item) => item.employee.id == employee && item.date == date
+      (item) => item.employee.id == employee.id && item.date == date
     )[0];
     if (!available) {
       date = parseISO(date);
-      available = employeesList.find((item) => item.id == employee)
-        .default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
+      employee.default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
     }
     return available;
   };
@@ -271,7 +272,17 @@ const Rota = ({ modalProps, confirmProps }) => {
           </h1>
         </div>
       </div> */}
-      <RotaBar
+      <div className="banner">
+        <div className="wrapper--md flex-container--between-start">
+          <h1 className="header">
+            <Title name="Rota" breakWord={false} />
+          </h1>
+          {/* <div className="profile-icon">
+            <i className="fas fa-user"></i>
+          </div> */}
+        </div>
+      </div>
+      {/* <RotaBar
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
         updateShifts={updateShifts}
@@ -280,7 +291,7 @@ const Rota = ({ modalProps, confirmProps }) => {
         template={template}
         showFinancials={showFinancials}
         setShowFinancials={setShowFinancials}
-      />
+      /> */}
       <div>
         <Dates
           filterEmployees={filterEmployees}
@@ -295,7 +306,7 @@ const Rota = ({ modalProps, confirmProps }) => {
         {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
           <div
-            className={`shiftList container ${filterDate ? "filtered" : ""} ${
+            className={`shiftList wrapper--md ${filterDate ? "filtered" : ""} ${
               scrollPosition >= 250 ? " fixed" : ""
             }`}
           >
@@ -312,54 +323,125 @@ const Rota = ({ modalProps, confirmProps }) => {
                 }
               />
             )} */}
-            {sortEmployees().map(
-              (employee, i) =>
-                (!employee.archived ||
-                  shifts_list.find(
-                    (item) => item.employee && item.employee.id == employee.id
-                  )) && (
-                  <div key={employee.id} className="rota__container">
-                    <Employee
-                      employee={employee}
-                      current_employee={current_employee}
-                      shifts={shifts_list}
-                      user={user}
-                      currentDepartment={current.department.id}
-                      result={result}
-                    />
-                    <div className="container-right">
-                      {result.map((result) => {
-                        const format_date = format(result, "yyyy-MM-dd");
-                        const shifts = getEmployeeShift(
-                          employee.id,
-                          format_date
-                        );
-                        let props = {
-                          format_date,
-                          result,
-                          available: isAvailable(employee.id, format_date),
-                          limit,
-                          employee,
-                          showAvailabilities,
-                          filterDate,
-                          admin: shiftPerm,
-                        };
+            {employees.length > 0 &&
+              departments.map((dep, i) => (
+                <Fragment>
+                  <h2
+                    className={`title-sm ${i > 0 ? "title--margin-top" : ""}`}
+                  >
+                    {dep.name}
+                  </h2>
+                  <hr className="separator" />
+                  {employees
+                    .filter((emp) =>
+                      emp.position.some((pos) => pos.department.id == dep.id)
+                    )
+                    .map((employee, i) => (
+                      <div key={employee.id} className="rota__container">
+                        <Employee
+                          employee={employee}
+                          current_employee={current_employee}
+                          shifts={shifts_list}
+                          user={user}
+                          currentDepartment={current.department.id}
+                          result={result}
+                        />
+                        <div className="container-right">
+                          {result.map((result) => {
+                            const format_date = format(result, "yyyy-MM-dd");
+                            const shifts = getEmployeeShift(
+                              employee.id,
+                              format_date
+                            );
+                            console.log(employee);
+                            let props = {
+                              format_date,
+                              result,
+                              available: isAvailable(employee, format_date),
+                              limit,
+                              employee,
+                              showAvailabilities,
+                              filterDate,
+                              admin: shiftPerm,
+                            };
 
-                        return shifts.length > 0 ? (
-                          <Shift
-                            key={result}
-                            {...modalProps}
-                            {...props}
-                            shifts={shifts}
-                          />
-                        ) : (
-                          <NoShift key={result} {...modalProps} {...props} />
-                        );
-                      })}
-                    </div>
-                  </div>
-                )
-            )}
+                            return shifts.length > 0 ? (
+                              <Shift
+                                key={result}
+                                {...modalProps}
+                                {...props}
+                                shifts={shifts}
+                              />
+                            ) : (
+                              <NoShift
+                                key={result}
+                                {...modalProps}
+                                {...props}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  {/* {sortEmployees(
+                  employees.filter((emp) =>
+                    emp.position.some((pos) => pos.department.id == dep.id)
+                  )
+                ).map(
+                  (employee, i) =>
+                    (!employee.archived ||
+                      shifts_list.find(
+                        (item) =>
+                          item.employee && item.employee.id == employee.id
+                      )) && (
+                      <div key={employee.id} className="rota__container">
+                        <Employee
+                          employee={employee}
+                          current_employee={current_employee}
+                          shifts={shifts_list}
+                          user={user}
+                          currentDepartment={current.department.id}
+                          result={result}
+                        />
+                        <div className="container-right">
+                          {result.map((result) => {
+                            const format_date = format(result, "yyyy-MM-dd");
+                            const shifts = getEmployeeShift(
+                              employee.id,
+                              format_date
+                            );
+                            let props = {
+                              format_date,
+                              result,
+                              available: isAvailable(employee.id, format_date),
+                              limit,
+                              employee,
+                              showAvailabilities,
+                              filterDate,
+                              admin: shiftPerm,
+                            };
+
+                            return shifts.length > 0 ? (
+                              <Shift
+                                key={result}
+                                {...modalProps}
+                                {...props}
+                                shifts={shifts}
+                              />
+                            ) : (
+                              <NoShift
+                                key={result}
+                                {...modalProps}
+                                {...props}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )
+                )} */}
+                </Fragment>
+              ))}
           </div>
         )}
       </div>
