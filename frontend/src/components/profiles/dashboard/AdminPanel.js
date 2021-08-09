@@ -27,9 +27,7 @@ import DashboardShifts from "./DashboardShifts";
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
 
-  const [startDate, setStartDate] = useState(
-    startOfWeek(new Date(), { weekStartsOn: 1 })
-  );
+  const [startDate, setStartDate] = useState(addDays(new Date(), -7));
   const [endDate, setEndDate] = useState(new Date());
 
   let current = useSelector((state) => state.employees.current);
@@ -87,7 +85,7 @@ const AdminPanel = (props) => {
     labels: interval.map((item) => format(item, "d MMM yyyy")),
     datasets: [
       {
-        label: "Hours Worked",
+        label: "Shifts Worked",
         data: interval.map((item) =>
           stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
             ? stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))

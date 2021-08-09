@@ -48,6 +48,7 @@ class Site(models.Model):
             ('manage_shifts', 'Manage Shifts'),
             ('manage_wages', 'Manage Employee Wages'),
             ('create_forecasts', 'Create Forecasts'),
+            ('view_forecasts', 'View Forecasts'),
             ('manage_availabilities', 'Manage Availabilities'),
             ('view_stats', 'View Stats'),
             ('approve_shifts', 'Approve Shifts'),
