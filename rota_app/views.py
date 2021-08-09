@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Employee, Shift, UserProfile, Business, Wage
-from django.db.models import Count
+from django.db.models import Count, Sum
 from .serializers import ShiftSerializer
 from operator import attrgetter
 from itertools import groupby
@@ -22,6 +22,16 @@ from django.views.decorators.csrf import csrf_exempt
 from decimal import Decimal
 from rotaready.settings import STRIPE_SECRET_KEY
 from django.core import serializers
+from django.db.models.functions import TruncMonth, TruncDay
+from django.db.models import FloatField
+from django.db.models.functions import Cast
+from django.db.models import F, Func, ExpressionWrapper, fields
+from .serializers import ShiftSerializer
+import sqlite3
+
+db = sqlite3.connect(':memory:')
+
+sqlite3.enable_callback_tracebacks(True)   # <-- !
 
 
 # Create your views here.
@@ -57,6 +67,7 @@ class GetPopularTimes(APIView):
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]
+            i['end_time'] = str(i['end_time'])[0:5]
         return Response(most_common)
 
 
@@ -115,7 +126,7 @@ class Publish(APIView):
 
             if employee.user:
                 shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
+                    employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
                 html_message = render_to_string("emailshifts.html", context={
                                                 'shifts': shifts, 'employee': employee})
                 mail_item = mail.EmailMultiAlternatives(
@@ -140,7 +151,7 @@ def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
     wage = 0
     days_difference = (end_date - start_date) + timedelta(days=1)
     for i in shifts:
-        if i.end_time != "Finish":
+        if i.end_time:
             wage_obj = Wage.objects.filter(
                 employee=i.employee).order_by('-start_date').first()
 
@@ -182,9 +193,29 @@ def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
 
     return hours, wage
 
-
+import sqlite3
 class GetStats(APIView):
     def get(self, request):
+        stat_type = request.query_params.get('stat_type')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        start_date = datetime.strptime(start_date, '%d/%m/%Y')
+        end_date = datetime.strptime(end_date, '%d/%m/%Y')
+
+        if stat_type == "business":
+            id = request.query_params.get('id')
+            shifts_worked = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+        else:
+            employee_id = request.query_params.get('employee_id')
+            shifts_worked = Shift.objects.filter(employee__id=employee_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+        # shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(month=TruncMonth('date')).values('month').annotate(c=Count('id')).values('month', 'c')
+        
+        
+
+        return JsonResponse({"hours": list(shifts_worked)}, safe=False)
+
+        print(stat_shifts)
+
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         stat_type = request.query_params.get('stat_type')
@@ -224,6 +255,7 @@ class GetStats(APIView):
                 date__range=[start_date, end_date], employee__user__id=user_id)
             before_shifts = Shift.objects.filter(date__range=[
                                                  before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
+
         elif stat_type == "staff_profile":
             employee_id = request.query_params.get('user_id')
             shifts = Shift.objects.filter(

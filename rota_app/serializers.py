@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, NewAvailability
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -117,7 +117,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True)
-    # site_permissions = serializers.SerializerMethodField()
+    site_permissions = serializers.SerializerMethodField()
 
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
@@ -137,8 +137,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         # return (wage.wage_type, wage.wage)
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
+        print(status)
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
@@ -148,14 +148,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ('__all__')
 
-    # def get_site_permissions(self, obj):
-    #     print("TEST")
-    #     if(obj.)
-    #     if(obj.user != None):
-    #         user = obj.user
-    #         site = obj.position.all().first().department.site
-    #         return get_perms(user, site)
-    #     return []
+    def get_site_permissions(self, obj):
+        if(obj.user != None):
+            user = obj.user
+            site = obj.position.all().first().department.site
+            return get_perms(user, site)
+        return []
 
     def update(self, instance, validated_data):
         last_archived_employee = Employee.objects.filter(
@@ -364,8 +362,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         return None
 
     def get_current_status(self, instance):
-        status = instance.status.all().filter(
-            start_date__lte=datetime.now()).order_by('-start_date')
+        status = instance.status.all().order_by('-start_date')
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
@@ -387,7 +384,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'full_name',)
+        fields = ('id', 'full_name', 'first_name', 'last_name', 'position')
 
 
 class TimeClockSerializer(serializers.ModelSerializer):
@@ -425,7 +422,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     timeclock = TimeClockSerializer(required=False)
 
     def get_length(self, obj):
-        if obj.end_time != "Finish":
+        if obj.end_time:
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
             end_time = datetime.strptime(obj.end_time, '%H:%M')
@@ -471,10 +468,14 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField(read_only=True)
+    end_time = serializers.SerializerMethodField(read_only=True)
 
     def get_start_time(self, obj):
         if obj.start_time:
             return str(obj.start_time)[0:5]
+    def get_end_time(self, obj):
+        if obj.end_time:
+            return str(obj.end_time)[0:5]
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):
@@ -489,17 +490,12 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-
-class NewAvailabilitySerializer(serializers.ModelSerializer):
+class LeaveSerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(
         queryset=Employee.objects.all(), required=False, source='employee', write_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(
+        queryset=Site.objects.all(), required=False, source='site', write_only=True)
     employee = ShiftEmployeeSerializer(read_only=True)
-
-    class Meta:
-        model = NewAvailability
-        fields = '__all__'
-        depth = 1
-
 
 class SiteSerializer(serializers.ModelSerializer):
     business_id = serializers.PrimaryKeyRelatedField(
@@ -507,7 +503,6 @@ class SiteSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(required=False)
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
-    unmarked_holidays = serializers.SerializerMethodField(read_only=True)
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
     permissions = serializers.SerializerMethodField(read_only=True)
@@ -515,7 +510,7 @@ class SiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 'admins',
-                  'number_of_employees', 'unpublished_shifts', 'unmarked_holidays', 'sitesettings', 'permissions',)
+                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -568,11 +563,6 @@ class SiteSerializer(serializers.ModelSerializer):
         shifts = Shift.objects.filter(
             department__site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
-
-    def get_unmarked_holidays(self, obj):
-        holidays = Availability.objects.filter(Q(name="holiday") | Q(
-            name="unavailable"), site=obj.id, approved=None, date__gte=date.today())
-        return len(holidays)
 
 
 class ForecastSerializer(serializers.ModelSerializer):

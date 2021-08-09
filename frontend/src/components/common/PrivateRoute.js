@@ -14,6 +14,7 @@ const PrivateRoute = ({
   confirmProps,
   admin,
   perms,
+  title,
   ...rest
 }) => {
   const dispatch = useDispatch();
@@ -33,8 +34,15 @@ const PrivateRoute = ({
   useEffect(() => {
     if (auth.user) {
       dispatch(getSites());
+      if (modalProps) {
+        modalProps.setOpen(false);
+      }
     }
   }, [auth]);
+
+  useEffect(() => {
+    document.title = title ? `${title} | readysetrota` : "readysetrota";
+  }, [title]);
 
   if (auth && auth.isAuthenticated && loading.sites) {
     return false;
@@ -42,12 +50,13 @@ const PrivateRoute = ({
 
   const { computedMatch } = rest;
   let url = computedMatch.url;
+
   return (
     <Route
       {...rest}
       render={(props) => {
         if (auth.isLoading) {
-          return <Loading />;
+          return false;
         } else if (!auth.isAuthenticated) {
           if (url == "/") {
             return <Beta {...modalProps} />;

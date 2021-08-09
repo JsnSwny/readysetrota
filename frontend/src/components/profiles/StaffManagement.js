@@ -6,6 +6,7 @@ import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker";
 import { getEmployees } from "../../actions/employees";
 import { format } from "date-fns";
+import Title from "../common/Title";
 
 const StaffManagement = ({ modalProps }) => {
   const dispatch = useDispatch();
@@ -13,19 +14,21 @@ const StaffManagement = ({ modalProps }) => {
   let business = useSelector((state) => state.employees.business);
   let user = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    dispatch(getEmployees());
-  }, []);
-
   return (
     <Fragment>
       <div className="banner">
-        <div className="wrapper--lg">
-          <h1 className="header">Staff Management</h1>
-          {/* <p>{subtitles[type]}</p> */}
+        <div className="wrapper--md flex-container--between-start">
+          <Title name="Staff Management" breakWord={false} />
+          {/* <div className="profile-icon">
+            <i className="fas fa-user"></i>
+          </div> */}
         </div>
       </div>
-      <div className="dashboard container-2">
+      {/* <div className="container-2">
+        <Title name="Staff Management" />
+      </div> */}
+
+      <div className="list-block wrapper--md">
         {business.plan != "F" && (
           <Fragment>
             <SitePicker {...modalProps} admin={user.business ? true : false} />

@@ -147,7 +147,7 @@ const ShiftDetails = ({
             <option value="" disabled>
               Select an end time
             </option>
-            <option value="Finish">Finish</option>
+            {/* <option value="Finish">Finish</option> */}
             {hours.map((time) => (
               <option key={time} value={time}>
                 {time}
@@ -172,7 +172,8 @@ const ShiftDetails = ({
               setBreakLength(item.break_length);
             }}
           >
-            {item.start_time} - {item.end_time}{" "}
+            {item.start_time} -{" "}
+            {item.end_time != "None" ? item.end_time : "Finish"}{" "}
             {item.break_length > 0 && `(${item.break_length})`}
           </p>
         ))}

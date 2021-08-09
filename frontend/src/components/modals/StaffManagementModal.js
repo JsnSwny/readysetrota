@@ -100,9 +100,6 @@ const StaffManagementModal = (props) => {
   };
   return (
     <div className="form">
-      <div className="form__image">
-        <i class="fas fa-users-cog"></i>
-      </div>
       <p className="form__subheading">Staff Management - {form}</p>
       <h1 className="form__heading">{name ? name : !update ? title : name}</h1>
       <form onSubmit={onSubmit} className="form__form">
@@ -146,7 +143,7 @@ const StaffManagementModal = (props) => {
                     });
                   } else if (form == "Staff") {
                     setOnConfirm(() => () => {
-                      setConfirmOpen(false);     
+                      setConfirmOpen(false);
                       // dispatch(updateEmployee(update.id, {...update, first_name: 'Anonymous', last_name: 'User'}))
                       dispatch(deleteEmployee(update.id));
                     });

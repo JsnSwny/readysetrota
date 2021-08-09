@@ -73,7 +73,7 @@ const MovableItem = ({ position, props, index, movePosition }) => {
   drag(drop(ref));
 
   return (
-    <div ref={ref} style={{ opacity }} className={`dashboard__item--sm`}>
+    <div ref={ref} style={{ opacity }} className={`list-block__item--sm`}>
       <p className="title-md bold flex-container--between-center">
         {position.name}{" "}
         {permissions.includes("manage_positions") && (
@@ -144,31 +144,32 @@ const PositionPicker = (props) => {
 
   return (
     <DashboardBlock>
-      <div className="dashboard__block-title-container">
-        <div className="flex-container--align-center">
-          <p className="dashboard__block-title">Positions</p>
-          {permissions.includes("manage_positions") && (
-            <i
-              onClick={() => {
-                setOpen(true);
-                setUpdate(false);
-                setType("Position");
-              }}
-              className="fas fa-plus"
-            ></i>
-          )}
+      <div className="flex-container--align-center">
+        <p className="list-block__title">
+          <i class="fas fa-chess-queen"></i> Positions
+        </p>
+        {permissions.includes("manage_positions") && (
+          <i
+            onClick={() => {
+              setOpen(true);
+              setUpdate(false);
+              setType("Position");
+            }}
+            className="fas fa-plus"
+          ></i>
+        )}
 
-          {!positionsEqual && permissions.includes("manage_positions") && (
-            <i
-              onClick={() => {
-                dispatch(updatePositionIndex(newPositions));
-                toast.success("Position orders updated!");
-              }}
-              className="fas fa-save"
-            ></i>
-          )}
-        </div>
+        {!positionsEqual && permissions.includes("manage_positions") && (
+          <i
+            onClick={() => {
+              dispatch(updatePositionIndex(newPositions));
+              toast.success("Position orders updated!");
+            }}
+            className="fas fa-save"
+          ></i>
+        )}
       </div>
+      <hr className="separator" />
       <small className="helper-text">
         <i class="fas fa-info-circle"></i> Click and drag positions to reorder,
         click the save icon to save changes.
@@ -177,7 +178,7 @@ const PositionPicker = (props) => {
       {loading.positions && (
         <small className="loading-text">Loading positions...</small>
       )}
-      <div className="dashboard__wrapper">
+      <div className="list-block__wrapper">
         <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
           {newPositions.map((item, i) => (
             <MovableItem

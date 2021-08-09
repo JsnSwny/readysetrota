@@ -10,7 +10,45 @@
   }
   &-sm {
     @extend .title;
+    font-size: 22px;
+    font-family: "Signika Negative", sans-serif;
+    font-weight: 400;
+    line-height: 25px;
+  }
+  &--margin-top {
+    margin-top: 50px;
+  }
+  &-container {
+    position: relative;
+  }
+  &--lg {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 40px;
+    @include wi-mq(tablet) {
+      font-size: 28px;
+    }
+  }
+  &--wide {
     font-size: 18px;
+    text-transform: uppercase;
+    margin: 30px 0px;
+    border-radius: 10px;
+    min-width: 50%;
+    letter-spacing: 1px;
+    font-weight: normal;
+    @include wi-mq(mobile) {
+      font-size: 16px;
+    }
+  }
+  &--sub {
+    font-size: 16px;
+    color: $blue;
+    font-weight: 300;
+    line-height: 20px;
+    @include wi-mq(tablet) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -37,6 +75,10 @@
 .error {
   font-size: 12px;
   color: $red;
+  &--lg {
+    @extend .error;
+    font-size: 16px;
+  }
 }
 
 .success {
@@ -98,6 +140,12 @@
   align-items: center;
   margin-top: -20px;
   margin-bottom: 10px;
+}
+
+strong {
+  &.pink {
+    color: $pink;
+  }
 }
 
 @media only screen and (max-width: 600px) {

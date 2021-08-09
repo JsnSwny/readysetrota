@@ -6,15 +6,16 @@
 
   @include wi-mq(mobile) {
     margin-left: 0;
-    margin: 70px 0;
+    margin: 0;
+    margin-top: 70px;
   }
   &.open {
-    margin-left: 250px;
+    margin-left: 200px;
     @include wi-mq(laptop) {
       margin-left: 200px;
     }
     @include wi-mq(tablet) {
-      transform: translate(50%, 0);
+      transform: translate(200px, 0);
       margin-left: 0;
     }
     @include wi-mq(mobile) {

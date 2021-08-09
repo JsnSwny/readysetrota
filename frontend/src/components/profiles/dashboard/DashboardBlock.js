@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const DashboardBlock = ({ children, disabled, disabledText, size }) => {
   return (
-    <div className={`dashboard__block${size ? size : ""}`}>
+    <div className={`list-block__block${size ? size : ""}`}>
       {disabled && (
-        <div className="dashboard__block-disabled flex-container--column-center">
+        <div className="list-block__block-disabled flex-container--column-center">
           <i class="fas fa-lock"></i>
           <h2>Locked</h2>
           <p>
@@ -18,7 +18,7 @@ const DashboardBlock = ({ children, disabled, disabledText, size }) => {
         </div>
       )}
       <div
-        className={`dashboard__block-container ${disabled ? "disabled" : ""}`}
+        className={`list-block__block-container ${disabled ? "disabled" : ""}`}
       >
         <>{children}</>
       </div>

@@ -1,8 +1,8 @@
 from rest_framework import routers
-from .api import (ShiftViewSet, EmployeeViewSet, PositionViewSet,
-                  DepartmentViewSet, BusinessViewSet, AvailabilityViewSet,
-                  ShiftListViewSet, EmployeeListViewSet, SiteViewSet, AdminEmployeeListViewSet,
-                  BasicPositionViewSet, ForecastViewSet, SiteSettingsViewSet, NewAvailabilityViewSet)
+from .api import (ShiftViewSet, EmployeeViewSet, PositionViewSet, 
+DepartmentViewSet, BusinessViewSet, AvailabilityViewSet, 
+ShiftListViewSet, EmployeeListViewSet, SiteViewSet, AdminEmployeeListViewSet,
+BasicPositionViewSet, ForecastViewSet, SiteSettingsViewSet)
 from .views import CheckUUID
 from django.urls import path, include
 
@@ -25,6 +25,9 @@ router.register('availability', AvailabilityViewSet, 'availability')
 router.register('new-availability', NewAvailabilityViewSet, 'new-availability')
 
 router.register('sites', SiteViewSet, 'sites')
+
+router.register('leave', LeaveViewSet, 'leaves')
+
 router.register('forecast', ForecastViewSet, 'forecast')
 router.register('sitesettings', SiteSettingsViewSet, 'sitesettings')
 

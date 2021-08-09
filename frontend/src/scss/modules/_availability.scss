@@ -1,0 +1,78 @@
+.availabilityEmployee {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 25px -5px 0 -5px;
+  &__item {
+    padding: 22px 20px 15px 20px;
+    background-color: white;
+    border-radius: 10px;
+    @extend .shadow;
+    width: calc(33.33% - 10px);
+    margin: 5px;
+    transition: 0.2s ease background-color;
+    cursor: pointer;
+    position: relative;
+    @include wi-mq(laptop) {
+      width: calc(50% - 10px);
+    }
+    @include wi-mq(stamp) {
+      width: 100%;
+    }
+    p {
+      line-height: 12px;
+    }
+    .tooltip {
+      font-size: 14px;
+    }
+    &.selected {
+      background-color: $pink;
+      color: white;
+      .availabilityEmployee__bar {
+        opacity: 1;
+      }
+      .tooltip {
+        visibility: visible;
+      }
+    }
+    &:hover {
+      .tooltip {
+        visibility: visible;
+        z-index: 100;
+      }
+    }
+  }
+  &__bar {
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    height: 7px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.5;
+    overflow: hidden;
+    &--available {
+      background-color: $green;
+    }
+    &--unavailable {
+      background-color: $red;
+    }
+    &--unavailablePending {
+      background-color: $red;
+      opacity: 0.5;
+    }
+    &--leave {
+      background-color: $holiday;
+    }
+    &--leavePending {
+      background-color: $holiday;
+      opacity: 0.5;
+    }
+    &--none {
+      flex: 1;
+      background-color: $light-gray-2;
+    }
+  }
+}

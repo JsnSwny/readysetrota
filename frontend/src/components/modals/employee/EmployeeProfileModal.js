@@ -47,6 +47,7 @@ const EmployeeProfileModal = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [permissions, setPermissions] = useState([]);
+  console.log(update);
   const [startWorkingDate, setStartWorkingDate] = useState(
     update && update.current_status.start_date
       ? parseISO(update.current_status.start_date)
@@ -173,13 +174,13 @@ const EmployeeProfileModal = (props) => {
 
   return (
     <div className="form">
-      <div className="form__image">
+      {/* <div className="form__image">
         {firstName ? (
           `${firstName[0]}${lastName && lastName[0]}`
         ) : (
           <i className="fas fa-user"></i>
         )}
-      </div>
+      </div> */}
       <p className="form__subheading">Employee Profile</p>
       <h1 className="form__heading">
         {firstName

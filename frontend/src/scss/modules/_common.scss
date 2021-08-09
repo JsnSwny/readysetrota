@@ -44,3 +44,124 @@
     }
   }
 }
+
+.shadow {
+  -webkit-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  -moz-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  &--md {
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  }
+  &--lg {
+    -webkit-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+    -moz-box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+    box-shadow: 0 0 10px 0 rgba(45, 50, 53, 0.9);
+  }
+  &--pink {
+    -webkit-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+    -moz-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+    box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+  }
+}
+
+.profile-icon {
+  background-color: $blue;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @extend .shadow--lg;
+  i {
+    font-size: 20px;
+  }
+}
+
+.separator {
+  margin: 10px 0 30px 0;
+  background-color: $light-gray;
+  border: 0;
+  height: 1px;
+  @include wi-mq(mobile) {
+    margin: 20px 0;
+  }
+  &--alt {
+    @extend .separator;
+    margin: 20px 0;
+  }
+}
+
+.tooltip {
+  visibility: hidden;
+  min-width: 120px;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  @extend .shadow--md;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
+  &.active {
+    visibility: visible;
+  }
+  .flex-container--center-vh {
+    width: auto;
+  }
+  &__icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 8px;
+    }
+  }
+}
+
+.circle-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: $light-gray-2;
+  margin-right: 4px;
+  display: block;
+  &--green {
+    background-color: $green;
+  }
+  &--red {
+    background-color: $red;
+  }
+  &--blue {
+    background-color: $holiday;
+  }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}

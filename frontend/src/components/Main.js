@@ -4,7 +4,6 @@ import {
   getEmployees,
   getDepartments,
   getPositions,
-  getHolidays,
   getSites,
   updateSettings,
 } from "../actions/employees";
@@ -43,8 +42,6 @@ import Confirm from "./layout/Confirm";
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
 
-import AvailabilityDashboard from "./availability/AvailabilityDashboard";
-
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -54,6 +51,7 @@ const Main = () => {
   const [forecastDate, setForecastDate] = useState(false);
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
+  const [holidayEmployee, setHolidayEmployee] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirm, setOnConfirm] = useState(false);
   const [message, setMessage] = useState(false);
@@ -105,6 +103,7 @@ const Main = () => {
     setType,
     setShiftInfo,
     setForecastDate,
+    setHolidayEmployee,
   };
 
   const confirmProps = {
@@ -131,6 +130,7 @@ const Main = () => {
         {...shiftInfo}
         forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
         confirmProps={confirmProps}
+        holidayEmployee={holidayEmployee}
       />
       <Confirm
         open={confirmOpen}
@@ -165,7 +165,7 @@ const Main = () => {
           />
           <Route
             path="/beta"
-            render={(props) => <Beta {...props} {...modalProps} test="TEST" />}
+            render={(props) => <Beta {...props} {...modalProps} />}
           />
           <PrivateRoute
             path="/list/:type"
@@ -182,14 +182,7 @@ const Main = () => {
             component={Rota}
             modalProps={modalProps}
             confirmProps={confirmProps}
-          />
-
-          <PrivateRoute
-            path="/availability"
-            exact
-            component={AvailabilityDashboard}
-            modalProps={modalProps}
-            confirmProps={confirmProps}
+            title="Rota"
           />
 
           <PrivateRoute
@@ -203,6 +196,7 @@ const Main = () => {
             exact
             component={StaffManagement}
             modalProps={modalProps}
+            title="Staff Management"
           />
           <PrivateRoute
             admin={true}

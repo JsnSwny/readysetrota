@@ -16,27 +16,28 @@ const SitePicker = (props) => {
 
   return (
     <DashboardBlock disabled={disabled} disabledText={"add more sites"}>
-      <div className="dashboard__block-title-container">
-        <div className="flex-container--align-center">
-          <p className="dashboard__block-title">Sites</p>
-          {admin && (
-            <i
-              onClick={() => {
-                if (plan == "F" && sites.length >= 1) {
-                  toast.warning(
-                    "Upgrade to premium to unlock unlimited departments"
-                  );
-                  return false;
-                }
-                setOpen(true);
-                setUpdate(false);
-                setType("Site");
-              }}
-              className="fas fa-plus"
-            ></i>
-          )}
-        </div>
+      <div className="flex-container--align-center">
+        <p className="list-block__title">
+          <i class="fas fa-store"></i> Sites
+        </p>
+        {admin && (
+          <i
+            onClick={() => {
+              if (plan == "F" && sites.length >= 1) {
+                toast.warning(
+                  "Upgrade to premium to unlock unlimited departments"
+                );
+                return false;
+              }
+              setOpen(true);
+              setUpdate(false);
+              setType("Site");
+            }}
+            className="fas fa-plus"
+          ></i>
+        )}
       </div>
+      <hr className="separator" />
       {sites.length == 0 && !user.business && (
         <Fragment>
           <p>You are not associated with any businesses yet</p>
@@ -58,11 +59,11 @@ const SitePicker = (props) => {
         <small className="loading-text">Loading sites...</small>
       )}
 
-      <div className="dashboard__wrapper">
+      <div className="list-block__wrapper">
         {sites.map((item) => (
           <div
             key={item.id}
-            className={`dashboard__item--sm ${
+            className={`list-block__item--sm ${
               (current.site.id == item.id || current.site.id == 0) && "current"
             }`}
           >
@@ -79,16 +80,18 @@ const SitePicker = (props) => {
                     className="fas fa-edit"
                   ></i>
                 )}
-                {current.site.id != item.id && (
-                  <i
-                    onClick={() => {
-                      if (current.site.id != item.id) {
-                        dispatch(setSite(item));
-                      }
-                    }}
-                    className="fas fa-check-circle"
-                  ></i>
-                )}
+                <i
+                  onClick={() => {
+                    if (current.site.id != item.id) {
+                      dispatch(setSite(item));
+                    }
+                  }}
+                  className={`${
+                    current.site.id != item.id
+                      ? "far fa-check-square"
+                      : "fas fa-check-square"
+                  }`}
+                ></i>
               </div>
             </div>
             <p className="subtitle-sm" style={{ marginBottom: "10px" }}>

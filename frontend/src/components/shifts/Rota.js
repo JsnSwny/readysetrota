@@ -16,6 +16,8 @@ import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
+import Title from "../common/Title";
+import { getLeave } from "../../actions/availability";
 
 const Rota = ({ modalProps, confirmProps }) => {
   const dispatch = useDispatch();
@@ -133,6 +135,7 @@ const Rota = ({ modalProps, confirmProps }) => {
     if (filterDate) {
       filterEmployees(filterDate, true);
     }
+    dispatch(getLeave(date, enddate));
   }, [shifts_list]);
 
   // Date range
@@ -232,10 +235,6 @@ const Rota = ({ modalProps, confirmProps }) => {
     }
   };
 
-  if (loading.employees) {
-    return <Loading />;
-  }
-
   // if (!loading.employees && employees.length == 0) {
   //   toast.warning(
   //     "You do not currently have any employees to manage in this department"
@@ -261,6 +260,17 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   return (
     <div className="rota">
+      {/* <div className="banner">
+        <div className="wrapper--md flex-container--between-start">
+          <h1 className="header">
+            <Title
+              name="Hello, Jason"
+              subtitle="Staff Dashboard"
+              breakWord={false}
+            />
+          </h1>
+        </div>
+      </div> */}
       <RotaBar
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
@@ -282,14 +292,14 @@ const Rota = ({ modalProps, confirmProps }) => {
           showFinancials={showFinancials}
           {...modalProps}
         />
-        {isLoading && <Loading />}
+        {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
           <div
             className={`shiftList container ${filterDate ? "filtered" : ""} ${
               scrollPosition >= 250 ? " fixed" : ""
             }`}
           >
-            {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
+            {/* {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
               <OpenShifts
                 current_employee={current_employee}
                 modalProps={modalProps}
@@ -301,7 +311,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                     : openShifts
                 }
               />
-            )}
+            )} */}
             {sortEmployees().map(
               (employee, i) =>
                 (!employee.archived ||
