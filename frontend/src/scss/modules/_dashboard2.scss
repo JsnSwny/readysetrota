@@ -604,6 +604,9 @@
     @include wi-mq(laptop) {
       width: 100%;
     }
+    @include wi-mq(mobile) {
+      padding: 15px 20px;
+    }
     p {
       font-size: 14px;
     }

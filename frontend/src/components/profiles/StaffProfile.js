@@ -221,7 +221,7 @@ const StaffProfile = ({ modalProps }) => {
         <div className="flex-container--between-start">
           <h1 className="header">
             <Title
-              name="Hello, Jason"
+              name={`${employee.first_name}`}
               subtitle="Staff Dashboard"
               breakWord={false}
             />
@@ -342,7 +342,7 @@ const StaffProfile = ({ modalProps }) => {
                     </h4>
                     <p className="dashboardHolidays__date">
                       <i class="fas fa-calendar-alt"></i>
-                      {format(parseISO(item.start_date), "do MMMM yyyy")} -
+                      {format(parseISO(item.start_date), "do MMMM yyyy")} -{" "}
                       {format(parseISO(item.end_date), "do MMMM yyyy")}
                     </p>
                   </div>

@@ -224,7 +224,7 @@ const AdminPanel = (props) => {
         <div className="wrapper--md flex-container--between-start">
           <h1 className="header">
             <Title
-              name="Welcome Back, Jason"
+              name={`${current.site.name} Dashboard`}
               subtitle="Dashboard"
               breakWord={false}
             />

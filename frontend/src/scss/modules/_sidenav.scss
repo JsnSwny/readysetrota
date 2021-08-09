@@ -160,9 +160,6 @@
       font-family: "Signika Negative", sans-serif;
       display: flex;
       align-items: center;
-      @include wi-mq(laptop) {
-        font-size: 12px;
-      }
     }
     i {
       font-size: 14px;
@@ -199,7 +196,8 @@
         margin-bottom: 0;
       }
       @include wi-mq(tablet) {
-        margin-left: 10%;
+        margin-left: 0;
+        background-color: lighten($blue, 10%);
       }
 
       &-text {
