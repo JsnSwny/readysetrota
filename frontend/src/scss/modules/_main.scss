@@ -10,32 +10,23 @@
   }
   &-sm {
     @extend .title;
-    font-size: 18px;
+    font-size: 22px;
+    font-family: "Signika Negative", sans-serif;
+    font-weight: 400;
+    line-height: 25px;
+  }
+  &--margin-top {
+    margin-top: 50px;
   }
   &-container {
     position: relative;
-    &::before {
-      content: "";
-      display: block;
-      width: 5px;
-      height: 100%;
-      background-color: $pink;
-      margin-right: 10px;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-    }
   }
   &--lg {
     font-size: 36px;
-    margin-left: 30px;
-    font-weight: 300;
+    font-weight: 700;
     line-height: 40px;
     @include wi-mq(tablet) {
       font-size: 28px;
-    }
-    @include wi-mq(mobile) {
-      font-size: 18px;
     }
   }
   &--wide {
@@ -51,8 +42,13 @@
     }
   }
   &--sub {
-    font-size: 18px;
-    margin-left: 30px;
+    font-size: 16px;
+    color: $blue;
+    font-weight: 300;
+    line-height: 20px;
+    @include wi-mq(tablet) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -144,6 +140,12 @@
   align-items: center;
   margin-top: -20px;
   margin-bottom: 10px;
+}
+
+strong {
+  &.pink {
+    color: $pink;
+  }
 }
 
 @media only screen and (max-width: 600px) {

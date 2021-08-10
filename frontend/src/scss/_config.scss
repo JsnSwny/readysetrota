@@ -1,12 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;700&display=swap");
 
 /*======Typography=======*/
 $base-font-family: "Poppins", sans-serif;
 
 /*======Colors=======*/
-$pink: #ec70c9;
+$pink: #fd809e;
 $pink2: #f3a4a5;
 $white: #fff;
 $green: #5bd075;
@@ -20,6 +19,7 @@ $purple: rgb(153, 61, 192);
 $red2: #a22c32;
 $white2: white;
 $light-gray-2: #a8a8a8;
+$holiday: #22c6f0;
 
 $breakpoints: (
   "stamp": "screen and (max-width: 399px)",
@@ -47,12 +47,12 @@ $breakpoints: (
 }
 
 @mixin sidenav_size($prop) {
-  #{$prop}: 250px;
+  #{$prop}: 200px;
   @include wi-mq(laptop) {
     #{$prop}: 200px;
   }
   @include wi-mq(tablet) {
-    #{$prop}: 50%;
+    #{$prop}: 200px;
   }
   @include wi-mq(mobile) {
     #{$prop}: 100%;

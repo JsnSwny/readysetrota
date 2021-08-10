@@ -230,7 +230,7 @@
       height: 300px;
       margin-bottom: 0;
       @include wi-mq(tablet) {
-        height: 250px;
+        height: 200px;
         &:not(:last-child) {
           margin-bottom: 40px;
         }

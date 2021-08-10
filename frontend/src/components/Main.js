@@ -4,7 +4,6 @@ import {
   getEmployees,
   getDepartments,
   getPositions,
-  getHolidays,
   getSites,
   updateSettings,
 } from "../actions/employees";
@@ -43,6 +42,8 @@ import Confirm from "./layout/Confirm";
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
 
+import Availability from "./availability/Availability";
+
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -52,6 +53,7 @@ const Main = () => {
   const [forecastDate, setForecastDate] = useState(false);
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
+  const [holidayEmployee, setHolidayEmployee] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirm, setOnConfirm] = useState(false);
   const [message, setMessage] = useState(false);
@@ -103,6 +105,7 @@ const Main = () => {
     setType,
     setShiftInfo,
     setForecastDate,
+    setHolidayEmployee,
   };
 
   const confirmProps = {
@@ -129,6 +132,7 @@ const Main = () => {
         {...shiftInfo}
         forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
         confirmProps={confirmProps}
+        holidayEmployee={holidayEmployee}
       />
       <Confirm
         open={confirmOpen}
@@ -180,7 +184,18 @@ const Main = () => {
             component={Rota}
             modalProps={modalProps}
             confirmProps={confirmProps}
+            title="Rota"
           />
+
+          <PrivateRoute
+            path="/availability"
+            exact
+            component={Availability}
+            modalProps={modalProps}
+            confirmProps={confirmProps}
+            title="Availability"
+          />
+
           <PrivateRoute
             admin={true}
             perms={[
@@ -192,6 +207,7 @@ const Main = () => {
             exact
             component={StaffManagement}
             modalProps={modalProps}
+            title="Staff Management"
           />
           <PrivateRoute
             admin={true}

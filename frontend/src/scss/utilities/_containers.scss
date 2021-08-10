@@ -9,7 +9,7 @@
 
 .container-left {
   width: 20%;
-  min-width: 150px;
+  min-width: 200px;
   max-width: 300px;
   @include wi-mq(laptop) {
     width: 15%;

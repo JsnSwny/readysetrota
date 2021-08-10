@@ -14,6 +14,7 @@ const PrivateRoute = ({
   confirmProps,
   admin,
   perms,
+  title,
   ...rest
 }) => {
   const dispatch = useDispatch();
@@ -39,12 +40,17 @@ const PrivateRoute = ({
     }
   }, [auth]);
 
+  useEffect(() => {
+    document.title = title ? `${title} | readysetrota` : "readysetrota";
+  }, [title]);
+
   if (auth && auth.isAuthenticated && loading.sites) {
     return false;
   }
 
   const { computedMatch } = rest;
   let url = computedMatch.url;
+
   return (
     <Route
       {...rest}

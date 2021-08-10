@@ -6,14 +6,8 @@ import { format, parseISO } from "date-fns";
 import TableHeaders from "./TableHeaders";
 
 const HolidayList = ({ listProps }) => {
-  const {
-    action,
-    selected,
-    setSelected,
-    selectAll,
-    setSelectAll,
-    filter,
-  } = listProps;
+  const { action, selected, setSelected, selectAll, setSelectAll, filter } =
+    listProps;
 
   let current = useSelector((state) => state.employees.current);
   let holidays = useSelector((state) => state.employees.holidays);
@@ -24,10 +18,6 @@ const HolidayList = ({ listProps }) => {
   useEffect(() => {
     setFilterHolidays(holidays);
   }, [holidays]);
-
-  useEffect(() => {
-    dispatch(getHolidays(current.site.id));
-  }, []);
 
   const approveAction = {
     name: "Approve",

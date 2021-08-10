@@ -126,7 +126,7 @@ class Publish(APIView):
 
             if employee.user:
                 shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
+                    employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
                 html_message = render_to_string("emailshifts.html", context={
                                                 'shifts': shifts, 'employee': employee})
                 mail_item = mail.EmailMultiAlternatives(
@@ -196,14 +196,21 @@ def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
 import sqlite3
 class GetStats(APIView):
     def get(self, request):
-
-        id = request.query_params.get('id')
-        # shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(month=TruncMonth('date')).values('month').annotate(c=Count('id')).values('month', 'c')
+        stat_type = request.query_params.get('stat_type')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         start_date = datetime.strptime(start_date, '%d/%m/%Y')
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
-        shifts_worked = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+
+        if stat_type == "business":
+            id = request.query_params.get('id')
+            shifts_worked = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+        else:
+            employee_id = request.query_params.get('employee_id')
+            shifts_worked = Shift.objects.filter(employee__id=employee_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+        # shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(month=TruncMonth('date')).values('month').annotate(c=Count('id')).values('month', 'c')
+        
+        
 
         return JsonResponse({"hours": list(shifts_worked)}, safe=False)
 

@@ -1,25 +1,17 @@
 .banner {
-  // background-image: url("/static/media/staff-management-banner4.jpeg");
-  height: 25vh;
-  margin-top: -20px;
+  margin-top: 40px;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   color: black;
+  font-family: "Signika Negative", sans-serif;
   @include wi-mq(tablet) {
-    height: 20vh;
+    margin-bottom: 60px;
   }
   @include wi-mq(mobile) {
-    height: 20vh;
-    margin-top: 0;
-  }
-  .header {
-    z-index: 10;
-    position: relative;
-  }
-  p {
-    @extend .header;
-    font-size: 18px;
+    margin-top: 80px;
+    margin-bottom: 40px;
   }
 }

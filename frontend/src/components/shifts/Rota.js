@@ -16,6 +16,7 @@ import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
+import Title from "../common/Title";
 
 const Rota = ({ modalProps, confirmProps }) => {
   const dispatch = useDispatch();
@@ -67,7 +68,6 @@ const Rota = ({ modalProps, confirmProps }) => {
   // Update shifts based on width
   const widthUpdate = (force = false) => {
     let currentDate = format(new Date(), "yyyy-MM-dd");
-    console.log("WIDTH UPDATE");
     if (width > 1200) {
       if (currentDevice != "Desktop" || force) {
         updateShifts(
@@ -258,6 +258,17 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   return (
     <div className="rota">
+      {/* <div className="banner">
+        <div className="wrapper--md flex-container--between-start">
+          <h1 className="header">
+            <Title
+              name="Hello, Jason"
+              subtitle="Staff Dashboard"
+              breakWord={false}
+            />
+          </h1>
+        </div>
+      </div> */}
       <RotaBar
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
