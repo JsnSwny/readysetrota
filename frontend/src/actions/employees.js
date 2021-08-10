@@ -303,9 +303,7 @@ export const getEmployees =
   };
 
 export const setDepartment = (id) => (dispatch, getState) => {
-  let isLoading = Object.keys(getState().loading).some(
-    (k) => getState().loading[k]
-  );
+  let isLoading = getState().loading.positions || getState().loading.employees;
   if (isLoading) {
     return false;
   }
