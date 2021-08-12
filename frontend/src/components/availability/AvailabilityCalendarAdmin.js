@@ -1,32 +1,11 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import DropButton from "../lists/DropButton";
-import {
-  updateAvailability,
-  addAvailability,
-  deleteAvailability,
-  updateEmployee,
-  getAllAvailability,
-} from "../../actions/employees";
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  addMonths,
-  differenceInDays,
-  getDay,
-  eachDayOfInterval,
-  startOfWeek,
-  endOfWeek,
-  getDaysInMonth,
-  getMonth,
-  parseISO,
-  isToday,
-} from "date-fns";
+import { format, startOfMonth, endOfMonth, isToday } from "date-fns";
 
 import AvailabilityDate from "./AvailabilityDate";
 import { getLeave } from "../../actions/availability";
+
+import { getShifts } from "../../actions/shifts";
 
 const AvailabilityCalendarAdmin = ({
   selectedDate,
@@ -39,11 +18,6 @@ const AvailabilityCalendarAdmin = ({
   availabilityByDate,
   setSelectedEmployee,
 }) => {
-  const dispatch = useDispatch();
-
-  let availability = useSelector((state) => state.employees.availability);
-  let current = useSelector((state) => state.employees.current);
-  let leave = useSelector((state) => state.availability.leave);
   let employees = useSelector((state) => state.employees.employees);
 
   return (

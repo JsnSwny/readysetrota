@@ -220,6 +220,7 @@
       }
     }
   }
+
   &__range {
     display: none;
     width: 100%;
@@ -509,6 +510,9 @@
     cursor: pointer;
     opacity: 0.5;
     transition: 0.4s ease opacity;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &.active {
       opacity: 1;
     }

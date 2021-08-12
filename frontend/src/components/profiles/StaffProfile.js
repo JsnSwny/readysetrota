@@ -29,9 +29,7 @@ const StaffProfile = ({ modalProps }) => {
 
   const { setOpen, setType } = modalProps;
   let user = useSelector((state) => state.auth.user);
-  const [startDate, setStartDate] = useState(
-    startOfWeek(new Date(), { weekStartsOn: 1 })
-  );
+  const [startDate, setStartDate] = useState(addDays(new Date(), -7));
   const [endDate, setEndDate] = useState(new Date());
   let { id: id_param } = useParams();
   let employees = useSelector((state) => state.employees.employees);

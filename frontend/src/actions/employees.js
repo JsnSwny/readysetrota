@@ -234,9 +234,7 @@ export const deleteSite = (id) => (dispatch, getState) => {
 };
 
 export const setSite = (id) => (dispatch, getState) => {
-  let isLoading = Object.keys(getState().loading).some(
-    (k) => getState().loading[k]
-  );
+  let isLoading = getState().loading.departments ? true : false;
   let user = getState().auth.user;
   if (isLoading) {
     return false;
@@ -305,9 +303,7 @@ export const getEmployees =
   };
 
 export const setDepartment = (id) => (dispatch, getState) => {
-  let isLoading = Object.keys(getState().loading).some(
-    (k) => getState().loading[k]
-  );
+  let isLoading = getState().loading.positions || getState().loading.employees;
   if (isLoading) {
     return false;
   }

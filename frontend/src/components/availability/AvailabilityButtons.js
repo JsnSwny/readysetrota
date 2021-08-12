@@ -38,22 +38,22 @@ const AvailabilityButtons = ({
           ></i>
         </div>
       </div>
-      <button
+      <div
         onClick={() => setCurrentSelector("available")}
         className={`dashboardAvailability__picker--green ${
           currentSelector == "available" ? "active" : ""
         }`}
       >
         Available
-      </button>
-      <button
+      </div>
+      <div
         onClick={() => setCurrentSelector("unavailable")}
         className={`dashboardAvailability__picker--red ${
           currentSelector == "unavailable" ? "active" : ""
         }`}
       >
         Unavailable
-      </button>
+      </div>
     </div>
   );
 };
