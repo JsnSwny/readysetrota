@@ -52,7 +52,7 @@ const Dates = (props) => {
         result = result[0];
       }
       if (result.wage_type == "S") {
-        return parseFloat((result.wage / 52 / 5).toFixed(2));
+        return parseFloat((result.wage / 52 / 7).toFixed(2));
       } else if (result.wage_type == "H") {
         return 0;
       }

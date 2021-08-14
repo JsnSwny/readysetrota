@@ -1,47 +1,31 @@
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSites } from "../../../actions/employees";
-import HolidayRequest from "./HolidayRequest";
-import Stats from "./stats/Stats";
-import SiteOverview from "./SiteOverview";
 import Title from "../../common/Title";
-import { Link } from "react-router-dom";
 import {
   format,
   differenceInMinutes,
   differenceInHours,
   addDays,
-  startOfWeek,
   addMonths,
   eachDayOfInterval,
 } from "date-fns";
 import { getTodayShifts } from "../../../actions/shifts";
 import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../../actions/stats";
-
-import { Carousel } from "react-responsive-carousel";
 import DashboardShifts from "./DashboardShifts";
+import StatsItem from "./StatsItem";
 
 const AdminPanel = (props) => {
   const dispatch = useDispatch();
 
-  const [startDate, setStartDate] = useState(addDays(new Date(), -7));
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(addDays(new Date(), 7));
 
   let current = useSelector((state) => state.employees.current);
-  let user = useSelector((state) => state.auth.user);
-  let holidays = useSelector((state) => state.employees.holidays);
-  let business = useSelector((state) => state.employees.business);
-  let sites = useSelector((state) => state.employees.sites);
-  let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
-  );
   let stats = useSelector((state) => state.stats.stats);
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
-  let notifications = [];
   const [interval, setInterval] = useState([]);
 
   useEffect(() => {
@@ -62,11 +46,6 @@ const AdminPanel = (props) => {
     );
   }, [startDate, endDate, current.site]);
 
-  const [beforeIncrement, setBeforeIncrement] = useState(0);
-  const [afterIncrement, setAfterIncrement] = useState(0);
-
-  let today = new Date();
-
   useEffect(() => {
     dispatch(getSites());
   }, []);
@@ -79,142 +58,6 @@ const AdminPanel = (props) => {
       )
     );
   }, [current.department]);
-
-  const data = {
-    // labels: stats.hours.map((item, idx) => item.day),
-    labels: interval.map((item) => format(item, "d MMM yyyy")),
-    datasets: [
-      {
-        label: "Shifts Worked",
-        data: interval.map((item) =>
-          stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
-            ? stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
-                .c
-            : 0
-        ),
-        backgroundColor: ["rgba(236, 112, 201, 1)"],
-        borderColor: ["rgba(236, 112, 201, 1)"],
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  let maxValueOfY = Math.max(...stats.hours.map((o) => o.c), 0);
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-      display: false,
-    },
-    interaction: {
-      intersect: false,
-    },
-    // tooltips: {
-    //   mode: "nearest",
-    // },
-    plugins: {
-      legend: false,
-      title: {
-        display: true,
-        text: "Shifts Worked",
-      },
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    scales: {
-      y: {
-        suggestedMax: maxValueOfY + maxValueOfY / 10,
-      },
-      x: {
-        ticks: {
-          stepSize: 4,
-        },
-      },
-    },
-  };
-
-  const getPositionByDepartment = (shift) => {
-    return shift.employee.position.find(
-      (item) => item.department.id == shift.department
-    );
-  };
-
-  let items = [];
-
-  const getTime = (shift) => {
-    return new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
-      shift.start_time.substr(0, 2),
-      shift.start_time.substr(3, 4),
-      0
-    );
-  };
-
-  const getBeforeAfterShifts = (before, increment) => {
-    let tempShifts = shifts;
-
-    if (before == true) {
-      tempShifts = tempShifts.filter((item) => getTime(item) < new Date());
-      tempShifts = tempShifts.slice(
-        tempShifts.length - (3 + increment),
-        tempShifts.length - increment
-      );
-    } else {
-      tempShifts = tempShifts.filter((item) => getTime(item) >= new Date());
-      tempShifts = tempShifts.slice(0 + increment, 3 + increment);
-    }
-
-    return tempShifts.map((item) => (
-      <div className="todayShifts__item flex-container--between">
-        <div className="todayShifts__item-left">
-          <p className="todayShifts__item-title">{item.employee.full_name}</p>
-          <p className="todayShifts__item-subtitle">
-            {getPositionByDepartment(item).name} (
-            {getPositionByDepartment(item).department.name})
-          </p>
-        </div>
-        <div className="todayShifts__item-right">
-          <p className="todayShifts__item-title">
-            {item.start_time} - {item.end_time}
-          </p>
-          <p className="todayShifts__item-subtitle">
-            {before ? "" : "In"}{" "}
-            {Math.abs(differenceInHours(getTime(item), new Date())) > 0 &&
-              `${Math.abs(differenceInHours(getTime(item), new Date()))} Hour${
-                Math.abs(differenceInHours(getTime(item), new Date())) > 1
-                  ? "s"
-                  : ""
-              } `}
-            {Math.abs(differenceInMinutes(getTime(item), new Date())) -
-              60 * Math.abs(differenceInHours(getTime(item), new Date()))}{" "}
-            Minutes {before ? "Ago" : ""}
-          </p>
-        </div>
-      </div>
-    ));
-  };
-
-  const sortArrow = ({ before, direction, increment, value, setIncrement }) => {
-    return (
-      <i
-        class={`fas fa-sort-${direction} ${
-          getBeforeAfterShifts(before, increment + value).length == 3
-            ? "pink"
-            : ""
-        }`}
-        onClick={() =>
-          getBeforeAfterShifts(before, increment + value).length == 3 &&
-          setIncrement(increment + value)
-        }
-      ></i>
-    );
-  };
 
   return (
     <Fragment>
@@ -250,13 +93,25 @@ const AdminPanel = (props) => {
             className="dashboard__select"
             onChange={(e) => {
               let values = e.target.value.split(" ");
-              if (values[1] == "D") {
-                setStartDate(addDays(new Date(), -values[0]));
-              } else if (values[1] == "M") {
-                setStartDate(addMonths(new Date(), -values[0]));
+              let num = parseInt(values[0]);
+              if (num < 0) {
+                setStartDate(new Date());
+                if (values[1] == "D") {
+                  setEndDate(addDays(new Date(), -num));
+                } else if (values[1] == "M") {
+                  setEndDate(addMonths(new Date(), -num));
+                }
+              } else {
+                setEndDate(new Date());
+                if (values[1] == "D") {
+                  setStartDate(addDays(new Date(), -num));
+                } else if (values[1] == "M") {
+                  setStartDate(addMonths(new Date(), -num));
+                }
               }
             }}
           >
+            <option value="-7 D">This week</option>
             <option value="7 D">Last week</option>
             <option value="14 D">Last 2 weeks</option>
             <option value="30 D">Last 30 Days</option>
@@ -266,19 +121,50 @@ const AdminPanel = (props) => {
           </select>
         </div>
         <hr class="separator" />
-        {permissions.includes("view_stats") && (
-          <Stats
-            title="Admin Panel"
-            type="business"
-            startDate={startDate}
-            endDate={endDate}
-          />
-        )}
-        <div className="stats-graph">
-          <div className="stats-graph__item">
-            <Line data={data} options={options} />
+        {stats && interval.length > 0 && (
+          <div className="stats-graph__container">
+            <StatsItem
+              title="Number of Shifts Worked"
+              decimals={0}
+              data={interval.map((item) =>
+                stats.hours.find(
+                  (stat) => stat.day == format(item, "yyyy-MM-dd")
+                )
+                  ? stats.hours.find(
+                      (stat) => stat.day == format(item, "yyyy-MM-dd")
+                    ).c
+                  : 0
+              )}
+              interval={interval}
+            />
+            <StatsItem
+              title="Estimated Outcome"
+              decimals={2}
+              data={Object.values(stats.total_cost).map((item) =>
+                parseInt(item)
+              )}
+              interval={interval}
+              prefix={"£"}
+            />
+            <StatsItem
+              title="Estimated Profits"
+              decimals={2}
+              data={Object.values(stats.forecast_dif).map((item) =>
+                parseInt(item)
+              )}
+              interval={interval}
+              prefix={"£"}
+            />
+            <StatsItem
+              title="Hours Worked"
+              decimals={1}
+              data={Object.values(stats.total_hours).map((item) =>
+                parseInt(item)
+              )}
+              interval={interval}
+            />
           </div>
-        </div>
+        )}
       </div>
     </Fragment>
   );

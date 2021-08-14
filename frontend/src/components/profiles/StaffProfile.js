@@ -6,7 +6,6 @@ import { useParams, Redirect } from "react-router-dom";
 import AvailabilityCalendar from "../availability/AvailabilityCalendar";
 import HolidayRequest from "./dashboard/HolidayRequest";
 import UpcomingShifts from "./UpcomingShifts";
-import Stats from "./dashboard/stats/Stats";
 import { getUserLeave, deleteLeave } from "../../actions/availability";
 import {
   format,
@@ -210,8 +209,6 @@ const StaffProfile = ({ modalProps }) => {
     "Saturday",
     "Sunday",
   ];
-
-  // console.log(shiftRanges);
 
   return (
     <Fragment>

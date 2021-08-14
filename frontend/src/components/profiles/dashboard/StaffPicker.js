@@ -64,8 +64,6 @@ const StaffPicker = (props) => {
   );
 
   const sortEmployees = () => {
-    console.log(employees);
-    console.log(positions);
     if (positions.length > 0 && employees.length > 0) {
       switch (staffSort) {
         case "position":

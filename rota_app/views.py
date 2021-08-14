@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Employee, Shift, UserProfile, Business, Wage
+from .models import Employee, Shift, UserProfile, Business, Wage, Forecast
 from django.db.models import Count, Sum
-from .serializers import ShiftSerializer
+from .serializers import ShiftSerializer, ShiftReadOnlySerializer
 from operator import attrgetter
 from itertools import groupby
-from datetime import datetime, timedelta, time, date
+from datetime import datetime, timedelta, date
 from django.core.mail import send_mail, send_mass_mail
 from django_xhtml2pdf.utils import generate_pdf
 from django.http import HttpResponse, FileResponse, JsonResponse
@@ -26,8 +26,11 @@ from django.db.models.functions import TruncMonth, TruncDay
 from django.db.models import FloatField
 from django.db.models.functions import Cast
 from django.db.models import F, Func, ExpressionWrapper, fields
-from .serializers import ShiftSerializer
 import sqlite3
+from django.db.models.functions import ExtractHour
+import pandas as pd
+from django.db.models import Q
+import time
 
 db = sqlite3.connect(':memory:')
 
@@ -146,56 +149,57 @@ class Publish(APIView):
         return Response(ids)
 
 
-def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
-    hours = 0
-    wage = 0
-    days_difference = (end_date - start_date) + timedelta(days=1)
-    for i in shifts:
-        if i.end_time:
-            wage_obj = Wage.objects.filter(
-                employee=i.employee).order_by('-start_date').first()
+# def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
+#     hours = 0
+#     wage = 0
+#     days_difference = (end_date - start_date) + timedelta(days=1)
+#     for i in shifts:
+#         if i.end_time:
+#             wage_obj = Wage.objects.filter(
+#                 employee=i.employee).order_by('-start_date').first()
 
-            current_date = date.today()
-            start = datetime.combine(current_date, i.start_time)
-            end_time = datetime.strptime(i.end_time, '%H:%M')
-            end = datetime.combine(current_date, end_time.time())
-            if (end < start):
-                end = end + timedelta(days=1)
+#             current_date = date.today()
+#             start = datetime.combine(current_date, i.start_time)
+#             end_time = datetime.strptime(i.end_time, '%H:%M')
+#             end = datetime.combine(current_date, end_time.time())
+#             if (end < start):
+#                 end = end + timedelta(days=1)
 
-            shift_length = round((end - start).total_seconds() / 3600, 2)
+#             shift_length = round((end - start).total_seconds() / 3600, 2)
 
-            hours += shift_length - (i.break_length / 60)
-            if(wage_obj and wage_obj.wage_type == "H"):
-                wage += float(wage_obj.wage) * \
-                    (shift_length - (i.break_length / 60))
+#             hours += shift_length - (i.break_length / 60)
+#             if(wage_obj and wage_obj.wage_type == "H"):
+#                 wage += float(wage_obj.wage) * \
+#                     (shift_length - (i.break_length / 60))
 
-    employees = []
+#     employees = []
 
-    if user_id:
-        employees = Employee.objects.filter(user__id=user_id).distinct()
-    if site_id:
-        employees = Employee.objects.filter(
-            position__department__site=site_id).distinct()
-    # if business_id:
-    #     employees = Employee.objects.filter(
-    #         position__department__site__business=business_id).distinct()
+#     if user_id:
+#         employees = Employee.objects.filter(user__id=user_id).distinct()
+#     if site_id:
+#         employees = Employee.objects.filter(
+#             position__department__site=site_id).distinct()
+#     # if business_id:
+#     #     employees = Employee.objects.filter(
+#     #         position__department__site__business=business_id).distinct()
     
-    # Check for employee end date
-    while start_date <= end_date:
-        for i in employees:
-            wage_obj = Wage.objects.filter(employee=i, start_date__lte=start_date).order_by('-start_date').first()
+#     # Check for employee end date
+#     while start_date <= end_date:
+#         for i in employees:
+#             wage_obj = Wage.objects.filter(employee=i, start_date__lte=start_date).order_by('-start_date').first()
             
-            if wage_obj:
-                if wage_obj.wage_type == "S":
-                    wage += float(wage_obj.wage/52/7)
+#             if wage_obj:
+#                 if wage_obj.wage_type == "S":
+#                     wage += float(wage_obj.wage/52/7)
 
-        start_date += timedelta(days=1)
+#         start_date += timedelta(days=1)
 
-    return hours, wage
+#     return hours, wage
 
 import sqlite3
 class GetStats(APIView):
     def get(self, request):
+        start_time = time.time()
         stat_type = request.query_params.get('stat_type')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
@@ -204,7 +208,39 @@ class GetStats(APIView):
 
         if stat_type == "business":
             id = request.query_params.get('id')
-            shifts_worked = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+            shifts = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
+            serializer = ShiftReadOnlySerializer(list(shifts), many=True).data
+            end_time = time.time()
+            shifts_worked = shifts.annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+
+            total_cost = {}
+            total_hours_obj = {}
+            forecast_dif_obj = {}
+
+            delta = end_date - start_date
+            for i in range(delta.days+1):
+
+                date = start_date + timedelta(days=i)
+                date_str = date.strftime("%Y-%m-%d")
+                cost = 0
+
+                cost += sum(item['total_cost'] for item in serializer if str(item['date']) == date_str)
+                total_hours = sum(item['length'] for item in serializer if str(item['date']) == date_str)
+
+                salaries = Wage.objects.filter(wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
+                for salary in salaries:
+                    cost += float(salary.wage) / 52 / 7
+
+                forecast = Forecast.objects.filter(site=id, date=date)
+                forecast_dif = 0.00
+                if forecast:
+                    forecast_dif = float(forecast.first().amount) - cost
+
+                total_hours_obj[date_str] = float("{:.1f}".format(total_hours))
+
+                forecast_dif_obj[date_str] = float("{:.2f}".format(forecast_dif))
+                total_cost[date_str] = float("{:.2f}".format(cost))
+
         else:
             employee_id = request.query_params.get('employee_id')
             shifts_worked = Shift.objects.filter(employee__id=employee_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
@@ -212,7 +248,7 @@ class GetStats(APIView):
         
         
 
-        return JsonResponse({"hours": list(shifts_worked)}, safe=False)
+        return JsonResponse({"hours": list(shifts_worked), "total_cost": total_cost, "forecast_dif": forecast_dif_obj, "total_hours": total_hours_obj}, safe=False)
 
         print(stat_shifts)
 

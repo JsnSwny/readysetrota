@@ -23,6 +23,7 @@ const Shift = (props) => {
     setConfirmOpen,
     setOnConfirm,
     setMessage,
+    financialMode,
   } = props;
 
   const [shiftDate, setShiftDate] = useState("");
@@ -93,19 +94,13 @@ const Shift = (props) => {
                       shift.stage
                     }`}
                   >
-                    {shift.start_time} -{" "}
-                    {shift.end_time ? shift.end_time : "Finish"}{" "}
-                    {permissions.includes("manage_shifts") && (
-                      <i
-                        className={`fas fa-clock ${
-                          shift.stage == "Published"
-                            ? shift.timeclock
-                              ? "active"
-                              : ""
-                            : "hide"
-                        }`}
-                      ></i>
-                    )}
+                    {financialMode == "predicted"
+                      ? `${shift.start_time} - ${
+                          shift.end_time ? shift.end_time : "Finish"
+                        }`
+                      : shift.timeclock
+                      ? `${shift.timeclock.clock_in} - ${shift.timeclock.clock_out}`
+                      : ""}
                   </p>
                 </div>
                 {shift.break_length > 0 && (

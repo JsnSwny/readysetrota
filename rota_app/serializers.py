@@ -393,10 +393,22 @@ class TimeClockSerializer(serializers.ModelSerializer):
 
     length = serializers.SerializerMethodField()
 
+    clock_in = serializers.SerializerMethodField(read_only=True)
+    clock_out = serializers.SerializerMethodField(read_only=True)
+
+    
+
     class Meta:
         model = TimeClock
         fields = ('clock_in', 'clock_out', 'break_length',
                   'employee_id', 'length',)
+
+    def get_clock_in(self, obj):
+        if obj.clock_in:
+            return str(obj.clock_in)[0:5]
+    def get_clock_out(self, obj):
+        if obj.clock_out:
+            return str(obj.clock_out)[0:5]
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:
@@ -408,6 +420,33 @@ class TimeClockSerializer(serializers.ModelSerializer):
             shift_length = round((end - start).total_seconds() / 3600, 2)
             return shift_length - (obj.break_length / 60)
 
+class ShiftReadOnlySerializer(serializers.Serializer):
+    length = serializers.SerializerMethodField(read_only=True)
+    total_cost = serializers.SerializerMethodField(read_only=True)
+    wage = serializers.SerializerMethodField(read_only=True)
+    date = serializers.DateField(read_only=True)
+    def get_wage(self, obj):
+            employee = Employee.objects.get(id=obj.employee_id)
+            wages = Wage.objects.filter(
+                    employee=employee, start_date__lte=obj.date).filter(Q(end_date__gte=obj.date) | Q(end_date=None)).first()
+            if wages:
+                if wages.wage_type == "H":
+                    return wages.wage
+            return 0
+
+    def get_length(self, obj):
+        if obj.end_time:
+            current_date = date.today()
+            start = datetime.combine(current_date, obj.start_time)
+
+            end = datetime.combine(current_date, obj.end_time)
+            if (end < start):
+                end = end + timedelta(days=1)
+            shift_length = round((end - start).total_seconds() / 3600, 2)
+            return shift_length - (obj.break_length / 60)
+
+    def get_total_cost(self, obj):
+        return float(self.get_length(obj)) * float(self.get_wage(obj))
 
 class ShiftListSerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(
@@ -418,19 +457,34 @@ class ShiftListSerializer(serializers.ModelSerializer):
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(
     ), source='positions', write_only=True, many=True, required=False)
     employee = ShiftEmployeeSerializer(read_only=True)
+    wage = serializers.SerializerMethodField()
 
     timeclock = TimeClockSerializer(required=False)
+    total_cost = serializers.SerializerMethodField()
+
+    def get_wage(self, obj):
+        employee = Employee.objects.get(id=obj.employee_id)
+        wages = Wage.objects.filter(
+                employee=employee, start_date__lte=obj.date).filter(Q(end_date__gte=obj.date) | Q(end_date=None)).first()
+        if wages:
+            if wages.wage_type == "H":
+                return wages.wage
+        return 0
 
     def get_length(self, obj):
         if obj.end_time:
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
-            end_time = datetime.strptime(obj.end_time, '%H:%M')
-            end = datetime.combine(current_date, end_time.time())
+
+            end = datetime.combine(current_date, obj.end_time)
             if (end < start):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
             return shift_length - (obj.break_length / 60)
+
+    def get_total_cost(self, obj):
+        return float(self.get_length(obj)) * float(self.get_wage(obj))
+        # float(self.get_length(obj)) * float(self.get_wage(obj))
 
     def create(self, validated_data):
         position = validated_data.pop('positions')
@@ -463,7 +517,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'open_shift', 'employee', 'break_length', 'positions', 'info', 'id',
-                  'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'timeclock',)
+                  'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'timeclock', 'total_cost',)
 
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):

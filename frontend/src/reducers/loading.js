@@ -12,6 +12,8 @@ import {
   CHARGE_COMPLETE,
   START_AVAILABILITY,
   GET_AVAILABILITY,
+  GET_STATS,
+  STATS_LOADING,
 } from "../actions/types";
 
 const initialState = {
@@ -22,6 +24,7 @@ const initialState = {
   employees: true,
   charge: false,
   availability: true,
+  stats: true,
 };
 
 export default function (state = initialState, action) {
@@ -100,6 +103,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         availability: false,
+      };
+    case GET_STATS:
+      return {
+        ...state,
+        stats: false,
+      };
+    case STATS_LOADING:
+      return {
+        ...state,
+        stats: true,
       };
     default:
       return state;

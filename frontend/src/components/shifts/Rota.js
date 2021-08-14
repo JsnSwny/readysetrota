@@ -19,6 +19,7 @@ import Shift from "./Shift";
 import OpenShifts from "./OpenShifts";
 import Title from "../common/Title";
 import { getLeave } from "../../actions/availability";
+import RotaDatePicker from "./RotaDatePicker";
 
 const Rota = ({ modalProps, confirmProps }) => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   const [template, setTemplate] = useState(false);
   const [limit, setLimit] = useState("");
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [financialMode, setFinancialMode] = useState("predicted");
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
@@ -78,6 +80,11 @@ const Rota = ({ modalProps, confirmProps }) => {
           format(addDays(parseISO(date, "dd-MM-yyyy"), 6), "yyyy-MM-dd")
         );
         setCurrentDevice("Desktop");
+      }
+    } else if (width > 600) {
+      if (currentDevice != "Tablet" || force) {
+        updateShifts(currentDate, format(addDays(new Date(), 2), "yyyy-MM-dd"));
+        setCurrentDevice("Tablet");
       }
     } else if (width > 600) {
       if (currentDevice != "Tablet" || force) {
@@ -260,7 +267,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   // }
 
   return (
-    <div className="rota">
+    <div>
       {/* <div className="banner">
         <div className="wrapper--md flex-container--between-start">
           <h1 className="header">
@@ -282,18 +289,42 @@ const Rota = ({ modalProps, confirmProps }) => {
           </div> */}
         </div>
       </div>
-      {/* <RotaBar
-        showAvailabilities={showAvailabilities}
-        setShowAvailabilities={setShowAvailabilities}
-        updateShifts={updateShifts}
-        scrollPosition={scrollPosition}
-        setTemplate={setTemplate}
-        template={template}
-        showFinancials={showFinancials}
-        setShowFinancials={setShowFinancials}
-      /> */}
+      <div className="rotaFunctions flex-container--between wrapper--md">
+        <div className="rotaFunctions__wrapper">
+          <div className="rotaFunctions__button-list">
+            <div className="rotaFunctions__button">
+              Publish <i className="fas fa-check"></i>
+            </div>
+            <div className="rotaFunctions__button">Availabilities</div>
+            <div className="rotaFunctions__button">
+              Export <i className="fas fa-file-download"></i>
+            </div>
+          </div>
+        </div>
+        <div className="rotaFunctions__wrapper">
+          <RotaDatePicker updateShifts={updateShifts} />
+        </div>
+
+        <div className="rotaFunctions__wrapper">
+          <div className={`rotaFunctions__selector ${financialMode}`}>
+            <p
+              onClick={() => setFinancialMode("predicted")}
+              className={`${financialMode == "predicted" ? "active" : ""}`}
+            >
+              Predicted
+            </p>
+            <p
+              onClick={() => setFinancialMode("actual")}
+              className={`${financialMode == "actual" ? "active" : ""}`}
+            >
+              Actual
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div>
-        <Dates
+        {/* <Dates
           filterEmployees={filterEmployees}
           dates={result}
           scrollPosition={scrollPosition}
@@ -302,35 +333,35 @@ const Rota = ({ modalProps, confirmProps }) => {
           filterDate={filterDate}
           showFinancials={showFinancials}
           {...modalProps}
-        />
+        /> */}
         {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
           <div
-            className={`shiftList wrapper--md ${filterDate ? "filtered" : ""} ${
-              scrollPosition >= 250 ? " fixed" : ""
+            className={`rota ${isLoading ? "loading" : ""} wrapper--md ${
+              filterDate ? "filtered" : ""
             }`}
           >
-            {/* {(openShifts.length > 0 || siteAdmin) && business.plan != "F" && (
-              <OpenShifts
-                current_employee={current_employee}
-                modalProps={modalProps}
-                confirmProps={confirmProps}
-                result={result}
-                shifts={
-                  siteAdmin
-                    ? shifts_list.filter((item) => item.open_shift == true)
-                    : openShifts
-                }
-              />
-            )} */}
             {employees.length > 0 &&
               departments.map((dep, i) => (
                 <Fragment>
-                  <h2
-                    className={`title-sm ${i > 0 ? "title--margin-top" : ""}`}
-                  >
-                    {dep.name}
-                  </h2>
+                  <div className="rota__heading flex-container--between-end">
+                    <h2
+                      className={`title-sm container-left ${
+                        i > 0 ? "title--margin-top" : ""
+                      }`}
+                    >
+                      {dep.name}
+                    </h2>
+                    <div className="container-right">
+                      {result.map((date) => (
+                        <div className="item-block">
+                          <p>{format(date, "ccc")}</p>
+                          <p>{format(date, "d MMM")}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <hr className="separator" />
                   {employees
                     .filter((emp) =>
@@ -345,6 +376,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                           user={user}
                           currentDepartment={current.department.id}
                           result={result}
+                          financialMode={financialMode}
                         />
                         <div className="container-right">
                           {result.map((result) => {
@@ -353,7 +385,6 @@ const Rota = ({ modalProps, confirmProps }) => {
                               employee.id,
                               format_date
                             );
-                            console.log(employee);
                             let props = {
                               format_date,
                               result,
@@ -371,6 +402,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                                 {...modalProps}
                                 {...props}
                                 shifts={shifts}
+                                financialMode={financialMode}
                               />
                             ) : (
                               <NoShift
@@ -383,63 +415,6 @@ const Rota = ({ modalProps, confirmProps }) => {
                         </div>
                       </div>
                     ))}
-                  {/* {sortEmployees(
-                  employees.filter((emp) =>
-                    emp.position.some((pos) => pos.department.id == dep.id)
-                  )
-                ).map(
-                  (employee, i) =>
-                    (!employee.archived ||
-                      shifts_list.find(
-                        (item) =>
-                          item.employee && item.employee.id == employee.id
-                      )) && (
-                      <div key={employee.id} className="rota__container">
-                        <Employee
-                          employee={employee}
-                          current_employee={current_employee}
-                          shifts={shifts_list}
-                          user={user}
-                          currentDepartment={current.department.id}
-                          result={result}
-                        />
-                        <div className="container-right">
-                          {result.map((result) => {
-                            const format_date = format(result, "yyyy-MM-dd");
-                            const shifts = getEmployeeShift(
-                              employee.id,
-                              format_date
-                            );
-                            let props = {
-                              format_date,
-                              result,
-                              available: isAvailable(employee.id, format_date),
-                              limit,
-                              employee,
-                              showAvailabilities,
-                              filterDate,
-                              admin: shiftPerm,
-                            };
-
-                            return shifts.length > 0 ? (
-                              <Shift
-                                key={result}
-                                {...modalProps}
-                                {...props}
-                                shifts={shifts}
-                              />
-                            ) : (
-                              <NoShift
-                                key={result}
-                                {...modalProps}
-                                {...props}
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )
-                )} */}
                 </Fragment>
               ))}
           </div>

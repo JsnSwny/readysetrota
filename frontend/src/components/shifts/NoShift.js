@@ -37,8 +37,6 @@ const NoShift = (props) => {
     }
   }
 
-  console.log(leave);
-
   return (
     <div
       key={result}

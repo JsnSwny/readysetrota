@@ -3,6 +3,9 @@ import { GET_STATS } from "../actions/types";
 const initialState = {
   stats: {
     hours: [],
+    total_cost: {},
+    total_hours: {},
+    forecast_dif: {},
   },
 };
 

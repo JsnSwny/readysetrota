@@ -1,9 +1,12 @@
-import { GET_STATS } from "./types";
+import { GET_STATS, STATS_LOADING } from "./types";
 import axios from "axios";
 
 export const getStats =
   (stat_type, id, start_date, end_date, currentFilter) =>
   (dispatch, getState) => {
+    dispatch({
+      type: STATS_LOADING,
+    });
     if (id) {
       axios
         .get(
@@ -14,7 +17,6 @@ export const getStats =
           }&start_date=${start_date}&end_date=${end_date}`
         )
         .then((res) => {
-          console.log(res.data);
           dispatch({
             type: GET_STATS,
             payload: res.data,

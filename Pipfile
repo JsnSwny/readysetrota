@@ -29,6 +29,7 @@ jsonfield = "*"
 django-guardian = "*"
 numpy = "*"
 django-simple-history = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"

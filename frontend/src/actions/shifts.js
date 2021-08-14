@@ -156,7 +156,6 @@ export const getShiftsByID = (id, user) => (dispatch, getState) => {
 
 // Add Employee
 export const addShift = (shift) => (dispatch, getState) => {
-  console.log(shift);
   axios
     .post("/api/shifts/", shift, tokenConfig(getState))
     .then((res) => {

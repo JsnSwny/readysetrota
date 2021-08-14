@@ -1,7 +1,7 @@
 :root {
-  --card-width: calc((var(--vw) - 300px) / 5);
+  --card-width: calc((var(--vw) - 270px) / 5);
   @include wi-mq(laptop) {
-    --card-width: calc((var(--vw) - 300px) / 4);
+    --card-width: calc((var(--vw) - 270px) / 4);
   }
   @include wi-mq(tablet) {
     --card-width: calc((var(--vw) - 150px) / 3);
@@ -12,6 +12,8 @@
 }
 
 .carousel {
+  width: 100%;
+  position: relative;
   &__list {
     width: calc(var(--card-width) * var(--num));
     display: flex;

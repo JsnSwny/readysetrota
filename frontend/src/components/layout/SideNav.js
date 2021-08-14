@@ -49,8 +49,6 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
       ["manage_stats", "manage_availabilities"].includes(item)
     );
 
-  console.log(permissions);
-
   const plans = { F: "Free", T: "Premium Trial", P: "Premium" };
 
   useEffect(() => {

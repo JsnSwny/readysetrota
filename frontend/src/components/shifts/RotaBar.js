@@ -18,6 +18,7 @@ const RotaBar = (props) => {
 
   // Selectors
   let width = useSelector((state) => state.responsive.width);
+  let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
   let date = useSelector((state) => state.shifts.date);
   let business = useSelector((state) => state.employees.business);
   let shifts = useSelector((state) => state.shifts.shifts);
@@ -47,8 +48,6 @@ const RotaBar = (props) => {
   if (user.employee) {
     current_employee = employees.find((item) => item.user == user.id);
   }
-
-  let dateRange = width > 1200 ? 6 : width > 600 ? 2 : 0;
 
   // Arrow Key Date Change
   const handleKeydown = (key) => {

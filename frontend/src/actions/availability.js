@@ -43,7 +43,6 @@ export const addLeave = (obj) => (dispatch, getState) => {
   axios
     .post("/api/leave/", obj, tokenConfig(getState))
     .then((res) => {
-      console.log("SUCCESSFUL");
       dispatch({
         type: ADD_LEAVE,
         payload: res.data,
