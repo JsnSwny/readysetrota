@@ -14,6 +14,9 @@
   @include wi-mq(laptop) {
     width: 15%;
   }
+  @include wi-mq(tablet) {
+    max-width: 175px;
+  }
 }
 
 .container-right {

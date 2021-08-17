@@ -87,18 +87,18 @@ const MovableItem = ({ position, props, index, movePosition }) => {
           ></i>
         )}
       </p>
-      <p className="subtitle-sm" style={{ flex: "0" }}>
+      <h3 className="subtitle-sm" style={{ flex: "0" }}>
         {current.site.id == 0 &&
           `${position.department.name} - ${position.department.site.name}`}
-      </p>
-      <p className="subtitle-sm">
+      </h3>
+      <h4 className="subtitle-sm">
         {
           employees.filter((employee) =>
             employee.position.some((item) => item.id == position.id)
           ).length
         }{" "}
         employees
-      </p>
+      </h4>
     </div>
   );
 };
@@ -144,10 +144,8 @@ const PositionPicker = (props) => {
 
   return (
     <DashboardBlock>
-      <div className="flex-container--align-center">
-        <p className="list-block__title">
-          <i class="fas fa-chess-queen"></i> Positions
-        </p>
+      <h2 className="title-sm title--margin-top">
+        Positions{" "}
         {permissions.includes("manage_positions") && (
           <i
             onClick={() => {
@@ -158,7 +156,6 @@ const PositionPicker = (props) => {
             className="fas fa-plus"
           ></i>
         )}
-
         {!positionsEqual && permissions.includes("manage_positions") && (
           <i
             onClick={() => {
@@ -168,12 +165,12 @@ const PositionPicker = (props) => {
             className="fas fa-save"
           ></i>
         )}
-      </div>
-      <hr className="separator" />
+      </h2>
       <small className="helper-text">
         <i class="fas fa-info-circle"></i> Click and drag positions to reorder,
         click the save icon to save changes.
       </small>
+      <hr class="separator" />
 
       {loading.positions && (
         <small className="loading-text">Loading positions...</small>

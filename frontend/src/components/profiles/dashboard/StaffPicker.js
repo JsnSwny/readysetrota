@@ -97,11 +97,8 @@ const StaffPicker = (props) => {
 
   return (
     <DashboardBlock>
-      <div className="flex-container--align-center">
-        <p className="list-block__title">
-          <i class="fas fa-users"></i> Staff ({business.number_of_employees} /{" "}
-          {total_employees})
-        </p>
+      <h2 className="title-sm title--margin-top">
+        Employees{" "}
         {permissions.includes("manage_employees") && (
           <i
             onClick={() => {
@@ -123,12 +120,13 @@ const StaffPicker = (props) => {
             className="fas fa-plus"
           ></i>
         )}
-      </div>
-      <hr className="separator" />
+      </h2>
       <small className="helper-text">
         <i class="fas fa-info-circle"></i> Click the clipboard icon to copy the
         employee's unique ID which you can send to them to sign up.
       </small>
+      <hr class="separator" />
+
       {loading.employees && (
         <small className="loading-text">Loading staff...</small>
       )}
@@ -176,7 +174,7 @@ const StaffPicker = (props) => {
       <div className="list-block__wrapper">
         {sortEmployees().map((item) => (
           <div key={item.id} className="list-block__item--sm">
-            <div
+            <h3
               className={`title-md bold flex-container--between-center ${
                 isSiteAdmin(item.user) ? "admin" : ""
               }`}
@@ -213,16 +211,16 @@ const StaffPicker = (props) => {
                     ></i>
                   )}
               </div>
-            </div>
+            </h3>
 
-            <p className="subtitle-sm">
+            <h4 className="subtitle-sm">
               {item.position.map(
                 (position) =>
                   position.department.id == current.department.id && (
                     <span key={position.id}>{position.name}</span>
                   )
               )}
-            </p>
+            </h4>
             {permissions.includes("manage_wages") &&
               item.current_wage &&
               ["H", "S"].includes(item.current_wage.type) && (

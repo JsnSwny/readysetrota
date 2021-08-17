@@ -17,11 +17,7 @@ const DashboardBlock = ({ children, disabled, disabledText, size }) => {
           </p>
         </div>
       )}
-      <div
-        className={`list-block__block-container ${disabled ? "disabled" : ""}`}
-      >
-        <>{children}</>
-      </div>
+      <>{children}</>
     </div>
   );
 };

@@ -393,8 +393,8 @@ class TimeClockSerializer(serializers.ModelSerializer):
 
     length = serializers.SerializerMethodField()
 
-    clock_in = serializers.SerializerMethodField(read_only=True)
-    clock_out = serializers.SerializerMethodField(read_only=True)
+    clock_in = serializers.TimeField(format='%H:%M')
+    clock_out = serializers.TimeField(format='%H:%M')
 
     
 
@@ -402,13 +402,6 @@ class TimeClockSerializer(serializers.ModelSerializer):
         model = TimeClock
         fields = ('clock_in', 'clock_out', 'break_length',
                   'employee_id', 'length',)
-
-    def get_clock_in(self, obj):
-        if obj.clock_in:
-            return str(obj.clock_in)[0:5]
-    def get_clock_out(self, obj):
-        if obj.clock_out:
-            return str(obj.clock_out)[0:5]
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:
@@ -505,6 +498,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         timeclock = validated_data.pop('timeclock', [])
         instance = super().update(instance, validated_data)
+        
         if(timeclock):
             tc, created = TimeClock.objects.get_or_create(
                 shift=instance, defaults=timeclock)

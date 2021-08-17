@@ -42,6 +42,7 @@ const NoShift = (props) => {
       key={result}
       className={`item-block shift__shift-noshift ${
         showAvailabilities &&
+        available &&
         ((available.name == "holiday" || available.name == "unmarked") &&
         available.status == "Pending"
           ? "unmarked"
@@ -66,14 +67,17 @@ const NoShift = (props) => {
           <p className={`shift__text`}>
             {isHoliday
               ? "Holiday"
-              : available.name != "unselected" &&
+              : available &&
+                available.name != "unselected" &&
                 available.status != "Denied" &&
                 available.name}
           </p>
-          {available.name == "unavailable" && available.status == "Pending" && (
-            <p className="shift__text">Unmarked</p>
-          )}
-          {!isHoliday && available.start_time && (
+          {available &&
+            available.name == "unavailable" &&
+            available.status == "Pending" && (
+              <p className="shift__text">Unmarked</p>
+            )}
+          {!isHoliday && available && available.start_time && (
             <p className="shift__text">
               {available.start_time.substr(0, 5)} - {available.end_time}
             </p>

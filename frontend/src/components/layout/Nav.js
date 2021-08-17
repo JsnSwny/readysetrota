@@ -2,131 +2,82 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
+import GuestLinks from "./GuestLinks";
+import { setSite } from "../../actions/employees";
+
+import NavLink from "./NavLink";
 
 const Nav = () => {
   let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   let user = useSelector((state) => state.auth.user);
-  const [burger, setBurger] = useState(false);
+  let sites = useSelector((state) => state.employees.sites);
+  let current = useSelector((state) => state.employees.current);
   const dispatch = useDispatch();
-  let employee = [];
-  const authLinks = user && (
-    <Fragment>
-      <Link to="/changepassword">
-        <li
-          onClick={() => {
-            setBurger(false);
-          }}
-        >
-          Change Password
-        </li>
-      </Link>
-      <li
-        style={{ cursor: "pointer" }}
-        onClick={() => {
-          dispatch(logout());
-          setBurger(false);
-        }}
-        className="nav__logout"
-      >
-        Logout
-      </li>
-    </Fragment>
-  );
-
-  const guestLinks = (
-    <Fragment>
-      <li
-        onClick={() => {
-          setBurger(false);
-        }}
-      >
-        <Link to="/register">Register</Link>
-      </li>
-      <li
-        onClick={() => {
-          setBurger(false);
-        }}
-      >
-        <Link to="/login">Login</Link>
-      </li>
-    </Fragment>
-  );
-
   return (
     <Fragment>
       <nav className="nav">
-        <Link className="nav__title-link" to="/">
-          <img className="nav__title" src="/static/media/logo2-01.svg"></img>
-        </Link>
-        <ul>
-          <div className="nav__lisection">
-            {user && (
-              <Fragment>
-                <Link to="/">
-                  <li>Home</li>
-                </Link>
-                <Link to="/rota">
-                  <li>Rota</li>
-                </Link>
-                {user && !user.business && (
-                  <Link to="/join">
-                    <li>Join</li>
-                  </Link>
-                )}
-              </Fragment>
-            )}
-          </div>
-          <div className="nav__lisection">
-            {isAuthenticated ? authLinks : guestLinks}
-          </div>
-          <div
-            onClick={() => {
-              setBurger(!burger);
-            }}
-            className="hamburger"
-          >
-            <i className="fas fa-bars"></i>
-          </div>
-        </ul>
-      </nav>
-      <div className={`hamburger__dropdown ${burger ? " active" : ""}`}>
-        <ul>
-          {user && (
-            <Fragment>
-              <Link to="/">
-                <li
-                  onClick={() => {
-                    setBurger(false);
-                  }}
-                >
-                  Home
-                </li>
-              </Link>
-              <Link to="/rota">
-                <li
-                  onClick={() => {
-                    setBurger(false);
-                  }}
-                >
-                  Rota
-                </li>
-              </Link>
-            </Fragment>
-          )}
-          {user && !user.business && (
-            <Link to="/join">
-              <li
-                onClick={() => {
-                  setBurger(false);
-                }}
-              >
-                Join
-              </li>
+        <div className="nav__container flex-container--between wrapper--md">
+          <div className="nav__section">
+            <Link to="/" className="flex-container--align-center">
+              <img className="nav__logo" src="/static/media/logo-3.svg" />
             </Link>
+          </div>
+          {isAuthenticated ? (
+            <Fragment>
+              <div className="nav__section">
+                <ul className="nav__list">
+                  <NavLink title="Dashboard" link="" />
+                  <NavLink title="Rota" link="rota" />
+                  <NavLink title="Employees" link="staff-management" />
+                  <NavLink title="Availability" link="availability" />
+                </ul>
+              </div>
+
+              <div className="nav__section">
+                <div className="nav__profile">
+                  <i class="fas fa-user"></i>
+                  <i class="fas fa-caret-down"></i>
+                  <div className="nav__profileDropdown-container">
+                    <div className="nav__profileDropdown">
+                      <div>Jason Sweeney</div>
+                      <div>{user.email}</div>
+                      <hr className="separator--alt-2"></hr>
+                      {sites.map((item) => (
+                        <div
+                          className={`nav__site ${
+                            current.site.id == item.id ? "active" : ""
+                          }`}
+                          onClick={() => dispatch(setSite(item))}
+                        >
+                          {item.name}
+                        </div>
+                      ))}
+                      <hr className="separator--alt-2"></hr>
+                      <Link
+                        className="nav__profileDropdown-link"
+                        to="/changepassword"
+                      >
+                        Change Password
+                      </Link>
+
+                      <div
+                        onClick={() => {
+                          dispatch(logout());
+                        }}
+                        className="nav__profileDropdown-link"
+                      >
+                        Logout
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+          ) : (
+            <GuestLinks />
           )}
-          {isAuthenticated ? authLinks : guestLinks}
-        </ul>
-      </div>
+        </div>
+      </nav>
     </Fragment>
   );
 };

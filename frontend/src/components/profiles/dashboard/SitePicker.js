@@ -17,9 +17,8 @@ const SitePicker = (props) => {
   return (
     <DashboardBlock disabled={disabled} disabledText={"add more sites"}>
       <div className="flex-container--align-center">
-        <p className="list-block__title">
-          <i class="fas fa-store"></i> Sites
-        </p>
+        <h2 className="title-sm">Sites</h2>
+        <hr class="separator" />
         {admin && (
           <i
             onClick={() => {
@@ -67,7 +66,7 @@ const SitePicker = (props) => {
               (current.site.id == item.id || current.site.id == 0) && "current"
             }`}
           >
-            <div className="title-md bold flex-container--between-center">
+            <h3 className="title-md bold flex-container--between-center">
               {item.name}{" "}
               <div className="flex">
                 {admin && (
@@ -93,11 +92,11 @@ const SitePicker = (props) => {
                   }`}
                 ></i>
               </div>
-            </div>
-            <p className="subtitle-sm" style={{ marginBottom: "10px" }}>
+            </h3>
+            <h4 className="subtitle-sm" style={{ marginBottom: "10px" }}>
               {item.number_of_employees}{" "}
               {item.number_of_employees == 1 ? "employee" : "employees"}
-            </p>
+            </h4>
           </div>
         ))}
       </div>

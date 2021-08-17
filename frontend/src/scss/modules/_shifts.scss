@@ -228,7 +228,8 @@
 }
 
 .rotaFunctions {
-  margin-bottom: 50px;
+  margin-top: -30px;
+  margin-bottom: 40px;
   &__wrapper {
     width: 33.33%;
     display: flex;
@@ -266,7 +267,6 @@
     &.actual {
       &::after {
         left: 50%;
-        background-color: $green;
       }
     }
     &::after {
@@ -276,7 +276,7 @@
       left: 0;
       width: 50%;
       height: 100%;
-      background-color: $red;
+      background-color: $pink;
       display: block;
       transition: 0.4s ease left, 0.4s ease background-color;
     }
@@ -303,6 +303,11 @@
       background-color: $pink;
       color: white;
     }
+    &.disabled {
+      cursor: default;
+      opacity: 0.4;
+      pointer-events: none;
+    }
   }
   &__datepicker {
     background-color: white;
@@ -320,7 +325,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px 15px;
+      padding: 8px 10px;
       font-size: 18px;
       cursor: pointer;
       transition: 0.2s ease background-color;
@@ -334,6 +339,7 @@
       align-items: center;
       margin: 0 20px;
       width: 175px;
+      font-size: 14px;
     }
   }
 }
@@ -404,9 +410,6 @@
           font-size: 16px;
           font-weight: bold;
         }
-      }
-      @include wi-mq(laptop) {
-        font-size: 12px;
       }
     }
     .title-sm {
@@ -655,7 +658,7 @@
   }
   .shift {
     &__time {
-      font-size: 14px;
+      font-size: 12px;
     }
   }
   .dates {

@@ -41,7 +41,7 @@ import Confirm from "./layout/Confirm";
 
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
-
+import Nav from "./layout/Nav";
 import Availability from "./availability/Availability";
 
 const Main = () => {
@@ -143,19 +143,15 @@ const Main = () => {
         message={message}
         sidebarOpen={sidebarOpen}
       />
-      <SideNav
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        confirmProps={confirmProps}
-      />
-      <div className="sidenav__bar">
+      <Nav />
+      {/* <div className="sidenav__bar">
         <i
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
           className={`fas fa-bars`}
         ></i>
-      </div>
+      </div> */}
       <div className={`App ${sidebarOpen ? "open" : ""}`}>
         <Switch>
           <PrivateRoute

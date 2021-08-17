@@ -59,12 +59,6 @@ const Employee = (props) => {
         item.wage > 0
     );
 
-    if (employee.id == 13) {
-      console.log(shifts);
-      console.log(formatDate);
-      console.log(shifts_filtered);
-    }
-
     let hourly = shifts_filtered
       .map((item) =>
         type == "p"

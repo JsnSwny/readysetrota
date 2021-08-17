@@ -3,10 +3,7 @@
   line-height: 30px;
   &-md {
     @extend .title;
-    font-size: 24px;
-    @include wi-mq(widescreen) {
-      font-size: 18px;
-    }
+    font-size: 16px;
   }
   &-sm {
     @extend .title;
@@ -65,10 +62,7 @@
   }
   &-sm {
     @extend .subtitle;
-    font-size: 16px;
-    @include wi-mq(widescreen) {
-      font-size: 14px;
-    }
+    font-size: 14px;
   }
 }
 

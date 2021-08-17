@@ -33,7 +33,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   let positions = useSelector((state) => state.employees.positions);
   let loading = useSelector((state) => state.loading);
   let enddate = useSelector((state) => state.shifts.end_date);
-  let shifts_list = useSelector((state) => state.shifts.shifts);
+  let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
@@ -44,6 +44,8 @@ const Rota = ({ modalProps, confirmProps }) => {
   );
   let siteAdmin = permissions.includes("manage_shifts");
   let shiftPerm = permissions.includes("manage_shifts");
+
+  let published_shifts = shifts.filter((item) => item.stage == "Published");
 
   // Use State
   const [employeesList, setEmployeesList] = useState(employees);
@@ -145,7 +147,7 @@ const Rota = ({ modalProps, confirmProps }) => {
       filterEmployees(filterDate, true);
     }
     dispatch(getLeave(date, enddate));
-  }, [shifts_list]);
+  }, [shifts]);
 
   // Date range
   var result = eachDayOfInterval({
@@ -154,7 +156,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   });
 
   var getEmployeeShift = (employee, date) =>
-    shifts_list.filter((obj) => {
+    shifts.filter((obj) => {
       return obj.employee && obj.employee.id === employee && obj.date === date
         ? siteAdmin
           ? true
@@ -168,7 +170,7 @@ const Rota = ({ modalProps, confirmProps }) => {
       setEmployeesList(employees);
       return true;
     }
-    let employeesOnDay = shifts_list.filter((obj) => {
+    let employeesOnDay = shifts.filter((obj) => {
       return obj.date == date && obj.employee && obj.employee.id;
     });
     let newEmployees = [];
@@ -190,8 +192,10 @@ const Rota = ({ modalProps, confirmProps }) => {
     )[0];
     if (!available) {
       date = parseISO(date);
-      employee.default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
+      available =
+        employee.default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
     }
+
     return available;
   };
 
@@ -252,7 +256,7 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   let openShifts =
     !user.business &&
-    shifts_list.filter(
+    shifts.filter(
       (item) =>
         item.open_shift == true &&
         item.positions.some((pos) =>
@@ -295,10 +299,32 @@ const Rota = ({ modalProps, confirmProps }) => {
             <div className="rotaFunctions__button">
               Publish <i className="fas fa-check"></i>
             </div>
-            <div className="rotaFunctions__button">Availabilities</div>
-            <div className="rotaFunctions__button">
+            {permissions.includes("manage_availabilities") &&
+              business.plan != "F" && (
+                <div
+                  onClick={() => {
+                    setShowAvailabilities(!showAvailabilities);
+                  }}
+                  className="rotaFunctions__button"
+                >
+                  Availabilities{" "}
+                  <i
+                    className={`fas ${
+                      showAvailabilities ? "fa-eye" : "fa-eye-slash"
+                    }`}
+                  ></i>
+                </div>
+              )}
+
+            <a
+              className={`rotaFunctions__button ${
+                published_shifts.length == 0 ? "disabled" : ""
+              }`}
+              href={`${`/exportall?start_date=${date}&end_date=${enddate}&id=${current.department.id}`}`}
+              target="_blank"
+            >
               Export <i className="fas fa-file-download"></i>
-            </div>
+            </a>
           </div>
         </div>
         <div className="rotaFunctions__wrapper">
@@ -372,7 +398,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                         <Employee
                           employee={employee}
                           current_employee={current_employee}
-                          shifts={shifts_list}
+                          shifts={shifts}
                           user={user}
                           currentDepartment={current.department.id}
                           result={result}

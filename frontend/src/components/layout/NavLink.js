@@ -1,47 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
-const NavLink = (props) => {
-  const {
-    link,
-    icon,
-    title,
-    setSidebarOpen,
-    sidebarOpen,
-    toggleNav,
-    disabled,
-    dropdown,
-    dropdownAction,
-    disabledMessage,
-  } = props;
+const NavLink = ({ title, link, alignRight }) => {
+  const location = useLocation().pathname;
   return (
-    <div
-      className={`sidenav__link-container ${
-        location.pathname == link ? "current" : ""
-      } ${disabled ? "disabled" : ""}`}
+    <li
+      className={`nav__item ${alignRight ? "align" : ""} ${
+        link == "" && location == "/"
+          ? "active"
+          : link && location.includes(link)
+          ? "active"
+          : ""
+      }`}
     >
-      <div
-        onClick={() => disabled && toast.error(disabledMessage)}
-        className="sidenav__link"
-      >
-        
-        <Link
-          onClick={() => {
-            toggleNav();
-          }}
-          to={link}
-          style={!link ? {pointerEvents: "none"} : null}
-        >
-          <div className="sidenav__link-text">
-            <i className={icon}></i> {title}
-          </div>
-        </Link>
-        {dropdown && (
-          <i onClick={dropdownAction} className="fas fa-chevron-down"></i>
-        )}
-      </div>
-    </div>
+      <Link to={`/${link}`}>{title}</Link>
+    </li>
   );
 };
 export default NavLink;

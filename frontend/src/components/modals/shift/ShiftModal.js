@@ -139,6 +139,8 @@ const ShiftModal = (props) => {
         ? true
         : "You must select at least one position",
     };
+
+    console.log(shiftObj);
     dispatch(getErrors(error_obj, 400));
 
     if (

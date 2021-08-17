@@ -1,26 +1,30 @@
-.App {
-  // transform: translate(0, 0);
-  transition: 0.5s ease transform, 0.5s ease margin-left;
-  margin: 20px 0;
-  margin-left: 50px;
+// .App {
+//   // transform: translate(0, 0);
+//   transition: 0.5s ease transform, 0.5s ease margin-left;
+//   margin: 20px 0;
+//   margin-left: 50px;
 
-  @include wi-mq(mobile) {
-    margin-left: 0;
-    margin: 0;
-    margin-top: 70px;
-  }
-  &.open {
-    margin-left: 200px;
-    @include wi-mq(laptop) {
-      margin-left: 200px;
-    }
-    @include wi-mq(tablet) {
-      transform: translate(200px, 0);
-      margin-left: 0;
-    }
-    @include wi-mq(mobile) {
-      transform: translate(100%, 0);
-      margin-left: 0;
-    }
-  }
+//   @include wi-mq(mobile) {
+//     margin-left: 0;
+//     margin: 0;
+//     margin-top: 70px;
+//   }
+//   &.open {
+//     margin-left: 200px;
+//     @include wi-mq(laptop) {
+//       margin-left: 200px;
+//     }
+//     @include wi-mq(tablet) {
+//       transform: translate(200px, 0);
+//       margin-left: 0;
+//     }
+//     @include wi-mq(mobile) {
+//       transform: translate(100%, 0);
+//       margin-left: 0;
+//     }
+//   }
+// }
+
+.App {
+  margin-top: 100px;
 }
