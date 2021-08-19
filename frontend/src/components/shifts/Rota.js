@@ -7,6 +7,7 @@ import {
   getEmployees,
   getPositions,
 } from "../../actions/employees";
+import { publish } from "../../actions/shifts";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -271,7 +272,12 @@ const Rota = ({ modalProps, confirmProps }) => {
       <div className="rotaFunctions flex-container--between wrapper--md">
         <div className="rotaFunctions__wrapper">
           <div className="rotaFunctions__button-list">
-            <div className="rotaFunctions__button">
+            <div
+              onClick={() => {
+                dispatch(publish());
+              }}
+              className="rotaFunctions__button"
+            >
               Publish <i className="fas fa-check"></i>
             </div>
             {permissions.includes("manage_availabilities") &&
@@ -327,16 +333,6 @@ const Rota = ({ modalProps, confirmProps }) => {
       </div>
 
       <div>
-        {/* <Dates
-          filterEmployees={filterEmployees}
-          dates={result}
-          scrollPosition={scrollPosition}
-          template={template}
-          shifts={shifts_list}
-          filterDate={filterDate}
-          showFinancials={showFinancials}
-          {...modalProps}
-        /> */}
         {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
           <div

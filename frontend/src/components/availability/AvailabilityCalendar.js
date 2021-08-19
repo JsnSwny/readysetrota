@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import DropButton from "../lists/DropButton";
 import {
   updateAvailability,
   addAvailability,

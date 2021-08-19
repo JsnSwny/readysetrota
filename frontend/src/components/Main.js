@@ -13,8 +13,6 @@ import store from "../store";
 import Rota from "./shifts/Rota";
 import { format } from "date-fns";
 
-import List from "./lists/List";
-
 import Register from "./accounts/Register";
 import Login from "./accounts/Login";
 
@@ -164,14 +162,6 @@ const Main = () => {
           <Route
             path="/beta"
             render={(props) => <Beta {...props} {...modalProps} />}
-          />
-          <PrivateRoute
-            path="/list/:type"
-            admin={true}
-            exact
-            component={List}
-            modalProps={modalProps}
-            confirmProps={confirmProps}
           />
 
           <PrivateRoute

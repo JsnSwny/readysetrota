@@ -8,7 +8,6 @@ import { cancelSubscription } from "../../actions/payments";
 import { toast } from "react-toastify";
 import { getCustomer } from "../../actions/payments";
 import { startTrial } from "../../actions/employees";
-import NavPicker from "./NavPicker";
 import { setDepartment, setSite } from "../../actions/employees";
 
 const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
@@ -139,27 +138,6 @@ const SideNav = ({ sidebarOpen, setSidebarOpen, confirmProps }) => {
           </div>
 
           <div className="sidenav__links">
-            {business.plan != "F" && (
-              <div className="sidenav__pickers">
-                <NavPicker
-                  navOpen={navOpen}
-                  setNavOpen={setNavOpen}
-                  name="Sites"
-                  items={sites}
-                  current={current.site.id}
-                  action={setSite}
-                />
-                <NavPicker
-                  navOpen={navOpen}
-                  setNavOpen={setNavOpen}
-                  name="Departments"
-                  items={departments}
-                  current={current.department.id}
-                  action={setDepartment}
-                />
-              </div>
-            )}
-
             {business.plan != "F" && (
               <div
                 className={`sidenav__links-container ${

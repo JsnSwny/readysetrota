@@ -233,13 +233,38 @@
   &__wrapper {
     width: 33.33%;
     display: flex;
+    @include wi-mq(tablet) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    &:nth-child(13) {
+      @include wi-mq(tablet) {
+        order: 1;
+      }
+    }
+    &:nth-child(2) {
+      @include wi-mq(tablet) {
+        order: 3;
+      }
+    }
     &:nth-child(3) {
       justify-content: flex-end;
+      @include wi-mq(tablet) {
+        justify-content: flex-start;
+      }
     }
   }
   &__button-list {
     display: flex;
     height: 100%;
+
+    @include wi-mq(tablet) {
+      flex-wrap: wrap;
+      margin-bottom: -10px;
+    }
+    @include wi-mq(mobile) {
+      width: 100%;
+    }
   }
   &__selector {
     display: flex;
@@ -251,6 +276,9 @@
     @extend .shadow;
     overflow: auto;
     padding: 5px;
+    @include wi-mq(mobile) {
+      width: 100%;
+    }
     p {
       width: 125px;
       text-align: center;
@@ -263,6 +291,10 @@
       }
       &:not(.selected) {
         cursor: pointer;
+      }
+      @include wi-mq(mobile) {
+        font-size: 12px;
+        width: 50%;
       }
     }
     &.actual {
@@ -293,12 +325,28 @@
     justify-content: center;
     align-items: center;
     font-size: 14px;
+
+    @include wi-mq(tablet) {
+      padding: 5px 20px;
+      margin-bottom: 10px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 12px;
+      max-width: calc(33.33%);
+      width: 100%;
+      i {
+        display: none;
+      }
+    }
     @extend .shadow;
     i {
       margin-left: 10px;
     }
-    &:not(:first-child) {
-      margin-left: 10px;
+    &:not(:last-child) {
+      margin-right: 10px;
+      @include wi-mq(mobile) {
+        max-width: calc(33.33% - 10px);
+      }
     }
     &:hover {
       background-color: $pink;
@@ -319,7 +367,12 @@
     border-radius: 5px;
     overflow: hidden;
     margin: 0 auto;
-
+    @include wi-mq(tablet) {
+      margin: 0;
+    }
+    @include wi-mq(mobile) {
+      width: 100%;
+    }
     i {
       background-color: $pink;
       color: white;
@@ -341,6 +394,9 @@
       margin: 0 20px;
       width: 175px;
       font-size: 14px;
+      @include wi-mq(mobile) {
+        width: 100%;
+      }
     }
   }
 }
@@ -423,6 +479,9 @@
     &:hover {
       color: $pink;
     }
+  }
+  strong {
+    font-size: 10px;
   }
 }
 

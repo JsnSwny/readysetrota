@@ -1,7 +1,4 @@
-import React, { useState, Fragment } from "react";
-// import DropButton from "../../../lists/DropButton";
-import AvailabilityPicker from "../../../common/AvailabilityPicker";
-import { format } from "date-fns";
+import React, { Fragment } from "react";
 import AvailabilityButtons from "../../../availability/AvailabilityButtons";
 import { toast } from "react-toastify";
 
