@@ -334,7 +334,7 @@ export default function (state = initialState, action) {
       state.sites[foundIndex].number_of_employees++;
       if (
         action.payload.position.some(
-          (item) => item.department.id == parseInt(action.current_dep)
+          (item) => item.department.id == parseInt(action.current_dep.id)
         )
       ) {
         return {

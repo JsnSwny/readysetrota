@@ -9,8 +9,6 @@ const NavLink = ({ title, link, alignRight, perms }) => {
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
-  console.log(permissions);
-  console.log(perms);
   if (perms && !permissions.some((item) => perms.includes(item))) {
     return false;
   }
