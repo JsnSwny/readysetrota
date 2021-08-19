@@ -106,11 +106,11 @@ class Publish(APIView):
         all_shifts = {}
 
         if business != "false":
-            all_shifts = Shift.objects.filter(date__gte=date.today(), site=request.query_params.get(
+            all_shifts = Shift.objects.filter(date__gte=date.today(), department__=request.query_params.get(
                 'site_id'), stage="Unpublished").exclude(employee__isnull=True)
         else:
             all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(
-            ), site=request.query_params.get('site_id')).exclude(employee__isnull=True)
+            ), department__site=request.query_params.get('site_id')).exclude(employee__isnull=True)
 
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
