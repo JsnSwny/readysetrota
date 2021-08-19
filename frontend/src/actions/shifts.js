@@ -263,8 +263,8 @@ export const publish = () => (dispatch, getState) => {
   let user = getState().auth.user;
   axios
     .get(
-      `/api-view/publish/?department_id=${
-        getState().employees.current.department.id
+      `/api-view/publish/?site_id=${
+        getState().employees.current.site.id
       }&business=${user.business ? true : false}`,
       tokenConfig(getState)
     )
