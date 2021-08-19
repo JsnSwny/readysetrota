@@ -103,7 +103,11 @@ const MovableItem = ({ position, props, index, movePosition }) => {
             employee.position.some((item) => item.id == position.id)
           ).length
         }{" "}
-        employees
+        {employees.filter((employee) =>
+          employee.position.some((item) => item.id == position.id)
+        ).length == 1
+          ? "employee"
+          : "employees"}
       </h4>
     </div>
   );

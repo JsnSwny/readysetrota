@@ -184,7 +184,12 @@ const StaffProfile = ({ modalProps }) => {
                       parseISO(shifts[0].date),
                       new Date()
                     )}{" "}
-                    days
+                    {differenceInCalendarDays(
+                      parseISO(shifts[0].date),
+                      new Date()
+                    ) == 1
+                      ? "day"
+                      : "days"}
                   </strong>
                 </Fragment>
               )}
