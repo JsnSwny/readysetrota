@@ -52,7 +52,7 @@ const AvailabilityRequestItem = ({ list, type, updateAction }) => {
             )
           }
         >
-          Approved
+          Approve
         </button>
         <button
           onClick={() =>
@@ -64,7 +64,7 @@ const AvailabilityRequestItem = ({ list, type, updateAction }) => {
             )
           }
         >
-          Denied
+          Deny
         </button>
       </div>
     </div>

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Employee, Shift, UserProfile, Business, Wage, Forecast
+from .models import Employee, Shift, UserProfile, Business, Wage, Forecast, Site
 from django.db.models import Count, Sum
 from .serializers import ShiftSerializer, ShiftReadOnlySerializer
 from operator import attrgetter
@@ -117,27 +117,27 @@ class Publish(APIView):
 
         # print(all_shifts)
 
-        connection = mail.get_connection()
-        shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
-        shifts_unique = [list(grp) for k, grp in groupby(
-            shifts_sorted, attrgetter("employee.id"))]
-        email = []
-        today_date = datetime.now().strftime("%d/%m/%Y")
-        connection.open()
-        for idx, val in enumerate(shifts_unique):
-            employee = shifts_unique[idx][0].employee
+        # connection = mail.get_connection()
+        # shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
+        # shifts_unique = [list(grp) for k, grp in groupby(
+        #     shifts_sorted, attrgetter("employee.id"))]
+        # email = []
+        # today_date = datetime.now().strftime("%d/%m/%Y")
+        # connection.open()
+        # for idx, val in enumerate(shifts_unique):
+        #     employee = shifts_unique[idx][0].employee
 
-            if employee.user:
-                shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
-                html_message = render_to_string("emailshifts.html", context={
-                                                'shifts': shifts, 'employee': employee})
-                mail_item = mail.EmailMultiAlternatives(
-                    "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
-                mail_item.attach_alternative(html_message, "text/html")
-                email.append(mail_item)
-        connection.send_messages(email)
-        connection.close()
+        #     if employee.user:
+        #         shifts = Shift.objects.filter(
+        #             employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
+        #         html_message = render_to_string("emailshifts.html", context={
+        #                                         'shifts': shifts, 'employee': employee})
+        #         mail_item = mail.EmailMultiAlternatives(
+        #             "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
+        #         mail_item.attach_alternative(html_message, "text/html")
+        #         email.append(mail_item)
+        # connection.send_messages(email)
+        # connection.close()
 
         # publish_email.delay(shifts_list)
 
@@ -326,17 +326,21 @@ class ExportShifts(APIView):
 class ExportAllShifts(APIView):
     def get(self, request):
         shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
-            'end_date'), department__id=request.query_params.get('id')).order_by('date')
+            'end_date'), department__site__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
+
+        print(request.query_params.get('start_date'))
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
             all_shifts[i] = Shift.objects.filter(
-                date=i, stage="Published", department__id=request.query_params.get('id')).order_by('start_time')
+                date=i, stage="Published", department__site__id=request.query_params.get('id')).order_by('start_time')
+            
+        site = Site.objects.get(pk=request.query_params.get('id'))
         resp = HttpResponse(content_type='application/pdf')
         resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
         result = generate_pdf('allshifts.html', file_object=resp, context={
-                              'all_shifts': all_shifts}, )
+                              'all_shifts': all_shifts, 'start_date': request.query_params.get('start_date'), 'end_date': request.query_params.get('end_date'), 'site': site.name}, )
         return result
 
 # Create your views here.

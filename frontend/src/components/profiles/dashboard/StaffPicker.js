@@ -130,46 +130,18 @@ const StaffPicker = (props) => {
       {loading.employees && (
         <small className="loading-text">Loading staff...</small>
       )}
-      {employees.length > 0 && (
-        <Fragment>
-          <div className="flex-container--align-center-wrap">
-            {/* <span
-              onClick={() => {
-                setStaffSort("alphabetical");
-                localStorage.setItem("staff_sort", "alphabetical");
-              }}
-              className={`btn-toggle--sm ${
-                staffSort == "alphabetical" ? "active" : ""
-              }`}
-            >
-              Sort Alphabetically
-            </span>
-            <span
-              onClick={() => {
-                setStaffSort("position");
-                localStorage.setItem("staff_sort", "position");
-              }}
-              className={`btn-toggle--sm ${
-                staffSort == "position" ? "active" : ""
-              }`}
-            >
-              Sort by Position
-            </span> */}
-            <div>
-              <p>Show Inactive Employees</p>
-              <Switch
-                onChange={() => {
-                  localStorage.setItem("show_all_employees", !showAll);
-                  dispatch(getEmployees(true, true));
-                  setShowAll(!showAll);
-                }}
-                checked={showAll}
-                onColor={"#FD809E"}
-              />
-            </div>
-          </div>
-        </Fragment>
-      )}
+      <div>
+        <p>Show Inactive Employees</p>
+        <Switch
+          onChange={() => {
+            localStorage.setItem("show_all_employees", !showAll);
+            dispatch(getEmployees(true, true));
+            setShowAll(!showAll);
+          }}
+          checked={showAll}
+          onColor={"#FD809E"}
+        />
+      </div>
 
       <div className="list-block__wrapper">
         {sortEmployees()
@@ -185,9 +157,9 @@ const StaffPicker = (props) => {
                   isSiteAdmin(item.user) ? "admin" : ""
                 }`}
               >
-                <Link to={`/profile/${item.id}`}>
+                <div>
                   {item.first_name} <strong>{item.last_name}</strong>
-                </Link>
+                </div>
 
                 <div className="flex list-block__icons">
                   {/* {item.user && (

@@ -301,7 +301,7 @@ const Rota = ({ modalProps, confirmProps }) => {
               className={`rotaFunctions__button ${
                 published_shifts.length == 0 ? "disabled" : ""
               }`}
-              href={`${`/exportall?start_date=${date}&end_date=${enddate}&id=${current.department.id}`}`}
+              href={`${`/exportall?start_date=${date}&end_date=${enddate}&id=${current.site.id}`}`}
               target="_blank"
             >
               Export <i className="fas fa-file-download"></i>

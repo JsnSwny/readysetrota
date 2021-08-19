@@ -32,7 +32,7 @@
     </style>
   </head>
   <body>
-    <h1>Rota</h1>
+    <h1>{{ site }} Rota ({{ start_date }} - {{ end_date }})</h1>
 
     {% for date in all_shifts %}
     <table>
@@ -43,6 +43,7 @@
           <th>Start Time</th>
           <th>End Time</th>
           <th>Info</th>
+          <th>Department</th>
         </tr>
       </thead>
       {% current_time date all_shifts as the_time %} {% for shift in the_time %}
@@ -56,10 +57,11 @@
           <td>{{ shift.start_time|time:"H:i" }}</td>
           <td>{{ shift.end_time }}</td>
           {% if shift.info|length %}
-            <td>{{ shift.info }}</td>
+          <td>{{ shift.info }}</td>
           {% else %}
-            <td>N/A</td>
+          <td>N/A</td>
           {% endif %}
+          <td>{{ shift.department.name }}</td>
         </tr>
       </tbody>
 
