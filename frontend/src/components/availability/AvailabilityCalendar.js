@@ -56,6 +56,8 @@ const AvailabilityCalendar = (props) => {
     );
   }, [availabilityMonth]);
 
+  console.log(employee);
+
   return (
     <Fragment>
       <div className="dashboardAvailability">

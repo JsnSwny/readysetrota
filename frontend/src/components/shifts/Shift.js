@@ -39,9 +39,12 @@ const Shift = (props) => {
         key={result}
         className={`item-block shift__shift ${
           filterDate == format_date ? "filtered" : ""
-        } ${
-          shifts.some((item) => item.stage != "Published") ? "unpublished" : ""
-        } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
+        } 
+          ${
+            shifts.some((item) => item.stage != "Published")
+              ? "unpublished"
+              : ""
+          } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
         {admin && (
           <AddShiftButton
@@ -70,25 +73,7 @@ const Shift = (props) => {
                 }}
                 className={`shift__wrapper ${admin ? "edit" : ""}`}
               >
-                <div
-                  className="flex-container--align-center"
-                  onClick={() => {
-                    if (!employee && !admin) {
-                      setConfirmOpen(true);
-                      setMessage("Are you sure you want to take this shift?");
-                      setOnConfirm(() => () => {
-                        setConfirmOpen(false);
-                        dispatch(
-                          updateShift(shift.id, {
-                            ...shift,
-                            employee_id: current_employee.id,
-                          })
-                        );
-                        toast.success("You have accepted this shift");
-                      });
-                    }
-                  }}
-                >
+                <div className="flex-container--align-center">
                   <p
                     className={`shift__time ${!employee ? "open-shift" : ""} ${
                       shift.stage
@@ -100,14 +85,22 @@ const Shift = (props) => {
                         }`
                       : shift.timeclock
                       ? `${shift.timeclock.clock_in} - ${shift.timeclock.clock_out}`
-                      : ""}
+                      : "Missing Timeclock"}
                   </p>
                 </div>
-                {shift.break_length > 0 && (
-                  <p className="shift__info">
-                    Break: {shift.break_length} minutes
-                  </p>
-                )}
+                {financialMode == "predicted"
+                  ? shift.break_length > 0 && (
+                      <p className="shift__info">
+                        Break: {shift.break_length} minutes
+                      </p>
+                    )
+                  : shift.timeclock
+                  ? shift.timeclock.break_length > 0 && (
+                      <p className="shift__info">
+                        Break: {shift.timeclock.break_length} minutes
+                      </p>
+                    )
+                  : ""}
                 {shift.info && (
                   <p className="shift__info">
                     <i className="fas fa-info-circle"></i>

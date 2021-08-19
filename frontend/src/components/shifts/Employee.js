@@ -8,7 +8,7 @@ const Employee = (props) => {
     employee,
     user,
     shifts,
-    currentDepartment,
+    department,
     current_employee,
     result,
     financialMode,
@@ -16,7 +16,12 @@ const Employee = (props) => {
 
   const getHours = (employee, type) => {
     return shifts
-      .filter((item) => item.employee.id == employee && item.absence == "None")
+      .filter(
+        (item) =>
+          item.department == department &&
+          item.employee.id == employee &&
+          item.absence == "None"
+      )
       .map((item) =>
         type == "actual"
           ? item.timeclock
@@ -24,7 +29,8 @@ const Employee = (props) => {
             : 0
           : item.length
       )
-      .reduce((a, b) => a + b, 0.0);
+      .reduce((a, b) => a + b, 0.0)
+      .toFixed(2);
   };
 
   const getWage = (date, employee) => {
@@ -94,14 +100,6 @@ const Employee = (props) => {
           : ""
       }`}
     >
-      <p className="rotaEmployee__position">
-        {employee.position.map(
-          (item) =>
-            item.department == parseInt(currentDepartment) && (
-              <span key={item.id}>{item.name}</span>
-            )
-        )}
-      </p>
       <p className="rotaEmployee__name">
         {employee.first_name} <strong>{employee.last_name}</strong>
       </p>

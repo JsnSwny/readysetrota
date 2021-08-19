@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import PositionField from "../employees/PositionField";
 
 const Positions = ({ position, setPosition, many = false, shift = false }) => {
-  let positions = useSelector((state) => state.employees.all_positions);
+  let positions = useSelector((state) => state.employees.positions);
   let departments = useSelector((state) => state.employees.departments);
   return (
     <div className="form__control">

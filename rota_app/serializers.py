@@ -202,7 +202,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         if wage:
             wage_obj = Wage.objects.filter(
                 employee=instance).order_by('-start_date').first()
-
             if not wage_obj or wage_obj.wage_type != wage_type or wage_obj.wage != float(wage):
                 if wage_obj and str(wage_obj.start_date) == datetime.now().strftime('%Y-%m-%d'):
                     wage_obj.wage = wage
@@ -210,6 +209,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 else:
                     if wage_obj:
                         wage_obj.end_date = datetime.now()
+                    wage_obj.save()
                     wage_obj = Wage(employee=instance, wage_type=wage_type,
                                     wage=wage, start_date=datetime.now())
                     wage_obj.save()
@@ -625,4 +625,4 @@ class ForecastSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Forecast
-        fields = ('id', 'date', 'site_id', 'amount',)
+        fields = ('id', 'date', 'site_id', 'predicted', 'actual',)

@@ -206,26 +206,23 @@ export default function (state = initialState, action) {
             : state.holidays,
       };
     case UPDATE_AVAILABILITY:
-
-      let holidays = []
-      if(["holiday", "unavailable"].includes(action.payload.name)) {
-        if(state.holidays.some(item => item.id == action.payload.id)) {
+      let holidays = [];
+      if (["holiday", "unavailable"].includes(action.payload.name)) {
+        if (state.holidays.some((item) => item.id == action.payload.id)) {
           holidays = state.holidays.map((item) =>
-          item.id === action.payload.id
-            ? action.payload
-            : item
-        );
+            item.id === action.payload.id ? action.payload : item
+          );
         } else {
-          holidays = [...state.holidays, action.payload]
+          holidays = [...state.holidays, action.payload];
         }
       }
-    
+
       return {
         ...state,
         availability: state.availability.map((item) =>
           item.id === action.payload.id ? action.payload : item
         ),
-        holidays
+        holidays,
       };
     case DELETE_AVAILABILITY:
       return {
@@ -253,7 +250,7 @@ export default function (state = initialState, action) {
     case GET_POSITIONS:
       return {
         ...state,
-        positions: action.payload,
+        positions: action.payload.sort((a, b) => a.order - b.order),
       };
     case GET_ALL_POSITIONS:
       return {

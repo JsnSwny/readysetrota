@@ -102,28 +102,11 @@ export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
     .catch((err) => console.log(err.response));
 };
 
-export const getOpenShifts = (startdate) => (dispatch, getState) => {
-  axios
-    .get(
-      `/api/shiftlist/?date_after=${startdate}&department=${
-        getState().employees.current.department.id
-      }&open_shift=true&ordering=date,start_time`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: GET_OPEN_SHIFTS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => console.log(err.response));
-};
-
 export const getAbsences = (startdate, site) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shiftlist/?date_after=${startdate}&department=${
-        getState().employees.current.department.id
+      `/api/shiftlist/?date_after=${startdate}&department__site=${
+        getState().employees.current.site.id
       }&absence__not=None&ordering=date,start_time`,
       tokenConfig(getState)
     )
@@ -178,7 +161,6 @@ export const addShift = (shift) => (dispatch, getState) => {
 };
 
 export const updateShift = (id, shift) => (dispatch, getState) => {
-  console.log(shift);
   axios
     .put(`/api/shifts/${id}/`, shift, tokenConfig(getState))
     .then((res) => {

@@ -19,7 +19,7 @@ const CreateShift = (props) => {
     template,
     sidebarOpen,
     confirmProps,
-    forecastDate,
+    extra,
   } = props;
 
   const staffTypes = [
@@ -41,7 +41,7 @@ const CreateShift = (props) => {
     Position: "fas fa-users-cog",
   };
 
-  const modalProps = { onClose, update, confirmProps };
+  const modalProps = { onClose, update, confirmProps, extra };
 
   const getModal = () => {
     if (type == "employeeprofile") {
@@ -49,7 +49,7 @@ const CreateShift = (props) => {
     } else if (type == "shift") {
       return <ShiftModal employee={employee} date={date} {...modalProps} />;
     } else if (type == "forecast") {
-      return <ForecastModal date={forecastDate} {...modalProps} />;
+      return <ForecastModal {...modalProps} />;
     } else if (type == "register") {
       return <RegisterModal {...modalProps} />;
     } else if (type == "holiday") {

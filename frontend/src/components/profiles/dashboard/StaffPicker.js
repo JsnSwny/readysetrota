@@ -133,7 +133,7 @@ const StaffPicker = (props) => {
       {employees.length > 0 && (
         <Fragment>
           <div className="flex-container--align-center-wrap">
-            <span
+            {/* <span
               onClick={() => {
                 setStaffSort("alphabetical");
                 localStorage.setItem("staff_sort", "alphabetical");
@@ -154,17 +154,17 @@ const StaffPicker = (props) => {
               }`}
             >
               Sort by Position
-            </span>
+            </span> */}
             <div>
               <p>Show Inactive Employees</p>
               <Switch
                 onChange={() => {
                   localStorage.setItem("show_all_employees", !showAll);
-                  dispatch(getEmployees());
+                  dispatch(getEmployees(true, true));
                   setShowAll(!showAll);
                 }}
                 checked={showAll}
-                onColor={"#EC70C9"}
+                onColor={"#FD809E"}
               />
             </div>
           </div>
@@ -172,19 +172,25 @@ const StaffPicker = (props) => {
       )}
 
       <div className="list-block__wrapper">
-        {sortEmployees().map((item) => (
-          <div key={item.id} className="list-block__item--sm">
-            <h3
-              className={`title-md bold flex-container--between-center ${
-                isSiteAdmin(item.user) ? "admin" : ""
-              }`}
-            >
-              <Link to={`/profile/${item.id}`}>
-                {item.first_name} <strong>{item.last_name}</strong>
-              </Link>
+        {sortEmployees()
+          .filter((emp) =>
+            emp.position.some(
+              (pos) => pos.department.id == current.department.id
+            )
+          )
+          .map((item) => (
+            <div key={item.id} className="list-block__item--sm">
+              <h3
+                className={`title-md bold flex-container--between-center ${
+                  isSiteAdmin(item.user) ? "admin" : ""
+                }`}
+              >
+                <Link to={`/profile/${item.id}`}>
+                  {item.first_name} <strong>{item.last_name}</strong>
+                </Link>
 
-              <div className="flex list-block__icons">
-                {/* {item.user && (
+                <div className="flex list-block__icons">
+                  {/* {item.user && (
                   <i
                     className={`fas fa-crown ${
                       isSiteAdmin(item.user)
@@ -196,43 +202,43 @@ const StaffPicker = (props) => {
                   ></i>
                 )} */}
 
-                {permissions.includes("manage_employees") && !item.user && (
-                  <CopyUUID employee={item} />
-                )}
-                {item.user != user.id &&
-                  permissions.includes("manage_employees") && (
-                    <i
-                      onClick={() => {
-                        setOpen(true);
-                        setUpdate(item);
-                        setType("employeeprofile");
-                      }}
-                      className="fas fa-edit"
-                    ></i>
+                  {permissions.includes("manage_employees") && !item.user && (
+                    <CopyUUID employee={item} />
                   )}
-              </div>
-            </h3>
+                  {item.user != user.id &&
+                    permissions.includes("manage_employees") && (
+                      <i
+                        onClick={() => {
+                          setOpen(true);
+                          setUpdate(item);
+                          setType("employeeprofile");
+                        }}
+                        className="fas fa-edit"
+                      ></i>
+                    )}
+                </div>
+              </h3>
 
-            <h4 className="subtitle-sm">
-              {item.position.map(
-                (position) =>
-                  position.department.id == current.department.id && (
-                    <span key={position.id}>{position.name}</span>
-                  )
-              )}
-            </h4>
-            {permissions.includes("manage_wages") &&
-              item.current_wage &&
-              ["H", "S"].includes(item.current_wage.type) && (
-                <Fragment>
-                  <p className="subtitle-sm">
-                    £{numberWithCommas(item.current_wage.amount)}{" "}
-                    {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}
-                  </p>
-                </Fragment>
-              )}
-          </div>
-        ))}
+              <h4 className="subtitle-sm">
+                {item.position.map(
+                  (position) =>
+                    position.department.id == current.department.id && (
+                      <span key={position.id}>{position.name}</span>
+                    )
+                )}
+              </h4>
+              {permissions.includes("manage_wages") &&
+                item.current_wage &&
+                ["H", "S"].includes(item.current_wage.type) && (
+                  <Fragment>
+                    <p className="subtitle-sm">
+                      £{numberWithCommas(item.current_wage.amount)}{" "}
+                      {item.current_wage.type == "H" ? "(Hourly)" : "(Yearly)"}
+                    </p>
+                  </Fragment>
+                )}
+            </div>
+          ))}
       </div>
     </DashboardBlock>
   );

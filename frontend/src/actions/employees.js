@@ -263,7 +263,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 };
 
 export const getEmployees =
-  (archived = false, start_date, end_date) =>
+  (archived = false, department = false, start_date, end_date) =>
   (dispatch, getState) => {
     let current = getState().employees.current;
     let site_admin = true;
@@ -272,18 +272,18 @@ export const getEmployees =
     if (current.site.id > 0) {
       query += `&position__department__site=${current.site.id}`;
     }
-    // if (current.department.id > 0) {
-    //   query += `&position__department=${current.department.id}`;
-    // }
+    if (department && current.department.id > 0) {
+      query += `&position__department=${current.department.id}`;
+    }
     if (localStorage.getItem("show_all_employees") == "false") {
       if (!start_date) {
         start_date = format(new Date(), "yyyy-MM-dd");
         end_date = format(new Date(), "yyyy-MM-dd");
       }
+    }
 
-      if (start_date && end_date) {
-        query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
-      }
+    if (start_date && end_date) {
+      query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
     }
 
     axios
@@ -409,37 +409,24 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 };
 // Get Positions
 export const getPositions =
-  (all = false) =>
+  (department = false) =>
   (dispatch, getState) => {
     let current = getState().employees.current;
-    let site_admin = getState().employees.site_admin;
 
     let query = "";
-    if (current.site.id > 0) {
-      query += `&department__site=${current.site.id}`;
-    }
     if (current.department.id > 0) {
       query += `&department=${current.department.id}`;
     }
     axios
       .get(
-        `/api/positionslist/${
-          all ? `?department__site=${current.site.id}` : `?${query}`
-        }`,
+        `/api/positionslist/?department__site=${current.site.id}`,
         tokenConfig(getState)
       )
       .then((res) => {
-        if (all) {
-          dispatch({
-            type: GET_ALL_POSITIONS,
-            payload: res.data,
-          });
-        } else {
-          dispatch({
-            type: GET_POSITIONS,
-            payload: res.data,
-          });
-        }
+        dispatch({
+          type: GET_POSITIONS,
+          payload: res.data,
+        });
       })
       .catch((err) => console.log(err.response));
   };
@@ -485,7 +472,7 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
         payload: res.data,
       });
       dispatch(resetErrors());
-      dispatch(getEmployees());
+      dispatch(getEmployees(false, true));
     })
 
     .catch();
@@ -536,7 +523,7 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
         type: DELETE_DEPARTMENT,
         payload: id,
       });
-      dispatch(getEmployees());
+      dispatch(getEmployees(false, true));
       dispatch(getPositions(true));
       dispatch(getPositions());
       dispatch(getSites());

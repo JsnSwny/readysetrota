@@ -16,6 +16,8 @@ const NoShift = (props) => {
     setUpdate,
     setType,
     setShiftInfo,
+    shiftDepartment,
+    setExtra,
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
@@ -60,6 +62,8 @@ const NoShift = (props) => {
           employee={employee}
           date={format_date}
           limit={limit}
+          setExtra={setExtra}
+          shiftDepartment={shiftDepartment}
         />
       )}
       {showAvailabilities && (

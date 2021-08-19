@@ -4,7 +4,7 @@ import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
 import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker";
-import { getEmployees } from "../../actions/employees";
+import { getEmployees, getPositions } from "../../actions/employees";
 import { format } from "date-fns";
 import Title from "../common/Title";
 
@@ -12,7 +12,19 @@ const StaffManagement = ({ modalProps }) => {
   const dispatch = useDispatch();
   let current = useSelector((state) => state.employees.current);
   let business = useSelector((state) => state.employees.business);
+  let positions = useSelector((state) => state.employees.positions);
   let user = useSelector((state) => state.auth.user);
+  let loading = useSelector((state) => state.loading);
+  let sites = useSelector((state) => state.employees.sites);
+
+  useEffect(() => {
+    if (!loading.departments && !loading.sites) {
+      if (sites.length > 0) {
+        dispatch(getPositions(true));
+        dispatch(getEmployees(true, false));
+      }
+    }
+  }, [current.department, current.site]);
 
   return (
     <Fragment>
@@ -38,7 +50,12 @@ const StaffManagement = ({ modalProps }) => {
 
         {current.department != 0 && (
           <Fragment>
-            <PositionPicker {...modalProps} />
+            <PositionPicker
+              {...modalProps}
+              positions={positions.filter(
+                (item) => item.department.id == current.department.id
+              )}
+            />
             <StaffPicker {...modalProps} />
           </Fragment>
         )}

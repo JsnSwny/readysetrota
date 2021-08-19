@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useCallback,
+  useState,
+  Fragment,
+} from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector, useDispatch } from "react-redux";
@@ -104,9 +110,11 @@ const MovableItem = ({ position, props, index, movePosition }) => {
 };
 
 const PositionPicker = (props) => {
-  const { setOpen, setUpdate, setType } = props;
+  const { setOpen, setUpdate, setType, positions } = props;
   const dispatch = useDispatch();
-  let positions = useSelector((state) => state.employees.positions);
+  let current = useSelector((state) => state.employees.current);
+
+  let departments = useSelector((state) => state.employees.departments);
   let loading = useSelector((state) => state.loading);
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions

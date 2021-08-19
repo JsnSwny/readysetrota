@@ -16,7 +16,7 @@ import { updateLeave, getLeave } from "../../actions/availability";
 import { objectOf } from "prop-types";
 import AvailabilityByDate from "./AvailabilityByDate";
 import AvailabilityByEmployee from "./AvailabilityByEmployee";
-import { getAllAvailability } from "../../actions/employees";
+import { getAllAvailability, getEmployees } from "../../actions/employees";
 
 const Availability = ({ modalProps }) => {
   const dispatch = useDispatch();
@@ -31,6 +31,19 @@ const Availability = ({ modalProps }) => {
   let current = useSelector((state) => state.employees.current);
 
   const [availabilityMonth, setAvailabilityMonth] = useState(new Date());
+
+  useEffect(() => {
+    if (dateRange.length > 0) {
+      dispatch(
+        getEmployees(
+          true,
+          false,
+          format(dateRange[0], "yyyy-MM-dd"),
+          format(dateRange[dateRange.length - 1], "yyyy-MM-dd")
+        )
+      );
+    }
+  }, [dateRange, current.site]);
 
   useEffect(() => {
     setAvailabilityByDate({});
@@ -311,8 +324,11 @@ const Availability = ({ modalProps }) => {
                         <span className="availabilityEmployee__bar--none"></span>
                       </div>
                       <p>
-                        {item.position.map((pos) => (
-                          <small>{pos.name}</small>
+                        {item.position.map((pos, idx) => (
+                          <small>
+                            {idx > 0 ? `, ` : ""}
+                            {pos.name}
+                          </small>
                         ))}
                       </p>
                       <h4>{item.full_name}</h4>

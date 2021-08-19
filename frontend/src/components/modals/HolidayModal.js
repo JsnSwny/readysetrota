@@ -7,8 +7,9 @@ import { getErrors } from "../../actions/errors";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import employees from "../../reducers/employees";
+import ExtraInfo from "./shift/tabs/ExtraInfo";
 
-const HolidayModal = ({ onClose }) => {
+const HolidayModal = ({ onClose, extra }) => {
   const dispatch = useDispatch();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -42,7 +43,7 @@ const HolidayModal = ({ onClose }) => {
           end_date: format(endDate, "yyyy-MM-dd"),
           reason: reason,
           status: "Pending",
-          employee_id: employees.find((item) => item.user == user.id).id,
+          employee_id: extra.employee.id,
           site_id: current.site.id,
         })
       );

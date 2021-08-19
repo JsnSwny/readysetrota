@@ -21,6 +21,8 @@ const DashboardShifts = () => {
   let loading = useSelector((state) => state.shifts.isLoading);
   let width = useSelector((state) => state.responsive.width);
   let employees = useSelector((state) => state.employees.employees);
+  let departments = useSelector((state) => state.employees.departments);
+  let current = useSelector((state) => state.employees.current);
 
   const [carouselItems, setCarouselItems] = useState([]);
   const [carouselShift, setCarouselShift] = useState(0);
@@ -31,6 +33,10 @@ const DashboardShifts = () => {
   const handleAnimationEnd = () => {
     setDirection("");
   };
+
+  useEffect(() => {
+    setCarouselItems([]);
+  }, [current.site]);
 
   useEffect(() => {
     if (!firstIdx && shifts.length > 0 && atEnd > 0) {
@@ -134,11 +140,11 @@ const DashboardShifts = () => {
                       : ""
                   }`}
                 >
-                  <small></small>
-                  {employees.length > 0 &&
-                    employees
-                      .find((emp) => emp.id == item.employee.id)
-                      .position.map((pos) => <small>{pos.name}</small>)}
+                  <small>
+                    {departments.length > 0 &&
+                      departments.find((dep) => dep.id == item.department).name}
+                  </small>
+
                   <p>
                     {item.employee.first_name}{" "}
                     <strong>{item.employee.last_name}</strong>

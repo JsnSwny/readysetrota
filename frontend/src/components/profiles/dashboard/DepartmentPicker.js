@@ -51,19 +51,50 @@ const DepartmentPicker = (props) => {
 
       <div className="list-block__wrapper">
         {departments.map((item, i) => (
-          <div key={item.id} className={`list-block__item--sm`}>
+          <div
+            key={item.id}
+            className={`list-block__item--sm ${
+              (current.department.id == item.id || current.department == 0) &&
+              "current"
+            }`}
+          >
             <h3 className="title-md bold flex-container--between-center">
               <p>{item.name} </p>
-              {permissions.includes("manage_departments") && (
+              <div className="flex">
+                {permissions.includes("manage_departments") && (
+                  <i
+                    onClick={() => {
+                      setOpen(true);
+                      setType("Department");
+                      setUpdate(item);
+                    }}
+                    className="fas fa-edit"
+                  ></i>
+                )}
                 <i
                   onClick={() => {
-                    setOpen(true);
-                    setType("Department");
-                    setUpdate(item);
+                    if (
+                      plan == "F" &&
+                      i > 0 &&
+                      item.business.id == current.business.id
+                    ) {
+                      toast.warning(
+                        "Upgrade to premium to unlock unlimited departments"
+                      );
+                      return false;
+                    } else {
+                      if (current.department.id != item.id) {
+                        setDep(item);
+                      }
+                    }
                   }}
-                  className="fas fa-edit"
+                  className={`${
+                    current.department.id != item.id
+                      ? "far fa-check-square"
+                      : "fas fa-check-square"
+                  }`}
                 ></i>
-              )}
+              </div>
             </h3>
             <h4 className="subtitle-sm">
               {current.site.id == 0 && item.site.name}

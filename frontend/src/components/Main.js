@@ -58,6 +58,7 @@ const Main = () => {
   const [onConfirm, setOnConfirm] = useState(false);
   const [message, setMessage] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
+  const [extra, setExtra] = useState({});
 
   // Selectors
   let departments = useSelector((state) => state.employees.departments);
@@ -86,9 +87,6 @@ const Main = () => {
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
       if (sites.length > 0) {
-        dispatch(getEmployees(false));
-        dispatch(getPositions(true));
-        dispatch(getPositions());
         dispatch(
           updateSettings(
             sites.find((item) => item.id == current.site.id).sitesettings
@@ -106,6 +104,7 @@ const Main = () => {
     setShiftInfo,
     setForecastDate,
     setHolidayEmployee,
+    setExtra,
   };
 
   const confirmProps = {
@@ -133,6 +132,7 @@ const Main = () => {
         forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
         confirmProps={confirmProps}
         holidayEmployee={holidayEmployee}
+        extra={extra}
       />
       <Confirm
         open={confirmOpen}
@@ -152,7 +152,7 @@ const Main = () => {
           className={`fas fa-bars`}
         ></i>
       </div> */}
-      <div className={`App ${sidebarOpen ? "open" : ""}`}>
+      <div className={`App`}>
         <Switch>
           <PrivateRoute
             path="/"
@@ -184,6 +184,8 @@ const Main = () => {
           />
 
           <PrivateRoute
+            admin={true}
+            perms={["manage_availabilities"]}
             path="/availability"
             exact
             component={Availability}

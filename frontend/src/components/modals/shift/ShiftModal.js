@@ -14,13 +14,13 @@ import Tab from "../Tab";
 import { parseISO, addDays } from "date-fns";
 
 const ShiftModal = (props) => {
-  const { date, employee, onClose, update } = props;
+  const { date, employee, onClose, update, extra } = props;
   let updating = update ? true : false;
 
   let current = useSelector((state) => state.employees.current);
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
-  let positions = useSelector((state) => state.employees.all_positions);
+  let positions = useSelector((state) => state.employees.positions);
   let sites = useSelector((state) => state.employees.sites);
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
@@ -100,6 +100,7 @@ const ShiftModal = (props) => {
   };
 
   const onSubmit = (e) => {
+    console.log(extra);
     e.preventDefault();
     const shiftObj = {
       employee_id: shiftEmployee ? shiftEmployee : null,
@@ -111,7 +112,7 @@ const ShiftModal = (props) => {
       absence: absence,
       absence_info: absenceInfo,
       open_shift: shiftEmployee ? false : true,
-      department_id: current.department.id,
+      department_id: extra.shiftDepartment,
       stage: shiftEmployee
         ? isUpdated() && !(startTimeClock && endTimeClock)
           ? !settings.shift_approval || user.business

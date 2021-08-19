@@ -20,7 +20,7 @@ const EmployeeProfileModal = (props) => {
   const { setConfirmOpen, setOnConfirm, setMessage } = confirmProps;
 
   const dispatch = useDispatch();
-  let positions = useSelector((state) => state.employees.all_positions);
+  let positions = useSelector((state) => state.employees.positions);
   let sites = useSelector((state) => state.employees.sites);
   let user = useSelector((state) => state.auth.user);
   let errors = useSelector((state) => state.errors.msg);

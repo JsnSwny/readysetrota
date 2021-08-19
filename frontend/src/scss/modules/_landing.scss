@@ -395,14 +395,13 @@ footer {
   flex-direction: column;
   background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
     url("/static/media/restaurant.jpg");
-  margin: -20px 0;
+  margin: -100px 0;
   color: white;
   background-position: center;
   background-size: cover;
   padding: 0 1.5rem;
   @include wi-mq(mobile) {
-    height: calc(100vh - 60px);
-    margin: -10px 0;
+    height: calc(100vh);
   }
   h1 {
     font-size: 64px;

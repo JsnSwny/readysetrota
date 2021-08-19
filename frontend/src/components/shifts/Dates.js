@@ -95,7 +95,7 @@ const Dates = (props) => {
       (item) => item.date == format(date, "yyyy-MM-dd")
     );
     if (forecastValue) {
-      return parseFloat(forecastValue.amount).toFixed(2);
+      return parseFloat(forecastValue.predicted).toFixed(2);
     } else {
       return 0;
     }

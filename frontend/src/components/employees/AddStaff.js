@@ -24,7 +24,7 @@ const AddStaff = (props) => {
 
   const { setConfirmOpen, setOnConfirm, setMessage } = confirmProps;
 
-  let positions = useSelector((state) => state.employees.all_positions);
+  let positions = useSelector((state) => state.employees.positions);
   let errors = useSelector((state) => state.errors.msg);
   let departments = useSelector((state) => state.employees.departments);
   let employees = useSelector((state) => state.employees.employees);
@@ -409,7 +409,13 @@ const AddStaff = (props) => {
                   } else if (form == "Staff") {
                     setOnConfirm(() => () => {
                       setConfirmOpen(false);
-                      dispatch(updateEmployee(update.id, {...update, first_name: 'Anonymous', last_name: 'User'}))
+                      dispatch(
+                        updateEmployee(update.id, {
+                          ...update,
+                          first_name: "Anonymous",
+                          last_name: "User",
+                        })
+                      );
                     });
                   } else if (form == "Site") {
                     if (sites.length == 1) {

@@ -314,10 +314,11 @@ class Forecast(models.Model):
     date = models.DateField()
     site = models.ForeignKey(
         Site, related_name="site_forecast", on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    predicted = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    actual = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     def __str__(self):
-        return f'{self.date}: {self.site.name} - {self.amount}'
+        return f'{self.date}: {self.site.name} - {self.predicted}'
 
 
 class TimeClock(models.Model):

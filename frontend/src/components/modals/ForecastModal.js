@@ -5,14 +5,20 @@ import { format, parseISO } from "date-fns";
 import { toast } from "react-toastify";
 import { getErrors } from "../../actions/errors";
 
-const ForecastModal = ({ onClose, date, update }) => {
+const ForecastModal = ({ onClose, update, extra }) => {
   const dispatch = useDispatch();
-  const [forecastAmount, setForecastAmount] = useState("");
+  const [forecastAmount, setForecastAmount] = useState(0);
+  const [actualAmount, setActualAmount] = useState(0);
   let current = useSelector((state) => state.employees.current);
   let errors = useSelector((state) => state.errors.msg);
 
+  console.log(extra);
+
   useEffect(() => {
-    if (update) setForecastAmount(update.amount);
+    if (update) {
+      setForecastAmount(update.predicted);
+      setActualAmount(update.actual);
+    }
   }, [update]);
 
   const onSubmit = (e) => {
@@ -30,16 +36,18 @@ const ForecastModal = ({ onClose, date, update }) => {
       if (update) {
         dispatch(
           updateForecast(update.id, {
-            date,
-            amount: forecastAmount,
+            date: format(extra.date, "yyyy-MM-dd"),
+            predicted: forecastAmount,
+            actual: actualAmount,
           })
         );
         toast.success("Forecast updated");
       } else {
         dispatch(
           addForecast({
-            amount: forecastAmount,
-            date,
+            predicted: forecastAmount,
+            actual: actualAmount,
+            date: format(extra.date, "yyyy-MM-dd"),
             site_id: current.site.id,
           })
         );
@@ -53,21 +61,35 @@ const ForecastModal = ({ onClose, date, update }) => {
   return (
     <div className="form">
       <p className="form__subheading">
-        {format(parseISO(date), "cccc do MMMM yyyy")}
+        {format(extra.date, "cccc do MMMM yyyy")}
       </p>
-      <h1 className="form__heading">Forecast</h1>
+      <h1 className="form__heading">Revenue</h1>
       <form onSubmit={onSubmit} className="form__form">
-        <div className="form__control">
-          <label className="form__label">Forecast Amount*</label>
-          <input
-            className="form__input"
-            type="number"
-            name="forecastamount"
-            onChange={(e) => setForecastAmount(e.target.value)}
-            value={forecastAmount}
-            step="0.01"
-            autoFocus
-          />
+        <div className="flex-container--between">
+          <div className="form__control--half">
+            <label className="form__label">Predicted Forecast</label>
+            <input
+              className="form__input"
+              type="number"
+              name="forecastamount"
+              onChange={(e) => setForecastAmount(e.target.value)}
+              value={forecastAmount}
+              step="0.01"
+              autoFocus={extra.type == "predicted"}
+            />
+          </div>
+          <div className="form__control--half">
+            <label className="form__label">Actual Sales</label>
+            <input
+              className="form__input"
+              type="number"
+              name="actualamount"
+              onChange={(e) => setActualAmount(e.target.value)}
+              value={actualAmount}
+              step="0.01"
+              autoFocus={extra.type == "actual"}
+            />
+          </div>
         </div>
         <p className="error">{errors.forecast}</p>
         <div className="flex-container--between form__actions">

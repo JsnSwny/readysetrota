@@ -250,6 +250,7 @@
     position: relative;
     @extend .shadow;
     overflow: auto;
+    padding: 5px;
     p {
       width: 125px;
       text-align: center;
@@ -257,10 +258,10 @@
       font-size: 14px;
       cursor: default;
       transition: 0.4s ease color;
-      &.active {
+      &.selected {
         color: white;
       }
-      &:not(.active) {
+      &:not(.selected) {
         cursor: pointer;
       }
     }
@@ -397,9 +398,38 @@
   }
 }
 
+.financialBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background-color: white;
+  padding: 10px 0;
+  @extend .shadow;
+  text-align: center;
+  font-size: 12px;
+  p {
+    &.red {
+      color: $red;
+    }
+    &.green {
+      color: $green;
+    }
+  }
+  u {
+    cursor: pointer;
+    transition: 0.2s ease color;
+    &:hover {
+      color: $pink;
+    }
+  }
+}
+
 .rota {
   transition: 0.3s ease opacity;
   opacity: 1;
+  padding-bottom: 75px;
   &__heading {
     .item-block {
       text-align: center;
@@ -412,6 +442,7 @@
         }
       }
     }
+
     .title-sm {
       flex: 1;
     }
@@ -425,6 +456,16 @@
         &:not(.filtered) {
           filter: blur(1px) opacity(50%);
         }
+      }
+    }
+  }
+  &__department {
+    .rota__position {
+      font-size: 14px;
+      font-weight: normal;
+      color: $light-gray-2;
+      &:not(:first-of-type) {
+        margin-top: 20px;
       }
     }
   }

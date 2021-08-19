@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getShifts, getOpenShifts } from "../../actions/shifts";
+import { getShifts } from "../../actions/shifts";
 import { getAvailability } from "../../actions/employees";
 import { useParams, Redirect } from "react-router-dom";
 import AvailabilityCalendar from "../availability/AvailabilityCalendar";
@@ -22,14 +22,15 @@ import Title from "../common/Title";
 import { GET_LEAVE } from "../../actions/types";
 import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../actions/stats";
+import StatsItem from "./dashboard/StatsItem";
 
 const StaffProfile = ({ modalProps }) => {
   const dispatch = useDispatch();
 
-  const { setOpen, setType } = modalProps;
+  const { setOpen, setType, setExtra } = modalProps;
   let user = useSelector((state) => state.auth.user);
-  const [startDate, setStartDate] = useState(addDays(new Date(), -7));
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(addDays(new Date(), 7));
   let { id: id_param } = useParams();
   let employees = useSelector((state) => state.employees.employees);
   let plan = useSelector((state) => state.employees.business.plan);
@@ -45,34 +46,13 @@ const StaffProfile = ({ modalProps }) => {
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
-  let holidays = useSelector((state) => state.employees.holidays);
 
-  let employee =
-    (id_param && employees.find((item) => item.id == employee_id)) ||
-    employees.find((employee) => employee.user == user.id);
+  let employee = user.employee.find(
+    (item) => item.business.id == current.business.id
+  );
 
-  let openShifts = useSelector((state) => state.shifts.open_shifts);
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
-
-  const data = {
-    // labels: stats.hours.map((item, idx) => item.day),
-    labels: interval.map((item) => format(item, "d MMM yyyy")),
-    datasets: [
-      {
-        label: "Shifts Worked",
-        data: interval.map((item) =>
-          stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
-            ? stats.hours.find((stat) => stat.day == format(item, "yyyy-MM-dd"))
-                .c
-            : 0
-        ),
-        backgroundColor: ["rgba(236, 112, 201, 1)"],
-        borderColor: ["rgba(236, 112, 201, 1)"],
-        borderWidth: 2,
-      },
-    ],
-  };
 
   useEffect(() => {
     setInterval(
@@ -94,44 +74,6 @@ const StaffProfile = ({ modalProps }) => {
     }
   }, [startDate, endDate, current.site, employee]);
 
-  let maxValueOfY = Math.max(...stats.hours.map((o) => o.c), 0);
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-      display: false,
-    },
-    interaction: {
-      intersect: false,
-    },
-    // tooltips: {
-    //   mode: "nearest",
-    // },
-    plugins: {
-      legend: false,
-      title: {
-        display: true,
-        text: "Shifts Worked",
-      },
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    scales: {
-      y: {
-        suggestedMax: maxValueOfY + maxValueOfY / 10,
-      },
-      x: {
-        ticks: {
-          stepSize: 4,
-        },
-      },
-    },
-  };
-
   useEffect(() => {
     dispatch(
       getShifts(
@@ -142,7 +84,6 @@ const StaffProfile = ({ modalProps }) => {
         employee_id
       )
     );
-    dispatch(getOpenShifts(format(new Date(), "yyyy-MM-dd")));
   }, [current]);
 
   useEffect(() => {
@@ -303,9 +244,7 @@ const StaffProfile = ({ modalProps }) => {
           <p>You have no upcoming shifts</p>
         )}
         <div className="flex-container--between">
-          <AvailabilityCalendar
-            employee={employees.find((item) => item.user == user.id)}
-          />
+          <AvailabilityCalendar employee={employee} />
           <div className="dashboardHolidays">
             <div className="flex-container--between">
               <h3 className="title-sm title--margin-top">Requests</h3>
@@ -313,6 +252,7 @@ const StaffProfile = ({ modalProps }) => {
                 onClick={() => {
                   setOpen(true);
                   setType("holiday");
+                  setExtra({ employee: employee });
                 }}
                 class="dashboardHolidays__request"
               >
@@ -355,13 +295,25 @@ const StaffProfile = ({ modalProps }) => {
           <select
             onChange={(e) => {
               let values = e.target.value.split(" ");
-              if (values[1] == "D") {
-                setStartDate(addDays(new Date(), -values[0]));
-              } else if (values[1] == "M") {
-                setStartDate(addMonths(new Date(), -values[0]));
+              let num = parseInt(values[0]);
+              if (num < 0) {
+                setStartDate(new Date());
+                if (values[1] == "D") {
+                  setEndDate(addDays(new Date(), -num));
+                } else if (values[1] == "M") {
+                  setEndDate(addMonths(new Date(), -num));
+                }
+              } else {
+                setEndDate(new Date());
+                if (values[1] == "D") {
+                  setStartDate(addDays(new Date(), -num));
+                } else if (values[1] == "M") {
+                  setStartDate(addMonths(new Date(), -num));
+                }
               }
             }}
           >
+            <option value="-7 D">This week</option>
             <option value="7 D">Last week</option>
             <option value="14 D">Last 2 weeks</option>
             <option value="30 D">Last 30 Days</option>
@@ -371,17 +323,41 @@ const StaffProfile = ({ modalProps }) => {
           </select>
         </div>
         <hr class="separator" />
-        <Stats
-          title="Admin Panel"
-          type="employee"
-          startDate={startDate}
-          endDate={endDate}
-        />
-        <div className="stats-graph">
-          <div className="stats-graph__item">
-            <Line data={data} options={options} />
+        {stats && interval.length > 0 && (
+          <div className="stats-graph__container">
+            <StatsItem
+              title="Number of Shifts Worked"
+              decimals={0}
+              data={interval.map((item) =>
+                stats.hours.find(
+                  (stat) => stat.day == format(item, "yyyy-MM-dd")
+                )
+                  ? stats.hours.find(
+                      (stat) => stat.day == format(item, "yyyy-MM-dd")
+                    ).c
+                  : 0
+              )}
+              interval={interval}
+            />
+            <StatsItem
+              title="Hours Worked"
+              decimals={1}
+              data={Object.values(stats.total_hours).map((item) =>
+                parseInt(item)
+              )}
+              interval={interval}
+            />
+            <StatsItem
+              title="Estimated Pay"
+              decimals={2}
+              data={Object.values(stats.total_cost).map((item) =>
+                parseInt(item)
+              )}
+              interval={interval}
+              prefix={"£"}
+            />
           </div>
-        </div>
+        )}
       </div>
     </Fragment>
   );

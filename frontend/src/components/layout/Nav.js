@@ -28,8 +28,20 @@ const Nav = () => {
                 <ul className="nav__list">
                   <NavLink title="Dashboard" link="" />
                   <NavLink title="Rota" link="rota" />
-                  <NavLink title="Employees" link="staff-management" />
-                  <NavLink title="Availability" link="availability" />
+                  <NavLink
+                    title="Employees"
+                    link="staff-management"
+                    perms={[
+                      "manage_departments",
+                      "manage_positions",
+                      "manage_employees",
+                    ]}
+                  />
+                  <NavLink
+                    title="Availability"
+                    link="availability"
+                    perms={["manage_availabilities"]}
+                  />
                 </ul>
               </div>
 

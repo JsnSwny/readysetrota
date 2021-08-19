@@ -199,51 +199,53 @@ class Publish(APIView):
 import sqlite3
 class GetStats(APIView):
     def get(self, request):
-        start_time = time.time()
         stat_type = request.query_params.get('stat_type')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         start_date = datetime.strptime(start_date, '%d/%m/%Y')
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
-
+        id = request.query_params.get('id')
         if stat_type == "business":
-            id = request.query_params.get('id')
-            shifts = Shift.objects.filter(department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
-            serializer = ShiftReadOnlySerializer(list(shifts), many=True).data
-            end_time = time.time()
-            shifts_worked = shifts.annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
-
-            total_cost = {}
-            total_hours_obj = {}
-            forecast_dif_obj = {}
-
-            delta = end_date - start_date
-            for i in range(delta.days+1):
-
-                date = start_date + timedelta(days=i)
-                date_str = date.strftime("%Y-%m-%d")
-                cost = 0
-
-                cost += sum(item['total_cost'] for item in serializer if str(item['date']) == date_str)
-                total_hours = sum(item['length'] for item in serializer if str(item['date']) == date_str)
-
-                salaries = Wage.objects.filter(wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
-                for salary in salaries:
-                    cost += float(salary.wage) / 52 / 7
-
-                forecast = Forecast.objects.filter(site=id, date=date)
-                forecast_dif = 0.00
-                if forecast:
-                    forecast_dif = float(forecast.first().amount) - cost
-
-                total_hours_obj[date_str] = float("{:.1f}".format(total_hours))
-
-                forecast_dif_obj[date_str] = float("{:.2f}".format(forecast_dif))
-                total_cost[date_str] = float("{:.2f}".format(cost))
-
+            shifts = Shift.objects.filter(stage="Published", department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
+            
         else:
             employee_id = request.query_params.get('employee_id')
-            shifts_worked = Shift.objects.filter(employee__id=employee_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True).annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+            shifts = Shift.objects.filter(stage="Published", employee__id=employee_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
+
+        serializer = ShiftReadOnlySerializer(list(shifts), many=True).data
+        shifts_worked = shifts.annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+        total_cost = {}
+        total_hours_obj = {}
+        forecast_dif_obj = {}
+
+        delta = end_date - start_date
+        for i in range(delta.days+1):
+
+            date = start_date + timedelta(days=i)
+            date_str = date.strftime("%Y-%m-%d")
+            cost = 0
+
+            cost += sum(item['total_cost'] for item in serializer if str(item['date']) == date_str)
+            total_hours = sum(item['length'] for item in serializer if str(item['date']) == date_str)
+            forecast_dif = 0.00
+            if stat_type == "business":
+                salaries = Wage.objects.filter(employee__position__department__site=id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
+                forecast = Forecast.objects.filter(site=id, date=date)
+                if forecast:
+                    forecast_dif = float(forecast.first().predicted) - cost
+            else:
+                salaries = Wage.objects.filter(employee__id=employee_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
+            for salary in salaries:
+                cost += float(salary.wage) / 52 / 7
+
+            
+
+            total_hours_obj[date_str] = float("{:.1f}".format(total_hours))
+
+            forecast_dif_obj[date_str] = float("{:.2f}".format(forecast_dif))
+            total_cost[date_str] = float("{:.2f}".format(cost))
+
+        
         # shifts_worked = Shift.objects.filter(department__site=id).exclude(end_time__isnull=True).annotate(month=TruncMonth('date')).values('month').annotate(c=Count('id')).values('month', 'c')
         
         
