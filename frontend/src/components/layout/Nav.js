@@ -51,7 +51,11 @@ const Nav = () => {
                   <i class="fas fa-caret-down"></i>
                   <div className="nav__profileDropdown-container">
                     <div className="nav__profileDropdown">
-                      <div>Jason Sweeney</div>
+                      <div>
+                        {user.business
+                          ? user.business.name
+                          : `${user.first_name} ${user.last_name}`}
+                      </div>
                       <div>{user.email}</div>
                       <hr className="separator--alt-2"></hr>
                       {sites.map((item) => (
@@ -59,7 +63,10 @@ const Nav = () => {
                           className={`nav__site ${
                             current.site.id == item.id ? "active" : ""
                           }`}
-                          onClick={() => dispatch(setSite(item))}
+                          onClick={() =>
+                            current.site.id != item.id &&
+                            dispatch(setSite(item))
+                          }
                         >
                           {item.name}
                         </div>
