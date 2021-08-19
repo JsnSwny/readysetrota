@@ -30,6 +30,8 @@ django-guardian = "*"
 numpy = "*"
 django-simple-history = "*"
 pandas = "*"
+psycopg2 = "==2.8.6"
+numpy-matrixlib = "*"
 
 [requires]
 python_version = "3.7"
