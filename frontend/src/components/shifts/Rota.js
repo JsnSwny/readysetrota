@@ -40,6 +40,9 @@ const Rota = ({ modalProps, confirmProps }) => {
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
   let departments = useSelector((state) => state.employees.departments);
+  let settings = useSelector(
+    (state) => state.employees.current.site.sitesettings
+  );
 
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
