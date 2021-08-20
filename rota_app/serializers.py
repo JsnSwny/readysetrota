@@ -428,7 +428,7 @@ class ShiftReadOnlySerializer(serializers.Serializer):
             return 0
 
     def get_length(self, obj):
-        if obj.end_time:
+        if obj.end_time != 'Finish':
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
 
@@ -438,6 +438,7 @@ class ShiftReadOnlySerializer(serializers.Serializer):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
             return shift_length - (obj.break_length / 60)
+        return 0
 
     def get_total_cost(self, obj):
         return float(self.get_length(obj)) * float(self.get_wage(obj))
@@ -466,7 +467,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
         return 0
 
     def get_length(self, obj):
-        if obj.end_time:
+        if obj.end_time != 'Finish':
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
 
@@ -476,6 +477,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
                 end = end + timedelta(days=1)
             shift_length = round((end - start).total_seconds() / 3600, 2)
             return shift_length - (obj.break_length / 60)
+        return 0
 
     def get_total_cost(self, obj):
         return float(self.get_length(obj)) * float(self.get_wage(obj))

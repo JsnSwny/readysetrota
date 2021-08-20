@@ -147,7 +147,7 @@ const ShiftDetails = ({
             <option value="" disabled>
               Select an end time
             </option>
-            {/* <option value="Finish">Finish</option> */}
+            <option value="Finish">Finish</option>
             {hours.map((time) => (
               <option key={time} value={time}>
                 {time}
