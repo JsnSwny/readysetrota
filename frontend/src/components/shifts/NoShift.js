@@ -18,6 +18,7 @@ const NoShift = (props) => {
     setShiftInfo,
     shiftDepartment,
     setExtra,
+    financialMode,
   } = props;
   const format_date = format(result, "yyyy-MM-dd");
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
@@ -55,7 +56,7 @@ const NoShift = (props) => {
         result <= addDays(new Date(), -1) ? "date-before" : ""
       } ${showAvailabilities && isHoliday ? "holiday" : ""}`}
     >
-      {!isHoliday && showAdd && admin && (
+      {!isHoliday && showAdd && admin && financialMode == "predicted" && (
         <AddShiftButton
           {...modalProps}
           setUpdate={setUpdate}
@@ -64,6 +65,7 @@ const NoShift = (props) => {
           limit={limit}
           setExtra={setExtra}
           shiftDepartment={shiftDepartment}
+          financialMode={financialMode}
         />
       )}
       {showAvailabilities && (

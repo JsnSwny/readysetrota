@@ -12,6 +12,7 @@ const AddShiftButton = (props) => {
     setUpdate,
     setExtra,
     shiftDepartment,
+    financialMode,
   } = props;
   return (
     (!limit || employee.id <= limit) && (
@@ -23,7 +24,7 @@ const AddShiftButton = (props) => {
               setType("shift");
               setShiftInfo({ employee, date });
               setUpdate("");
-              setExtra({ shiftDepartment });
+              setExtra({ shiftDepartment, financialMode });
             }}
             className={`shift__add${white ? "--white" : ""}`}
           >

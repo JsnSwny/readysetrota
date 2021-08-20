@@ -233,11 +233,16 @@
   &__wrapper {
     width: 33.33%;
     display: flex;
+    @include wi-mq(laptop) {
+      width: auto;
+    }
     @include wi-mq(tablet) {
-      width: 100%;
       margin-bottom: 10px;
     }
-    &:nth-child(13) {
+    @include wi-mq(mobile) {
+      width: 100%;
+    }
+    &:nth-child(1) {
       @include wi-mq(tablet) {
         order: 1;
       }
@@ -250,7 +255,13 @@
     &:nth-child(3) {
       justify-content: flex-end;
       @include wi-mq(tablet) {
-        justify-content: flex-start;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        margin-bottom: 0;
+        height: 35px;
       }
     }
   }
@@ -275,12 +286,16 @@
     position: relative;
     @extend .shadow;
     overflow: auto;
-    padding: 5px;
-    @include wi-mq(mobile) {
+    @include wi-mq(tablet) {
+      padding: 5px;
+      border-radius: 0;
+      border-top: 1px solid $light-gray-2;
+    }
+    @include wi-mq(tablet) {
       width: 100%;
     }
     p {
-      width: 125px;
+      width: 100px;
       text-align: center;
       z-index: 2;
       font-size: 14px;
@@ -292,8 +307,7 @@
       &:not(.selected) {
         cursor: pointer;
       }
-      @include wi-mq(mobile) {
-        font-size: 12px;
+      @include wi-mq(tablet) {
         width: 50%;
       }
     }
@@ -327,7 +341,7 @@
     font-size: 14px;
 
     @include wi-mq(tablet) {
-      padding: 5px 20px;
+      padding: 8px 20px;
       margin-bottom: 10px;
     }
     @include wi-mq(mobile) {
@@ -465,6 +479,9 @@
   @extend .shadow;
   text-align: center;
   font-size: 12px;
+  @include wi-mq(tablet) {
+    bottom: 35px;
+  }
   p {
     &.red {
       color: $red;

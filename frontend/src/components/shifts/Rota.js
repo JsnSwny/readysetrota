@@ -435,6 +435,7 @@ const Rota = ({ modalProps, confirmProps }) => {
                                       {...modalProps}
                                       {...props}
                                       shiftDepartment={dep.id}
+                                      financialMode={financialMode}
                                     />
                                   );
                                 })}

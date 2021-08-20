@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addShift, deleteShift, updateShift } from "../../../actions/shifts";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ import { parseISO, addDays } from "date-fns";
 const ShiftModal = (props) => {
   const { date, employee, onClose, update, extra } = props;
   let updating = update ? true : false;
-
+  console.log(extra);
   let current = useSelector((state) => state.employees.current);
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);
@@ -36,7 +36,9 @@ const ShiftModal = (props) => {
   const [breakLength, setBreakLength] = useState(0);
   const [absence, setAbsence] = useState("None");
   const [absenceInfo, setAbsenceInfo] = useState("");
-  const [currentTab, setCurrentTab] = useState("Shift Details");
+  const [currentTab, setCurrentTab] = useState(
+    `${extra.financialMode == "predicted" ? "Shift Details" : "Timeclock"}`
+  );
 
   const [startTimeClock, setStartTimeClock] = useState("");
   const [endTimeClock, setEndTimeClock] = useState("");
@@ -100,7 +102,6 @@ const ShiftModal = (props) => {
   };
 
   const onSubmit = (e) => {
-    console.log(extra);
     e.preventDefault();
     const shiftObj = {
       employee_id: shiftEmployee ? shiftEmployee : null,
@@ -140,8 +141,6 @@ const ShiftModal = (props) => {
         ? true
         : "You must select at least one position",
     };
-
-    console.log(shiftObj);
     dispatch(getErrors(error_obj, 400));
 
     if (
@@ -236,12 +235,20 @@ const ShiftModal = (props) => {
         {update ? "Update Shift" : "Create Shift"}
       </h1>
       <div className="flex-container--center form__tabs">
-        <Tab title="Shift Details" {...currentTabProps} />
-        <Tab title="Extra Info" {...currentTabProps} />
-        {current.business.plan != "F" && (
-          <Tab title="Timeclock" {...currentTabProps} />
+        {extra.financialMode == "predicted" ? (
+          <Fragment>
+            <Tab title="Shift Details" {...currentTabProps} />
+            <Tab title="Extra Info" {...currentTabProps} />
+          </Fragment>
+        ) : (
+          ""
         )}
-
+        {current.business.plan != "F" &&
+          update &&
+          update.stage == "Published" &&
+          parseISO(update.date) <= new Date() && (
+            <Tab title="Timeclock" {...currentTabProps} />
+          )}
         {employee && update && update.stage == "Published" && (
           <Tab title="Absence" {...currentTabProps} />
         )}

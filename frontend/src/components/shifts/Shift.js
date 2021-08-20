@@ -23,15 +23,19 @@ const Shift = (props) => {
     setConfirmOpen,
     setOnConfirm,
     setMessage,
+    setExtra,
     financialMode,
+    shiftDepartment,
   } = props;
 
   const [shiftDate, setShiftDate] = useState("");
 
-  let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
+  let modalProps = { setOpen, setUpdate, setType, setShiftInfo, setExtra };
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
+
+  console.log(shiftDepartment, financialMode);
 
   return (
     <Fragment>
@@ -46,7 +50,7 @@ const Shift = (props) => {
               : ""
           } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
-        {admin && (
+        {admin && financialMode == "predicted" && (
           <AddShiftButton
             employee={employee}
             date={format_date}
@@ -54,6 +58,8 @@ const Shift = (props) => {
             limit={limit}
             setUpdate={setUpdate}
             {...modalProps}
+            shiftDepartment={shiftDepartment}
+            financialMode={financialMode}
           />
         )}
 
@@ -69,6 +75,7 @@ const Shift = (props) => {
                     setType("shift");
                     setUpdate(shift);
                     setShiftInfo({ employee, date: shiftDate });
+                    setExtra({ financialMode, shiftDepartment });
                   }
                 }}
                 className={`shift__wrapper ${admin ? "edit" : ""}`}
