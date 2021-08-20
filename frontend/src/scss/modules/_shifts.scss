@@ -506,6 +506,9 @@
   transition: 0.3s ease opacity;
   opacity: 1;
   padding-bottom: 75px;
+  @include wi-mq(tablet) {
+    padding-bottom: 110px;
+  }
   &__heading {
     .item-block {
       text-align: center;
