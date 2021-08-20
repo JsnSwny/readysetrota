@@ -254,7 +254,7 @@ class LeaveFilter(django_filters.FilterSet):
 
     class Meta:
         model = Leave
-        fields = ['employee__id', 'employee__user', 'status', 'employee__business',
+        fields = ['site__id', 'employee__id', 'employee__user', 'status', 'employee__business',
                   'start_date', 'end_date']
 
 

@@ -70,7 +70,6 @@ const HolidayModal = ({ onClose, extra }) => {
             value={leaveType}
           >
             <option value="Holiday">Holiday</option>
-            <option value="Sick">Sick</option>
           </select>
           <p className="error">{errors.last_name}</p>
         </div>

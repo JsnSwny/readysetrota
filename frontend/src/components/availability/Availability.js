@@ -16,7 +16,12 @@ import { updateLeave, getLeave } from "../../actions/availability";
 import { objectOf } from "prop-types";
 import AvailabilityByDate from "./AvailabilityByDate";
 import AvailabilityByEmployee from "./AvailabilityByEmployee";
-import { getAllAvailability, getEmployees } from "../../actions/employees";
+import AvailabilityRequestItem from "./AvailabilityRequestItem";
+import {
+  getAllAvailability,
+  getEmployees,
+  updateAvailability,
+} from "../../actions/employees";
 
 const Availability = ({ modalProps }) => {
   const dispatch = useDispatch();
@@ -351,59 +356,21 @@ const Availability = ({ modalProps }) => {
               ) : selectedEmployee ? (
                 <AvailabilityByEmployee selectedEmployee={selectedEmployee} />
               ) : (
-                leave
-                  .filter((leave) => leave.status == "Pending")
-                  .map((item) => (
-                    <div className="dashboardHolidays__item">
-                      <div>
-                        <h4 className="flex-container--align-center dashboardHolidays__type">
-                          <span className="dashboardHolidays__indicator--blue"></span>
-                          {item.leave_type}
-                        </h4>
-                        <p>
-                          <i class="fas fa-user"></i>
-                          {item.employee.full_name}
-                        </p>
-                        <p>
-                          <i class="fas fa-calendar-alt"></i>
-                          {format(parseISO(item.start_date), "do MMMM yyyy")} -
-                          {format(parseISO(item.end_date), "do MMMM yyyy")}
-                        </p>
-                        {item.reason && (
-                          <p>
-                            <i class="fas fa-info-circle"></i>
-                            {item.reason}
-                          </p>
-                        )}
-                      </div>
-                      <div className="dashboardHolidays__buttons">
-                        <button
-                          onClick={() =>
-                            dispatch(
-                              updateLeave(item.id, {
-                                ...item,
-                                status: "Approved",
-                              })
-                            )
-                          }
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() =>
-                            dispatch(
-                              updateLeave(item.id, {
-                                ...item,
-                                status: "Denied",
-                              })
-                            )
-                          }
-                        >
-                          Deny
-                        </button>
-                      </div>
-                    </div>
-                  ))
+                <Fragment>
+                  <AvailabilityRequestItem
+                    list={leave.filter((leave) => leave.status == "Pending")}
+                    type="leave"
+                    updateAction={updateLeave}
+                  />
+                  <AvailabilityRequestItem
+                    list={availability.filter(
+                      (item) =>
+                        item.name == "unavailable" && item.status == "Pending"
+                    )}
+                    type="availabilities"
+                    updateAction={updateAvailability}
+                  />
+                </Fragment>
               )}
             </div>
           </div>

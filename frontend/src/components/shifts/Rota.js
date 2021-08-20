@@ -272,14 +272,34 @@ const Rota = ({ modalProps, confirmProps }) => {
       <div className="rotaFunctions flex-container--between wrapper--md">
         <div className="rotaFunctions__wrapper">
           <div className="rotaFunctions__button-list">
-            <div
-              onClick={() => {
-                dispatch(publish());
-              }}
-              className="rotaFunctions__button"
-            >
-              Publish <i className="fas fa-check"></i>
-            </div>
+            {permissions.includes("manage_shifts") && (
+              <div
+                onClick={() => {
+                  dispatch(publish());
+                }}
+                className={`rotaFunctions__button ${
+                  !user.business && settings.shift_approval
+                    ? shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= addDays(new Date(), -1) &&
+                          item.stage == "Unpublished" &&
+                          item.employee
+                      )
+                      ? ""
+                      : "disabled"
+                    : !shifts.some(
+                        (item) =>
+                          parseISO(item.date) >= addDays(new Date(), -1) &&
+                          item.stage != "Published" &&
+                          item.employee
+                      )
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                Publish <i className="fas fa-check"></i>
+              </div>
+            )}
             {permissions.includes("manage_availabilities") &&
               business.plan != "F" && (
                 <div
