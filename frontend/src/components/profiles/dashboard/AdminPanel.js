@@ -16,7 +16,7 @@ import { getStats } from "../../../actions/stats";
 import DashboardShifts from "./DashboardShifts";
 import StatsItem from "./StatsItem";
 
-const AdminPanel = (props) => {
+const AdminPanel = ({ setDashboardView }) => {
   const dispatch = useDispatch();
 
   const [startDate, setStartDate] = useState(new Date());
@@ -26,6 +26,7 @@ const AdminPanel = (props) => {
   let stats = useSelector((state) => state.stats.stats);
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
+  let user = useSelector((state) => state.auth.user);
   const [interval, setInterval] = useState([]);
 
   useEffect(() => {
@@ -61,8 +62,8 @@ const AdminPanel = (props) => {
 
   return (
     <Fragment>
-      <div className="banner">
-        <div className="wrapper--md flex-container--between-start">
+      <div className="banner wrapper--md">
+        <div className="flex-container--between-start">
           <h1 className="header">
             <Title
               name={`${current.site.name} Dashboard`}
@@ -70,10 +71,15 @@ const AdminPanel = (props) => {
               breakWord={false}
             />
           </h1>
-          {/* <div className="profile-icon">
-            <i className="fas fa-user"></i>
-          </div> */}
         </div>
+        {!user.business && (
+          <p
+            className="banner__link"
+            onClick={() => setDashboardView("employee")}
+          >
+            View Employee Dashboard
+          </p>
+        )}
       </div>
       <div className="dashboard wrapper--md">
         <h2 className="title-sm">Shifts</h2>

@@ -24,7 +24,7 @@ import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../actions/stats";
 import StatsItem from "./dashboard/StatsItem";
 
-const StaffProfile = ({ modalProps }) => {
+const StaffProfile = ({ modalProps, setDashboardView }) => {
   const dispatch = useDispatch();
 
   const { setOpen, setType, setExtra } = modalProps;
@@ -38,7 +38,9 @@ const StaffProfile = ({ modalProps }) => {
   let loading = useSelector((state) => state.loading);
   let leave = useSelector((state) => state.availability.leave);
   let stats = useSelector((state) => state.stats.stats);
-
+  let permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
   const [interval, setInterval] = useState([]);
 
   let siteAdmin = useSelector((state) => state.employees.site_admin);
@@ -163,6 +165,16 @@ const StaffProfile = ({ modalProps }) => {
             />
           </h1>
         </div>
+        {permissions &&
+          permissions.includes("manage_shifts") &&
+          permissions.includes("manage_wages") && (
+            <p
+              className="banner__link"
+              onClick={() => setDashboardView("business")}
+            >
+              View Site Dashboard
+            </p>
+          )}
       </div>
 
       <div className="dashboard wrapper--md">
