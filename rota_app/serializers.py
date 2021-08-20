@@ -526,8 +526,9 @@ class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
         if obj.start_time:
             return str(obj.start_time)[0:5]
     def get_end_time(self, obj):
-        if obj.end_time:
+        if obj.end_time != "Finish":
             return str(obj.end_time)[0:5]
+        return str(obj.end_time)
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):
