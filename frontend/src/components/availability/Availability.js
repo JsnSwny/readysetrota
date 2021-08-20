@@ -69,7 +69,7 @@ const Availability = ({ modalProps }) => {
       )
     );
     dispatch(getLeave());
-  }, [availabilityMonth]);
+  }, [availabilityMonth, current.site]);
 
   useEffect(() => {
     dateRange.forEach((date) => {
