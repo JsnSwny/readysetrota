@@ -149,6 +149,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
     def get_site_permissions(self, obj):
+        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -428,7 +429,7 @@ class ShiftReadOnlySerializer(serializers.Serializer):
             return 0
 
     def get_length(self, obj):
-        if obj.end_time != 'Finish':
+        if obj.end_time and obj.end_time != 'Finish':
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
 
@@ -467,7 +468,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
         return 0
 
     def get_length(self, obj):
-        if obj.end_time != 'Finish':
+        if obj.end_time and obj.end_time != 'Finish':
             current_date = date.today()
             start = datetime.combine(current_date, obj.start_time)
 
