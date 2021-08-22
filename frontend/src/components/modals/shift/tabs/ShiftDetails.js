@@ -157,6 +157,7 @@ const ShiftDetails = ({
           <p className="error">{errors.end_time}</p>
         </div>
       </div>
+      {console.log(popular_times)}
       {popular_times.length > 0 && (
         <small className="staffForm__popular-title">Most Used Times</small>
       )}
