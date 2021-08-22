@@ -119,11 +119,9 @@ const Rota = ({ modalProps, confirmProps }) => {
 
   // Update Shifts and Popular Times
   useEffect(() => {
-    if (current.site.id > 0) {
-      dispatch(getPopularTimes());
-      widthUpdate(true);
-    }
-  }, [current.site.id]);
+    dispatch(getPopularTimes());
+    widthUpdate(true);
+  }, [current.site]);
 
   // Initialise employee list
   useEffect(() => {
