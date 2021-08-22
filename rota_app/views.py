@@ -64,9 +64,9 @@ class CheckUUID(APIView):
 
 class GetPopularTimes(APIView):
     def get(self, request):
-        department_id = request.query_params.get('department')
-        shifts = Shift.objects.filter(department=department_id)
-        most_common = shifts.values("start_time", "end_time", "break_length", "department").annotate(
+        site_id = request.query_params.get('site')
+        shifts = Shift.objects.filter(department__site=site_id)
+        most_common = shifts.values("start_time", "end_time", "break_length", "department__site").annotate(
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]

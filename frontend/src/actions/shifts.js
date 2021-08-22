@@ -200,9 +200,7 @@ export const deleteShift = (id) => (dispatch, getState) => {
 export const getPopularTimes = () => (dispatch, getState) => {
   axios
     .get(
-      `/api-view/getpopulartimes?department=${
-        getState().employees.current.department.id
-      }`,
+      `/api-view/getpopulartimes?site=${getState().employees.current.site.id}`,
       tokenConfig(getState)
     )
     .then((res) => {
