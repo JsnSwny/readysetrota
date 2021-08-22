@@ -72,6 +72,17 @@ const Nav = () => {
                         </div>
                       ))}
                       <hr className="separator--alt-2"></hr>
+                      {user.business ? (
+                        <Link
+                          className="nav__profileDropdown-link"
+                          to="/settings"
+                        >
+                          Settings
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+
                       <Link
                         className="nav__profileDropdown-link"
                         to="/changepassword"
