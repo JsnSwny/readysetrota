@@ -172,8 +172,7 @@ const ShiftDetails = ({
               setBreakLength(item.break_length);
             }}
           >
-            {item.start_time} -{" "}
-            {item.end_time != "None" ? item.end_time : "Finish"}{" "}
+            {item.start_time} - {item.end_time}{" "}
             {item.break_length > 0 && `(${item.break_length})`}
           </p>
         ))}

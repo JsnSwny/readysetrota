@@ -147,7 +147,7 @@ export const addShift = (shift) => (dispatch, getState) => {
         payload: {
           ...res.data,
           start_time: res.data.start_time.substr(0, 5),
-          end_time: res.data.end_time.substr(0, 5),
+          end_time: res.data.end_time,
         },
       });
       dispatch(getPopularTimes());

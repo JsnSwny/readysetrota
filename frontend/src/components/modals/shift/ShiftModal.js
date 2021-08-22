@@ -106,7 +106,7 @@ const ShiftModal = (props) => {
     const shiftObj = {
       employee_id: shiftEmployee ? shiftEmployee : null,
       start_time: startTime,
-      end_time: endTime == "Finish" ? null : endTime,
+      end_time: endTime,
       info,
       date: update ? update.date : date,
       break_length: breakLength,
@@ -142,7 +142,7 @@ const ShiftModal = (props) => {
         : "You must select at least one position",
     };
     dispatch(getErrors(error_obj, 400));
-
+    console.log(shiftObj);
     if (
       Object.keys(error_obj).every((k) => {
         return error_obj[k] == true;

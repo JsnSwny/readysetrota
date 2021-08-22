@@ -70,7 +70,7 @@ class GetPopularTimes(APIView):
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]
-            i['end_time'] = str(i['end_time'])[0:5]
+            i['end_time'] = str(i['end_time'])
         return Response(most_common)
 
 
