@@ -6,6 +6,7 @@ import StaffManagement from "./StaffManagement";
 
 const Home = ({ modalProps }) => {
   let user = useSelector((state) => state.auth.user);
+  let current = useSelector((state) => state.employees.current);
   const [dashboardView, setDashboardView] = useState(
     user.business ? "business" : "employee"
   );
