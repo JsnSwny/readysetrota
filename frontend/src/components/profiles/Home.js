@@ -9,6 +9,9 @@ const Home = ({ modalProps }) => {
   const [dashboardView, setDashboardView] = useState(
     user.business ? "business" : "employee"
   );
+  useEffect(() => {
+    setDashboardView(user.business ? "business" : "employee");
+  }, [current.site]);
   if (dashboardView == "business") {
     return <AdminPanel setDashboardView={setDashboardView} />;
   } else {
