@@ -145,10 +145,11 @@ const StaffPicker = (props) => {
 
       <div className="list-block__wrapper">
         {sortEmployees()
-          .filter((emp) =>
-            emp.position.some(
-              (pos) => pos.department.id == current.department.id
-            )
+          .filter(
+            (emp) =>
+              emp.position.some(
+                (pos) => pos.department.id == current.department.id
+              ) && !emp.archived
           )
           .map((item) => (
             <div key={item.id} className="list-block__item--sm">
