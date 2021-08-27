@@ -4,6 +4,9 @@ import Switch from "react-switch";
 import { updateSite } from "../../actions/employees";
 import { toast } from "react-toastify";
 import Title from "../common/Title";
+import PasswordSettings from "./PasswordSettings";
+import AccountSettings from "./AccountSettings";
+import EmailSettings from "./EmailSettings";
 
 const Settings = () => {
   let sites = useSelector((state) => state.employees.sites);
@@ -45,139 +48,20 @@ const Settings = () => {
   return (
     <Fragment>
       <div className="banner">
-        <div className="wrapper--md">
+        <div className="wrapper--sm">
           <h1 className="header">
-            <Title name="Site Settings" breakWord={true} />
+            <Title name="Settings" breakWord={true} />
           </h1>
         </div>
       </div>
-      <div className="settings wrapper--md">
-        <div className="flex-container--between settings__wrapper">
-          <div className="settings__item">
-            <h2>Shift Approval</h2>
-            <p>
-              The business owner has to approve incoming shifts from site
-              managers
-            </p>
-          </div>
-          <Switch
-            onChange={() => {
-              setShiftApproval(!shiftApproval);
-            }}
-            checked={shiftApproval}
-            onColor={"#EE6DE7"}
-          />
+      <div className="settings wrapper--sm">
+        <div className="settings__right">
+          <AccountSettings />
+          <hr className="separator--alt-3" />
+          <EmailSettings />
+          <hr className="separator--alt-3" />
+          <PasswordSettings />
         </div>
-
-        <hr />
-        <div className="flex-container--between settings__wrapper">
-          <div className="settings__item">
-            <h2>Forecasting</h2>
-            <p>Set the start and end times for shift creation</p>
-          </div>
-          <Switch
-            onChange={() => {
-              setForecasting(!forecasting);
-            }}
-            checked={forecasting}
-            onColor={"#EE6DE7"}
-          />
-        </div>
-        <hr />
-        <div className="flex-container--between settings__wrapper">
-          <div className="settings__item">
-            <h2>Shift Times</h2>
-            <p>Set the start and end times for shift creation</p>
-          </div>
-          <div className="form__wrapper">
-            <div className="form__control">
-              <label className="form__label">Minimum Time:</label>
-              <select
-                className="form__input"
-                onChange={(e) => setMinTime(e.target.value)}
-                name="starttime"
-                value={minTime}
-              >
-                <option value="" disabled>
-                  Select a start time
-                </option>
-                {hours.map((time) => (
-                  <option key={time} value={`${time}`}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form__control">
-              <label className="form__label">Maximum Time:</label>
-              <select
-                className="form__input"
-                onChange={(e) => setMaxTime(e.target.value)}
-                name="endtime"
-                value={maxTime}
-              >
-                <option value="" disabled>
-                  Select an end time
-                </option>
-                <option value="Finish">Finish</option>
-                {hours.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div className="flex-container--between settings__wrapper">
-          <div className="settings__item">
-            <h2>Shift Time Interval</h2>
-            <p>Set the interval between shift times</p>
-          </div>
-          <select
-            className="form__input"
-            onChange={(e) => setIncremental(e.target.value)}
-            name="incremental"
-            value={incremental}
-          >
-            <option value="" disabled>
-              Select an incremental
-            </option>
-            {incrementalList.map((inc) => (
-              <option key={inc} value={inc}>
-                {inc} minutes
-              </option>
-            ))}
-          </select>
-          {/* <input
-            type="number"
-            onChange={(e) => {
-              setIncremental(e.target.value);
-            }}
-            value={incremental}
-          /> */}
-        </div>
-        <button
-          className="form__save"
-          onClick={() => {
-            dispatch(
-              updateSite(current.site.id, {
-                sitesettings: {
-                  ...settings,
-                  forecasting,
-                  shift_approval: shiftApproval,
-                  min_time: minTime,
-                  max_time: maxTime,
-                  time_increment: incremental,
-                },
-              })
-            );
-            toast.success("Settings Applied!");
-          }}
-        >
-          Apply
-        </button>
       </div>
     </Fragment>
   );

@@ -8,6 +8,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  UUID_SUCCESS,
+  SUCCESS,
 } from "./types";
 
 import { getErrors } from "./errors";
@@ -71,29 +73,28 @@ export const login = (username, password) => (dispatch) => {
     });
 };
 
-export const changePassword = (old_password, new_password) => (
-  dispatch,
-  getState
-) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const body = JSON.stringify({
-    old_password,
-    new_password,
-  });
-  axios
-    .put("/api/auth/changepassword", body, tokenConfig(getState))
-    .then((res) => {
-      res.data;
-      dispatch(logout());
-    })
-    .catch((err) => {
-      dispatch(getErrors(err.response.data, err.response.status));
+export const changePassword =
+  (old_password, new_password) => (dispatch, getState) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const body = JSON.stringify({
+      old_password,
+      new_password,
     });
-};
+    axios
+      .put("/api/auth/changepassword", body, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: SUCCESS,
+        });
+      })
+      .catch((err) => {
+        dispatch(getErrors(err.response.data, err.response.status));
+      });
+  };
 
 export const logout = () => (dispatch, getState) => {
   axios
@@ -108,51 +109,53 @@ export const logout = () => (dispatch, getState) => {
 };
 
 // REGISTER USER
-export const register = ({
-  username,
-  password,
-  password2,
-  email,
-  role,
-  businessName,
-  first_name,
-  last_name,
-}) => (dispatch) => {
-  // Headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  // Request Body
-  const body = JSON.stringify({
+export const register =
+  ({
     username,
     password,
     password2,
     email,
     role,
     businessName,
-    first_name: first_name ? first_name : businessName,
-    last_name: last_name ? last_name : businessName,
-  });
+    first_name,
+    last_name,
+  }) =>
+  (dispatch) => {
+    // Headers
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-  axios
-    .post("/api/auth/register", body, config)
-    .then((res) => {
-      dispatch({
-        type: REGISTER_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      console.log(err.response);
-      dispatch(getErrors(err.response.data, err.response.status));
-      dispatch({
-        type: REGISTER_FAIL,
-      });
+    // Request Body
+    const body = JSON.stringify({
+      username,
+      password,
+      password2,
+      email,
+      role,
+      businessName,
+      first_name: first_name ? first_name : businessName,
+      last_name: last_name ? last_name : businessName,
     });
-};
+
+    axios
+      .post("/api/auth/register", body, config)
+      .then((res) => {
+        dispatch({
+          type: REGISTER_SUCCESS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        dispatch(getErrors(err.response.data, err.response.status));
+        dispatch({
+          type: REGISTER_FAIL,
+        });
+      });
+  };
 
 export const tokenConfig = (getState) => {
   // Get token from state

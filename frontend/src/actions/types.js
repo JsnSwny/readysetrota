@@ -80,3 +80,5 @@ export const DELETE_LEAVE = "DELETE_LEAVE";
 export const UPDATE_LEAVE = "UPDATE_LEAVE";
 
 export const STATS_LOADING = "STATS_LOADING";
+
+export const SUCCESS = "SUCCESS";

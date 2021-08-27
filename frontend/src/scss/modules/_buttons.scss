@@ -23,33 +23,13 @@
   }
   &-3 {
     @extend .btn;
-    height: 35px;
-    border-radius: 10px;
-    margin-right: 10px;
-    border: 1px solid rgb(190, 190, 190);
-    background-color: white;
-    padding: 0 20px;
-    color: $pink;
-    width: 200px;
-    @include wi-mq(tablet) {
-      margin-right: 0;
-      margin: 5px 0;
-      width: 80%;
-      max-width: 400px;
-      // &.button {
-      //   width: 80%;
-      //   max-width: 400px;
-      // }
-    }
-    &:focus {
-      outline: none;
-    }
-    .fas {
-      margin-right: 10px;
-    }
-    &.disabled {
-      opacity: 0.5;
-      cursor: auto;
+    background-color: $pink;
+    padding: 6px 20px;
+    border-radius: 5px;
+    min-width: 170px;
+    @extend .shadow;
+    &:hover {
+      background-color: darken($pink, 10%);
     }
   }
   &-4 {

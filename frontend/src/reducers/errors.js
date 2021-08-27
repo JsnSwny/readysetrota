@@ -1,8 +1,9 @@
-import { GET_ERRORS, RESET_ERRORS } from "../actions/types";
+import { GET_ERRORS, RESET_ERRORS, SUCCESS } from "../actions/types";
 
 const initialState = {
   msg: {},
   status: null,
+  success: false,
 };
 
 export default function (state = initialState, action) {
@@ -18,6 +19,12 @@ export default function (state = initialState, action) {
         ...state,
         msg: {},
         status: null,
+        success: false,
+      };
+    case SUCCESS:
+      return {
+        ...state,
+        success: true,
       };
     default:
       return state;

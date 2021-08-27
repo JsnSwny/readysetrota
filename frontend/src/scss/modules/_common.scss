@@ -97,6 +97,10 @@
     @extend .separator;
     margin: 10px 0;
   }
+  &--alt-3 {
+    @extend .separator;
+    margin: 40px 0;
+  }
 }
 
 .tooltip {
