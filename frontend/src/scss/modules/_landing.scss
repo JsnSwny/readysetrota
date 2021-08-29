@@ -1,388 +1,259 @@
 .landing {
-  &__hero {
-    min-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    @include wi-mq(tablet) {
-      flex-direction: column;
-      justify-content: center;
-      padding: 100px 0;
-    }
-    &-image {
-      max-width: 900px;
-      width: 100%;
-      margin-left: 20px;
-      @include wi-mq(tablet) {
-        max-width: 400px;
-        margin-left: 0;
-        margin-top: 50px;
-      }
-    }
-    &-text {
-      max-width: 800px;
-      margin-right: 20px;
-      @include wi-mq(tablet) {
-        margin-right: 0;
-        text-align: center;
-      }
-      h2 {
-        color: #963cbd;
-        font-size: 48px;
-        font-weight: normal;
-        @include wi-mq(mobile) {
-          font-size: 36px;
-        }
-      }
-      p {
-        line-height: 35px;
-        font-size: 18px;
-        margin-top: 15px;
-        max-width: 70%;
-        width: 100%;
-        @include wi-mq(tablet) {
-          margin: 0 auto;
-          margin-top: 30px;
-        }
-        @include wi-mq(mobile) {
-          font-size: 16px;
-          max-width: 100%;
-        }
-      }
-    }
-    .btn-5 {
-      margin-top: 50px;
-      padding: 15px 0;
-      width: 300px;
-      font-size: 18px;
-    }
-  }
-  &__section {
-    iframe {
-      max-width: 1229px;
-      height: 691px;
-      width: 100%;
-      display: block;
-      margin: 0 auto;
+  &__banner {
+    background-color: $pink;
+    padding: 50px 0;
+    color: white;
+    text-align: center;
+    button {
+      background-color: white;
+      color: $blue;
+      font-weight: bold;
       margin-top: 40px;
-      @include wi-mq(tablet) {
-        max-width: 100%;
-        height: 400px;
-      }
-      @include wi-mq(mobile) {
-        max-width: 100%;
-        height: 300px;
-      }
-    }
-    padding: 150px 20px;
-    @include wi-mq(tablet) {
-      padding: 100px 20px;
-    }
-    &.blue-section {
-      background-color: #32394d;
-      color: $pink;
-      .landing__section-subtitle {
+      &:hover {
+        background-color: $blue;
         color: white;
       }
     }
-    &-title {
+  }
+  h1 {
+    font-size: 64px;
+    line-height: 3.5rem;
+    text-align: center;
+    @include wi-mq(widescreen) {
       font-size: 56px;
-      text-align: center;
-      @include wi-mq(tablet) {
-        font-size: 36px;
-        line-height: 45px;
-      }
     }
-    &-subtitle {
-      font-size: 18px;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 30px;
-      margin-top: 5px;
-      @include wi-mq(tablet) {
-        font-size: 16px;
+  }
+  h1,
+  h2 {
+    font-family: "Signika Negative", sans-serif;
+  }
+  h2 {
+    text-align: center;
+    font-size: 48px;
+    &.radial-underline {
+      &::after {
+        margin: 0 auto;
+        margin-top: 10px;
+        width: 200px;
+        background: radial-gradient($blue, white);
+        height: 2px;
       }
     }
   }
-  &__about {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  h3 {
+    font-size: 24px;
+  }
+  &__subtitle {
     margin: 0 auto;
-    margin-top: 75px;
-
-    max-width: 1200px;
-    width: 100%;
-    @include wi-mq(tablet) {
-      flex-direction: column;
+    margin-top: 20px;
+    text-align: center;
+    width: 60%;
+  }
+  .section {
+    padding: 150px 0;
+    background-color: $light-blue;
+    display: flex;
+    align-items: center;
+    &.hero {
+      align-items: stretch;
     }
-    img {
-      width: 425px;
-      height: 425px;
-      object-fit: cover;
-      @include wi-mq(tablet) {
-        width: 100%;
+    &--white {
+      background-color: white;
+    }
+  }
+  .hero {
+    display: flex;
+    margin-top: -40px;
+    min-height: 75vh;
+    h1 {
+      text-align: left;
+      font-size: 72px;
+      line-height: 4.2rem;
+      @include wi-mq(widescreen) {
+        font-size: 64px;
       }
     }
     p {
-      margin-left: 60px;
-      max-width: 600px;
-      font-size: 18px;
-      @include wi-mq(tablet) {
-        margin-left: 0;
-        width: 80%;
-        margin: 0 auto;
-        margin-top: 50px;
-        text-align: center;
-      }
-      @include wi-mq(mobile) {
-        margin-left: 0;
-        width: 100%;
-        margin: 0 auto;
-        margin-top: 50px;
-        text-align: center;
+      color: $light-gray-2;
+      font-size: 24px;
+      margin-top: 20px;
+      width: 80%;
+      margin-bottom: 50px;
+      @include wi-mq(widescreen) {
+        font-size: 20px;
       }
     }
-  }
-  &__contact {
-    max-width: 600px;
-    width: 100%;
-    margin: 0 auto;
-    margin-top: 30px;
-    textarea {
-      height: 150px;
-      padding: 20px;
-      font-family: $base-font-family;
+    small {
+      font-size: 14px;
+      display: block;
+      color: $light-gray-2;
+      margin-top: 10px;
     }
-    .form-group {
-      &:not(:first-child) {
-        margin-top: 20px;
-      }
+    &__left {
+      width: 55%;
+      z-index: 2;
+      margin-top: 70px;
     }
-    .btn-5 {
-      padding: 15px 0;
-      width: 100%;
-      font-size: 18px;
+    &__image {
+      width: 55%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+    }
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    button {
+      background-color: $pink;
+      padding: 10px 0;
+      width: 175px;
+      color: white;
       font-weight: bold;
-      margin-top: 50px;
+      font-size: 16px;
+      margin-right: 30px;
+      border-radius: 5px;
+      transition: 0.2s ease background-color;
+      cursor: pointer;
+      &:hover {
+        background-color: darken($pink, 10%);
+      }
+      &.blue {
+        background-color: $blue;
+        &:hover {
+          background-color: lighten($blue, 10%);
+        }
+      }
     }
   }
-  &__chooseus {
-    margin-top: 75px;
+  .features {
+    display: flex;
+    margin-top: 125px;
+    justify-content: space-between;
+    &__item {
+      width: calc(33.33% - 20px);
+      position: relative;
+      background-color: white;
+      border-radius: 5px;
+      border-top: 50px solid $pink;
+      padding: 50px;
+      text-align: center;
+      h3 {
+        line-height: 1.7rem;
+        margin-bottom: 20px;
+      }
+      p {
+        line-height: 1.3rem;
+        color: $light-gray-2;
+      }
+      @extend .shadow;
+    }
+    &__hang {
+      position: absolute;
+      border-radius: 20px;
+      width: 30px;
+      height: 75px;
+      border: 3px solid white;
+      top: -100px;
+      background-color: $pink;
+      &-left {
+        @extend .features__hang;
+        left: 15%;
+      }
+      &-right {
+        @extend .features__hang;
+        right: 15%;
+      }
+    }
+  }
+  .usersThink {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    color: white;
-    @include wi-mq(tablet) {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    &-item {
+    margin-top: 75px;
+    &__item {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      margin: 0 20px;
-      @include wi-mq(tablet) {
-        &:not(:first-child) {
-          margin-top: 75px;
-        }
-      }
-      i {
-        font-size: 100px;
-      }
-      p {
-        max-width: 350px;
-        text-align: center;
-        margin-top: 40px;
-        font-size: 18px;
-      }
-    }
-  }
-  &__features {
-    &-list {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      font-size: 24px;
-      max-width: 1000px;
-      width: 100%;
-      margin: 0 auto;
-      margin-top: 75px;
-      @include wi-mq(tablet) {
-        justify-content: center;
-      }
-      p {
-        opacity: 0.5;
-        cursor: pointer;
-        margin: 10px 10px;
-        transition: 0.2s opacity ease-in-out;
-        @include wi-mq(tablet) {
-          font-size: 18px;
-          justify-content: flex-start;
-        }
-        &::after {
-          content: "";
-          display: block;
-          width: 100%;
-          height: 2.5px;
-          margin-top: 5px;
-          background-color: black;
-          opacity: 0.5;
-        }
-        &.active {
-          opacity: 1;
-          &::after {
-            opacity: 1;
-          }
-        }
-        &:hover {
-          opacity: 0.8;
-          &::after {
-            opacity: 0.8;
-          }
-        }
-      }
-    }
-    &-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      @include wi-mq(tablet) {
-        flex-direction: column;
-      }
-      &.reverse {
-        flex-direction: row-reverse;
-        @include wi-mq(tablet) {
-          flex-direction: column;
-        }
-      }
-      margin-top: 50px;
-      @include wi-mq(tablet) {
-        margin-top: 20px;
-      }
+      width: 45%;
       img {
-        max-width: 50%;
-        width: 100%;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
         margin-right: 30px;
-        @include wi-mq(tablet) {
-          margin-right: 0;
-          max-width: 100%;
-        }
-      }
-      div {
-        max-width: 50%;
-        width: 100%;
-        margin-left: 30px;
-        @include wi-mq(tablet) {
-          text-align: center;
-          margin-left: 0;
-          max-width: 100%;
-        }
-      }
-    }
-  }
-  &__join {
-    text-align: center;
-    color: white;
-    .btn-5 {
-      color: white;
-      border: 2px solid white;
-      font-weight: bold;
-      margin-top: 50px;
-      max-width: 500px;
-      width: 100%;
-      padding: 20px 0;
-      &:hover {
-        color: $pink;
-        border: 2px solid $pink;
-        background-color: transparent;
-      }
-    }
-  }
-  &__pricing {
-    color: white;
-    text-align: center;
-    label {
-      color: white;
-      display: block;
-      margin-top: 20px;
-    }
-    .slider {
-      display: block;
-      max-width: 600px;
-      width: 100%;
-      margin: 0 auto;
-      margin-top: 20px;
-      margin-bottom: 25px;
-    }
-    &-item {
-      background-color: white;
-      padding: 30px 20px;
-      color: black;
-      text-align: center;
-      max-width: 600px;
-      width: 100%;
-      margin: 0 auto;
-      margin-top: 75px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      -webkit-box-shadow: 0px 9px 12px 0px rgba(0, 0, 0, 0.75);
-      -moz-box-shadow: 0px 9px 12px 0px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 9px 12px 0px rgba(0, 0, 0, 0.75);
-      h2 {
-        font-size: 48px;
-        margin-bottom: 40px;
-        @include wi-mq(tablet) {
-          font-size: 36px;
-        }
-        &::after {
-          content: "";
-          display: block;
-          width: 80%;
-          margin: 0 auto;
-          height: 3px;
-          margin-top: 10px;
-          background-color: rgb(0, 0, 0);
-        }
-      }
-      ul {
-        list-style-type: none;
-        font-size: 18px;
-        line-height: 35px;
-        margin-bottom: 50px;
       }
       h3 {
-        font-size: 32px;
+        font-weight: normal;
+        strong {
+          font-weight: bold;
+        }
+      }
+      a {
+        color: $pink;
+      }
+      blockquote {
+        font-size: 14px;
+        margin-top: 10px;
       }
     }
   }
-  &__video {
-    max-width: 1000px;
-    width: 100%;
-    margin: 0 auto;
-    display: block;
+  .pricing {
     margin-top: 75px;
-  }
-}
-
-footer {
-  background-color: $blue;
-  margin-top: 100px;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  @include wi-mq(tablet) {
     display: flex;
-    flex-direction: column;
-    span {
-      display: none;
+    justify-content: center;
+    &__item {
+      width: 350px;
+      height: 400px;
+      background-color: white;
+      text-align: center;
+      padding: 25px 40px;
+      display: flex;
+      flex-direction: column;
+      margin: 0 20px;
+      @extend .shadow;
+
+      h3 {
+        font-size: 36px;
+      }
+      h5 {
+        font-size: 16px;
+        font-weight: normal;
+      }
+      p {
+        margin-top: 20px;
+        color: $light-gray-2;
+        font-size: 14px;
+        flex: 1;
+      }
+      button {
+        background-color: $pink;
+        padding: 10px 20px;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+    }
+  }
+  footer {
+    width: 100%;
+    padding: 50px 0;
+    img {
+      width: 200px;
+    }
+    .flex-container {
+      width: auto;
+    }
+    .wrapper--lg {
+      align-items: center;
+    }
+    p {
+      font-size: 14px;
+      color: $light-gray-2;
+    }
+    i {
+      color: $pink;
+      font-size: 40px;
+      margin-left: 15px;
     }
   }
 }

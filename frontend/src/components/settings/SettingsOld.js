@@ -43,7 +43,7 @@ const Settings = () => {
   }
 
   return (
-    <Fragment>
+    <div className="wrapper--lg">
       <div className="banner">
         <div className="wrapper--md">
           <h1 className="header">
@@ -179,7 +179,7 @@ const Settings = () => {
           Apply
         </button>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

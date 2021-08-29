@@ -1,20 +1,90 @@
-.dropper {
-    &:hover {
-        .dropper__items {
-            max-height: 500px;
-        }
+.dropdown {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  @extend .shadow;
+  &__wrapper {
+    position: relative;
+    height: 100%;
+    margin-right: 0 !important;
+    border-radius: 0 !important;
+  }
+  &__button {
+    background-color: white;
+    height: 100%;
+    font-size: 14px;
+    padding: 0 25px 0 10px;
+    display: flex;
+    align-items: center;
+    transition: 0.2s ease background-color, 0.2s ease color;
+    cursor: pointer;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    &.disabled {
+      cursor: default;
+      opacity: 0.5;
+      pointer-events: none;
     }
-    .fa-sort-down {
-        margin-left: 10px;
-    }
-    &__items {
-        transition: 0.5s ease max-height;
-        // max-height: 0;
-        position: absolute;
-        z-index: 10;
-        background-color: $blue;
+    &:not(.disabled) {
+      &:hover {
+        background-color: $pink;
         color: white;
-        width: 200px;
-        padding: 10px;
+      }
     }
+  }
+  &__dropper {
+    position: absolute;
+    top: calc(100% + 5px);
+
+    width: max-content;
+    left: 0;
+    color: black;
+
+    font-size: 14px;
+    font-weight: bold;
+    transform: scale(0);
+    transition: 0.2s ease transform;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: white;
+    @extend .shadow;
+
+    &.active {
+      transform: scale(1);
+    }
+  }
+  &__item {
+    padding: 10px 25px 10px 10px;
+    transition: 0.2s ease background-color, 0.2s ease color;
+    &:first-child {
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    &:last-child {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+    &:hover {
+      background-color: $pink;
+      color: white;
+    }
+    &:not(:last-child) {
+      //   border-bottom: 2px solid $blue;
+    }
+  }
+  .fa-caret-down {
+    padding: 0 10px;
+    background-color: $pink;
+    color: white;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 2px solid white;
+    &:hover {
+      background-color: darken($pink, 10%);
+    }
+  }
 }

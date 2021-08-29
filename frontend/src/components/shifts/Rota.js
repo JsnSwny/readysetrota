@@ -7,7 +7,7 @@ import {
   getEmployees,
   getPositions,
 } from "../../actions/employees";
-import { publish } from "../../actions/shifts";
+import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
 import Dates from "./Dates";
 import Loading from "../common/Loading";
@@ -57,6 +57,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   const [filterDate, setFilterDate] = useState("");
   const [currentDevice, setCurrentDevice] = useState("");
   const [showAvailabilities, setShowAvailabilities] = useState(false);
+  const [publishDropdown, setPublishDropdown] = useState(false);
   const [showFinancials, setShowFinancials] = useState(false);
   const [template, setTemplate] = useState(false);
   const [limit, setLimit] = useState("");
@@ -274,32 +275,92 @@ const Rota = ({ modalProps, confirmProps }) => {
         <div className="rotaFunctions__wrapper">
           <div className="rotaFunctions__button-list">
             {permissions.includes("manage_shifts") && (
-              <div
-                onClick={() => {
-                  dispatch(publish());
-                }}
-                className={`rotaFunctions__button ${
-                  !user.business && settings.shift_approval
-                    ? shifts.some(
-                        (item) =>
-                          parseISO(item.date) >= addDays(new Date(), -1) &&
-                          item.stage == "Unpublished" &&
-                          item.employee
-                      )
-                      ? ""
-                      : "disabled"
-                    : !shifts.some(
-                        (item) =>
-                          parseISO(item.date) >= addDays(new Date(), -1) &&
-                          item.stage != "Published" &&
-                          item.employee
-                      )
-                    ? "disabled"
-                    : ""
-                }`}
-              >
-                Publish <i className="fas fa-check"></i>
+              <div className="dropdown">
+                <div className="dropdown__wrapper">
+                  <div
+                    onClick={() => dispatch(publish())}
+                    className={`dropdown__button ${
+                      !user.business && settings.shift_approval
+                        ? shifts.some(
+                            (item) =>
+                              parseISO(item.date) >= addDays(new Date(), -1) &&
+                              item.stage == "Unpublished" &&
+                              item.employee
+                          )
+                          ? ""
+                          : "disabled"
+                        : !shifts.some(
+                            (item) =>
+                              parseISO(item.date) >= addDays(new Date(), -1) &&
+                              item.stage != "Published" &&
+                              item.employee
+                          )
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
+                    Publish
+                  </div>
+                  <div
+                    className={`dropdown__dropper ${
+                      publishDropdown ? "active" : ""
+                    }`}
+                  >
+                    <div
+                      className="dropdown__item"
+                      onClick={() => {
+                        dispatch(sendForApproval());
+                        setPublishDropdown(!publishDropdown);
+                      }}
+                    >
+                      Send for Approval
+                    </div>
+                    <div
+                      className="dropdown__item"
+                      onClick={() => {
+                        dispatch(approveShifts());
+                        setPublishDropdown(!publishDropdown);
+                      }}
+                    >
+                      Approve Shifts
+                    </div>
+                  </div>
+                </div>
+                <i
+                  onClick={() => setPublishDropdown(!publishDropdown)}
+                  className="fas fa-caret-down"
+                ></i>
               </div>
+
+              // <div
+              //     onClick={() => {
+              //       dispatch(publish());
+              //     }}
+              //     className={`rotaFunctions__button ${
+              //       !user.business && settings.shift_approval
+              //         ? shifts.some(
+              //             (item) =>
+              //               parseISO(item.date) >= addDays(new Date(), -1) &&
+              //               item.stage == "Unpublished" &&
+              //               item.employee
+              //           )
+              //           ? ""
+              //           : "disabled"
+              //         : !shifts.some(
+              //             (item) =>
+              //               parseISO(item.date) >= addDays(new Date(), -1) &&
+              //               item.stage != "Published" &&
+              //               item.employee
+              //           )
+              //         ? "disabled"
+              //         : ""
+              //     }`}
+              //   >
+              //     Publish <i className="fas fa-check"></i>
+              //   </div>
+              //   <div className="dropper__item">
+              //     <div>Send for Approval</div>
+              //   </div>
             )}
             {permissions.includes("manage_availabilities") &&
               business.plan != "F" && (

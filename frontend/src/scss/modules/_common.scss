@@ -81,6 +81,17 @@
   }
 }
 
+.radial-underline {
+  &::after {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 1px;
+    background: radial-gradient(#ccc, #f6f8fa);
+    margin-top: 8px;
+  }
+}
+
 .separator {
   margin: 10px 0 30px 0;
   background-color: $light-gray;
@@ -104,7 +115,6 @@
 }
 
 .tooltip {
-  visibility: hidden;
   min-width: 120px;
   background-color: rgb(255, 255, 255);
   color: black;
@@ -115,7 +125,7 @@
   z-index: 1;
   bottom: 110%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(0);
   @extend .shadow--md;
   &::after {
     content: "";
@@ -128,7 +138,7 @@
     border-color: white transparent transparent transparent;
   }
   &.active {
-    visibility: visible;
+    transform: scale(1);
   }
   .flex-container--center-vh {
     width: auto;
