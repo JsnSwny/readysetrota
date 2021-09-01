@@ -44,7 +44,6 @@
     font-weight: bold;
     transform: scale(0);
     transition: 0.2s ease transform;
-    cursor: pointer;
     border-radius: 5px;
     background-color: white;
     @extend .shadow;
@@ -56,6 +55,7 @@
   &__item {
     padding: 10px 25px 10px 10px;
     transition: 0.2s ease background-color, 0.2s ease color;
+    cursor: pointer;
     &:first-child {
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
@@ -67,6 +67,11 @@
     &:hover {
       background-color: $pink;
       color: white;
+    }
+    &.disabled {
+      pointer-events: none;
+      cursor: default;
+      color: rgba(black, 0.5);
     }
     &:not(:last-child) {
       //   border-bottom: 2px solid $blue;

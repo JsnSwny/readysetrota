@@ -306,24 +306,39 @@ const Rota = ({ modalProps, confirmProps }) => {
                       publishDropdown ? "active" : ""
                     }`}
                   >
-                    <div
-                      className="dropdown__item"
-                      onClick={() => {
-                        dispatch(sendForApproval());
-                        setPublishDropdown(!publishDropdown);
-                      }}
-                    >
-                      Send for Approval
-                    </div>
-                    <div
-                      className="dropdown__item"
-                      onClick={() => {
-                        dispatch(approveShifts());
-                        setPublishDropdown(!publishDropdown);
-                      }}
-                    >
-                      Approve Shifts
-                    </div>
+                    {permissions.includes("manage_shifts") &&
+                      !user.business &&
+                      settings.shift_approval && (
+                        <div
+                          className={`dropdown__item ${
+                            !shifts.some((item) => item.stage == "Creation")
+                              ? "disabled"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            dispatch(sendForApproval());
+                            setPublishDropdown(!publishDropdown);
+                          }}
+                        >
+                          Send for Approval
+                        </div>
+                      )}
+                    {permissions.includes("approve_shifts") &&
+                      settings.shift_approval && (
+                        <div
+                          className={`dropdown__item ${
+                            !shifts.some((item) => item.stage == "Approval")
+                              ? "disabled"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            dispatch(approveShifts());
+                            setPublishDropdown(!publishDropdown);
+                          }}
+                        >
+                          Approve Shifts
+                        </div>
+                      )}
                   </div>
                 </div>
                 <i
