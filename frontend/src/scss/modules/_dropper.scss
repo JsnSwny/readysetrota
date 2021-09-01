@@ -3,11 +3,18 @@
   align-items: center;
   margin-right: 10px;
   @extend .shadow;
+  @include wi-mq(mobile) {
+    max-width: calc(33.33% - 10px);
+    width: 100%;
+  }
   &__wrapper {
     position: relative;
     height: 100%;
     margin-right: 0 !important;
     border-radius: 0 !important;
+    @include wi-mq(mobile) {
+      flex: 1;
+    }
   }
   &__button {
     background-color: white;
@@ -31,6 +38,9 @@
         color: white;
       }
     }
+    @include wi-mq(tablet) {
+      font-size: 12px;
+    }
   }
   &__dropper {
     position: absolute;
@@ -50,6 +60,9 @@
 
     &.active {
       transform: scale(1);
+    }
+    @include wi-mq(tablet) {
+      font-size: 12px;
     }
   }
   &__item {

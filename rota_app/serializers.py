@@ -532,17 +532,29 @@ class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
         return str(obj.end_time)
 
 
+class AvailabilityEmployeeSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        if obj.first_name:
+            return f'{obj.first_name} {obj.last_name}'
+        return 'Open Shift'
+    class Meta:
+        model = Employee
+        fields = ('id', 'full_name',)
+
+
 class AvailabilitySerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(
         queryset=Employee.objects.all(), required=False, source='employee', write_only=True)
     site_id = serializers.PrimaryKeyRelatedField(
         queryset=Site.objects.all(), required=False, source='site', write_only=True)
-    employee = ShiftEmployeeSerializer(read_only=True)
+    employee = AvailabilityEmployeeSerializer(read_only=True)
 
     class Meta:
         model = Availability
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
 class LeaveSerializer(serializers.ModelSerializer):
     employee_id = serializers.PrimaryKeyRelatedField(
