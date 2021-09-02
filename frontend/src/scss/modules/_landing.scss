@@ -1,4 +1,5 @@
 .landing {
+  background-color: white;
   .video-modal {
     position: fixed;
     top: 0;
@@ -68,6 +69,11 @@
         color: white;
       }
     }
+    p {
+      @include wi-mq(mobile) {
+        font-size: 14px;
+      }
+    }
   }
   h1 {
     font-size: 64px;
@@ -75,6 +81,9 @@
     text-align: center;
     @include wi-mq(widescreen) {
       font-size: 56px;
+    }
+    @include wi-mq(tablet) {
+      font-size: 48px;
     }
   }
   h1,
@@ -86,6 +95,9 @@
     font-size: 48px;
     @include wi-mq(tablet) {
       font-size: 36px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 28px;
     }
     &.radial-underline {
       &::after {
@@ -102,12 +114,16 @@
     @include wi-mq(tablet) {
       font-size: 20px;
     }
+    @include wi-mq(mobile) {
+      font-size: 16px;
+    }
   }
   &__subtitle {
     margin: 0 auto;
     margin-top: 20px;
     text-align: center;
     width: 60%;
+    font-weight: normal;
     @include wi-mq(tablet) {
       width: 100%;
     }
@@ -134,6 +150,13 @@
     @include wi-mq(tablet) {
       text-align: center;
       position: relative;
+    }
+    @include wi-mq(mobile) {
+      min-height: 0;
+      margin-bottom: 50px;
+      &.section {
+        padding: 75px 0 150px 0;
+      }
     }
     h1 {
       text-align: left;
@@ -253,6 +276,9 @@
     justify-content: center;
     flex-wrap: wrap;
     margin: 125px -20px -75px 0;
+    @include wi-mq(mobile) {
+      margin: 50px 0 -40px 0;
+    }
     &__item {
       &:nth-child(even) {
         border-top: 50px solid $blue;
@@ -267,6 +293,9 @@
       }
       @include wi-mq(mobile) {
         width: calc(100%);
+        margin-bottom: 40px;
+        padding: 25px;
+        margin-right: 0;
       }
       margin-right: 20px;
       position: relative;
@@ -296,6 +325,9 @@
       border: 3px solid white;
       top: -100px;
       background-color: $pink;
+      @include wi-mq(mobile) {
+        display: none;
+      }
       &-left {
         @extend .features__hang;
         left: 15%;
@@ -312,6 +344,9 @@
     margin-top: 75px;
     @include wi-mq(tablet) {
       margin-bottom: -20px;
+    }
+    @include wi-mq(mobile) {
+      margin-top: 50px;
     }
     &__right {
       @include wi-mq(mobile) {
@@ -364,6 +399,7 @@
     }
     @include wi-mq(mobile) {
       margin-bottom: -20px;
+      margin-top: 50px;
     }
     &__item {
       width: 350px;
@@ -442,6 +478,7 @@
   .footer {
     width: 100%;
     padding: 50px 0;
+    background-color: $light-blue;
     img {
       width: 200px;
       @include wi-mq(mobile) {
