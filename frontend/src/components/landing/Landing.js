@@ -123,10 +123,10 @@ const Landing = ({ setOpen, setType }) => {
       <section className="section section--white">
         <div className="landing__wrapper wrapper--lg">
           <h2 className="radial-underline">Pricing</h2>
-          <h3 class="landing__subtitle">
+          <h4 class="landing__subtitle">
             We offer a free and premium plan so that whether you're a small or
             large business, you can benefit from readysetrota.
-          </h3>
+          </h4>
           <div className="pricing">
             <div className="pricing__item">
               <h3>Free Plan</h3>
@@ -146,8 +146,10 @@ const Landing = ({ setOpen, setType }) => {
                 <strong>£3</strong> per <strong>5</strong> Employees
               </p>
               <small>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                ultricies pharetra sagittis non.
+                The premium plan includes advanced features to further improve
+                your rota management. These features include availability
+                management, labour forecasting, custom employee permissions and
+                more.
               </small>
               <button>Learn More</button>
             </div>

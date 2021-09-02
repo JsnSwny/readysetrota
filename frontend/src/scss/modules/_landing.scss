@@ -110,9 +110,18 @@
     }
   }
   h3 {
+    font-size: 36px;
+    @include wi-mq(tablet) {
+      font-size: 28px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 20px;
+    }
+  }
+  h4 {
     font-size: 24px;
     @include wi-mq(tablet) {
-      font-size: 20px;
+      font-size: 18px;
     }
     @include wi-mq(mobile) {
       font-size: 16px;
@@ -222,6 +231,7 @@
         right: auto;
         max-width: 350px;
         height: 200px;
+        width: 100%;
       }
     }
     &__wrapper {
@@ -386,6 +396,7 @@
       blockquote {
         font-size: 14px;
         margin-top: 10px;
+        color: $light-gray-2;
       }
     }
   }
@@ -441,7 +452,7 @@
       h3 {
         font-size: 36px;
         @include wi-mq(tablet) {
-          font-size: 28px;
+          font-size: 32px;
         }
       }
       p {
