@@ -86,7 +86,7 @@
     z-index: 150;
     top: 75px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0);
     border-radius: 50%;
     background-color: lighten($blue, 10%);
     border: 4px solid lighten($blue, 20%);
@@ -99,6 +99,11 @@
     justify-content: center;
     align-items: center;
     color: white;
+    transition: 0.2s ease transform;
+    transition-delay: 0.1s;
+    &.open {
+      transform: translateX(-50%) scale(1);
+    }
     @include wi-mq(tablet) {
       width: 120px;
       height: 120px;

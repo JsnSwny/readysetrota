@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Feature from "./Feature";
 
-const Landing = () => {
+const Landing = ({ setOpen, setType }) => {
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <div className="landing">
+      <div className={`video-modal ${showVideo ? "open" : ""}`}>
+        <i
+          className="fas fa-times video-modal__close"
+          onClick={() => {
+            setShowVideo(false);
+            document.body.style.overflow = "auto";
+          }}
+        ></i>
+        <iframe
+          src="https://www.youtube.com/embed/SEhEmfoQNT8"
+          frameBorder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
       <section className="hero section">
         <div className="hero__wrapper wrapper--lg">
           <div className="hero__left">
@@ -12,8 +29,23 @@ const Landing = () => {
               readysetrota is an intuitive application which aims to make your
               life easier
             </p>
-            <button>Try it for FREE</button>
-            <button className="blue">Watch Demo</button>
+            <button
+              onClick={() => {
+                setOpen(true);
+                setType("register");
+              }}
+            >
+              Try it for FREE
+            </button>
+            <button
+              onClick={() => {
+                setShowVideo(true);
+                document.body.style.overflow = "hidden";
+              }}
+              className="blue"
+            >
+              Watch Demo
+            </button>
             <small>Full Release Coming October 26th</small>
           </div>
           <img className="hero__image" src="static/media/hero-image.svg" />
@@ -25,15 +57,15 @@ const Landing = () => {
           <div className="features">
             <Feature
               title="Advanced Availability Management"
-              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mi congue non egestas sed odio viverra sit."
+              content="Manage holidays and know exactly who you have available when planning your rota with our advanced availability management."
             />
             <Feature
-              title="Advanced Availability Management"
-              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mi congue non egestas sed odio viverra sit."
+              title="Labour Forecasting"
+              content="Track employee wages and set daily sales forecasts to get a better representation of labour costs against your revenue."
             />
             <Feature
-              title="Advanced Availability Management"
-              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mi congue non egestas sed odio viverra sit."
+              title="User Permissions"
+              content="Have full control over what your employees can see and do with our custom user permissions."
             />
           </div>
         </div>
@@ -43,7 +75,7 @@ const Landing = () => {
           <h2 className="radial-underline">What Our Users Think</h2>
           <div className="usersThink">
             <div className="usersThink__item">
-              <img src="static/media/dwayne-the-rock-.jpg" />
+              <img src="static/media/montlogo.jpg" />
               <div className="usersThink__right">
                 <h3>
                   Paul <strong>Patterson</strong>
@@ -63,7 +95,7 @@ const Landing = () => {
                 </blockquote>
               </div>
             </div>
-            <div className="usersThink__item">
+            {/* <div className="usersThink__item">
               <img src="static/media/dwayne-the-rock-.jpg" />
               <div className="usersThink__right">
                 <h3>
@@ -83,7 +115,7 @@ const Landing = () => {
                   fantastic and innovative tool!
                 </blockquote>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -92,26 +124,31 @@ const Landing = () => {
         <div className="landing__wrapper wrapper--lg">
           <h2 className="radial-underline">Pricing</h2>
           <h3 class="landing__subtitle">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nisl
-            commodo, quis elementum ac. Elit ac lectus eu lobortis.
+            We offer a free and premium plan so that whether you're a small or
+            large business, you can benefit from readysetrota.
           </h3>
           <div className="pricing">
             <div className="pricing__item">
               <h3>Free Plan</h3>
-              <h5>Completely Free</h5>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                ultricies pharetra sagittis non.
+                Completely <strong>Free</strong>
               </p>
+              <small>
+                The free plan offers a stripped back version of the application,
+                only allowing the bare minimum of creating employees and shifts.
+                Ideal for small businesses.
+              </small>
               <button>Learn More</button>
             </div>
-            <div className="pricing__item">
+            <div className="pricing__item pink">
               <h3>Premium Plan</h3>
-              <h5>£3 per 5 Employees</h5>
               <p>
+                <strong>£3</strong> per <strong>5</strong> Employees
+              </p>
+              <small>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                 ultricies pharetra sagittis non.
-              </p>
+              </small>
               <button>Learn More</button>
             </div>
           </div>
@@ -120,9 +157,17 @@ const Landing = () => {
       <section className="landing__banner">
         <h2>Try it now for FREE</h2>
         <p>Getting set up is quick and easy</p>
-        <button className="btn-3">Try Now</button>
+        <button
+          onClick={() => {
+            setOpen(true);
+            setType("register");
+          }}
+          className="btn-3"
+        >
+          Try Now
+        </button>
       </section>
-      <footer>
+      <footer className="footer">
         <div className="wrapper--lg flex-container--between">
           <div>
             <img src="static/media/logo-3.svg" />
@@ -130,9 +175,24 @@ const Landing = () => {
           </div>
 
           <div className="flex-container">
-            <i class="fab fa-linkedin"></i>
-            <i class="fab fa-instagram"></i>
-            <i class="fab fa-facebook-square"></i>
+            <a
+              className="footer__link"
+              href="https://www.linkedin.com/company/readysetcore"
+              target="_blank"
+            >
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a className="footer__link" href="#" target="_blank">
+              <i class="fab fa-instagram"></i>
+            </a>
+
+            <a
+              className="footer__link"
+              href="https://www.facebook.com/readysetcore"
+              target="_blank"
+            >
+              <i class="fab fa-facebook-square"></i>
+            </a>
           </div>
         </div>
       </footer>

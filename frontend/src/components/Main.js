@@ -43,6 +43,7 @@ import Beta from "./landing/Beta";
 import Nav from "./layout/Nav";
 import Availability from "./availability/Availability";
 import Landing from "./landing/Landing";
+import { TableBody } from "semantic-ui-react";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -66,6 +67,14 @@ const Main = () => {
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites);
   let auth = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [open]);
 
   // Use effect
   useEffect(() => {

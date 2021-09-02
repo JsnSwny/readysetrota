@@ -168,8 +168,6 @@ class Shift(models.Model):
         choices=STAGE_TYPES,
         default="Unpublished",
     )
-
-
     open_shift = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User, related_name="shifts", on_delete=models.CASCADE)
@@ -206,25 +204,7 @@ class Shift(models.Model):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {str(self.end_time)[0:5]} ({self.owner.email})'
 
     def save(self, *args, **kwargs):
-        wage_obj = Wage.objects.filter(
-            employee=self.employee).order_by('-start_date').first()
         super(Shift, self).save(*args, **kwargs)
-
-
-class ShiftSwap(models.Model):
-    swap_from = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, related_name="swap_from")
-    swap_to = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, related_name="swap_to")
-    shift_from = models.ForeignKey(
-        Shift, on_delete=models.CASCADE, related_name="shift_from")
-    shift_to = models.ForeignKey(
-        Shift, on_delete=models.CASCADE, related_name="shift_to")
-    employee_approved = models.BooleanField(null=True)
-    admin_approved = models.BooleanField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
 class Availability(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
@@ -248,21 +228,8 @@ class Availability(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # STATUS_TYPES = [
-    #     ("Unsubmitted", 'Unsubmitted'),
-    #     ("Pending", 'Pending'),
-    #     ("Approved", 'Approved'),
-    #     ("Denied", 'Denied'),
-    # ]
-    # status = models.CharField(
-    #     max_length=11,
-    #     choices=STATUS_TYPES,
-    #     default="Unsubmitted",
-    # )
-
     def __str__(self):
         return f'{self.id}. {self.date} - {self.name} - {self.employee}'
-
 class Leave(models.Model):
     LEAVE_TYPES = [
         ("Holiday", 'Holiday'),
@@ -296,9 +263,6 @@ class Leave(models.Model):
                              on_delete=models.CASCADE, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
@@ -348,3 +312,17 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return f'{self.site.business.name} - {self.site.name} [ID: {self.id}]'
+
+
+class ShiftSwap(models.Model):
+    swap_from = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="swap_from")
+    swap_to = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="swap_to")
+    shift_from = models.ForeignKey(
+        Shift, on_delete=models.CASCADE, related_name="shift_from")
+    shift_to = models.ForeignKey(
+        Shift, on_delete=models.CASCADE, related_name="shift_to")
+    employee_approved = models.BooleanField(null=True)
+    admin_approved = models.BooleanField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
