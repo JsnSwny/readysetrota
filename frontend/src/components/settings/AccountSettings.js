@@ -5,7 +5,6 @@ import { updateBusinessName } from "../../actions/employees";
 
 const AccountSettings = () => {
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
   const [businessName, setBusinessName] = useState(user.business.name);
   const [emailAddress, setEmailAddress] = useState(user.email);
   const dispatch = useDispatch();

@@ -38,7 +38,6 @@ import Checkout from "./accounts/Checkout";
 import Confirm from "./layout/Confirm";
 
 import Settings from "./settings/Settings";
-import OldSettings from "./settings/SettingsOld";
 import Beta from "./landing/Beta";
 import Nav from "./layout/Nav";
 import Availability from "./availability/Availability";
@@ -223,7 +222,7 @@ const Main = () => {
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsAndConditions} />
           <PrivateRoute path="/changepassword" component={ChangePassword} />
-          <PrivateRoute path="/settings" component={OldSettings} />
+          <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
           <PrivateRoute path="/premium" component={Plans} />

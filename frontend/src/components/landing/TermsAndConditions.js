@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Title from "../common/Title";
 
 const TermsAndConditions = () => {
   return (
-    <div className="container-2" style={{ marginTop: "40px" }}>
-      <h2>
-        <strong>Terms and Conditions</strong>
-      </h2>
+    <div className="wrapper--sm" style={{ marginTop: "40px" }}>
+      <div className="banner">
+        <h1 className="header">
+          <Title name="Terms and Conditions" breakWord={true} />
+        </h1>
+      </div>
 
       <p>Welcome to readysetrota!</p>
 

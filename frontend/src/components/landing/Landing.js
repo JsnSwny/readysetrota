@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Feature from "./Feature";
+import { Link } from "react-router-dom";
 
 const Landing = ({ setOpen, setType }) => {
   const [showVideo, setShowVideo] = useState(false);
@@ -138,7 +139,7 @@ const Landing = ({ setOpen, setType }) => {
                 only allowing the bare minimum of creating employees and shifts.
                 Ideal for small businesses.
               </small>
-              <button>Learn More</button>
+              <button>More Info Coming Soon</button>
             </div>
             <div className="pricing__item pink">
               <h3>Premium Plan</h3>
@@ -151,7 +152,7 @@ const Landing = ({ setOpen, setType }) => {
                 management, labour forecasting, custom employee permissions and
                 more.
               </small>
-              <button>Learn More</button>
+              <button>More Info Coming Soon</button>
             </div>
           </div>
         </div>
@@ -173,7 +174,10 @@ const Landing = ({ setOpen, setType }) => {
         <div className="wrapper--lg flex-container--between">
           <div>
             <img src="static/media/logo-3.svg" />
-            <p>Privacy Policy | Terms and Conditions</p>
+            <p>
+              <Link to="privacy">Privacy Policy</Link> |{" "}
+              <Link to="terms">Terms and Conditions</Link>
+            </p>
           </div>
 
           <div className="flex-container">

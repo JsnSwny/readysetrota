@@ -1,10 +1,14 @@
 import React from "react";
+import Title from "../common/Title";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="container-2" style={{ marginTop: "40px" }}>
-      <h1>Privacy Policy for readysetrota</h1>
-
+    <div className="wrapper--sm" style={{ marginTop: "40px" }}>
+      <div className="banner">
+        <h1 className="header">
+          <Title name="Privacy policy for readysetrota" breakWord={true} />
+        </h1>
+      </div>
       <p>
         At readysetrota, accessible from www.readysetrota.com, one of our main
         priorities is the privacy of our visitors. This Privacy Policy document
