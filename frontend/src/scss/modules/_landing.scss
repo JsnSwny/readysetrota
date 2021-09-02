@@ -96,9 +96,6 @@
     @include wi-mq(tablet) {
       font-size: 36px;
     }
-    @include wi-mq(mobile) {
-      font-size: 28px;
-    }
     &.radial-underline {
       &::after {
         margin: 0 auto;
@@ -110,12 +107,13 @@
     }
   }
   h3 {
-    font-size: 36px;
+    font-size: 28px;
+    line-height: 2.2rem;
     @include wi-mq(tablet) {
-      font-size: 28px;
+      font-size: 24px;
     }
     @include wi-mq(mobile) {
-      font-size: 20px;
+      font-size: 24px;
     }
   }
   h4 {
@@ -297,14 +295,17 @@
         }
       }
       width: calc(33.33% - 20px);
+      @include wi-mq(laptop) {
+        padding: 35px;
+      }
       @include wi-mq(tablet) {
         width: calc(50% - 20px);
         margin-bottom: 75px;
+        padding: 25px;
       }
       @include wi-mq(mobile) {
         width: calc(100%);
         margin-bottom: 40px;
-        padding: 25px;
         margin-right: 0;
       }
       margin-right: 20px;
@@ -315,7 +316,6 @@
       padding: 50px;
       text-align: center;
       h3 {
-        line-height: 1.7rem;
         margin-bottom: 20px;
       }
       p {
@@ -448,16 +448,10 @@
         }
       }
       @extend .shadow;
-
-      h3 {
-        font-size: 36px;
-        @include wi-mq(tablet) {
-          font-size: 32px;
-        }
-      }
       p {
         font-size: 16px;
         font-weight: normal;
+        margin-top: 5px;
         @include wi-mq(tablet) {
           font-size: 14px;
         }
