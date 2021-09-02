@@ -147,8 +147,9 @@ class RegisterSerializer(serializers.ModelSerializer):
                     name="",
                     email=validated_data['email']
                 )
+                # SETS END DATE AS PER BETA END DATE
                 business = Business(
-                    owner=user, name=validated_data['businessName'], plan="T", trial_end=datetime.datetime(2021, 9, 1).date())
+                    owner=user, name=validated_data['businessName'], plan="T", trial_end=datetime.datetime(2021, 10, 26).date())
                 business.save()
                 profile = UserProfile(
                     user=user, role=validated_data['role'], stripe_id=customer.id)
