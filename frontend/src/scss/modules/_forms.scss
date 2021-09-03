@@ -100,10 +100,10 @@
     color: white;
     transition: 0.2s ease transform;
     transition-delay: 0.1s;
-    display: none;
-    &.open {
-      display: flex;
-    }
+    display: flex;
+    // &.open {
+    //   display: flex;
+    // }
     @include wi-mq(tablet) {
       width: 120px;
       height: 120px;

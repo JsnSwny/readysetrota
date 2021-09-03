@@ -66,20 +66,25 @@ const CreateShift = (props) => {
   };
 
   return (
-    <div className={`modal App ${open ? "open" : ""}`}>
-      <div className={`form__image ${open ? "open" : ""}`}>
-        <i className={`${imageTypes[type]}`}></i>
-      </div>
+    open && (
+      <div className={`modal App ${open ? "open" : ""}`}>
+        <div className={`form__image ${open ? "open" : ""}`}>
+          <i className={`${imageTypes[type]}`}></i>
+        </div>
 
-      <div
-        className={`modal__container ${open ? "open" : ""} ${
-          type == "register" ? "modal__container--sm" : ""
-        }`}
-      >
-        <i className="fas fa-times modal__close" onClick={() => onClose()}></i>
-        {getModal()}
+        <div
+          className={`modal__container ${open ? "open" : ""} ${
+            type == "register" ? "modal__container--sm" : ""
+          }`}
+        >
+          <i
+            className="fas fa-times modal__close"
+            onClick={() => onClose()}
+          ></i>
+          {getModal()}
+        </div>
       </div>
-    </div>
+    )
   );
 };
 

@@ -40,10 +40,10 @@
     overflow: hidden;
     max-width: 750px;
     transition: 0.2s ease transform;
-    display: none;
-    &.open {
-      display: block;
-    }
+    display: block;
+    // &.open {
+    //   display: block;
+    // }
     &--sm {
       max-width: 550px;
     }
