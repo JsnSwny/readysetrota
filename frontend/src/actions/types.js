@@ -80,5 +80,8 @@ export const DELETE_LEAVE = "DELETE_LEAVE";
 export const UPDATE_LEAVE = "UPDATE_LEAVE";
 
 export const STATS_LOADING = "STATS_LOADING";
+export const TIMECLOCK_LOADING = "TIMECLOCK_LOADING";
 
 export const SUCCESS = "SUCCESS";
+export const GET_TIMECLOCK = "GET_TIMECLOCK";
+export const RESET_TIMECLOCK = "RESET_TIMECLOCK";

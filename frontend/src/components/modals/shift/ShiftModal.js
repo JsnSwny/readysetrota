@@ -8,7 +8,7 @@ import ShiftDetails from "./tabs/ShiftDetails";
 import ExtraInfo from "./tabs/ExtraInfo";
 import Absence from "./tabs/Absence";
 import Positions from "../Positions";
-import Timeclock from "./tabs/Timeclock";
+import TimeclockTab from "./tabs/TimeclockTab";
 import useref from "gulp-useref";
 import Tab from "../Tab";
 import { parseISO, addDays } from "date-fns";
@@ -115,7 +115,7 @@ const ShiftModal = (props) => {
       open_shift: shiftEmployee ? false : true,
       department_id: extra.shiftDepartment,
       stage: shiftEmployee
-        ? isUpdated() && !(startTimeClock && endTimeClock)
+        ? isUpdated()
           ? !settings.shift_approval || user.business
             ? "Unpublished"
             : "Creation"
@@ -142,7 +142,6 @@ const ShiftModal = (props) => {
         : "You must select at least one position",
     };
     dispatch(getErrors(error_obj, 400));
-    console.log(shiftObj);
     if (
       Object.keys(error_obj).every((k) => {
         return error_obj[k] == true;
@@ -222,7 +221,7 @@ const ShiftModal = (props) => {
           />
         );
       case "Timeclock":
-        return <Timeclock {...timeClockProps} />;
+        return <TimeclockTab {...timeClockProps} />;
       default:
         return "Invalid Tab";
     }

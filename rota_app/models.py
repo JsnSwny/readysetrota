@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime, timedelta, time, date
 from jsonfield import JSONField
 from simple_history.models import HistoricalRecords
-
+from django.core.validators import MaxValueValidator, MinValueValidator 
 
 
 class Business(models.Model):
@@ -114,6 +114,7 @@ class Employee(models.Model):
     business = models.ForeignKey(
         Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
     history = HistoricalRecords()
+    pin = models.IntegerField(null=True, validators=[MinValueValidator(1000), MaxValueValidator(9999)])
 
     archived = models.BooleanField(default=False)
 
@@ -291,7 +292,17 @@ class TimeClock(models.Model):
     employee = models.ForeignKey(
         Employee, related_name="employee_timeclock", on_delete=models.CASCADE)
     clock_in = models.TimeField()
-    clock_out = models.TimeField()
+    clock_out = models.TimeField(null=True)
+    STAGE_TYPES = [
+        ("DEFAULT", 'DEFAULT'),
+        ("CLOCKED_IN", 'CLOCKED_IN'),
+        ("CLOCKED_OUT", 'CLOCKED_OUT'),
+    ]
+    stage = models.CharField(
+        max_length=11,
+        choices=STAGE_TYPES,
+        default="DEFAULT",
+    )
     break_length = models.IntegerField(default=0)
 
 

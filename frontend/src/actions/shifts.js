@@ -267,11 +267,13 @@ export const publish = () => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      dispatch({
-        type: PUBLISHED_SHIFTS,
-        payload: res.data,
-        stage: "Published",
-      });
+      dispatch(getShifts(getState().shifts.date, getState().shifts.end_date));
+
+      // dispatch({
+      //   type: PUBLISHED_SHIFTS,
+      //   payload: res.data,
+      //   stage: "Published",
+      // });
     });
 };
 

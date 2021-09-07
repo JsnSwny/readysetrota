@@ -1,0 +1,127 @@
+.pins {
+  display: flex;
+  justify-content: space-between;
+  &__pin {
+    text-security: disc;
+    -webkit-text-security: disc;
+    @extend .input;
+    height: 150px;
+    width: 24%;
+    text-align: center;
+    font-size: 100px;
+    color: white;
+    animation: fade 1s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+    background-color: lighten($pink, 15%);
+    &:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    -moz-appearance: textfield;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.timeclock {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 998;
+  background-color: lighten($pink, 10%);
+  text-align: center;
+  color: white;
+  &__logo {
+    margin-top: 5rem;
+    max-width: 300px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 15px 30px;
+  }
+  &__title {
+    font-size: 64px;
+    font-family: "Signika Negative", sans-serif;
+    margin-top: 5rem;
+    @include wi-mq(tablet) {
+      font-size: 48px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 40px;
+    }
+  }
+  &__time {
+    font-weight: normal;
+    font-size: 32px;
+    @include wi-mq(tablet) {
+      font-size: 28px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 24px;
+    }
+  }
+  &__subtext {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    font-size: 24px;
+    color: white;
+    @include wi-mq(mobile) {
+      font-size: 18px;
+    }
+  }
+  &__shift {
+    width: 100%;
+    @extend .shadow;
+    text-align: left;
+    color: $blue;
+    background-color: lighten($pink, 15%);
+    padding: 2rem 2.5rem;
+    border-radius: 5px;
+    font-weight: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include wi-mq(mobile) {
+      flex-direction: column;
+    }
+    &-time {
+      font-size: 40px;
+      font-weight: bold;
+      font-family: "Signika Negative", sans-serif;
+      @include wi-mq(tablet) {
+        font-size: 32px;
+      }
+      @include wi-mq(mobile) {
+        font-size: 28px;
+        margin-bottom: 1rem;
+      }
+    }
+    .btn-3 {
+      &.clocked_in {
+        background-color: $red;
+      }
+    }
+  }
+}

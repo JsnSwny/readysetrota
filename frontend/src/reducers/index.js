@@ -8,6 +8,7 @@ import payments from "./payments";
 import loading from "./loading";
 import stats from "./stats";
 import availability from "./availability";
+import timeclock from "./timeclock";
 
 const appReducer = combineReducers({
   shifts,
@@ -19,6 +20,7 @@ const appReducer = combineReducers({
   loading,
   stats,
   availability,
+  timeclock,
 });
 
 const rootReducer = (state, action) => {

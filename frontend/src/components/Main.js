@@ -43,6 +43,8 @@ import Nav from "./layout/Nav";
 import Availability from "./availability/Availability";
 import Landing from "./landing/Landing";
 import { TableBody } from "semantic-ui-react";
+import Timeclock from "./timeclock/Timeclock";
+import { useLocation } from "react-router-dom";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -90,7 +92,7 @@ const Main = () => {
         );
       }
     }
-  }, [current.site.id, auth.token]);
+  }, [current.site.id, auth.token, auth.user]);
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {
@@ -227,6 +229,7 @@ const Main = () => {
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
           <PrivateRoute path="/premium" component={Plans} />
           <PrivateRoute path="/checkout" component={Checkout} />
+          <Route path="/timeclock" component={Timeclock} />
         </Switch>
       </div>
     </Router>

@@ -35,8 +35,6 @@ const Shift = (props) => {
     (state) => state.employees.current.site.permissions
   );
 
-  console.log(shiftDepartment, financialMode);
-
   return (
     <Fragment>
       <div
@@ -91,7 +89,11 @@ const Shift = (props) => {
                           shift.end_time ? shift.end_time : "Finish"
                         }`
                       : shift.timeclock
-                      ? `${shift.timeclock.clock_in} - ${shift.timeclock.clock_out}`
+                      ? `${shift.timeclock.clock_in} - ${
+                          shift.timeclock.clock_out
+                            ? shift.timeclock.clock_out
+                            : "MISSING"
+                        }`
                       : "Missing Timeclock"}
                   </p>
                 </div>

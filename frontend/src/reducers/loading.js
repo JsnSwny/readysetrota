@@ -14,6 +14,8 @@ import {
   GET_AVAILABILITY,
   GET_STATS,
   STATS_LOADING,
+  TIMECLOCK_LOADING,
+  GET_TIMECLOCK,
 } from "../actions/types";
 
 const initialState = {
@@ -25,6 +27,7 @@ const initialState = {
   charge: false,
   availability: true,
   stats: true,
+  timeclock: false,
 };
 
 export default function (state = initialState, action) {
@@ -38,6 +41,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         any: false,
+      };
+    case TIMECLOCK_LOADING:
+      return {
+        ...state,
+        timeclock: true,
+      };
+    case GET_TIMECLOCK:
+      return {
+        ...state,
+        timeclock: false,
       };
     case SET_DEPARTMENT:
       return {

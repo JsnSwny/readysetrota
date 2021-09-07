@@ -75,6 +75,11 @@ const FinancialBar = ({
     let shifts_filtered = shifts.filter((item) =>
       dateList.some((date) => format(date, "yyyy-MM-dd") == item.date)
     );
+    if (financialMode == "actual") {
+      shifts_filtered = shifts_filtered.filter(
+        (item) => item.stage == "Published"
+      );
+    }
     return shifts_filtered
       .map((item) =>
         financialMode == "actual"
@@ -90,6 +95,11 @@ const FinancialBar = ({
   const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == formatDate);
+    if (type == "p") {
+      shifts_filtered = shifts_filtered.filter(
+        (item) => item.stage == "Published"
+      );
+    }
     let hourly = shifts_filtered
       .map(
         (item) =>

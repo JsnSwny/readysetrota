@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Employee, Shift, UserProfile, Business, Wage, Forecast, Site
+from .models import Employee, Shift, UserProfile, Business, Wage, Forecast, Site, TimeClock
 from django.db.models import Count, Sum
-from .serializers import ShiftSerializer, ShiftReadOnlySerializer
+from .serializers import ShiftListSerializer, ShiftSerializer, ShiftReadOnlySerializer, EmployeeListSerializer, TimeclockShiftSerializer
 from operator import attrgetter
 from itertools import groupby
 from datetime import datetime, timedelta, date
@@ -31,6 +31,7 @@ from django.db.models.functions import ExtractHour
 import pandas as pd
 from django.db.models import Q
 import time
+from django.forms.models import model_to_dict
 
 db = sqlite3.connect(':memory:')
 
@@ -117,32 +118,48 @@ class Publish(APIView):
 
         # print(all_shifts)
 
-        connection = mail.get_connection()
-        shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
-        shifts_unique = [list(grp) for k, grp in groupby(
-            shifts_sorted, attrgetter("employee.id"))]
-        email = []
-        today_date = datetime.now().strftime("%d/%m/%Y")
-        connection.open()
-        for idx, val in enumerate(shifts_unique):
-            employee = shifts_unique[idx][0].employee
+        # connection = mail.get_connection()
+        # shifts_sorted = sorted(all_shifts, key=attrgetter("employee.id"))
+        # shifts_unique = [list(grp) for k, grp in groupby(
+        #     shifts_sorted, attrgetter("employee.id"))]
+        # email = []
+        # today_date = datetime.now().strftime("%d/%m/%Y")
+        # connection.open()
+        # for idx, val in enumerate(shifts_unique):
+        #     employee = shifts_unique[idx][0].employee
 
-            if employee.user:
-                shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
-                html_message = render_to_string("emailshifts.html", context={
-                                                'shifts': shifts, 'employee': employee})
-                mail_item = mail.EmailMultiAlternatives(
-                    "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
-                mail_item.attach_alternative(html_message, "text/html")
-                email.append(mail_item)
-        connection.send_messages(email)
-        connection.close()
+        #     if employee.user:
+        #         shifts = Shift.objects.filter(
+        #             employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
+        #         html_message = render_to_string("emailshifts.html", context={
+        #                                         'shifts': shifts, 'employee': employee})
+        #         mail_item = mail.EmailMultiAlternatives(
+        #             "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
+        #         mail_item.attach_alternative(html_message, "text/html")
+        #         email.append(mail_item)
+        # connection.send_messages(email)
+        # connection.close()
 
         # publish_email.delay(shifts_list)
 
         for i in all_shifts:
             i.stage = "Published"
+
+            end_time = i.end_time
+
+            if end_time == "Finish":
+                end_time = None
+            
+            tc, created = TimeClock.objects.get_or_create(
+                shift=i, defaults={'clock_in': i.start_time, 'clock_out': end_time, 'employee': i.employee, 'break_length': i.break_length})
+
+            if not created:
+                tc.clock_in = i.start_time
+                tc.clock_out = end_time
+                tc.break_length = i.break_length
+
+            tc.save()
+
             i.save()
 
         ids = (o.id for o in all_shifts)
@@ -197,6 +214,29 @@ class Publish(APIView):
 #     return hours, wage
 
 import sqlite3
+
+
+class GetTimeclock(APIView):
+    def get(self, request):
+        pin = request.query_params.get('pin')
+        site = int(request.query_params.get('site'))
+        pin = int(pin.replace(',', ''))
+        
+        employee = Employee.objects.get(position__department__site=site, pin=pin)
+        shifts = None
+        if employee:
+            shifts = Shift.objects.filter(employee=employee, date=datetime.today()).exclude(timeclock__stage="CLOCKED_OUT")
+            shifts_list = TimeclockShiftSerializer(instance=shifts, many=True).data
+
+        # shifts_list = list(shifts)
+        
+        response = EmployeeListSerializer(instance=employee).data
+
+        
+
+
+        return JsonResponse({'shifts': shifts_list, 'employee': response}, safe=False)
+
 class GetStats(APIView):
     def get(self, request):
         stat_type = request.query_params.get('stat_type')

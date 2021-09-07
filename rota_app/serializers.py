@@ -7,7 +7,7 @@ from django.db.models import Q
 from guardian.shortcuts import get_perms, remove_perm, assign_perm
 from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
 import numpy as np
-
+import random
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -138,7 +138,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def get_current_status(self, instance):
         status = instance.status.all().order_by('-start_date')
-        print(status)
         if status:
             status = status[0]
             return {'start_date': status.start_date, 'end_date': status.end_date}
@@ -149,7 +148,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
     def get_site_permissions(self, obj):
-        print(obj)
         if(obj.user != None):
             user = obj.user
             site = obj.position.all().first().department.site
@@ -254,7 +252,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         position = validated_data.pop('position')
         employee = Employee.objects.create(**validated_data)
+        number = random.randint(1000,9999)
+        employee.pin = number
         employee.position.set(position)
+
+        employee.save()
 
         wage_type = self.context['request'].query_params.get(
             'wage_type')
@@ -270,6 +272,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'start_working_date')
         end_working_date = self.context['request'].query_params.get(
             'end_working_date')
+
+        
 
         current_status = EmployeeStatus.objects.filter(
             employee=employee).order_by('-start_date').first()
@@ -372,7 +376,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived',)
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -395,14 +399,14 @@ class TimeClockSerializer(serializers.ModelSerializer):
     length = serializers.SerializerMethodField()
 
     clock_in = serializers.TimeField(format='%H:%M')
-    clock_out = serializers.TimeField(format='%H:%M')
+    clock_out = serializers.TimeField(format='%H:%M', required=False)
 
     
 
     class Meta:
         model = TimeClock
         fields = ('clock_in', 'clock_out', 'break_length',
-                  'employee_id', 'length',)
+                  'employee_id', 'length', 'stage',)
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:
@@ -542,6 +546,12 @@ class AvailabilityEmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name',)
+
+class TimeclockShiftSerializer(serializers.ModelSerializer):
+    timeclock = TimeClockSerializer(required=False)
+    class Meta:
+        model = Shift
+        fields = ('id', 'date', 'start_time', 'end_time', 'break_length', 'timeclock')
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):

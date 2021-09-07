@@ -155,34 +155,28 @@ export const getSites = () => (dispatch, getState) => {
   let current_site = getState().employees.current.site.id;
   let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
-
-  axios
-    .get(
-      `/api/sites/?current_department=${current_department}&current_site=${current_site}`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: GET_SITES,
-        payload: res.data,
-        user: user,
-      });
-      let business = res.data[0].business;
-      dispatch({
-        type: SET_BUSINESS,
-        payload: res.data.length > 0 ? business : 0,
-      });
-      if (
-        business &&
-        business.plan == "T" &&
-        parseISO(business.trial_end) < new Date()
-      ) {
-        dispatch(endTrial(business.id));
-      }
-      dispatch({
-        type: UUID_RESET,
-      });
+  axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_SITES,
+      payload: res.data,
+      user: user,
     });
+    let business = res.data[0].business;
+    dispatch({
+      type: SET_BUSINESS,
+      payload: res.data.length > 0 ? business : 0,
+    });
+    if (
+      business &&
+      business.plan == "T" &&
+      parseISO(business.trial_end) < new Date()
+    ) {
+      dispatch(endTrial(business.id));
+    }
+    dispatch({
+      type: UUID_RESET,
+    });
+  });
 };
 
 export const addSite = (site) => (dispatch, getState) => {
