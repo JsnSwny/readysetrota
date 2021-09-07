@@ -125,7 +125,8 @@
   z-index: 1;
   bottom: 110%;
   left: 50%;
-  transform: translateX(-50%) scale(0);
+  transform: translateX(-50%);
+  visibility: hidden;
   @extend .shadow--md;
   &::after {
     content: "";
@@ -138,7 +139,8 @@
     border-color: white transparent transparent transparent;
   }
   &.active {
-    transform: scale(1);
+    visibility: visible;
+    // transform: scale(1);
   }
   .flex-container--center-vh {
     width: auto;

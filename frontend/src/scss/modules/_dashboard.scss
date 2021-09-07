@@ -2,6 +2,17 @@
   .helper-text {
     margin-top: 10px;
   }
+  &__pin {
+    position: relative;
+    .tooltip {
+      font-family: $base-font-family;
+    }
+    &:hover {
+      .tooltip {
+        visibility: visible;
+      }
+    }
+  }
   &__title {
     font-weight: bold;
     font-size: 32px;

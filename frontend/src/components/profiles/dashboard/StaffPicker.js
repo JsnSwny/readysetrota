@@ -159,7 +159,12 @@ const StaffPicker = (props) => {
                 }`}
               >
                 <div>
-                  {item.first_name} <strong>{item.last_name}</strong>
+                  {item.first_name} <strong>{item.last_name}</strong>{" "}
+                  {item.pin && (
+                    <i className="fas fa-eye list-block__pin">
+                      <div className="tooltip">PIN: {item.pin}</div>
+                    </i>
+                  )}
                 </div>
 
                 <div className="flex list-block__icons">
