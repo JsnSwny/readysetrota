@@ -25,4 +25,9 @@
       color: darken($pink, 10%);
     }
   }
+  &--dashboard {
+    .title--lg {
+      margin-right: 1rem;
+    }
+  }
 }

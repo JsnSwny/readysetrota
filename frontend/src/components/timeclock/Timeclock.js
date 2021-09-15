@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { resetErrors } from "../../actions/errors";
 import { updateShift } from "../../actions/shifts";
 import { logout } from "../../actions/auth";
+import { Redirect } from "react-router";
 
 const Timeclock = () => {
   const [pin, setPin] = useState({});
@@ -20,6 +21,9 @@ const Timeclock = () => {
   const sites = useSelector((state) => state.employees.sites);
   const auth = useSelector((state) => state.auth);
   const loading = useSelector((state) => state.loading);
+  const permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
   const [message, setMessage] = useState("");
   const handleChange = (e) => {
     if (e.target.value < 10) {
@@ -40,9 +44,11 @@ const Timeclock = () => {
 
   useEffect(() => {
     if (current.site && current.site.id) {
-      localStorage.setItem("timeclock_site", current.site.id);
-      if (!loading.sites && auth.isAuthenticated) {
-        dispatch(logout());
+      if (permissions.includes("manage_shifts")) {
+        localStorage.setItem("timeclock_site", current.site.id);
+        if (!loading.sites && auth.isAuthenticated) {
+          dispatch(logout());
+        }
       }
     }
     setCurrentSite(localStorage.getItem("timeclock_site"));
@@ -64,6 +70,13 @@ const Timeclock = () => {
       dispatch(resetErrors());
     }
   }, [success]);
+
+  if (current.site && current.site.id) {
+    console.log(permissions);
+    if (!permissions.includes("manage_shifts")) {
+      return <Redirect to="/" />;
+    }
+  }
 
   return (
     <Fragment>
@@ -121,6 +134,9 @@ const Timeclock = () => {
           )}
 
           <div className="timeclock__shifts">
+            {employee && shifts.length == 0 && (
+              <p>There are no shifts to show</p>
+            )}
             {shifts.map((item) => {
               let start_date = new Date().setHours(
                 item.start_time.substr(0, 2),

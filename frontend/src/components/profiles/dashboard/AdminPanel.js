@@ -15,6 +15,7 @@ import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../../actions/stats";
 import DashboardShifts from "./DashboardShifts";
 import StatsItem from "./StatsItem";
+import { Link } from "react-router-dom";
 
 const AdminPanel = ({ setDashboardView }) => {
   const dispatch = useDispatch();
@@ -62,14 +63,15 @@ const AdminPanel = ({ setDashboardView }) => {
 
   return (
     <Fragment>
-      <div className="banner wrapper--md">
-        <div className="flex-container--between-start">
+      <div className="banner banner--dashboard wrapper--md">
+        <div className="flex-container">
           <h1 className="header">
-            <Title
-              name={`${current.site.name} Dashboard`}
-              subtitle="Dashboard"
-              breakWord={false}
-            />
+            <div className="title-container">
+              <h4 className="title--sub">Dashboard</h4>
+              <div className="flex-container--center-vh">
+                <h1 className="title--lg">{current.site.name} Dashboard</h1>
+              </div>
+            </div>
           </h1>
         </div>
         {!user.business && (
@@ -82,8 +84,16 @@ const AdminPanel = ({ setDashboardView }) => {
         )}
       </div>
       <div className="dashboard wrapper--md">
-        <h2 className="title-sm">Shifts</h2>
+        <div className="flex-container--align-center">
+          <h2 className="title-sm">Shifts</h2>
+          <Link to="/timeclock" className="btn-3 tooltip-activator">
+            Open Timeclock
+            <div className="tooltip tooltip--sm">This will log you out</div>
+          </Link>
+        </div>
+
         <hr class="separator" />
+
         <div className="todayShifts">
           {isLoading ? (
             <div class="dot-pulse"></div>

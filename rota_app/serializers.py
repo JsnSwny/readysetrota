@@ -251,8 +251,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         position = validated_data.pop('position')
+        site = self.context['request'].query_params.get('site')
         employee = Employee.objects.create(**validated_data)
         number = random.randint(1000,9999)
+        while len(Employee.objects.filter(pin=number, position__department__site=site)) > 0:
+            number = random.randint(1000,9999)
         employee.pin = number
         employee.position.set(position)
 

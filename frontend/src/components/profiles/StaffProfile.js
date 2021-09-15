@@ -178,6 +178,13 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
       </div>
 
       <div className="dashboard wrapper--md">
+        <h2 className="title-sm title--margin-top">Your PIN</h2>
+        <hr class="separator" />
+        {employee && (
+          <p>
+            Your PIN is <strong>{employee.pin ? employee.pin : "None"}</strong>
+          </p>
+        )}
         <h2 className="title-sm title--margin-top">Your Shifts</h2>
         <hr class="separator" />
         {isLoading ? (

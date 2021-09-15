@@ -116,6 +116,7 @@
 
 .tooltip {
   min-width: 120px;
+  width: 100%;
   background-color: rgb(255, 255, 255);
   color: black;
   text-align: center;
@@ -128,6 +129,17 @@
   transform: translateX(-50%);
   visibility: hidden;
   @extend .shadow--md;
+  &--sm {
+    font-size: 14px;
+  }
+  &-activator {
+    position: relative;
+    &:hover {
+      .tooltip {
+        visibility: visible;
+      }
+    }
+  }
   &::after {
     content: "";
     position: absolute;

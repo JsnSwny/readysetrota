@@ -62,7 +62,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'business', 'default_availability', 'business_id',)
+                  'position', 'business', 'default_availability', 'business_id', 'pin',)
 
         # User Serializer
 

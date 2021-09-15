@@ -9,11 +9,11 @@
     width: 24%;
     text-align: center;
     font-size: 100px;
-    color: white;
+    color: $pink;
     animation: fade 1s;
     animation-fill-mode: forwards;
     opacity: 0;
-    background-color: lighten($pink, 15%);
+    background-color: white;
     &:nth-child(2) {
       animation-delay: 0.1s;
     }
@@ -51,9 +51,8 @@
   left: 0;
   bottom: 0;
   z-index: 998;
-  background-color: lighten($pink, 10%);
+  background-color: $light-blue;
   text-align: center;
-  color: white;
   &__logo {
     margin-top: 5rem;
     max-width: 300px;
@@ -86,7 +85,6 @@
     margin-top: 4rem;
     margin-bottom: 2rem;
     font-size: 24px;
-    color: white;
     @include wi-mq(mobile) {
       font-size: 18px;
     }
@@ -96,7 +94,7 @@
     @extend .shadow;
     text-align: left;
     color: $blue;
-    background-color: lighten($pink, 15%);
+    background-color: white;
     padding: 2rem 2.5rem;
     border-radius: 5px;
     font-weight: normal;

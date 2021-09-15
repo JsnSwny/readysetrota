@@ -383,7 +383,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 
   axios
     .post(
-      `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`,
+      `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}&site=${current.site.id}`,
       employee,
       tokenConfig(getState)
     )

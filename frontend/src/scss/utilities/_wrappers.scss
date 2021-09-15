@@ -21,5 +21,8 @@
   &--lg {
     @extend .wrapper;
     max-width: 1600px;
+    @include wi-mq(laptop) {
+      max-width: 1300px;
+    }
   }
 }
