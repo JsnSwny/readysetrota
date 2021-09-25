@@ -174,8 +174,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
         if validated_data.get('archived') == True:
             instance.first_name = 'Anonymous'
             if last_archived_employee:
-                value = int(
-                    last_archived_employee.last_name.replace('Employee ', ''))
+                if last_archived_employee.first_name == "Anonymous":
+                    value = int(
+                        last_archived_employee.last_name.replace('Employee ', ''))
+                else:
+                    value = 0
                 instance.last_name = 'Employee ' + str(value + 1)
             else:
                 instance.last_name = 'Employee 1'
