@@ -82,6 +82,7 @@ const Rota = ({ modalProps, confirmProps }) => {
   // Update shifts based on width
   const widthUpdate = (force = false) => {
     let currentDate = format(new Date(), "yyyy-MM-dd");
+    console.log(width);
     if (width > 980) {
       if (currentDevice != "Desktop" || force) {
         updateShifts(

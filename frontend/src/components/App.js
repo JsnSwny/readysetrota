@@ -14,7 +14,7 @@ const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
     window.addEventListener("resize", () => {
-      store.dispatch(setWidth(window.innerWidth));
+      store.dispatch(setWidth(document.body.clientWidth));
     });
   }, []);
 
