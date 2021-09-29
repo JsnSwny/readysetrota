@@ -163,7 +163,7 @@ const AdminPanel = ({ setDashboardView }) => {
               prefix={"£"}
             />
             <StatsItem
-              title="Estimated Profits"
+              title="Estimated Turnover"
               decimals={2}
               data={Object.values(stats.forecast_dif).map((item) =>
                 parseInt(item)
