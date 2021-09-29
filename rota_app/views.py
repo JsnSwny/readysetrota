@@ -276,7 +276,7 @@ class GetStats(APIView):
             else:
                 salaries = Wage.objects.filter(employee__id=employee_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
             for salary in salaries:
-                cost += float(salary.wage) / 52 / 5
+                cost += float(salary.wage) / 52 / 7
 
             
 
