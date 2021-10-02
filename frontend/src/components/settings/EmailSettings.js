@@ -5,7 +5,6 @@ import { updateBusinessName } from "../../actions/employees";
 
 const EmailSettings = () => {
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
   const [publishedShifts, setPublishedShifts] = useState(false);
   const dispatch = useDispatch();
 

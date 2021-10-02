@@ -115,12 +115,21 @@
   height: 100%;
   align-self: flex-start;
   transition: 0.2s linear filter, 0.4s ease opacity;
-  &:first-child {
-    margin: 0 4px 0 8px;
+  @include wi-mq(laptop-sm) {
+    margin: 0 1px;
   }
-  &:last-child {
-    margin: 0 0 0 4px;
-  }
+  // &:first-child {
+  //   margin: 0 4px 0 8px;
+  //   @include wi-mq(laptop-sm) {
+  //     margin: 0 1px 0 1px;
+  //   }
+  // }
+  // &:last-child {
+  //   margin: 0 0 0 4px;
+  //   @include wi-mq(laptop-sm) {
+  //     margin: 0 0 0 1px;
+  //   }
+  // }
   &__title {
     @include wi-mq(laptop) {
       font-size: 14px;

@@ -16,7 +16,6 @@ import { parseISO, addDays } from "date-fns";
 const ShiftModal = (props) => {
   const { date, employee, onClose, update, extra } = props;
   let updating = update ? true : false;
-  console.log(extra);
   let current = useSelector((state) => state.employees.current);
   const [position, setPosition] = useState([]);
   let departments = useSelector((state) => state.employees.departments);

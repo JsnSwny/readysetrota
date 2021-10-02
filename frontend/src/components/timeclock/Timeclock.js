@@ -72,7 +72,6 @@ const Timeclock = () => {
   }, [success]);
 
   if (current.site && current.site.id) {
-    console.log(permissions);
     if (!permissions.includes("manage_shifts")) {
       return <Redirect to="/" />;
     }

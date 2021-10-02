@@ -18,11 +18,16 @@
   @include wi-mq(tablet) {
     max-width: 175px;
   }
+  margin-right: 4px;
 }
 
 .container-right {
   display: flex;
   flex: 1;
+  margin: 0 -4px;
+  @include wi-mq(laptop-sm) {
+    margin: 0 -1px;
+  }
 }
 
 .container-2 {

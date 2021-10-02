@@ -572,6 +572,11 @@
     transition: 0.2s ease background-color;
     @extend .shadow;
 
+    @include wi-mq(laptop-sm) {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+    }
+
     &:hover {
       .shift__add {
         opacity: 1;
@@ -658,7 +663,7 @@
   }
   &__time {
     font-size: 16px;
-    margin-right: 10px;
+    // margin-right: 10px;
     position: relative;
     .fa-clock {
       opacity: 0.5;
@@ -679,6 +684,9 @@
     }
     @include wi-mq(laptop) {
       font-size: 12px;
+    }
+    @include wi-mq(laptop-sm) {
+      font-size: 10px;
     }
     &::before {
       content: "";

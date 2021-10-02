@@ -12,8 +12,6 @@ const ForecastModal = ({ onClose, update, extra }) => {
   let current = useSelector((state) => state.employees.current);
   let errors = useSelector((state) => state.errors.msg);
 
-  console.log(extra);
-
   useEffect(() => {
     if (update) {
       setForecastAmount(update.predicted);
