@@ -142,7 +142,8 @@ const DashboardShifts = () => {
                 >
                   <small>
                     {departments.length > 0 &&
-                      departments.find((dep) => dep.id == item.department).name}
+                      departments.find((dep) => dep.id == item.department)
+                        ?.name}
                   </small>
 
                   <p>
