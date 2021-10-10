@@ -50,18 +50,27 @@
   .react-datepicker-wrapper {
     width: 100%;
   }
-  // width: 80%;
+  width: 80%;
   margin: 0 auto;
-  // padding: 40px 0;
+  padding: 40px 0;
   @include wi-mq(mobile) {
     width: 90%;
   }
+  &__form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
   &__heading {
-    background-color: $pink;
-    color: white;
-    padding: 20px 20px;
-    h4 {
-      font-size: 18px;
+    font-size: 40px;
+    text-align: center;
+    font-weight: normal;
+    margin-bottom: 20px;
+    @include wi-mq(tablet) {
+      font-size: 32px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 28px;
     }
   }
   &__actions {
@@ -113,7 +122,6 @@
     //   margin-top: 20px;
     // }
   }
-
   &__control {
     width: 100%;
     margin-bottom: 20px;
@@ -162,25 +170,23 @@
     width: 100%;
     border: none;
     background-color: white;
-    border: 1px solid #ededed;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
-    -moz-box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
-    box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+    border-radius: 15px;
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     padding: 15px 20px;
     margin-right: 20px;
     &:focus {
       outline: none;
-      -webkit-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
-      -moz-box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
-      box-shadow: 0 7px 30px -10px rgba($pink, 0.5);
+      -webkit-box-shadow: 0px 0px 7px 0px $pink;
+      -moz-box-shadow: 0px 0px 7px 0px $pink;
+      box-shadow: 0px 0px 7px 0px $pink;
     }
   }
   &__label {
     display: block;
-    margin: 12px 0;
+    margin: 8px 0;
     font-size: 14px;
-    font-weight: bold;
     &--inline {
       margin-left: 10px;
     }
@@ -221,36 +227,11 @@
     }
   }
   &__tabs {
-    margin-top: 2rem;
-    padding-bottom: 1rem;
+    margin-bottom: 15px;
     justify-content: center;
     @include wi-mq(tablet) {
       flex-wrap: wrap;
       justify-content: space-between;
-    }
-  }
-  &__tab-line {
-    height: 2px;
-    width: 100%;
-    background-color: #f8f8f8;
-    position: relative;
-    span {
-      position: absolute;
-      left: 0;
-      width: 25%;
-      top: 0;
-      bottom: 0;
-      background-color: $pink;
-      transition: 0.2s ease left;
-    }
-  }
-  &__tab {
-    width: 25%;
-    font-weight: bold;
-    color: $light-gray-2;
-    cursor: pointer;
-    &.active {
-      color: black;
     }
   }
   &__check {

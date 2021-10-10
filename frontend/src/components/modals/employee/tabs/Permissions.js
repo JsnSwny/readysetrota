@@ -55,42 +55,6 @@ const Permissions = ({ permissions, setPermissions }) => {
         {...permProps}
         indent={true}
       />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
-      <PermissionItem
-        perm="view_forecasts"
-        permText="View Forecasts"
-        {...permProps}
-        indent={true}
-      />
       <h3>Availabilities</h3>
       <PermissionItem
         perm="manage_availabilities"
