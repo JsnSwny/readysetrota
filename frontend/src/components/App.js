@@ -9,9 +9,11 @@ import "../css/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import { setWidth } from "../actions/responsive";
 import ErrorBoundary from "./ErrorBoundary";
+import { install } from "resize-observer";
 
 const App = () => {
   useEffect(() => {
+    install();
     store.dispatch(loadUser());
     window.addEventListener("resize", () => {
       store.dispatch(setWidth(document.body.clientWidth));
