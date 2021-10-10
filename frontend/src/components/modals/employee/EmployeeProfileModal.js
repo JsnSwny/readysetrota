@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PersonalDetails from "./tabs/PersonalDetails";
 import Positions from "../Positions";
@@ -47,6 +47,7 @@ const EmployeeProfileModal = (props) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [permissions, setPermissions] = useState([]);
+  const [currentTabNumber, setCurrentTabNumber] = useState(1);
 
   const [startWorkingDate, setStartWorkingDate] = useState(
     update && update.current_status.start_date
@@ -77,7 +78,7 @@ const EmployeeProfileModal = (props) => {
       : false;
   };
 
-  const [currentTab, setCurrentTab] = useState("Personal Details");
+  const [currentTab, setCurrentTab] = useState("Details");
 
   useEffect(() => {
     if (update) {
@@ -173,81 +174,114 @@ const EmployeeProfileModal = (props) => {
   };
 
   return (
-    <div className="form">
-      {/* <div className="form__image">
-        {firstName ? (
-          `${firstName[0]}${lastName && lastName[0]}`
-        ) : (
-          <i className="fas fa-user"></i>
-        )}
-      </div> */}
-      <p className="form__subheading">Employee Profile</p>
-      <h1 className="form__heading">
-        {firstName
-          ? `${firstName} ${lastName && lastName}`
-          : update
-          ? ""
-          : "Create an Employee"}
-      </h1>
+    <Fragment>
+      <div className="form__heading">
+        <h4>
+          {firstName
+            ? `${firstName} ${lastName && lastName}`
+            : update
+            ? ""
+            : "Add a new employee"}
+        </h4>
+        <p>Fill out the information below to add a new employee</p>
+      </div>
+
       <div className={`flex-container form__tabs`}>
         <button
-          onClick={() => setCurrentTab("Personal Details")}
-          className={`btn-8 ${
+          onClick={() => {
+            setCurrentTab("Details");
+            setCurrentTabNumber(1);
+          }}
+          className={`form__tab ${
             errors &&
             errors.first_name &&
             (errors.first_name != true || errors.last_name != true)
               ? "err"
               : ""
-          } ${currentTab == "Personal Details" ? "active" : ""}`}
+          } ${currentTab == "Details" ? "active" : ""}`}
         >
-          Personal Details
+          Details
         </button>
         <button
-          onClick={() => setCurrentTab("Positions")}
-          className={`btn-8 ${
+          onClick={() => {
+            setCurrentTab("Positions");
+            setCurrentTabNumber(2);
+          }}
+          className={`form__tab ${
             errors && errors.positions && errors.positions != true ? "err" : ""
           } ${currentTab == "Positions" ? "active" : ""}`}
         >
           Positions
         </button>
         <button
-          onClick={() => setCurrentTab("Status")}
-          className={`btn-8 ${currentTab == "Status" ? "active" : ""}`}
+          onClick={() => {
+            setCurrentTab("Availability");
+            setCurrentTabNumber(3);
+          }}
+          className={`form__tab ${
+            currentTab == "Availability" ? "active" : ""
+          }`}
         >
-          Status
+          Availability
         </button>
-        {perms.includes("manage_availabilities") && (
-          <button
-            onClick={() => setCurrentTab("Availability")}
-            className={`btn-8 ${currentTab == "Availability" ? "active" : ""}`}
-          >
-            Availability
-          </button>
-        )}
-
-        {user.business && update && update.user && (
-          <button
-            onClick={() => setCurrentTab("Permissions")}
-            className={`btn-8 ${currentTab == "Permissions" ? "active" : ""}`}
-          >
-            Permissions
-          </button>
-        )}
+        <button
+          onClick={() => {
+            setCurrentTab("Permissions");
+            setCurrentTabNumber(4);
+          }}
+          className={`form__tab ${currentTab == "Permissions" ? "active" : ""}`}
+        >
+          Permissions
+        </button>
       </div>
-      <form onSubmit={onSubmit} className="form__form">
-        {currentTab == "Personal Details" && (
-          <PersonalDetails {...personalDetailsProps} />
-        )}
-        {currentTab == "Positions" && <Positions {...positionsProps} />}
-        {currentTab == "Availability" && (
-          <DefaultAvailability {...availabilityProps} />
-        )}
-        {currentTab == "Permissions" && <Permissions {...permissionsProps} />}
-        {currentTab == "Status" && <Status {...statusProps} />}
-        <div className="flex-container--between form__actions">
-          <button className="form__save" type="submit" value="Save">
-            Save
-          </button>
+      <div class="form__tab-line">
+        <span style={{ left: `${(currentTabNumber - 1) * 25}%` }}></span>
+      </div>
+      <form onSubmit={onSubmit} className="modal__form">
+        <div className="modal__content">
+          <div className="modal__content-wrapper">
+            {currentTab == "Details" && (
+              <Fragment>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                <h1>Test</h1>
+                {/* <Positions {...positionsProps} />
+                <PersonalDetails {...personalDetailsProps} />
+                <PersonalDetails {...personalDetailsProps} /> */}
+              </Fragment>
+            )}
+
+            {currentTab == "Positions" && (
+              <Fragment>
+                <Positions {...positionsProps} />
+                <PersonalDetails {...personalDetailsProps} />
+                <PersonalDetails {...personalDetailsProps} />
+              </Fragment>
+            )}
+            {currentTab == "Availability" && (
+              <DefaultAvailability {...availabilityProps} />
+            )}
+            {currentTab == "Permissions" && (
+              <Permissions {...permissionsProps} />
+            )}
+            {currentTab == "Status" && <Status {...statusProps} />}
+          </div>
+        </div>
+        <div className="modal__actions">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -278,13 +312,20 @@ const EmployeeProfileModal = (props) => {
               onClose();
             }}
             value="delete"
-            className="form__delete"
+            className="modal__button modal__delete"
           >
             {update ? "Delete" : "Cancel"}
           </button>
+          <button
+            className="modal__button modal__save"
+            type="submit"
+            value="Save"
+          >
+            Add Employee
+          </button>
         </div>
       </form>
-    </div>
+    </Fragment>
   );
 };
 

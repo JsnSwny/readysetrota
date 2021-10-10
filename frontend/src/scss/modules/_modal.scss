@@ -1,9 +1,65 @@
 .modal {
   pointer-events: none;
   background-color: transparent;
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: lighten($blue, 10%);
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: lighten($blue, 20%);
+  }
   &.open {
     pointer-events: visible;
     background-color: rgba(0, 0, 0, 0.6);
+  }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    background-color: $light-blue;
+    padding: 2rem;
+  }
+  &__button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+
+    @extend .shadow;
+  }
+  &__save {
+    background-color: $pink;
+    color: white;
+    margin-left: 1rem;
+  }
+  &__delete {
+    background-color: white;
+    color: black;
+  }
+  &__content {
+    flex: 1;
+    margin: 0 auto;
+    overflow-y: auto;
+    width: 95%;
+    height: 100%;
+    &-wrapper {
+      width: 80%;
+      height: 0;
+      margin: 0 auto;
+    }
   }
   &__close {
     position: absolute;
@@ -29,21 +85,21 @@
   top: 0;
   height: 100%;
   z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   transition: 0.5s ease transform, 0.5s ease margin-left;
+  &__form {
+    flex: 1;
+    padding: 20px 0;
+  }
   &__container {
     position: relative;
-    max-height: 80%;
-    margin: 150px 0;
-    overflow: auto;
-    max-width: 750px;
+    height: 70%;
+    margin: 5% auto 0 auto;
+    max-width: 1000px;
     transition: 0.2s ease transform;
-    display: block;
-    // &.open {
-    //   display: block;
-    // }
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    overflow-y: initial !important;
     &--sm {
       max-width: 550px;
     }
@@ -86,12 +142,6 @@
   }
   &__buttonConfirm {
     background-color: rgb(102, 184, 102);
-  }
-  &__button {
-    cursor: pointer;
-    color: white;
-    border: none;
-    margin-left: 20px;
   }
 }
 

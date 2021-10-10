@@ -68,10 +68,6 @@ const CreateShift = (props) => {
   return (
     open && (
       <div className={`modal App ${open ? "open" : ""}`}>
-        <div className={`form__image ${open ? "open" : ""}`}>
-          <i className={`${imageTypes[type]}`}></i>
-        </div>
-
         <div
           className={`modal__container ${open ? "open" : ""} ${
             type == "register" ? "modal__container--sm" : ""
