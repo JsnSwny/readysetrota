@@ -30,6 +30,9 @@ import { ToastContainer } from "react-toastify";
 import TermsAndConditions from "./landing/TermsAndConditions";
 
 import StaffManagement from "./profiles/StaffManagement";
+import NewStaffManagement from "./employees/NewStaffManagement";
+
+import Employees from "./employees/Employees";
 import CreateShift from "./modals/CreateShift";
 
 import AdminPanel from "./profiles/dashboard/AdminPanel";
@@ -213,6 +216,35 @@ const Main = () => {
             modalProps={modalProps}
             title="Staff Management"
           />
+
+          <PrivateRoute
+            admin={true}
+            perms={[
+              "manage_departments",
+              "manage_positions",
+              "manage_employees",
+            ]}
+            path="/new-staff-management"
+            exact
+            component={NewStaffManagement}
+            modalProps={modalProps}
+            title="Staff Management"
+          />
+
+          <PrivateRoute
+            admin={true}
+            perms={[
+              "manage_departments",
+              "manage_positions",
+              "manage_employees",
+            ]}
+            path="/employees"
+            exact
+            component={Employees}
+            modalProps={modalProps}
+            title="Employees"
+          />
+
           <PrivateRoute
             admin={true}
             path="/admin-panel"

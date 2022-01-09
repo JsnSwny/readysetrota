@@ -382,7 +382,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin',)
+                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin', 'created_at')
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):

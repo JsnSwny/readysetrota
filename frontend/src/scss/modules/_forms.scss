@@ -170,7 +170,7 @@
     width: 100%;
     border: none;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 5px;
     -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
@@ -299,5 +299,42 @@
         line-height: 1.1rem;
       }
     }
+  }
+}
+
+.form-block {
+  &__wrapper {
+    max-width: 750px;
+    width: 100%;
+    margin: 3rem auto;
+  }
+  &__heading {
+    margin-bottom: 2rem;
+    h4 {
+      font-weight: normal;
+      font-size: 16px;
+      color: $light-gray-2;
+    }
+    h3 {
+      font-size: 32px;
+      span {
+        font-weight: normal;
+      }
+    }
+  }
+  &__label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .btn-3 {
+    margin-top: 2rem;
+  }
+}
+
+.search-field {
+  border: none;
+  &:focus {
+    outline: none;
   }
 }

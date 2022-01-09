@@ -1,0 +1,49 @@
+.tab {
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: -300px;
+  bottom: 0;
+  padding: 3rem 2rem;
+  width: 100%;
+  transition: 0.3s ease left;
+  &__link {
+    font-size: 14px;
+    cursor: pointer;
+    color: $pink;
+  }
+  &__list {
+    margin-top: 2rem;
+    margin-bottom: -0.75rem;
+  }
+  &__item {
+    color: #757575;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    &.active {
+      font-weight: bold;
+    }
+  }
+  &.active {
+    left: 0;
+  }
+}
+
+.tab-wrapper {
+  position: relative;
+  width: 300px;
+  height: 100%;
+}
+
+.three-grids {
+  display: flex;
+  margin-top: -40px;
+  height: calc(100vh - 60px);
+  .form-block {
+    min-width: 800px;
+    width: calc(100% - 600px);
+  }
+  .search-field {
+    margin-bottom: 1rem;
+  }
+}
