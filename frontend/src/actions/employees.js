@@ -325,57 +325,44 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
     });
 };
 
-export const updateEmployee =
-  (update, employee, siteAdmin, current_site) => (dispatch, getState) => {
-    let current = getState().employees.current;
-    let query = "";
-    if (employee.wage_type) {
-      query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`;
-    }
-    if (employee.start_working_date) {
-      query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
-    }
-    axios
-      .put(
-        `/api/employees/${update}/?${query}${
-          employee.hasOwnProperty("permissions")
-            ? `&permissions=${employee.permissions}`
-            : ""
-        }`,
-        employee,
-        tokenConfig(getState)
-      )
-      .then((res) => {
-        dispatch({
-          type: UPDATE_EMPLOYEE,
-          payload: res.data,
-        });
-        if (update.user) {
-          if (siteAdmin) {
-            dispatch(
-              updateSite(current.site.id, {
-                ...current_site,
-                admins: [...current_site.admins, update.user],
-                business_id: current_site.business.id,
-              })
-            );
-          } else {
-            dispatch(
-              updateSite(current.site.id, {
-                ...current_site,
-                admins: current_site.admins.filter(
-                  (item) => item != update.user
-                ),
-                business_id: current_site.business.id,
-              })
-            );
-          }
-        }
-        dispatch(resetErrors());
-      })
+export const updateEmployee = (update, employee) => (dispatch, getState) => {
+  let current = getState().employees.current;
+  let query = "";
+  if (employee.wage_type) {
+    query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`;
+  }
+  if (employee.start_working_date) {
+    query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
+  }
+  axios
+    .put(
+      `/api/employees/${update}/?${query}${
+        employee.hasOwnProperty("permissions")
+          ? `&permissions=${employee.permissions}`
+          : ""
+      }`,
+      employee,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: UPDATE_EMPLOYEE,
+        payload: res.data,
+      });
+      if (update.user) {
+        dispatch(
+          updateSite(current.site.id, {
+            ...current.site,
+            admins: current.site.admins.filter((item) => item != update.user),
+            business_id: current.site.business.id,
+          })
+        );
+      }
+      dispatch(resetErrors());
+    })
 
-      .catch((err) => console.log(err.response));
-  };
+    .catch((err) => console.log(err.response));
+};
 
 // Add Employee
 export const addEmployee = (employee) => (dispatch, getState) => {

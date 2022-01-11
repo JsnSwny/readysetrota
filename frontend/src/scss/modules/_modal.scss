@@ -1,261 +1,44 @@
-.modal {
-  pointer-events: none;
-  background-color: transparent;
-  &.open {
-    pointer-events: visible;
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-  &__close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: 0.5s ease transform;
-    &:hover {
-      color: $pink;
-      transform: rotate(90deg);
-    }
-  }
+.modal-container {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
-
   left: 0;
   margin-top: 0;
-  // @include wi-mq(mobile) {
-  //   left: 0;
-  //   top: 60px;
-  // }
   right: 0;
   top: 0;
   height: 100%;
-  z-index: 100;
-  display: flex;
+  z-index: 999;
   justify-content: center;
-  align-items: flex-start;
-  transition: 0.5s ease transform, 0.5s ease margin-left;
-  &__container {
-    position: relative;
-    max-height: 80%;
-    margin: 150px 0;
-    overflow: auto;
-    max-width: 750px;
-    transition: 0.2s ease transform;
-    display: block;
-    // &.open {
-    //   display: block;
-    // }
-    &--sm {
-      max-width: 550px;
+  align-items: center;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 5px;
+  &-sm {
+    @extend .modal;
+    width: 400px;
+    padding: 1rem 2rem;
+    &__heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .fa-times {
+        cursor: pointer;
+      }
     }
-    width: 100%;
-    @include wi-mq(tablet) {
-      max-width: 90%;
-      margin: 70px 0;
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      .btn-3 {
+        font-size: 14px;
+      }
     }
-    // @include wi-mq(tablet) {
-    //   margin-top: -60px;
-    // }
-    background-color: white;
-    z-index: 100;
-    -webkit-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-  }
-  &__message {
-    padding: 20px 40px;
-  }
-  &__buttonsContainer {
-    padding: 20px 40px;
-    background-color: rgb(243, 243, 243);
-    border-top: rgb(161, 161, 161) solid 1px;
-  }
-  &__buttons {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    button {
+    hr {
+      height: 1px;
+      background-color: $light-gray-2;
       border: none;
-
-      cursor: pointer;
-      color: white;
-      padding: 10px 15px;
-    }
-  }
-  &__buttonCancel {
-    background-color: rgb(194, 102, 102);
-  }
-  &__buttonConfirm {
-    background-color: rgb(102, 184, 102);
-  }
-  &__button {
-    cursor: pointer;
-    color: white;
-    border: none;
-    margin-left: 20px;
-  }
-}
-
-.shiftModal {
-  &__container {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    width: 600px;
-    transform: translate(-50%, -50%);
-    background-color: rgb(255, 255, 255);
-    z-index: 9999;
-    -webkit-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 7px 12px -1px rgba(0, 0, 0, 0.75);
-  }
-}
-
-.staffForm {
-  width: 70%;
-  margin: 0 auto;
-  padding: 40px 0;
-  &__form {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-
-  &__control {
-    width: 100%;
-    &--half {
-      width: 48.5%;
-    }
-  }
-  &__input {
-    display: block;
-    width: 100%;
-    border: none;
-    background-color: white;
-    border-radius: 15px;
-    -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.5);
-    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.5);
-    padding: 15px 20px;
-    margin-right: 20px;
-    &:focus {
-      outline: none;
-    }
-  }
-  &__label {
-    display: block;
-    margin: 20px 0 5px 0;
-  }
-  //   .btn-1 {
-  //     background-color: #5bd075;
-  //     padding: 10px 0;
-  //     width: 45%;
-
-  //     border-radius: 0;
-  //     font-size: 16px;
-  //     transition: 0.2s ease all;
-  //     margin-top: 20px;
-  //     &:hover {
-  //       background-color: #67ad5d;
-  //     }
-  //     display: block;
-  //   }
-  &__times {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    .staffForm__input {
-      width: 100%;
-    }
-  }
-  &__buttons {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    flex-direction: row-reverse;
-  }
-  &__wrapper {
-    display: flex;
-    align-items: center;
-  }
-  &__popular-title {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    text-align: center;
-  }
-  &__popular-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  &__popular {
-    background-color: $pink;
-    font-size: 12px;
-    margin: 2px;
-    padding: 5px 10px;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .shiftModal {
-    &__container {
-      width: 90%;
-    }
-  }
-  .staffForm {
-    width: 90%;
-  }
-}
-
-.modalDefaultAvailability {
-  margin: 20px 0;
-  list-style-type: none;
-  display: flex;
-  justify-content: space-between;
-  li {
-    background-color: $blue;
-    color: white;
-    text-align: center;
-    width: calc(100% / 7 - 4px);
-    padding: 20px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    @include wi-mq(tablet) {
-      padding: 15px 0;
-    }
-    @include wi-mq(mobile) {
-      padding: 12px 0;
-      font-size: 14px;
-    }
-    i {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      font-size: 12px;
-    }
-    &:hover {
-      .tooltip {
-        visibility: visible;
-      }
-      &.available {
-        background-color: $green;
-      }
-      &.unavailable {
-        background-color: $red;
-      }
-    }
-
-    &.current {
-      &-available {
-        background-color: $green;
-      }
-      &-unavailable {
-        background-color: $red;
-      }
+      margin: 1rem -2rem;
     }
   }
 }

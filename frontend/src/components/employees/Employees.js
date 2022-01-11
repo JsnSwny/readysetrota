@@ -1,10 +1,19 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getEmployees, getPositions } from "../../actions/employees";
+import {
+  getEmployees,
+  getPositions,
+  deleteEmployee,
+} from "../../actions/employees";
 import TabItem from "../common/TabItem";
 import PersonalDetails from "./PersonalDetails";
 import { parseISO, format } from "date-fns";
 import Title from "../common/Title";
+import ListAction from "./ListAction";
+import SearchField from "./SearchField";
+import { Link } from "react-router-dom";
+import ConfirmModal from "./ConfirmModal";
+import { numberWithCommas } from "../Utilities";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -24,6 +33,8 @@ const Employees = () => {
   const [employeeSearch, setEmployeeSearch] = useState("");
 
   const [filteredEmployees, setFilteredEmployees] = useState({});
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (employees.length > 0) {
@@ -40,117 +51,29 @@ const Employees = () => {
   }, [currentEmployee]);
 
   return (
-    // <div className="three-grids">
-    //   <div className="tab-wrapper">
-    //     <div
-    //       className={`employees__list tab ${!currentEmployee ? "active" : ""}`}
-    //     >
-    //       <h3>Employees</h3>
-    //       <p className="tab__link">+ Add Employee</p>
-    //       <div className="tab__list">
-    //         <input
-    //           type="text"
-    //           className="search-field"
-    //           placeholder="Search employees..."
-    //           value={employeeSearch}
-    //           onChange={(e) => {
-    //             setEmployeeSearch(e.target.value);
-    //             setFilteredEmployees(
-    //               employees.filter((item) =>
-    //                 item.full_name
-    //                   .toLowerCase()
-    //                   .includes(e.target.value.toLowerCase())
-    //               )
-    //             );
-    //           }}
-    //         />
-    //         {filteredEmployees.length > 0 &&
-    //           filteredEmployees.map((item) => (
-    //             <TabItem
-    //               id={item.id}
-    //               title={`${item.first_name} ${item.last_name}`}
-    //               current={currentEmployee}
-    //               setCurrent={setCurrentEmployee}
-    //             />
-    //           ))}
-    //       </div>
-    //     </div>
-    //     <div
-    //       className={`employees__section tab ${
-    //         currentEmployee ? "active" : ""
-    //       }`}
-    //     >
-    //       {Object.keys(currentEmployeeObj).length != 0 && (
-    //         <Fragment>
-    //           <h3>{currentEmployeeObj.full_name}</h3>
-    //           {/* <small>
-    //             Created{" "}
-    //             {format(
-    //               parseISO(currentEmployeeObj.created_at),
-    //               "do MMMM yyyy"
-    //             )}
-    //           </small> */}
-    //         </Fragment>
-    //       )}
-
-    //       <small
-    //         className="tab__link"
-    //         onClick={() => {
-    //           setCurrentEmployee(false);
-    //           setCurrentEmployeeObj({});
-    //         }}
-    //       >
-    //         Back to employees
-    //       </small>
-    //       <div className="tab__list">
-    //         <TabItem
-    //           title="Personal Details"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //         <TabItem
-    //           title="Wage Information"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //         <TabItem
-    //           title="Status"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //         <TabItem
-    //           title="Roles and Locations"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //         <TabItem
-    //           title="Permissions"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //         <TabItem
-    //           title="Availability and Holidays"
-    //           current={currentSection}
-    //           setCurrent={setCurrentSection}
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <div className="form-block">
-    //     <div className="form-block__wrapper">
-    //       <Fragment>
-    //         <div className="form-block__heading">
-    //           <h3>{currentSection}</h3>
-    //         </div>
-    //         <PersonalDetails obj={currentEmployeeObj} />
-    //       </Fragment>
-    //     </div>
-    //   </div>
-    // </div>
     <Fragment>
+      {confirmOpen && selectedEmployee && (
+        <ConfirmModal
+          title={`Are you sure you want to delete ${selectedEmployee.full_name}?`}
+          open={confirmOpen}
+          setOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          action={() => {
+            dispatch(deleteEmployee(selectedEmployee.id));
+          }}
+        />
+      )}
       <div className="list-banner">
-        <div className="flex-container--align-center">
+        <SearchField
+          placeholder="Search employees..."
+          searchValue={employeeSearch}
+          setSearchValue={setEmployeeSearch}
+          setFilteredObjects={setFilteredEmployees}
+          objs={employees}
+          filterField={"full_name"}
+        />
+
+        {/* <div className="flex-container--align-center">
           <i class="fas fa-search"></i>
           <input
             type="text"
@@ -167,11 +90,13 @@ const Employees = () => {
               );
             }}
           />
-        </div>
+        </div> */}
         <div className="list-banner__right">
           {/* <div>Departments</div>
           <div>Positions</div> */}
-          <button className="btn-3">+ Add Employee</button>
+          <Link to="/employees/create" className="btn-3">
+            + Add Employee
+          </Link>
         </div>
       </div>
       <div className="employees">
@@ -188,7 +113,7 @@ const Employees = () => {
               <th>
                 Created <i class="fas fa-sort"></i>
               </th>
-              <th className="center">Action</th>
+              <th className="right"></th>
             </tr>
           </thead>
           <tbody>
@@ -203,11 +128,30 @@ const Employees = () => {
                     {item.full_name}
                   </td>
                   <td className="highlight">jason@readysetcore.com</td>
-                  <td>£10 per hour</td>
-                  <td>{format(parseISO(item.created_at), "do MMM yyyy")}</td>
-                  <td className="center">
-                    <i class="fas fa-ellipsis-v"></i>
+                  <td>
+                    {item.current_wage &&
+                      `£${numberWithCommas(item.current_wage.amount)} per ${
+                        item.current_wage.type == "H" ? "hour" : "annum"
+                      }`}{" "}
                   </td>
+                  <td>{format(parseISO(item.created_at), "do MMM yyyy")}</td>
+                  <ListAction
+                    actions={
+                      <ul>
+                        <Link to={`/employees/edit/${item.id}`}>
+                          <li>Edit</li>
+                        </Link>
+                        <li
+                          onClick={() => {
+                            setSelectedEmployee(item);
+                            setConfirmOpen(true);
+                          }}
+                        >
+                          Delete
+                        </li>
+                      </ul>
+                    }
+                  />
                 </tr>
               ))}
           </tbody>

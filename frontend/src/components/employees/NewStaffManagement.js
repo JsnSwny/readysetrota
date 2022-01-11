@@ -8,9 +8,17 @@ import Title from "../common/Title";
 import Employees from "./Employees";
 import Departments from "./Departments";
 import Positions from "./Positions";
+import { useParams } from "react-router";
 
 const NewStaffManagement = () => {
   const dispatch = useDispatch();
+  const { sectionParam } = useParams();
+
+  useEffect(() => {
+    if (sectionParam) {
+      setCurrentSection(sectionParam);
+    }
+  }, []);
   let current = useSelector((state) => state.employees.current);
   let business = useSelector((state) => state.employees.business);
   let positions = useSelector((state) => state.employees.positions);
@@ -23,15 +31,6 @@ const NewStaffManagement = () => {
   const employees = useSelector((state) => state.employees.employees);
 
   const [currentSection, setCurrentSection] = useState("Departments");
-
-  useEffect(() => {
-    if (!loading.departments && !loading.sites) {
-      if (sites.length > 0) {
-        dispatch(getPositions(false));
-        dispatch(getEmployees(true, false));
-      }
-    }
-  }, [current.department, current.site]);
 
   const getSection = () => {
     switch (currentSection) {
@@ -70,29 +69,6 @@ const NewStaffManagement = () => {
         <Title name={currentSection} breakWord={false} />
       </div>
       <div className="sidebar-list flex-container">
-        {/* <div className="sidebar">
-        <h4>Staff Management</h4>
-        <ul className="sidebar__list">
-          <li
-            onClick={() => setCurrentSection("Departments")}
-            className={`${currentSection == "Departments" ? "active" : ""}`}
-          >
-            <i class="fas fa-building"></i> Departments
-          </li>
-          <li
-            onClick={() => setCurrentSection("Positions")}
-            className={`${currentSection == "Positions" ? "active" : ""}`}
-          >
-            <i class="fas fa-tags"></i> Positions
-          </li>
-          <li
-            onClick={() => setCurrentSection("Employees")}
-            className={`${currentSection == "Employees" ? "active" : ""}`}
-          >
-            <i class="fas fa-user-tie"></i> Employees
-          </li>
-        </ul>
-      </div> */}
         <div className="sidebar-list__right">{getSection()}</div>
       </div>
     </div>

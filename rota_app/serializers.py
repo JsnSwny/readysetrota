@@ -119,6 +119,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         queryset=Business.objects.all(), source='business', write_only=True)
     site_permissions = serializers.SerializerMethodField()
 
+    full_name = serializers.SerializerMethodField()
+
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
@@ -153,6 +155,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
             site = obj.position.all().first().department.site
             return get_perms(user, site)
         return []
+
+    def get_full_name(self, obj):
+        if obj.first_name:
+            return f'{obj.first_name} {obj.last_name}'
+        return 'Open Shift'
 
     def update(self, instance, validated_data):
         last_archived_employee = Employee.objects.filter(

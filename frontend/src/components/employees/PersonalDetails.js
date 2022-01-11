@@ -1,15 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
 
-const PersonalDetails = ({ obj }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    setFirstName(obj.first_name);
-    setLastName(obj.last_name);
-  }, [obj]);
-
+const PersonalDetails = ({
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  email,
+  setEmail,
+}) => {
   return (
     <Fragment>
       <div className="flex-container--between">
@@ -46,8 +44,6 @@ const PersonalDetails = ({ obj }) => {
             value={email}
           ></input>
         </div>
-        <div className="form__control--half"></div>
-        <button className="btn-3">Save</button>
       </div>
     </Fragment>
   );

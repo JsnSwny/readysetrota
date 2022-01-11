@@ -48,6 +48,7 @@ import Landing from "./landing/Landing";
 import { TableBody } from "semantic-ui-react";
 import Timeclock from "./timeclock/Timeclock";
 import { useLocation } from "react-router-dom";
+import EmployeesForm from "./employees/EmployeesForm";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -108,6 +109,15 @@ const Main = () => {
       }
     }
   }, [departments, sites]);
+
+  useEffect(() => {
+    if (!loading.sites) {
+      if (sites.length > 0) {
+        dispatch(getPositions(false));
+        dispatch(getEmployees(true, false));
+      }
+    }
+  }, [current.site]);
 
   // Props
   const modalProps = {
@@ -224,7 +234,7 @@ const Main = () => {
               "manage_positions",
               "manage_employees",
             ]}
-            path="/new-staff-management"
+            path="/management"
             exact
             component={NewStaffManagement}
             modalProps={modalProps}
@@ -238,10 +248,9 @@ const Main = () => {
               "manage_positions",
               "manage_employees",
             ]}
-            path="/employees"
+            path="/employees/:formType/:employeeId?"
             exact
-            component={Employees}
-            modalProps={modalProps}
+            component={EmployeesForm}
             title="Employees"
           />
 

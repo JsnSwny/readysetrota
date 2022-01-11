@@ -7,6 +7,7 @@ import DashboardBlock from "./DashboardBlock";
 import Switch from "react-switch";
 import { getEmployees } from "../../../actions/employees";
 import { format } from "date-fns";
+import { numberWithCommas } from "../../Utilities";
 
 const StaffPicker = (props) => {
   const dispatch = useDispatch();
@@ -33,13 +34,6 @@ const StaffPicker = (props) => {
         : false
       : true
   );
-
-  function numberWithCommas(x) {
-    return x
-      .toFixed(2)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   const isSiteAdmin = (user_id) => {
     return sites.find((site) => site.id == current.site.id)

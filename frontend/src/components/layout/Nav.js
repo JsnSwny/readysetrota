@@ -33,8 +33,8 @@ const Nav = () => {
                   <NavLink title="Dashboard" link="" />
                   <NavLink title="Rota" link="rota" />
                   <NavLink
-                    title="Employees"
-                    link="staff-management"
+                    title="Management"
+                    link="management"
                     perms={[
                       "manage_departments",
                       "manage_positions",
