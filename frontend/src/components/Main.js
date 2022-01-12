@@ -28,17 +28,10 @@ import PrivacyPolicy from "./landing/PrivacyPolicy";
 
 import { ToastContainer } from "react-toastify";
 import TermsAndConditions from "./landing/TermsAndConditions";
-
-import StaffManagement from "./profiles/StaffManagement";
-import NewStaffManagement from "./employees/NewStaffManagement";
-
-import Employees from "./employees/Employees";
 import CreateShift from "./modals/CreateShift";
 
 import AdminPanel from "./profiles/dashboard/AdminPanel";
 import Checkout from "./accounts/Checkout";
-
-import Confirm from "./layout/Confirm";
 
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
@@ -48,7 +41,11 @@ import Landing from "./landing/Landing";
 import { TableBody } from "semantic-ui-react";
 import Timeclock from "./timeclock/Timeclock";
 import { useLocation } from "react-router-dom";
-import EmployeesForm from "./employees/EmployeesForm";
+import EmployeesForm from "./management/forms/EmployeesForm";
+
+import Departments from "./management/tables/Departments";
+import Positions from "./management/tables/Positions";
+import Employees from "./management/tables/Employees";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -60,9 +57,6 @@ const Main = () => {
   const [type, setType] = useState("");
   const [shiftInfo, setShiftInfo] = useState({});
   const [holidayEmployee, setHolidayEmployee] = useState({});
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [onConfirm, setOnConfirm] = useState(false);
-  const [message, setMessage] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
   const [extra, setExtra] = useState({});
 
@@ -130,12 +124,6 @@ const Main = () => {
     setExtra,
   };
 
-  const confirmProps = {
-    setConfirmOpen,
-    setOnConfirm,
-    setMessage,
-  };
-
   return (
     <Router>
       <ToastContainer position="bottom-center" autoClose={2500} />
@@ -153,28 +141,10 @@ const Main = () => {
         sidebarOpen={sidebarOpen}
         {...shiftInfo}
         forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
-        confirmProps={confirmProps}
         holidayEmployee={holidayEmployee}
         extra={extra}
       />
-      <Confirm
-        open={confirmOpen}
-        onConfirm={onConfirm}
-        onClose={() => {
-          setConfirmOpen(!confirmOpen);
-        }}
-        message={message}
-        sidebarOpen={sidebarOpen}
-      />
       <Nav />
-      {/* <div className="sidenav__bar">
-        <i
-          onClick={() => {
-            setSidebarOpen(!sidebarOpen);
-          }}
-          className={`fas fa-bars`}
-        ></i>
-      </div> */}
       <div className={`App`}>
         <Switch>
           <PrivateRoute
@@ -198,7 +168,6 @@ const Main = () => {
             exact
             component={Rota}
             modalProps={modalProps}
-            confirmProps={confirmProps}
             title="Rota"
           />
 
@@ -209,36 +178,34 @@ const Main = () => {
             exact
             component={Availability}
             modalProps={modalProps}
-            confirmProps={confirmProps}
             title="Availability"
           />
 
           <PrivateRoute
             admin={true}
-            perms={[
-              "manage_departments",
-              "manage_positions",
-              "manage_employees",
-            ]}
-            path="/staff-management"
+            perms={["manage_departments"]}
+            path="/departments"
             exact
-            component={StaffManagement}
-            modalProps={modalProps}
-            title="Staff Management"
+            component={Departments}
+            title="Departments"
           />
 
           <PrivateRoute
             admin={true}
-            perms={[
-              "manage_departments",
-              "manage_positions",
-              "manage_employees",
-            ]}
-            path="/management"
+            perms={["manage_positions"]}
+            path="/positions"
             exact
-            component={NewStaffManagement}
-            modalProps={modalProps}
-            title="Staff Management"
+            component={Positions}
+            title="Positions"
+          />
+
+          <PrivateRoute
+            admin={true}
+            perms={["manage_employees"]}
+            path="/employees"
+            exact
+            component={Employees}
+            title="Employees"
           />
 
           <PrivateRoute

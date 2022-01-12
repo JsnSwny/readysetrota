@@ -445,6 +445,7 @@ export const addPosition = (position) => (dispatch, getState) => {
 };
 
 export const updatePosition = (id, position) => (dispatch, getState) => {
+  console.log(position);
   axios
     .put(`/api/positions/${id}/`, position, tokenConfig(getState))
     .then((res) => {
@@ -456,7 +457,7 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
       dispatch(getEmployees(false, true));
     })
 
-    .catch();
+    .catch((err) => console.log(err.response));
 };
 
 // Add Employee

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PersonalDetails from "./tabs/PersonalDetails";
-import Positions from "../Positions";
 import {
   updateEmployee,
   addEmployee,
@@ -238,7 +237,6 @@ const EmployeeProfileModal = (props) => {
         {currentTab == "Personal Details" && (
           <PersonalDetails {...personalDetailsProps} />
         )}
-        {currentTab == "Positions" && <Positions {...positionsProps} />}
         {currentTab == "Availability" && (
           <DefaultAvailability {...availabilityProps} />
         )}

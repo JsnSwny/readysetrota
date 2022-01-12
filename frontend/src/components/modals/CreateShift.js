@@ -1,6 +1,5 @@
 import React from "react";
 import EmployeeProfileModal from "./employee/EmployeeProfileModal";
-import StaffManagementModal from "./StaffManagementModal";
 import ShiftModal from "./shift/ShiftModal";
 import ForecastModal from "./ForecastModal";
 import RegisterModal from "./RegisterModal";
@@ -54,14 +53,6 @@ const CreateShift = (props) => {
       return <RegisterModal {...modalProps} />;
     } else if (type == "holiday") {
       return <HolidayModal {...modalProps} />;
-    } else if (staffTypes.includes(type)) {
-      return (
-        <StaffManagementModal
-          {...modalProps}
-          form={type}
-          title={`Create ${type}`}
-        />
-      );
     }
   };
 

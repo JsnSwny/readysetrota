@@ -2,12 +2,10 @@ import React, { useEffect, useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addShift, deleteShift, updateShift } from "../../../actions/shifts";
 import { toast } from "react-toastify";
-import PositionField from "../../employees/PositionField";
 import { getErrors } from "../../../actions/errors";
 import ShiftDetails from "./tabs/ShiftDetails";
 import ExtraInfo from "./tabs/ExtraInfo";
 import Absence from "./tabs/Absence";
-import Positions from "../Positions";
 import TimeclockTab from "./tabs/TimeclockTab";
 import useref from "gulp-useref";
 import Tab from "../Tab";
@@ -208,15 +206,6 @@ const ShiftModal = (props) => {
             setAbsence={setAbsence}
             absenceInfo={absenceInfo}
             setAbsenceInfo={setAbsenceInfo}
-          />
-        );
-      case "Positions":
-        return (
-          <Positions
-            position={position}
-            setPosition={setPosition}
-            many={true}
-            shift={update}
           />
         );
       case "Timeclock":

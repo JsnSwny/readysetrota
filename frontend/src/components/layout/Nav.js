@@ -34,7 +34,7 @@ const Nav = () => {
                   <NavLink title="Rota" link="rota" />
                   <NavLink
                     title="Management"
-                    link="management"
+                    link="departments"
                     perms={[
                       "manage_departments",
                       "manage_positions",
