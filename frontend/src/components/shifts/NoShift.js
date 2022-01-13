@@ -7,15 +7,16 @@ const NoShift = (props) => {
     result,
     showAvailabilities,
     available,
-    limit,
     employee,
-    admin,
     shiftDepartment,
     financialMode,
     setOpen,
     setShiftFormInfo,
   } = props;
   const date = format(result, "yyyy-MM-dd");
+  const permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
   let leave = useSelector((state) => state.availability.leave);
   let showAdd = true;
   let isHoliday = leave.some(
@@ -50,15 +51,18 @@ const NoShift = (props) => {
         showAvailabilities && isHoliday ? "holiday" : ""
       }`}
     >
-      {!isHoliday && showAdd && admin && financialMode == "predicted" && (
-        <i
-          class="fas fa-plus"
-          onClick={() => {
-            setOpen(true);
-            setShiftFormInfo({ employee, date, shiftDepartment });
-          }}
-        ></i>
-      )}
+      {!isHoliday &&
+        showAdd &&
+        permissions.includes("manage_shifts") &&
+        financialMode == "predicted" && (
+          <i
+            class="fas fa-plus"
+            onClick={() => {
+              setOpen(true);
+              setShiftFormInfo({ employee, date, shiftDepartment });
+            }}
+          ></i>
+        )}
       {showAvailabilities && (
         <Fragment>
           <p className={`shift__text`}>

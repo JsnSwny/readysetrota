@@ -6,25 +6,10 @@ import { updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 
 const Shift = (props) => {
-  const dispatch = useDispatch();
-  const {
-    result,
-    shifts,
-    format_date,
-    admin,
-    employee,
-    setOpen,
-    setUpdate,
-    setType,
-    setShiftInfo,
-    setExtra,
-    financialMode,
-    shiftDepartment,
-  } = props;
-
-  const [shiftDate, setShiftDate] = useState("");
-
-  let modalProps = { setOpen, setUpdate, setType, setShiftInfo, setExtra };
+  const { result, shifts, employee, setOpen, financialMode } = props;
+  const permissions = useSelector(
+    (state) => state.employees.current.site.permissions
+  );
 
   return (
     <Fragment>
@@ -37,32 +22,25 @@ const Shift = (props) => {
               : ""
           } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
-        {admin && financialMode == "predicted" && (
+        {permissions.includes("manage_shifts") && financialMode == "predicted" && (
           <i
             class="fas fa-plus fa-plus--white"
             onClick={() => {
               setOpen(true);
-              // setShiftFormInfo({ employee, date, shiftDepartment });
             }}
           ></i>
         )}
 
         {shifts.map((shift) => (
           <Fragment key={shift.id}>
-            {!admin && shift.stage != "Published" ? (
+            {!permissions.includes("manage_shifts") &&
+            shift.stage != "Published" ? (
               ""
             ) : (
               <div
-                onClick={() => {
-                  if (admin) {
-                    setOpen(true);
-                    setType("shift");
-                    setUpdate(shift);
-                    setShiftInfo({ employee, date: shiftDate });
-                    setExtra({ financialMode, shiftDepartment });
-                  }
-                }}
-                className={`shift__wrapper ${admin ? "edit" : ""}`}
+                className={`shift__wrapper ${
+                  permissions.includes("manage_shifts") ? "edit" : ""
+                }`}
               >
                 <div className="flex-container--align-center">
                   <p
