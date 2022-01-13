@@ -19,7 +19,6 @@ const DepartmentForm = ({ setOpen, editDepartment }) => {
       business_id: current.business.id,
       site_id: current.site.id,
     };
-    console.log(editDepartment);
     !editDepartment
       ? dispatch(addDepartment(depObj))
       : dispatch(updateDepartment(editDepartment.id, depObj));
@@ -42,7 +41,7 @@ const DepartmentForm = ({ setOpen, editDepartment }) => {
       <hr />
       <div className="button-container">
         <button className="btn-3" type="submit" value="Add Department">
-          Add Department
+          {!editDepartment ? "Add Department" : "Save"}
         </button>
       </div>
     </form>

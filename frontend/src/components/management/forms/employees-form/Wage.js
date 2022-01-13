@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { numberWithCommas } from "../../../Utilities";
 
 const Wage = ({ wage, setWage, wageType, setWageType, currentEmployee }) => {
-  console.log(currentEmployee);
   return (
     <Fragment>
       <div className="flex-container--between">

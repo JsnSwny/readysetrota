@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPosition, updatePosition } from "../../../actions/employees";
 import { toast } from "react-toastify";
-
+import Select from "react-select";
 const PositionForm = ({ setOpen, editPosition }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
@@ -11,8 +11,13 @@ const PositionForm = ({ setOpen, editPosition }) => {
   const departments = useSelector((state) => state.employees.departments);
 
   useEffect(() => {
-    setName(editPosition.name);
-    setDepartment(editPosition.department.id);
+    if (editPosition) {
+      setName(editPosition.name);
+      setDepartment({
+        value: editPosition.department.id,
+        label: editPosition.department.name,
+      });
+    }
   }, [editPosition]);
 
   const onSubmit = (e) => {
@@ -20,10 +25,8 @@ const PositionForm = ({ setOpen, editPosition }) => {
     const positionObj = {
       name,
       business_id: current.business.id,
-      department_id: department,
+      department_id: department.value,
     };
-
-    console.log(positionObj);
 
     !editPosition
       ? dispatch(addPosition(positionObj))
@@ -46,26 +49,26 @@ const PositionForm = ({ setOpen, editPosition }) => {
         ></input>
       </div>
       <div className="form__control">
-        <label className="form__label">Department*</label>
-        <select
-          className="form__input"
-          type="text"
-          name="department"
-          onChange={(e) => setDepartment(e.target.value)}
+        <label className="form__label">Department*:</label>
+        <Select
+          className="react-select-container"
+          classNamePrefix="react-select"
           value={department}
-        >
-          <option value="" selected disabled hidden>
-            Select a department
-          </option>
-          {departments.map((item) => (
-            <option value={item.id}>{item.name}</option>
-          ))}
-        </select>
+          onChange={(e) => setDepartment(e)}
+          options={[
+            ...departments.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })),
+          ]}
+          placeholder={"Select a department"}
+        />
       </div>
+
       <hr />
       <div className="button-container">
-        <button className="btn-3" type="submit" value="Add Department">
-          Add Position
+        <button className="btn-3" type="submit" value="Add Position">
+          {!editPosition ? "Add Position" : "Save"}
         </button>
       </div>
     </form>

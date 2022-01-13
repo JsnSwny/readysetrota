@@ -59,6 +59,7 @@
     "react-redux": "^7.2.0",
     "react-responsive-carousel": "^3.2.20",
     "react-router-dom": "^5.1.2",
+    "react-select": "^5.2.1",
     "react-share": "^4.2.1",
     "react-switch": "^6.0.0",
     "react-time-picker": "^4.3.0",

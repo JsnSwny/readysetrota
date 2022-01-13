@@ -8,7 +8,6 @@ import {
   updateSettings,
 } from "../actions/employees";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import SideNav from "./layout/SideNav";
 import store from "../store";
 import Rota from "./shifts/Rota";
 import { format } from "date-fns";
@@ -38,9 +37,7 @@ import Beta from "./landing/Beta";
 import Nav from "./layout/Nav";
 import Availability from "./availability/Availability";
 import Landing from "./landing/Landing";
-import { TableBody } from "semantic-ui-react";
 import Timeclock from "./timeclock/Timeclock";
-import { useLocation } from "react-router-dom";
 import EmployeesForm from "./management/forms/EmployeesForm";
 
 import Departments from "./management/tables/Departments";

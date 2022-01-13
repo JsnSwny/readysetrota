@@ -15,11 +15,12 @@
 .modal {
   background-color: white;
   border-radius: 5px;
+  margin-bottom: 1rem;
   &-sm {
     @extend .modal;
     width: 400px;
     padding: 1rem 2rem;
-    &__heading {
+    .heading {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -40,5 +41,9 @@
       border: none;
       margin: 1rem -2rem;
     }
+  }
+  &-md {
+    @extend .modal-sm;
+    width: 675px;
   }
 }

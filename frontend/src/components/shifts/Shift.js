@@ -10,19 +10,13 @@ const Shift = (props) => {
   const {
     result,
     shifts,
-    filterDate,
     format_date,
-    limit,
     admin,
     employee,
     setOpen,
     setUpdate,
     setType,
     setShiftInfo,
-    current_employee,
-    setConfirmOpen,
-    setOnConfirm,
-    setMessage,
     setExtra,
     financialMode,
     shiftDepartment,
@@ -31,17 +25,12 @@ const Shift = (props) => {
   const [shiftDate, setShiftDate] = useState("");
 
   let modalProps = { setOpen, setUpdate, setType, setShiftInfo, setExtra };
-  let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
-  );
 
   return (
     <Fragment>
       <div
         key={result}
-        className={`item-block shift__shift ${
-          filterDate == format_date ? "filtered" : ""
-        } 
+        className={`item-block shift__shift
           ${
             shifts.some((item) => item.stage != "Published")
               ? "unpublished"
@@ -49,16 +38,13 @@ const Shift = (props) => {
           } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
         {admin && financialMode == "predicted" && (
-          <AddShiftButton
-            employee={employee}
-            date={format_date}
-            white={true}
-            limit={limit}
-            setUpdate={setUpdate}
-            {...modalProps}
-            shiftDepartment={shiftDepartment}
-            financialMode={financialMode}
-          />
+          <i
+            class="fas fa-plus fa-plus--white"
+            onClick={() => {
+              setOpen(true);
+              // setShiftFormInfo({ employee, date, shiftDepartment });
+            }}
+          ></i>
         )}
 
         {shifts.map((shift) => (

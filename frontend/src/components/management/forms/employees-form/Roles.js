@@ -41,9 +41,9 @@ const Roles = ({
       <div className="roles-form__section">
         <h4>Departments</h4>
         {selectedDepartments.length > 0 && (
-          <ul className="roles-form__list">
+          <ul className="tag-container">
             {selectedDepartments.map((item) => (
-              <li>{item.name}</li>
+              <li className="tag">{item.name}</li>
             ))}
           </ul>
         )}

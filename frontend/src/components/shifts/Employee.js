@@ -100,9 +100,12 @@ const Employee = (props) => {
           : ""
       }`}
     >
-      <p className="rotaEmployee__name">
+      <Link
+        to={`/employees/edit/${employee.id}`}
+        className="rotaEmployee__name"
+      >
         {employee.first_name} <strong>{employee.last_name}</strong>
-      </p>
+      </Link>
 
       <p className="rotaEmployee__hours">
         {getHours(

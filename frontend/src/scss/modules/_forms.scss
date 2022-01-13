@@ -124,7 +124,7 @@
   }
   &__control {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
     &--half {
       @extend .form__control;
       width: 48.5%;
@@ -174,8 +174,13 @@
     -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
-    padding: 15px 20px;
+    padding: 0 8px;
+    min-height: 38px;
     margin-right: 20px;
+    &.textarea {
+      min-height: auto;
+      padding: 8px;
+    }
     &:focus {
       outline: none;
       -webkit-box-shadow: 0px 0px 7px 0px $pink;
@@ -183,6 +188,7 @@
       box-shadow: 0px 0px 7px 0px $pink;
     }
   }
+
   &__label {
     display: block;
     margin: 8px 0;
@@ -343,23 +349,14 @@
     border: none;
     margin: 1rem 0;
   }
-  &__list {
-    display: flex;
-    list-style-type: none;
-    margin-top: 1rem;
-    li {
-      background-color: $pink;
-      color: white;
-      border-radius: 5px;
-      padding: 5px 8px;
-      margin-right: 1rem;
-    }
-  }
   &__section {
     margin-bottom: 4rem;
     h4 {
       font-size: 18px;
     }
+  }
+  .tag-container {
+    margin: 1rem 0 0 0;
   }
 }
 
@@ -396,6 +393,16 @@
     }
     &:hover {
       opacity: 0.8;
+    }
+  }
+}
+
+.shift-form {
+  .tag-container {
+    margin: 0 -0.4rem 0.6rem 0;
+    .tag {
+      width: calc(100% / 5 - 0.4rem);
+      text-align: center;
     }
   }
 }

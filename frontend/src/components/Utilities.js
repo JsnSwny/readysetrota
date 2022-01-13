@@ -1,5 +1,4 @@
 export const numberWithCommas = (x) => {
-  console.log(x);
   try {
     return x
       .toFixed(2)

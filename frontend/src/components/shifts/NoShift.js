@@ -1,33 +1,27 @@
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { format, addDays } from "date-fns";
-import AddShiftButton from "./AddShiftButton";
 
 const NoShift = (props) => {
   const {
     result,
     showAvailabilities,
     available,
-    filterDate,
     limit,
     employee,
     admin,
-    setOpen,
-    setUpdate,
-    setType,
-    setShiftInfo,
     shiftDepartment,
-    setExtra,
     financialMode,
+    setOpen,
+    setShiftFormInfo,
   } = props;
-  const format_date = format(result, "yyyy-MM-dd");
-  let modalProps = { setOpen, setUpdate, setType, setShiftInfo };
+  const date = format(result, "yyyy-MM-dd");
   let leave = useSelector((state) => state.availability.leave);
   let showAdd = true;
   let isHoliday = leave.some(
     (item) =>
-      item.start_date <= format_date &&
-      item.end_date >= format_date &&
+      item.start_date <= date &&
+      item.end_date >= date &&
       item.employee.id == employee.id &&
       item.status == "Approved"
   );
@@ -52,21 +46,18 @@ const NoShift = (props) => {
           : available.status == "Denied"
           ? "not-approved"
           : available.name)
-      } ${filterDate == format_date ? "filtered" : ""} ${
-        result <= addDays(new Date(), -1) ? "date-before" : ""
-      } ${showAvailabilities && isHoliday ? "holiday" : ""}`}
+      } ${result <= addDays(new Date(), -1) ? "date-before" : ""} ${
+        showAvailabilities && isHoliday ? "holiday" : ""
+      }`}
     >
       {!isHoliday && showAdd && admin && financialMode == "predicted" && (
-        <AddShiftButton
-          {...modalProps}
-          setUpdate={setUpdate}
-          employee={employee}
-          date={format_date}
-          limit={limit}
-          setExtra={setExtra}
-          shiftDepartment={shiftDepartment}
-          financialMode={financialMode}
-        />
+        <i
+          class="fas fa-plus"
+          onClick={() => {
+            setOpen(true);
+            setShiftFormInfo({ employee, date, shiftDepartment });
+          }}
+        ></i>
       )}
       {showAvailabilities && (
         <Fragment>

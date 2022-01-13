@@ -7,62 +7,50 @@ import {
   getEmployees,
   getPositions,
 } from "../../actions/employees";
-import { publish, sendForApproval, approveShifts } from "../../actions/shifts";
 import { format, parseISO, eachDayOfInterval, addDays, getDay } from "date-fns";
-import Dates from "./Dates";
 import Loading from "../common/Loading";
-import { toast } from "react-toastify";
 import Employee from "./Employee";
-import { Redirect } from "react-router-dom";
-import RotaBar from "./RotaBar";
 import NoShift from "./NoShift";
 import Shift from "./Shift";
-import OpenShifts from "./OpenShifts";
 import Title from "../common/Title";
-import { getLeave } from "../../actions/availability";
-import RotaDatePicker from "./RotaDatePicker";
 import FinancialBar from "./FinancialBar";
+import SmallModal from "../layout/SmallModal";
+import ShiftForm from "./ShiftForm";
+import RotaActions from "./RotaActions";
 
-const Rota = ({ modalProps, confirmProps }) => {
+const Rota = ({ modalProps }) => {
   const dispatch = useDispatch();
 
   // State Selectors
   let user = useSelector((state) => state.auth.user);
-  let business = useSelector((state) => state.employees.business);
+
   let employees = useSelector((state) => state.employees.employees);
   let date = useSelector((state) => state.shifts.date);
+  let enddate = useSelector((state) => state.shifts.end_date);
   let availability = useSelector((state) => state.employees.availability);
   let positions = useSelector((state) => state.employees.positions);
   let loading = useSelector((state) => state.loading);
-  let enddate = useSelector((state) => state.shifts.end_date);
+
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
   let departments = useSelector((state) => state.employees.departments);
-  let settings = useSelector(
-    (state) => state.employees.current.site.sitesettings
-  );
-
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
   let siteAdmin = permissions.includes("manage_shifts");
   let shiftPerm = permissions.includes("manage_shifts");
 
-  let published_shifts = shifts.filter((item) => item.stage == "Published");
-
   // Use State
-  const [employeesList, setEmployeesList] = useState(employees);
-  const [filterDate, setFilterDate] = useState("");
   const [currentDevice, setCurrentDevice] = useState("");
   const [showAvailabilities, setShowAvailabilities] = useState(false);
-  const [publishDropdown, setPublishDropdown] = useState(false);
-  const [showFinancials, setShowFinancials] = useState(false);
-  const [template, setTemplate] = useState(false);
-  const [limit, setLimit] = useState("");
-  const [scrollPosition, setScrollPosition] = useState(0);
+
   const [financialMode, setFinancialMode] = useState("predicted");
+
+  const [open, setOpen] = useState(false);
+  const [editShift, setEditShift] = useState(false);
+  const [shiftFormInfo, setShiftFormInfo] = useState(false);
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
@@ -124,36 +112,6 @@ const Rota = ({ modalProps, confirmProps }) => {
     widthUpdate(true);
   }, [current.site]);
 
-  // Initialise employee list
-  useEffect(() => {
-    if (user && !user.business && current_employee) {
-      if (employees.length > 0) {
-        employees = employees.filter(
-          (employee) => employee.id !== current_employee.id
-        );
-        employees.unshift(current_employee);
-      }
-    }
-    setEmployeesList(employees);
-    if (employees.length > business.total_employees) {
-      let num = employees.length - business.total_employees;
-      let id_list = employees
-        .map((item) => item.id)
-        .sort()
-        .reverse();
-
-      setLimit(id_list[num]);
-    }
-  }, [employees]);
-
-  // Filter employees after shift update
-  useEffect(() => {
-    if (filterDate) {
-      filterEmployees(filterDate, true);
-    }
-    dispatch(getLeave(date, enddate));
-  }, [shifts]);
-
   // Date range
   var result = eachDayOfInterval({
     start: parseISO(date),
@@ -172,28 +130,6 @@ const Rota = ({ modalProps, confirmProps }) => {
         : "";
     });
 
-  const filterEmployees = (date, update = false) => {
-    if (filterDate == date && update == false) {
-      setFilterDate("");
-      setEmployeesList(employees);
-      return true;
-    }
-    let employeesOnDay = shifts.filter((obj) => {
-      return obj.date == date && obj.employee && obj.employee.id;
-    });
-    let newEmployees = [];
-    employeesOnDay.map((obj) => {
-      !newEmployees.some((item) => item.id === obj.employee.id) &&
-        newEmployees.push(employees.find((item) => item.id == obj.employee.id));
-    });
-    employees.map((obj) => {
-      !newEmployees.some((item) => item.id === obj.id) &&
-        newEmployees.push(obj);
-    });
-    setEmployeesList(newEmployees);
-    setFilterDate(date);
-  };
-
   const isAvailable = (employee, date) => {
     let available = availability.filter(
       (item) => item.employee.id == employee.id && item.date == date
@@ -207,53 +143,11 @@ const Rota = ({ modalProps, confirmProps }) => {
     return available;
   };
 
-  // Handle Scrolling
-  const handleScroll = () => {
-    setScrollPosition(window.pageYOffset);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   const [staffSort, setStaffSort] = useState(
     localStorage.getItem("staff_sort")
       ? localStorage.getItem("staff_sort")
       : "alphabetical"
   );
-
-  const sortEmployees = () => {
-    if (positions.length > 0 && filterDate == "") {
-      switch (staffSort) {
-        case "position":
-          return employeesList.sort(
-            (a, b) =>
-              positions.find(
-                (pos) =>
-                  pos.id ==
-                  a.position.find(
-                    (item) => item.department.id == current.department.id
-                  ).id
-              ).order -
-              positions.find(
-                (pos) =>
-                  pos.id ==
-                  b.position.find(
-                    (item) => item.department.id == current.department.id
-                  ).id
-              ).order
-          );
-
-        default:
-          return employeesList;
-      }
-    } else {
-      return employeesList;
-    }
-  };
 
   return (
     <div>
@@ -264,6 +158,20 @@ const Rota = ({ modalProps, confirmProps }) => {
           financialMode={financialMode}
         />
       )}
+      {open && (
+        <SmallModal
+          open={open}
+          setOpen={setOpen}
+          title={editShift ? `Edit ${editShift.name}` : "Add a new shift"}
+          size={"-md"}
+        >
+          <ShiftForm
+            setOpen={setOpen}
+            editShift={editShift}
+            shiftFormInfo={shiftFormInfo}
+          />
+        </SmallModal>
+      )}
       <div className="banner">
         <div className="wrapper--md flex-container--between-start">
           <h1 className="header">
@@ -271,142 +179,17 @@ const Rota = ({ modalProps, confirmProps }) => {
           </h1>
         </div>
       </div>
-      <div className="rotaFunctions flex-container--between wrapper--md">
-        <div className="rotaFunctions__wrapper">
-          <div className="rotaFunctions__button-list">
-            {permissions.includes("manage_shifts") && (
-              <div className="dropdown">
-                <div className="dropdown__wrapper">
-                  <div
-                    onClick={() => dispatch(publish())}
-                    className={`dropdown__button ${
-                      !user.business && settings.shift_approval
-                        ? shifts.some(
-                            (item) =>
-                              parseISO(item.date) >= addDays(new Date(), -1) &&
-                              item.stage == "Unpublished" &&
-                              item.employee
-                          )
-                          ? ""
-                          : "disabled"
-                        : !shifts.some(
-                            (item) =>
-                              parseISO(item.date) >= addDays(new Date(), -1) &&
-                              item.stage != "Published" &&
-                              item.employee
-                          )
-                        ? "disabled"
-                        : ""
-                    }`}
-                  >
-                    Publish
-                  </div>
-                  <div
-                    className={`dropdown__dropper ${
-                      publishDropdown ? "active" : ""
-                    }`}
-                  >
-                    {permissions.includes("manage_shifts") &&
-                      !user.business &&
-                      settings.shift_approval && (
-                        <div
-                          className={`dropdown__item ${
-                            !shifts.some((item) => item.stage == "Creation")
-                              ? "disabled"
-                              : ""
-                          }`}
-                          onClick={() => {
-                            dispatch(sendForApproval());
-                            setPublishDropdown(!publishDropdown);
-                          }}
-                        >
-                          Send for Approval
-                        </div>
-                      )}
-                    {permissions.includes("approve_shifts") &&
-                      settings.shift_approval && (
-                        <div
-                          className={`dropdown__item ${
-                            !shifts.some((item) => item.stage == "Approval")
-                              ? "disabled"
-                              : ""
-                          }`}
-                          onClick={() => {
-                            dispatch(approveShifts());
-                            setPublishDropdown(!publishDropdown);
-                          }}
-                        >
-                          Approve Shifts
-                        </div>
-                      )}
-                  </div>
-                </div>
-                <i
-                  onClick={() => setPublishDropdown(!publishDropdown)}
-                  className="fas fa-caret-down"
-                ></i>
-              </div>
-            )}
-            {permissions.includes("manage_availabilities") &&
-              business.plan != "F" && (
-                <div
-                  onClick={() => {
-                    setShowAvailabilities(!showAvailabilities);
-                  }}
-                  className="rotaFunctions__button"
-                >
-                  Availabilities{" "}
-                  <i
-                    className={`fas ${
-                      showAvailabilities ? "fa-eye" : "fa-eye-slash"
-                    }`}
-                  ></i>
-                </div>
-              )}
-
-            <a
-              className={`rotaFunctions__button ${
-                published_shifts.length == 0 ? "disabled" : ""
-              }`}
-              href={`${`/exportall?start_date=${date}&end_date=${enddate}&id=${current.site.id}`}`}
-              target="_blank"
-            >
-              Export <i className="fas fa-file-download"></i>
-            </a>
-          </div>
-        </div>
-        <div className="rotaFunctions__wrapper">
-          <RotaDatePicker updateShifts={updateShifts} />
-        </div>
-
-        <div className="rotaFunctions__wrapper">
-          {permissions.includes("manage_wages") && (
-            <div className={`rotaFunctions__selector ${financialMode}`}>
-              <p
-                onClick={() => setFinancialMode("predicted")}
-                className={`${financialMode == "predicted" ? "selected" : ""}`}
-              >
-                Predicted
-              </p>
-              <p
-                onClick={() => setFinancialMode("actual")}
-                className={`${financialMode == "actual" ? "selected" : ""}`}
-              >
-                Actual
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
+      <RotaActions
+        showAvailabilities={showAvailabilities}
+        setShowAvailabilities={setShowAvailabilities}
+        financialMode={financialMode}
+        setFinancialMode={setFinancialMode}
+        updateShifts={updateShifts}
+      />
       <div>
         {(isLoading || loading.employees) && <Loading />}
         {current.department != 0 && (
-          <div
-            className={`rota ${isLoading ? "loading" : ""} wrapper--md ${
-              filterDate ? "filtered" : ""
-            }`}
-          >
+          <div className={`rota ${isLoading ? "loading" : ""} wrapper--md`}>
             {employees.length > 0 &&
               departments.map((dep, i) => (
                 <div className="rota__department">
@@ -480,29 +263,28 @@ const Rota = ({ modalProps, confirmProps }) => {
                                       employee,
                                       format_date
                                     ),
-                                    limit,
                                     employee,
                                     showAvailabilities,
-                                    filterDate,
                                     admin: shiftPerm,
                                   };
 
                                   return shifts.length > 0 ? (
                                     <Shift
                                       key={result}
-                                      {...modalProps}
                                       {...props}
                                       shifts={shifts}
                                       financialMode={financialMode}
                                       shiftDepartment={dep.id}
+                                      setShiftFormInfo={setShiftFormInfo}
                                     />
                                   ) : (
                                     <NoShift
                                       key={result}
-                                      {...modalProps}
                                       {...props}
                                       shiftDepartment={dep.id}
                                       financialMode={financialMode}
+                                      setOpen={setOpen}
+                                      setShiftFormInfo={setShiftFormInfo}
                                     />
                                   );
                                 })}
