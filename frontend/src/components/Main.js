@@ -39,6 +39,7 @@ import Availability from "./availability/Availability";
 import Landing from "./landing/Landing";
 import Timeclock from "./timeclock/Timeclock";
 import EmployeesForm from "./management/forms/EmployeesForm";
+import TimeclockPage from "./shifts/timeclock/TimeclockPage";
 
 import Departments from "./management/tables/Departments";
 import Positions from "./management/tables/Positions";
@@ -216,6 +217,15 @@ const Main = () => {
             exact
             component={EmployeesForm}
             title="Employees"
+          />
+
+          <PrivateRoute
+            admin={true}
+            perms={["manage_shifts"]}
+            path="/Timesheet"
+            exact
+            component={TimeclockPage}
+            title="Timesheet"
           />
 
           <PrivateRoute

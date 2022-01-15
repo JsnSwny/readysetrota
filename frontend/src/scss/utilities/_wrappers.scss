@@ -6,6 +6,10 @@
   @include wi-mq(laptop) {
     max-width: 1000px;
   }
+  &--xs {
+    @extend .wrapper;
+    max-width: 750px;
+  }
   &--sm {
     @extend .wrapper;
     max-width: 1000px;

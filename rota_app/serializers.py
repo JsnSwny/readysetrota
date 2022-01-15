@@ -406,6 +406,7 @@ class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerialize
 
 
 class TimeClockSerializer(serializers.ModelSerializer):
+    employee = ShiftEmployeeSerializer(read_only=True)
     employee_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(
     ), source='employee', write_only=True, required=False, allow_null=True)
 
@@ -414,12 +415,16 @@ class TimeClockSerializer(serializers.ModelSerializer):
     clock_in = serializers.TimeField(format='%H:%M')
     clock_out = serializers.TimeField(format='%H:%M', required=False)
 
+    department = DepartmentSerializer(read_only=True)
+    department_id = serializers.PrimaryKeyRelatedField(
+        queryset=Department.objects.all(), source='department', write_only=True, required=False)
+
     
 
     class Meta:
         model = TimeClock
-        fields = ('clock_in', 'clock_out', 'break_length',
-                  'employee_id', 'length', 'stage',)
+        fields = ('id', 'clock_in', 'clock_out', 'break_length',
+                  'employee', 'employee_id', 'length', 'stage', 'department', 'department_id', 'date')
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:

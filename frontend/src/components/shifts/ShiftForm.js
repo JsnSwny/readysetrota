@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { addShift } from "../../actions/shifts";
+import React, { useState, useEffect } from "react";
+import { addShift, updateShift } from "../../actions/shifts";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
-const ShiftForm = ({ shiftFormInfo, setOpen }) => {
+const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const dispatch = useDispatch();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -19,8 +19,32 @@ const ShiftForm = ({ shiftFormInfo, setOpen }) => {
   );
   const [breakLengthClock, setBreakLengthClock] = useState(0);
 
+  useEffect(() => {
+    setStartTime(
+      hours.find((e) => {
+        return e.value == editShift.start_time;
+      })
+    );
+    setEndTime(
+      hours.find((e) => {
+        return e.value == editShift.end_time;
+      })
+    );
+    setBreakLength(
+      breaks.find((e) => {
+        return e.value == editShift.break_length;
+      })
+    );
+    setInfo(editShift.info);
+  }, [editShift]);
+
   const onSubmit = (e) => {
     e.preventDefault();
+
+    console.log(shiftFormInfo);
+
+    console.log(startTime);
+
     const shiftObj = {
       employee_id: shiftFormInfo.employee.id,
       start_time: startTime.value,
@@ -28,11 +52,16 @@ const ShiftForm = ({ shiftFormInfo, setOpen }) => {
       break_length: breakLength.value,
       date: shiftFormInfo.date,
       stage: "Published",
+      info,
       position_id: [],
       department_id: shiftFormInfo.shiftDepartment,
     };
 
-    dispatch(addShift(shiftObj));
+    console.log(shiftObj);
+
+    editShift
+      ? dispatch(updateShift(editShift.id, shiftObj))
+      : dispatch(addShift(shiftObj));
 
     setOpen(false);
   };
@@ -153,7 +182,7 @@ const ShiftForm = ({ shiftFormInfo, setOpen }) => {
       <hr />
       <div className="button-container">
         <button className="btn-3" type="submit" value="Add Shift">
-          Add Shift
+          {editShift ? "Save" : "Add Shift"}
         </button>
       </div>
     </form>

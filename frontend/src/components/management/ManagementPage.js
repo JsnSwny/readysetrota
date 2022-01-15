@@ -1,15 +1,8 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getEmployees, getPositions } from "../../actions/employees";
-import TabItem from "../common/TabItem";
-import PersonalDetails from "./forms/employees-form/PersonalDetails";
-import { parseISO, format } from "date-fns";
 import Title from "../common/Title";
-import Employees from "./tables/Employees";
-import Departments from "./tables/Departments";
-import Positions from "./tables/Positions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const ManagementPage = ({ children, currentSection }) => {
   const dispatch = useDispatch();

@@ -84,9 +84,9 @@ const Roles = ({
       <div className="roles-form__section">
         <h4>Positions</h4>
         {positionList.length > 0 && (
-          <ul className="roles-form__list">
+          <ul className="roles-form__list tag-container">
             {positionList.map((item) => (
-              <li>{item.name}</li>
+              <li className="tag">{item.name}</li>
             ))}
           </ul>
         )}

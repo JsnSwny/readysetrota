@@ -10,6 +10,7 @@ const RotaEmployees = ({
   financialMode,
   setOpen,
   setShiftFormInfo,
+  setEditShift,
 }) => {
   const employees = useSelector((state) => state.employees.employees);
   const shifts = useSelector((state) => state.shifts.shifts);
@@ -40,6 +41,7 @@ const RotaEmployees = ({
           financialMode={financialMode}
           setOpen={setOpen}
           setShiftFormInfo={setShiftFormInfo}
+          setEditShift={setEditShift}
         />
       </div>
     ));

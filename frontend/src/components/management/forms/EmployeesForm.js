@@ -197,7 +197,7 @@ const EmployeesForm = () => {
       </div>
 
       <div className="form-block">
-        <div className="wrapper--sm">
+        <div className="wrapper--xs">
           <form onSubmit={onSubmit}>
             <div className="form-block__heading">
               <h3>{currentSection}</h3>

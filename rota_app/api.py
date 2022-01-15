@@ -1,9 +1,9 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
                           DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
                           ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer)
+                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer, TimeClockSerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -63,6 +63,24 @@ class ShiftListViewSet(viewsets.ModelViewSet):
     filterset_class = ShiftFilter
     ordering_fields = ('date', 'start_time')
 
+class TimeClockFilter(django_filters.FilterSet):
+    class Meta:
+        model = TimeClock
+        fields = ['date', 'department', 'department__site']
+
+class TimeClockViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = TimeClockSerializer
+    queryset = TimeClock.objects.all()
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = TimeClockFilter
+
+
+    ordering_fields = ('date', 'start_time')
 
 class ShiftViewSet(viewsets.ModelViewSet):
 
@@ -77,7 +95,7 @@ class ShiftViewSet(viewsets.ModelViewSet):
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = ShiftFilter
-    ordering_fields = ('date', 'start_time')
+    ordering_fields = ('date', 'clock_in')
 
 
 class EmployeeFilter(django_filters.FilterSet):

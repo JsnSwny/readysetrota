@@ -291,9 +291,12 @@ class Forecast(models.Model):
 
 class TimeClock(models.Model):
     shift = models.OneToOneField(
-        Shift, on_delete=models.CASCADE)
+        Shift, on_delete=models.CASCADE, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
     employee = models.ForeignKey(
-        Employee, related_name="employee_timeclock", on_delete=models.CASCADE)
+        Employee, related_name="employee_timeclock", on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(
+        Department, related_name="timeclock_department", on_delete=models.SET_NULL, null=True, blank=True)
     clock_in = models.TimeField()
     clock_out = models.TimeField(null=True)
     STAGE_TYPES = [

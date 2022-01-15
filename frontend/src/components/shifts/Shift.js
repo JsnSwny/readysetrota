@@ -1,12 +1,22 @@
 import React, { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import AddShiftButton from "./AddShiftButton";
 import { updateShift } from "../../actions/shifts";
 import { toast } from "react-toastify";
 
 const Shift = (props) => {
-  const { result, shifts, employee, setOpen, financialMode } = props;
+  const {
+    result,
+    shifts,
+    employee,
+    date,
+    setOpen,
+    financialMode,
+    shiftDepartment,
+    setShiftFormInfo,
+    setEditShift,
+  } = props;
   const permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
@@ -27,6 +37,11 @@ const Shift = (props) => {
             class="fas fa-plus fa-plus--white"
             onClick={() => {
               setOpen(true);
+              setShiftFormInfo({
+                employee,
+                date: format(result, "yyyy-MM-dd"),
+                shiftDepartment,
+              });
             }}
           ></i>
         )}
@@ -38,6 +53,17 @@ const Shift = (props) => {
               ""
             ) : (
               <div
+                onClick={() => {
+                  if (permissions.includes("manage_shifts")) {
+                    setOpen(true);
+                    setEditShift(shift);
+                    setShiftFormInfo({
+                      employee,
+                      date: format(result, "yyyy-MM-dd"),
+                      shiftDepartment,
+                    });
+                  }
+                }}
                 className={`shift__wrapper ${
                   permissions.includes("manage_shifts") ? "edit" : ""
                 }`}

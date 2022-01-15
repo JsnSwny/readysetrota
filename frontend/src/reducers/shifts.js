@@ -12,6 +12,10 @@ import {
   SEND_CHARGE,
   CHARGE_COMPLETE,
   GET_OPEN_SHIFTS,
+  GET_TIMECLOCKS,
+  ADD_TIMECLOCK,
+  DELETE_TIMECLOCK,
+  UPDATE_TIMECLOCK,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -32,6 +36,7 @@ weekFromDate = format(weekFromDate, "yyyy-MM-dd");
 
 const initialState = {
   shifts: [],
+  timeclocks: [],
   open_shifts: [],
   date: todayDate,
   end_date: weekFromDate,
@@ -67,6 +72,33 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
 
+    case GET_TIMECLOCKS:
+      return {
+        ...state,
+        timeclocks: action.payload,
+      };
+    case ADD_TIMECLOCK:
+      return {
+        ...state,
+        timeclocks: [...state.timeclocks, action.payload].sort((a, b) =>
+          a.clock_in.localeCompare(b.clock_in)
+        ),
+      };
+    case DELETE_TIMECLOCK:
+      return {
+        ...state,
+        timeclocks: state.timeclocks.filter(
+          (item) => item.id !== action.payload
+        ),
+      };
+
+    case UPDATE_TIMECLOCK:
+      return {
+        ...state,
+        timeclocks: state.timeclocks.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
     case GET_OPEN_SHIFTS:
       return {
         ...state,

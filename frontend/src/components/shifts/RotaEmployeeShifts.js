@@ -12,6 +12,7 @@ const RotaEmployeeShifts = ({
   showAvailabilities,
   setOpen,
   setShiftFormInfo,
+  setEditShift,
 }) => {
   const shifts = useSelector((state) => state.shifts.shifts);
   let availability = useSelector((state) => state.employees.availability);
@@ -70,6 +71,8 @@ const RotaEmployeeShifts = ({
             financialMode={financialMode}
             shiftDepartment={department.id}
             setShiftFormInfo={setShiftFormInfo}
+            setOpen={setOpen}
+            setEditShift={setEditShift}
           />
         ) : (
           <NoShift

@@ -34,6 +34,7 @@ const Rota = ({ modalProps }) => {
   let date = useSelector((state) => state.shifts.date);
   let enddate = useSelector((state) => state.shifts.end_date);
   let positions = useSelector((state) => state.employees.positions);
+  let employees = useSelector((state) => state.employees.employees);
   let loading = useSelector((state) => state.loading);
   const permissions = useSelector(
     (state) => state.employees.current.site.permissions
@@ -121,6 +122,7 @@ const Rota = ({ modalProps }) => {
         setOpen={setOpen}
         editShift={editShift}
         shiftFormInfo={shiftFormInfo}
+        editShift={editShift}
       />
 
       <div className="banner">
@@ -142,28 +144,38 @@ const Rota = ({ modalProps }) => {
           <Loading />
         ) : (
           <div className="rota wrapper--md">
-            {departments.map((department, i) => (
-              <div className="rota__department">
-                <RotaDepartmentList department={department} result={result} />
-                {positions.map(
-                  (position) =>
-                    position.department.id == department.id && (
-                      <Fragment>
-                        <h4 className="rota__position">{position.name}</h4>
-                        <RotaEmployees
-                          department={department}
-                          position={position}
-                          result={result}
-                          financialMode={financialMode}
-                          showAvailabilities={showAvailabilities}
-                          setOpen={setOpen}
-                          setShiftFormInfo={setShiftFormInfo}
-                        />
-                      </Fragment>
-                    )
-                )}
-              </div>
-            ))}
+            {departments.map(
+              (department, i) =>
+                department.number_of_employees > 0 && (
+                  <div className="rota__department">
+                    <RotaDepartmentList
+                      department={department}
+                      result={result}
+                    />
+                    {positions.map(
+                      (position) =>
+                        position.department.id == department.id &&
+                        employees.filter((employee) =>
+                          employee.position.some((pos) => position.id == pos.id)
+                        ).length > 0 && (
+                          <Fragment>
+                            <h4 className="rota__position">{position.name}</h4>
+                            <RotaEmployees
+                              department={department}
+                              position={position}
+                              result={result}
+                              financialMode={financialMode}
+                              showAvailabilities={showAvailabilities}
+                              setOpen={setOpen}
+                              setShiftFormInfo={setShiftFormInfo}
+                              setEditShift={setEditShift}
+                            />
+                          </Fragment>
+                        )
+                    )}
+                  </div>
+                )
+            )}
           </div>
         )}
       </div>
