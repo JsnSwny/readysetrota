@@ -352,15 +352,10 @@ export default function (state = initialState, action) {
       }
 
     case UPDATE_EMPLOYEE:
-      let newEmployees = state.employees.map((item) =>
-        item.id === action.payload.id ? action.payload : item
-      );
       return {
         ...state,
-        employees: newEmployees.filter((item) =>
-          item.position.some(
-            (pos) => pos.department.id == state.current.department.id
-          )
+        employees: state.employees.map((item) =>
+          item.id === action.payload.id ? action.payload : item
         ),
       };
 

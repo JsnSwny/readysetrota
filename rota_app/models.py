@@ -283,6 +283,7 @@ class Forecast(models.Model):
     site = models.ForeignKey(
         Site, related_name="site_forecast", on_delete=models.CASCADE)
     predicted = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    labourGoal = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     actual = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     def __str__(self):

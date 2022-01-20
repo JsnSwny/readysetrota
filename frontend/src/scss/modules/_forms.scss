@@ -521,3 +521,11 @@
     font-size: 14px !important;
   }
 }
+
+.employees-form {
+  background-color: white;
+  @extend .shadow;
+  padding: 2rem;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+}

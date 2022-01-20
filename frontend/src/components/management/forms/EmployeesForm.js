@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import { useParams } from "react-router";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,6 +17,10 @@ import Status from "./employees-form/Status";
 
 const EmployeesForm = () => {
   const dispatch = useDispatch();
+  const personalRef = useRef(null);
+  const wageRef = useRef(null);
+  const statusRef = useRef(null);
+  const rolesRef = useRef(null);
 
   const history = useHistory();
   const { formType, employeeId } = useParams();
@@ -92,26 +96,6 @@ const EmployeesForm = () => {
     setEndWorkingDate,
   };
 
-  const getSection = () => {
-    switch (currentSection) {
-      case "Personal Details":
-        return <PersonalDetails {...personalDetailsProps} />;
-      case "Roles":
-        return (
-          <Roles
-            positionList={positionList}
-            setPositionList={setPositionList}
-            selectedDepartments={selectedDepartments}
-            setSelectedDepartments={setSelectedDepartments}
-          />
-        );
-      case "Wage":
-        return <Wage {...wageProps} />;
-      case "Status":
-        return <Status {...statusProps} />;
-    }
-  };
-
   const [availability, setAvailability] = useState({
     0: { name: "unselected", start_time: null, end_time: null },
     1: { name: "unselected", start_time: null, end_time: null },
@@ -149,6 +133,10 @@ const EmployeesForm = () => {
     history.push("/employees");
   };
 
+  const scrollToRef = (ref) => {
+    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     <Fragment>
       <div className={`employees__section tab active`}>
@@ -167,22 +155,27 @@ const EmployeesForm = () => {
             title="Personal Details"
             current={currentSection}
             setCurrent={setCurrentSection}
-          />
-          <TabItem
-            title="Wage"
-            current={currentSection}
-            setCurrent={setCurrentSection}
-          />
-          <TabItem
-            title="Status"
-            current={currentSection}
-            setCurrent={setCurrentSection}
+            scroll={() => scrollToRef(personalRef)}
           />
           <TabItem
             title="Roles"
             current={currentSection}
             setCurrent={setCurrentSection}
+            scroll={() => scrollToRef(rolesRef)}
           />
+          <TabItem
+            title="Wage"
+            current={currentSection}
+            setCurrent={setCurrentSection}
+            scroll={() => scrollToRef(wageRef)}
+          />
+          <TabItem
+            title="Status"
+            current={currentSection}
+            setCurrent={setCurrentSection}
+            scroll={() => scrollToRef(statusRef)}
+          />
+
           <TabItem
             title="Permissions"
             current={currentSection}
@@ -199,10 +192,39 @@ const EmployeesForm = () => {
       <div className="form-block">
         <div className="wrapper--xs">
           <form onSubmit={onSubmit}>
-            <div className="form-block__heading">
-              <h3>{currentSection}</h3>
+            <div className="employees-form" ref={personalRef}>
+              <div className="form-block__heading">
+                <h3>Personal Details</h3>
+              </div>
+              <PersonalDetails {...personalDetailsProps} />
             </div>
-            {getSection()}
+
+            <div className="employees-form" ref={rolesRef}>
+              <div className="form-block__heading">
+                <h3>Roles</h3>
+              </div>
+              <Roles
+                positionList={positionList}
+                setPositionList={setPositionList}
+                selectedDepartments={selectedDepartments}
+                setSelectedDepartments={setSelectedDepartments}
+              />
+            </div>
+
+            <div className="employees-form" ref={wageRef}>
+              <div className="form-block__heading">
+                <h3>Wage</h3>
+              </div>
+              <Wage {...wageProps} />
+            </div>
+
+            <div className="employees-form" ref={statusRef}>
+              <div className="form-block__heading">
+                <h3>Status</h3>
+              </div>
+              <Status {...statusProps} />
+            </div>
+
             <div className="form-bottom-banner">
               <div className="wrapper--sm">
                 <button type="submit" className="btn-3">

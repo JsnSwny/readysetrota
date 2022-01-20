@@ -16,6 +16,8 @@ import {
   STATS_LOADING,
   TIMECLOCK_LOADING,
   GET_TIMECLOCK,
+  GET_FORECAST,
+  FORECAST_LOADING,
 } from "../actions/types";
 
 const initialState = {
@@ -28,6 +30,7 @@ const initialState = {
   availability: true,
   stats: true,
   timeclock: false,
+  forecast: false,
 };
 
 export default function (state = initialState, action) {
@@ -51,6 +54,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         timeclock: false,
+      };
+    case FORECAST_LOADING:
+      return {
+        ...state,
+        forecast: true,
+      };
+    case GET_FORECAST:
+      return {
+        ...state,
+        forecast: false,
       };
     case SET_DEPARTMENT:
       return {

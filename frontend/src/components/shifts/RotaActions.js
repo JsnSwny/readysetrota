@@ -137,7 +137,7 @@ const RotaActions = ({
         <RotaDatePicker updateShifts={updateShifts} />
       </div>
 
-      <div className="rotaFunctions__wrapper">
+      {/* <div className="rotaFunctions__wrapper">
         {permissions.includes("manage_wages") && (
           <div className={`rotaFunctions__selector ${financialMode}`}>
             <p
@@ -154,7 +154,7 @@ const RotaActions = ({
             </p>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

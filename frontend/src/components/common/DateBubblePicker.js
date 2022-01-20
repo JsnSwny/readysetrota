@@ -7,7 +7,7 @@ import {
   differenceInDays,
 } from "date-fns";
 
-const DateBubblePicker = ({ currentDate, setCurrentDate }) => {
+const DateBubblePicker = ({ currentDate, setCurrentDate, maxDate }) => {
   const [dateRange, setDateRange] = useState(
     eachDayOfInterval({
       start: addDays(new Date(), -3),
@@ -16,12 +16,15 @@ const DateBubblePicker = ({ currentDate, setCurrentDate }) => {
   );
 
   useEffect(() => {
-    setDateRange(
-      eachDayOfInterval({
-        start: addDays(currentDate, -3),
-        end: addDays(currentDate, 3),
-      })
-    );
+    let range = eachDayOfInterval({
+      start: addDays(currentDate, -3),
+      end: addDays(currentDate, 3),
+    });
+    if (maxDate) {
+      range = range.filter((item) => item <= maxDate);
+    }
+    console.log("RANGE", range);
+    setDateRange(range);
   }, [currentDate]);
 
   const beforeAfterCurrent = (date) => {
@@ -41,7 +44,7 @@ const DateBubblePicker = ({ currentDate, setCurrentDate }) => {
           onClick={() => setCurrentDate(item)}
           className={`date-bubble-picker__item date-bubble-picker__item--${beforeAfterCurrent(
             item
-          )}`}
+          )} noselect`}
         >
           <div>{format(item, "EEE")}</div>
           <div>{format(item, "dd")}</div>

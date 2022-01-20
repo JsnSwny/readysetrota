@@ -44,6 +44,7 @@ import TimeclockPage from "./shifts/timeclock/TimeclockPage";
 import Departments from "./management/tables/Departments";
 import Positions from "./management/tables/Positions";
 import Employees from "./management/tables/Employees";
+import ForecastPage from "./forecasting/ForecastPage";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -222,10 +223,19 @@ const Main = () => {
           <PrivateRoute
             admin={true}
             perms={["manage_shifts"]}
-            path="/Timesheet"
+            path="/timesheet"
             exact
             component={TimeclockPage}
             title="Timesheet"
+          />
+
+          <PrivateRoute
+            admin={true}
+            perms={["manage_shifts"]}
+            path="/forecasting"
+            exact
+            component={ForecastPage}
+            title="Forecasting"
           />
 
           <PrivateRoute

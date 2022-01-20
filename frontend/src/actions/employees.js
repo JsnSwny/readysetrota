@@ -34,6 +34,7 @@ import {
   UPDATE_FORECAST,
   UPDATE_SETTINGS,
   START_AVAILABILITY,
+  FORECAST_LOADING,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -44,6 +45,9 @@ import { format, addDays, parseISO } from "date-fns";
 import { tokenConfig } from "./auth";
 
 export const getForecast = (startDate, endDate) => (dispatch, getState) => {
+  dispatch({
+    type: FORECAST_LOADING,
+  });
   axios
     .get(
       `/api/forecast/?site__id=${
@@ -56,7 +60,8 @@ export const getForecast = (startDate, endDate) => (dispatch, getState) => {
         type: GET_FORECAST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err.response));
 };
 
 export const updateSettings = (settings) => (dispatch, getState) => {

@@ -18,6 +18,7 @@ const TimeclockPage = () => {
   const dispatch = useDispatch();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  let forecast = useSelector((state) => state.employees.forecast);
   const timeclocks = useSelector((state) => state.shifts.timeclocks);
   const current = useSelector((state) => state.employees.current);
   const employees = useSelector((state) => state.employees.employees);
@@ -27,13 +28,24 @@ const TimeclockPage = () => {
   const [open, setOpen] = useState(false);
 
   const [currentDate, setCurrentDate] = useState(startOfToday());
+  const [updatingTimeclock, setUpdatingTimeclock] = useState(false);
 
   useEffect(() => {
     dispatch(getTimeclocks(currentDate));
   }, [currentDate]);
 
   useEffect(() => {
-    setNewTimeclocks([...timeclocks]);
+    let temp = [...timeclocks];
+    temp = temp.map((item) => {
+      let nt = newTimeclocks.find((t) => t.id == item.id);
+      if (nt && timeclockIsAltered(nt)) {
+        return nt;
+      } else {
+        return item;
+      }
+    });
+
+    setNewTimeclocks(temp);
   }, [timeclocks]);
 
   const employeeSelectList = [
@@ -52,9 +64,27 @@ const TimeclockPage = () => {
 
   const timeclockIsAltered = (obj) => {
     const originalObj = timeclocks.find((item) => item.id == obj.id);
-    console.log(obj);
-    console.log(originalObj);
-    return !(JSON.stringify(obj) === JSON.stringify(originalObj));
+    if (!originalObj || !obj) {
+      return false;
+    }
+    return !(
+      JSON.stringify({ ...obj, employee: obj.employee?.id, length: 0 }) ===
+      JSON.stringify({
+        ...originalObj,
+        employee: originalObj.employee?.id,
+        length: 0,
+      })
+    );
+  };
+
+  const submitTimeclock = (tc, idx) => {
+    setUpdatingTimeclock(tc.id);
+    dispatch(
+      updateTimeclock(tc.id, {
+        ...newTimeclocks[idx],
+        employee_id: newTimeclocks[idx].employee.id,
+      })
+    );
   };
 
   return (
@@ -85,6 +115,7 @@ const TimeclockPage = () => {
         <DateBubblePicker
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
+          maxDate={new Date()}
         />
         <div className="list-banner__right">
           <button
@@ -122,7 +153,7 @@ const TimeclockPage = () => {
                     options={employeeSelectList}
                     autoFocus
                     value={employeeSelectList.filter((e) => {
-                      return e.value.id == item.employee.id;
+                      return e.value.id == item.employee?.id;
                     })}
                   />
                 </td>
@@ -134,6 +165,9 @@ const TimeclockPage = () => {
                     onChange={(e) => {
                       handleChange(idx, "clock_in", e.target.value);
                     }}
+                    onKeyDown={(e) =>
+                      e.key == "Enter" && submitTimeclock(item, idx)
+                    }
                   />
                 </td>
                 <td>
@@ -144,6 +178,9 @@ const TimeclockPage = () => {
                     onChange={(e) => {
                       handleChange(idx, "break_length", e.target.value);
                     }}
+                    onKeyDown={(e) =>
+                      e.key == "Enter" && submitTimeclock(item, idx)
+                    }
                   />
                 </td>
                 <td>
@@ -154,6 +191,9 @@ const TimeclockPage = () => {
                     onChange={(e) => {
                       handleChange(idx, "clock_out", e.target.value);
                     }}
+                    onKeyDown={(e) =>
+                      e.key == "Enter" && submitTimeclock(item, idx)
+                    }
                   />
                 </td>
                 <td className="right">
@@ -163,13 +203,7 @@ const TimeclockPage = () => {
                         timeclockIsAltered(item) && "show"
                       }`}
                       onClick={() => {
-                        dispatch(
-                          updateTimeclock(item.id, {
-                            ...newTimeclocks[idx],
-                            employee_id: newTimeclocks[idx].employee.id,
-                          })
-                        );
-                        toast.success("Updated");
+                        submitTimeclock(item, idx);
                       }}
                     ></i>
 

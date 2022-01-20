@@ -105,6 +105,9 @@
   margin-bottom: 4rem;
   border-collapse: collapse;
   @extend .shadow;
+  .pd {
+    padding: 0 2rem;
+  }
 
   .profile-picture {
     margin-right: 0.75rem;
@@ -128,7 +131,6 @@
   td,
   th {
     text-align: left;
-    padding: 0 2rem;
     font-size: 14px;
     &.center {
       text-align: center;
@@ -137,6 +139,14 @@
       text-align: right;
     }
     height: 60px;
+    padding: 0 2rem;
+
+    &.no-padding {
+      padding: 0;
+      input {
+        padding: 0 2rem;
+      }
+    }
   }
   tr {
     // border-bottom: 1px solid #dddddd;

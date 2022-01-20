@@ -671,4 +671,4 @@ class ForecastSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Forecast
-        fields = ('id', 'date', 'site_id', 'predicted', 'actual',)
+        fields = ('id', 'date', 'site_id', 'predicted', 'labourGoal', 'actual',)
