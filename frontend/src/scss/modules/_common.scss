@@ -337,3 +337,21 @@
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+
+.date-range-selector {
+  .react-datepicker-wrapper {
+    width: 200px;
+  }
+  p {
+    margin: 0 1rem;
+  }
+}
+
+.percentage {
+  &--red {
+    color: $red;
+  }
+  &--green {
+    color: $green;
+  }
+}

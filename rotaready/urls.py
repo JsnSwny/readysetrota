@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, GetPopularTimes, Publish, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats, GetTimeclock
+from rota_app.views import CheckUUID, GetPopularTimes, Publish, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -21,6 +21,7 @@ urlpatterns = [
     path('webhook/', webhook, name='webhook'),
     path('stats/', GetStats.as_view(), name='stats'),
     path('timeclock/', GetTimeclock.as_view(), name='timeclock'),
+    path('api-view/report/', GetReportData.as_view(), name='report'),
 ]
 
 if settings.DEBUG:

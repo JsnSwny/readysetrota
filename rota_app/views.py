@@ -33,6 +33,7 @@ from django.db.models import Q
 import time
 from django.forms.models import model_to_dict
 
+
 db = sqlite3.connect(':memory:')
 
 sqlite3.enable_callback_tracebacks(True)   # <-- !
@@ -292,63 +293,6 @@ class GetStats(APIView):
 
         return JsonResponse({"hours": list(shifts_worked), "total_cost": total_cost, "forecast_dif": forecast_dif_obj, "total_hours": total_hours_obj}, safe=False)
 
-        print(stat_shifts)
-
-        start_date = request.query_params.get('start_date')
-        end_date = request.query_params.get('end_date')
-        stat_type = request.query_params.get('stat_type')
-
-        start_date = datetime.strptime(start_date, '%d/%m/%Y')
-        end_date = datetime.strptime(end_date, '%d/%m/%Y')
-
-        days_difference = (end_date - start_date) + timedelta(days=1)
-
-        before_range_date = start_date - days_difference
-
-        id = False
-        user_id = False
-
-        if stat_type == "business":
-            current_filter = request.query_params.get('currentFilter')
-            id = request.query_params.get('id')
-            if current_filter == "business":
-                shifts = Shift.objects.filter(
-                    department__site__business=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department__site__business=id, date__range=[
-                                                     before_range_date, start_date - timedelta(days=1)])
-            if current_filter == "site":
-                shifts = Shift.objects.filter(
-                    department__site=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department__site=id, date__range=[
-                                                     before_range_date, start_date - timedelta(days=1)])
-            if current_filter == "department":
-                shifts = Shift.objects.filter(
-                    department=id, date__range=[start_date, end_date])
-                before_shifts = Shift.objects.filter(department=id, date__range=[
-                                                     before_range_date, start_date - timedelta(days=1)])
-
-        elif stat_type == "staff":
-            user_id = request.query_params.get('user_id')
-            shifts = Shift.objects.filter(
-                date__range=[start_date, end_date], employee__user__id=user_id)
-            before_shifts = Shift.objects.filter(date__range=[
-                                                 before_range_date, start_date - timedelta(days=1)], employee__user__id=user_id)
-
-        elif stat_type == "staff_profile":
-            employee_id = request.query_params.get('user_id')
-            shifts = Shift.objects.filter(
-                date__range=[start_date, end_date], employee__id=employee_id)
-            before_shifts = Shift.objects.filter(date__range=[
-                                                 before_range_date, start_date - timedelta(days=1)], employee__id=employee_id)
-
-        shifts = shifts.filter(absence="None").exclude(open_shift=True)
-        before_shifts = before_shifts.filter(
-            absence="None").exclude(open_shift=True)
-        data = {"shifts": {"current": len(shifts), "before": len(before_shifts)}, 'hours': {"current": getHoursAndWage(shifts, start_date, end_date,)[0], "before": getHoursAndWage(before_shifts, start_date, end_date,)[
-            0]}, "wage": {"current": getHoursAndWage(shifts, start_date, end_date, id, user_id)[1], "before": getHoursAndWage(before_shifts, start_date, end_date, id, user_id)[1]}}
-
-        return HttpResponse(json.dumps(data))
-
 
 class ExportShifts(APIView):
     def get(self, request):
@@ -519,3 +463,69 @@ def webhook(request):
         business.save()
 
     return HttpResponse(status=200)
+
+
+
+
+
+class GetReportData(APIView):
+
+    def timeDifference(self, time1, time2):
+        diff = time1 - time2
+        hours = diff.total_seconds() / 3600
+        return abs(hours)
+
+    def costAndHours(self, date):
+        
+        shifts = Shift.objects.filter(stage="Published", date=date).values('employee', 'start_time', 'end_time', 'break_length')
+        total_cost = Decimal(0)
+        total_hours = 0
+        for i in shifts:
+            employee = i['employee']
+            wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
+            start_time = i['start_time'].strftime('%H:%M')
+            start_time = datetime.strptime(start_time, '%H:%M')
+            end_time = datetime.strptime(i['end_time'], '%H:%M')
+            total_length = self.timeDifference(start_time, end_time) - (i['break_length'] / 60)
+
+            total_hours += total_length
+
+            if(wage_at_time):
+                total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
+
+        salaries = Wage.objects.filter(wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).values_list('wage')
+        for salary in salaries:
+            total_cost += salary[0] / 52 / 7
+
+        return {'total_hours': total_hours, 'total_cost': total_cost}
+
+
+
+    def get(self, request):
+        print("STARTING")
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        start_date = datetime.strptime(start_date, '%d/%m/%Y')
+        end_date = datetime.strptime(end_date, '%d/%m/%Y')
+        site_id = request.query_params.get('site_id')
+        
+        shifts = Shift.objects.filter(stage="Published", department__site=site_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
+        shifts_worked = shifts.annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
+
+        total_cost = {}
+        total_hours = {}
+        forecast_dif_obj = {}
+
+        delta = end_date - start_date
+        start = time.process_time()
+        for i in range(delta.days+1):
+
+            date = start_date + timedelta(days=i)
+            date_str = date.strftime("%Y-%m-%d")
+            costAndHours = self.costAndHours(date)
+
+            total_cost[date_str] = float("{:.2f}".format(costAndHours['total_cost']))
+            total_hours[date_str] = float("{:.1f}".format(costAndHours['total_hours']))
+        print(time.process_time() - start)
+        print("ENDED")
+        return JsonResponse({"shifts": list(shifts_worked), "total_cost": total_cost, "forecast_dif": forecast_dif_obj, "total_hours": total_hours}, safe=False)

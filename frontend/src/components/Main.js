@@ -45,6 +45,8 @@ import Departments from "./management/tables/Departments";
 import Positions from "./management/tables/Positions";
 import Employees from "./management/tables/Employees";
 import ForecastPage from "./forecasting/ForecastPage";
+import ScrollToTop from "./layout/ScrollToTop";
+import ReportsPage from "./reports/ReportsPage";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -125,6 +127,7 @@ const Main = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <ToastContainer position="bottom-center" autoClose={2500} />
       <CreateShift
         open={open}
@@ -236,6 +239,14 @@ const Main = () => {
             exact
             component={ForecastPage}
             title="Forecasting"
+          />
+
+          <PrivateRoute
+            admin={true}
+            path="/reports"
+            exact
+            component={ReportsPage}
+            title="Reports"
           />
 
           <PrivateRoute

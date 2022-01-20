@@ -23,10 +23,7 @@ const Employees = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getEmployees());
-  }, []);
-
-  useEffect(() => {
+    console.log(employees);
     if (employees.length > 0) {
       setFilteredEmployees(employees);
     }

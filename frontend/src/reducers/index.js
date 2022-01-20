@@ -9,6 +9,7 @@ import loading from "./loading";
 import stats from "./stats";
 import availability from "./availability";
 import timeclock from "./timeclock";
+import report from "./report";
 
 const appReducer = combineReducers({
   shifts,
@@ -21,6 +22,7 @@ const appReducer = combineReducers({
   stats,
   availability,
   timeclock,
+  report,
 });
 
 const rootReducer = (state, action) => {

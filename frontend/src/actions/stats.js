@@ -1,5 +1,6 @@
-import { GET_STATS, STATS_LOADING } from "./types";
+import { GET_STATS, STATS_LOADING, GET_REPORT_DATA } from "./types";
 import axios from "axios";
+import { format } from "date-fns";
 
 export const getStats =
   (stat_type, id, start_date, end_date, currentFilter) =>
@@ -24,3 +25,25 @@ export const getStats =
         });
     }
   };
+
+export const getReportData = (startDate, endDate) => (dispatch, getState) => {
+  dispatch({
+    type: STATS_LOADING,
+  });
+  var start = new Date();
+  axios
+    .get(
+      `/api-view/report/?site_id=1&start_date=${format(
+        startDate,
+        "dd/MM/yyyy"
+      )}&end_date=${format(endDate, "dd/MM/yyyy")}`
+    )
+    .then((res) => {
+      var elapsed = new Date() - start;
+      console.log(`${elapsed / 1000}s`);
+      dispatch({
+        type: GET_REPORT_DATA,
+        payload: res.data,
+      });
+    });
+};

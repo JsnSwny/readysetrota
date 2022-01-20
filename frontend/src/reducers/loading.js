@@ -18,6 +18,7 @@ import {
   GET_TIMECLOCK,
   GET_FORECAST,
   FORECAST_LOADING,
+  GET_REPORT_DATA,
 } from "../actions/types";
 
 const initialState = {
@@ -139,6 +140,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         stats: true,
+      };
+    case GET_REPORT_DATA:
+      return {
+        ...state,
+        stats: false,
       };
     default:
       return state;

@@ -1,0 +1,38 @@
+.report-boxes {
+  display: flex;
+  list-style-type: none;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  &__item {
+    background-color: white;
+    border-radius: 10px;
+    width: calc(25% - 1rem);
+    padding: 2rem 2rem;
+    @extend .shadow;
+    min-height: 250px;
+    span {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    &--orange {
+      span {
+        color: $holiday;
+      }
+    }
+    &--green {
+      span {
+        color: $green;
+      }
+    }
+    &--pink {
+      span {
+        color: $pink;
+      }
+    }
+    &--yellow {
+      span {
+        color: rgb(255, 211, 0);
+      }
+    }
+  }
+}

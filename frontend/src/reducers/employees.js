@@ -332,24 +332,14 @@ export default function (state = initialState, action) {
         (item) => item.id == action.payload.position[0].department.site.id
       );
       state.sites[foundIndex].number_of_employees++;
-      if (
-        action.payload.position.some(
-          (item) => item.department.id == parseInt(action.current_dep.id)
-        )
-      ) {
-        return {
-          ...state,
-          employees: [...state.employees, action.payload],
-          business: {
-            ...state.business,
-            number_of_employees: state.business.number_of_employees + 1,
-          },
-        };
-      } else {
-        return {
-          ...state,
-        };
-      }
+      return {
+        ...state,
+        employees: [...state.employees, action.payload],
+        business: {
+          ...state.business,
+          number_of_employees: state.business.number_of_employees + 1,
+        },
+      };
 
     case UPDATE_EMPLOYEE:
       return {

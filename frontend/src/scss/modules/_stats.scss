@@ -97,4 +97,11 @@
     font-size: 14px;
     color: $light-gray-2;
   }
+  &--report {
+    margin-top: 1rem;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

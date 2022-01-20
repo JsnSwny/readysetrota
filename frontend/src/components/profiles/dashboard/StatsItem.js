@@ -61,7 +61,7 @@ const StatsItem = ({ title, decimals, data, interval, prefix }) => {
 
   return (
     <div className="stats-graph">
-      <h2>{title}</h2>
+      {/* <h2>{title}</h2>
       <h3>
         <CountUp
           start={0}
@@ -70,7 +70,7 @@ const StatsItem = ({ title, decimals, data, interval, prefix }) => {
           decimals={decimals}
           prefix={prefix}
         />
-      </h3>
+      </h3> */}
       <div className="stats-graph__item flex-container--center-vh">
         {loading ? (
           <div className="dot-pulse"></div>
@@ -78,10 +78,10 @@ const StatsItem = ({ title, decimals, data, interval, prefix }) => {
           <Line data={chartData} options={options} />
         )}
       </div>
-      <div className="flex-container--between stats-graph__dates">
+      {/* <div className="flex-container--between stats-graph__dates">
         <p>{format(interval[0], "dd MMM yyyy")}</p>
         <p>{format(interval[interval.length - 1], "dd MMM yyyy")}</p>
-      </div>
+      </div> */}
     </div>
   );
 };
