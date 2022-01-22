@@ -14,6 +14,7 @@ import Roles from "./employees-form/Roles";
 import { getPositions } from "../../../actions/employees";
 import Wage from "./employees-form/Wage";
 import Status from "./employees-form/Status";
+import { isInViewport } from "../../../utils/hooks/isInViewport";
 
 const EmployeesForm = () => {
   const dispatch = useDispatch();
@@ -153,37 +154,37 @@ const EmployeesForm = () => {
         <div className="tab__list">
           <TabItem
             title="Personal Details"
-            current={currentSection}
+            current={isInViewport(personalRef)}
             setCurrent={setCurrentSection}
             scroll={() => scrollToRef(personalRef)}
           />
           <TabItem
             title="Roles"
-            current={currentSection}
+            current={isInViewport(rolesRef)}
             setCurrent={setCurrentSection}
             scroll={() => scrollToRef(rolesRef)}
           />
           <TabItem
             title="Wage"
-            current={currentSection}
+            current={isInViewport(wageRef)}
             setCurrent={setCurrentSection}
             scroll={() => scrollToRef(wageRef)}
           />
           <TabItem
             title="Status"
-            current={currentSection}
+            current={isInViewport(statusRef)}
             setCurrent={setCurrentSection}
             scroll={() => scrollToRef(statusRef)}
           />
 
           <TabItem
             title="Permissions"
-            current={currentSection}
+            current={false}
             setCurrent={setCurrentSection}
           />
           <TabItem
             title="Availability and Holidays"
-            current={currentSection}
+            current={false}
             setCurrent={setCurrentSection}
           />
         </div>

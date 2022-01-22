@@ -31,6 +31,9 @@
     &:hover {
       background-color: darken($pink, 10%);
     }
+    &--export {
+      text-align: center;
+    }
   }
   &-4 {
     @extend .btn;

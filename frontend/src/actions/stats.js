@@ -26,24 +26,25 @@ export const getStats =
     }
   };
 
-export const getReportData = (startDate, endDate) => (dispatch, getState) => {
-  dispatch({
-    type: STATS_LOADING,
-  });
-  var start = new Date();
-  axios
-    .get(
-      `/api-view/report/?site_id=1&start_date=${format(
-        startDate,
-        "dd/MM/yyyy"
-      )}&end_date=${format(endDate, "dd/MM/yyyy")}`
-    )
-    .then((res) => {
-      var elapsed = new Date() - start;
-      console.log(`${elapsed / 1000}s`);
-      dispatch({
-        type: GET_REPORT_DATA,
-        payload: res.data,
-      });
+export const getReportData =
+  (startDate, endDate, basedOn) => (dispatch, getState) => {
+    dispatch({
+      type: STATS_LOADING,
     });
-};
+    var start = new Date();
+    axios
+      .get(
+        `/api-view/report/?site_id=1&start_date=${format(
+          startDate,
+          "dd/MM/yyyy"
+        )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${basedOn}`
+      )
+      .then((res) => {
+        var elapsed = new Date() - start;
+        console.log(`${elapsed / 1000}s`);
+        dispatch({
+          type: GET_REPORT_DATA,
+          payload: res.data,
+        });
+      });
+  };

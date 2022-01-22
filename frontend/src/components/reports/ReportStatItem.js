@@ -88,6 +88,7 @@ const ReportStatItem = ({ data, range, color }) => {
       },
     },
     animation: dataset.length > 14 ? animation : "linear",
+    zoomEnabled: true,
     scales: {
       y: {
         grid: {

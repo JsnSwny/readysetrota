@@ -312,8 +312,6 @@ class ExportAllShifts(APIView):
         shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
             'end_date'), department__site__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
-
-        print(request.query_params.get('start_date'))
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
@@ -466,66 +464,150 @@ def webhook(request):
 
 
 
+def timeDifference(time1, time2):
+    diff = time1 - time2
+    hours = diff.total_seconds() / 3600
+    return abs(hours)
 
+def costAndHours(date, based_on):
 
-class GetReportData(APIView):
+    total_cost = Decimal(0)
+    total_hours = 0
 
-    def timeDifference(self, time1, time2):
-        diff = time1 - time2
-        hours = diff.total_seconds() / 3600
-        return abs(hours)
+    print(based_on)
 
-    def costAndHours(self, date):
-        
+    if(based_on == "predicted"):
         shifts = Shift.objects.filter(stage="Published", date=date).values('employee', 'start_time', 'end_time', 'break_length')
-        total_cost = Decimal(0)
-        total_hours = 0
+        
         for i in shifts:
             employee = i['employee']
             wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
             start_time = i['start_time'].strftime('%H:%M')
             start_time = datetime.strptime(start_time, '%H:%M')
             end_time = datetime.strptime(i['end_time'], '%H:%M')
-            total_length = self.timeDifference(start_time, end_time) - (i['break_length'] / 60)
+            total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
+
+            total_hours += total_length
+
+            if(wage_at_time):
+                total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
+    else:
+        timeclocks = TimeClock.objects.filter(date=date).values('employee', 'clock_in', 'clock_out', 'break_length')
+        for i in timeclocks:
+            employee = i['employee']
+            wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
+            start_time = i['clock_in'].strftime('%H:%M')
+            start_time = datetime.strptime(start_time, '%H:%M')
+            end_time = i['clock_out'].strftime('%H:%M')
+            end_time = datetime.strptime(end_time, '%H:%M')
+            total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
 
             total_hours += total_length
 
             if(wage_at_time):
                 total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
 
-        salaries = Wage.objects.filter(wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).values_list('wage')
-        for salary in salaries:
-            total_cost += salary[0] / 52 / 7
 
-        return {'total_hours': total_hours, 'total_cost': total_cost}
+    salaries = Wage.objects.filter(employee__position__department__site=1, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
+    for salary in salaries:
+        total_cost += salary.wage / 52 / 7
+
+    return {'total_hours': total_hours, 'total_cost': total_cost}
 
 
+from collections import defaultdict
+
+
+
+class GetReportData(APIView):
+
+    def daterange(self, start_date, end_date):
+        for n in range(int((end_date - start_date).days)):
+            yield end_date - timedelta(n)
 
     def get(self, request):
-        print("STARTING")
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         start_date = datetime.strptime(start_date, '%d/%m/%Y')
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
         site_id = request.query_params.get('site_id')
-        
-        shifts = Shift.objects.filter(stage="Published", department__site=site_id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
-        shifts_worked = shifts.annotate(day=TruncDay('date')).values('day').annotate(c=Count('id')).values('day', 'c')
 
-        total_cost = {}
-        total_hours = {}
+        based_on = request.query_params.get('based_on')
+        print(based_on)
+
+        total_cost = []
+        total_hours = []
         forecast_dif_obj = {}
 
         delta = end_date - start_date
         start = time.process_time()
+        dataObj = []
         for i in range(delta.days+1):
 
-            date = start_date + timedelta(days=i)
+            date = end_date - timedelta(days=i)
             date_str = date.strftime("%Y-%m-%d")
-            costAndHours = self.costAndHours(date)
+            costAndHoursValue = costAndHours(date, based_on)
 
-            total_cost[date_str] = float("{:.2f}".format(costAndHours['total_cost']))
-            total_hours[date_str] = float("{:.1f}".format(costAndHours['total_hours']))
-        print(time.process_time() - start)
-        print("ENDED")
-        return JsonResponse({"shifts": list(shifts_worked), "total_cost": total_cost, "forecast_dif": forecast_dif_obj, "total_hours": total_hours}, safe=False)
+            obj = {'date': date}
+            total_cost = float("{:.2f}".format(costAndHoursValue['total_cost']))
+            obj['total_cost'] = total_cost
+            
+            total_hours = float("{:.1f}".format(costAndHoursValue['total_hours']))
+            obj['total_hours'] = total_hours
+
+            if based_on == "predicted":
+                total_shifts = Shift.objects.filter(stage="Published", department__site=site_id, date=date).exclude(end_time__isnull=True).count()
+                obj['total_shifts'] = total_shifts
+            else:
+                total_shifts = TimeClock.objects.filter(date=date, department__site=site_id).count()
+                obj['total_shifts'] = total_shifts
+
+            forecast = Forecast.objects.filter(site=site_id, date=date).values('actual', 'predicted', 'labourGoal').first()
+
+            if forecast:
+                if based_on == "predicted":
+                    obj['revenue'] = float(forecast['predicted'])
+                else:
+                    obj['revenue'] = float(forecast['actual'])
+                labour_percentage = ((total_cost) / obj['revenue']) * 100
+                obj['labour_percentage'] = float(f"{labour_percentage:.2f}")
+                obj['labour_diff'] = float(f"{Decimal(obj['labour_percentage']) - forecast['labourGoal']:.2f}")
+            else:
+                obj['revenue'] = 0.00
+                obj['labour_percentage'] = 0.00 
+                obj['labour_diff'] = 0.00
+                
+                
+            # // const labourDiff = (
+            # //   labourPercentage - getForecastValues(date)?.labourGoal
+            # // ).toFixed(2);
+
+            dataObj.append(obj)
+
+        exportData = bool(request.query_params.get('exportData'))
+        
+
+
+        if exportData == True:
+            n_shifts = 0
+            n_revenue = 0
+            n_cost = 0
+            n_hours = 0
+            n_percentage = 0
+            for d in dataObj:
+                n_shifts += d['total_shifts']
+                n_revenue += d['revenue']
+                n_cost += d['total_cost']
+                n_hours += d['total_hours']
+                n_percentage += d['labour_percentage']
+
+            n_percentage = n_percentage / len(dataObj)
+                
+            exportDataTotals = {'total_shifts': float(f"{n_shifts:.2f}"), 'total_revenue': float(f"{n_revenue:.2f}"), 'total_cost': float(f"{n_cost:.2f}"), 'total_hours': float(f"{n_hours:.2f}"), 'total_percentage': float(f"{n_percentage:.2f}")}
+
+            resp = HttpResponse(content_type='application/pdf')
+            resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
+            result = generate_pdf('report.html', file_object=resp, context={'daterange': self.daterange(start_date, end_date), 'start_date': start_date, 'end_date': end_date, "dataObj": dataObj, "exportDataTotals": exportDataTotals} )
+            return result
+        else:
+            return JsonResponse(dataObj, safe=False)

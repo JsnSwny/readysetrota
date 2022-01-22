@@ -1,12 +1,7 @@
 import { GET_REPORT_DATA } from "../actions/types";
 
 const initialState = {
-  data: {
-    shifts: [],
-    total_cost: {},
-    total_hours: {},
-    forecast_dif: {},
-  },
+  data: [],
 };
 
 export default function (state = initialState, action) {

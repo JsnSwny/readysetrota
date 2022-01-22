@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Title from "../common/Title";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { addMonths, addDays, eachDayOfInterval, format } from "date-fns";
+import { addMonths, eachDayOfInterval, format, parseISO } from "date-fns";
 import { getForecast } from "../../actions/employees";
-import ForecastModal from "../modals/ForecastModal";
 import { getReportData } from "../../actions/stats";
-import { numberWithCommas } from "../Utilities";
 import ReportStatItem from "./ReportStatItem";
+import Select from "react-select";
 import CountUp from "react-countup";
 
 const ReportsPage = () => {
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(addDays(new Date(), -3));
+  const [startDate, setStartDate] = useState(addMonths(new Date(), -1));
   const [endDate, setEndDate] = useState(new Date());
   const [range, setRange] = useState([]);
   const forecast = useSelector((state) => state.employees.forecast);
   const report = useSelector((state) => state.report.data);
   const loading = useSelector((state) => state.loading);
+  const [activeGraph, setActiveGraph] = useState(false);
+  const current = useSelector((state) => state.employees.current);
+  const [basedOn, setBasedOn] = useState({ value: "actual", label: "Actual" });
+
+  const options = [
+    { value: "actual", label: "Actual" },
+    { value: "predicted", label: "Predicted" },
+  ];
 
   useEffect(() => {
     dispatch(
@@ -27,54 +34,20 @@ const ReportsPage = () => {
         format(endDate, "yyyy-MM-dd")
       )
     );
-    dispatch(getReportData(startDate, endDate));
+    dispatch(getReportData(startDate, endDate, basedOn.value));
     setRange(eachDayOfInterval({ start: startDate, end: endDate }).reverse());
   }, [startDate, endDate]);
 
-  const getForecastValues = (date) => {
-    return forecast.find((item) => item.date == format(date, "yyyy-MM-dd"));
-  };
-
-  const getTotalRevenue = () => {
-    let val = forecast.reduce((a, b) => {
-      return parseFloat(a) + parseFloat(b.actual);
-    }, 0);
-
-    return val;
-  };
-
-  const sumValues = (obj) =>
-    parseFloat(
-      Object.values(obj)
-        .reduce((a, b) => a + b, 0)
-        .toFixed(2)
-    );
-
-  const dailyLabourPercentage = (date) => {
-    const formattedDateAlt = format(date, "yyyy-MM-dd");
-    const labourPercentage = (
-      (report.total_cost[formattedDateAlt] / getForecastValues(date)?.actual) *
-      100
-    ).toFixed(2);
-
-    return labourPercentage;
-  };
-
-  const totalLabourPercentage = () => {
-    const labourPercentage = (
-      (sumValues(report.total_cost) / getTotalRevenue()) *
-      100
-    ).toFixed(2);
-
-    return labourPercentage ? parseFloat(labourPercentage) : 0.0;
-  };
+  useEffect(() => {
+    dispatch(getReportData(startDate, endDate, basedOn.value));
+  }, [basedOn]);
 
   return (
     <div className="wrapper--md">
       <div className="banner">
         <Title name="Reports" breakWord={false} />
       </div>
-      <div className="list-banner">
+      <div className="list-banner list-banner--report">
         <div className="date-range-selector flex-container--align-center">
           <DatePicker
             selected={startDate}
@@ -98,24 +71,53 @@ const ReportsPage = () => {
             "
           />
         </div>
+        {console.log(basedOn)}
         <div className="list-banner__right">
-          <button
-            className="btn-3"
-            onClick={() => {
-              false;
-            }}
+          <Select
+            className="react-select-container"
+            classNamePrefix="react-select"
+            value={basedOn}
+            onChange={(e) => setBasedOn(e)}
+            options={[
+              { value: "actual", label: "Actual" },
+              { value: "predicted", label: "Predicted" },
+            ]}
+            placeholder={"Select which values to use"}
+          />
+          <a
+            href={`/api-view/report/?site_id=${
+              current.site.id
+            }&start_date=${format(startDate, "dd/MM/yyyy")}&end_date=${format(
+              endDate,
+              "dd/MM/yyyy"
+            )}&based_on=${basedOn.value}&exportData=true`}
+            className="btn-3 btn-3--export"
+            target="_blank"
           >
             Export
-          </button>
+          </a>
         </div>
       </div>
       <ul className="report-boxes">
-        <li className="report-boxes__item report-boxes__item--yellow">
-          <h3>Shifts</h3>
+        <li
+          className={`report-boxes__item report-boxes__item--yellow ${
+            activeGraph == "Shifts" ? "active" : activeGraph ? "hide" : ""
+          }`}
+        >
+          <div className="flex-container--between">
+            <h3>Shifts</h3>
+            <i
+              class="fas fa-expand"
+              onClick={() =>
+                setActiveGraph(activeGraph != "Shifts" ? "Shifts" : false)
+              }
+            ></i>
+          </div>
+
           {!loading.stats ? (
             <CountUp
               start={0}
-              end={report.shifts.reduce((a, b) => a + b.c, 0)}
+              end={report.reduce((a, b) => a + b.total_shifts, 0)}
               duration={1}
               decimals={0}
               separator={","}
@@ -124,18 +126,33 @@ const ReportsPage = () => {
             <span>0</span>
           )}
           <ReportStatItem
-            data={report.shifts.map((item) => item.c)}
+            data={report.map((item) => item.total_shifts)}
             range={range}
             color="rgb(255,211,0)"
           />
         </li>
-        <li className="report-boxes__item report-boxes__item--orange">
-          <h3>Labour Cost</h3>
+        <li
+          className={`report-boxes__item report-boxes__item--orange ${
+            activeGraph == "Labour Cost" ? "active" : activeGraph ? "hide" : ""
+          }`}
+        >
+          <div className="flex-container--between">
+            <h3>Labour Cost</h3>
+            <i
+              class="fas fa-expand"
+              onClick={() =>
+                setActiveGraph(
+                  activeGraph != "Labour Cost" ? "Labour Cost" : false
+                )
+              }
+            ></i>
+          </div>
+
           {/* <p>£{numberWithCommas(sumValues(report.total_cost))}</p> */}
           {!loading.stats ? (
             <CountUp
               start={0}
-              end={sumValues(report.total_cost)}
+              end={report.reduce((a, b) => a + b.total_cost, 0)}
               duration={1}
               decimals={2}
               prefix={"£"}
@@ -145,19 +162,30 @@ const ReportsPage = () => {
             <span>£0</span>
           )}
           <ReportStatItem
-            data={Object.values(report.total_cost).map((item) =>
-              parseInt(item)
-            )}
+            data={report.map((item) => parseInt(item.total_cost))}
             range={range}
             color="rgb(34,198,240)"
           />
         </li>
-        <li className="report-boxes__item report-boxes__item--green">
-          <h3>Revenue</h3>
+        <li
+          className={`report-boxes__item report-boxes__item--green ${
+            activeGraph == "Revenue" ? "active" : activeGraph ? "hide" : ""
+          }`}
+        >
+          <div className="flex-container--between">
+            <h3>Revenue</h3>
+            <i
+              class="fas fa-expand"
+              onClick={() =>
+                setActiveGraph(activeGraph != "Revenue" ? "Revenue" : false)
+              }
+            ></i>
+          </div>
+
           {!loading.stats ? (
             <CountUp
               start={0}
-              end={getTotalRevenue()}
+              end={report.reduce((a, b) => a + b.revenue, 0)}
               duration={1}
               decimals={2}
               prefix={"£"}
@@ -167,26 +195,48 @@ const ReportsPage = () => {
             <span>£0</span>
           )}
           <ReportStatItem
-            data={forecast.map((item) => parseInt(item.actual))}
+            data={report.map((item) => parseInt(item.revenue))}
             range={range}
             color="rgb(91,208,117)"
           />
         </li>
-        <li className="report-boxes__item report-boxes__item--pink">
-          <h3>Labour %</h3>
+        <li
+          className={`report-boxes__item report-boxes__item--pink ${
+            activeGraph == "Labour %" ? "active" : activeGraph ? "hide" : ""
+          }`}
+        >
+          <div className="flex-container--between">
+            <h3>Labour % (Average)</h3>
+            <i
+              class="fas fa-expand"
+              onClick={() =>
+                setActiveGraph(activeGraph != "Labour %" ? "Labour %" : false)
+              }
+            ></i>
+          </div>
+
           {!loading.stats ? (
-            <CountUp
-              start={0}
-              end={totalLabourPercentage()}
-              duration={1}
-              decimals={2}
-            />
+            <Fragment>
+              <CountUp
+                start={0}
+                end={
+                  report.reduce((a, b) => a + b.labour_percentage, 0) /
+                  report.length
+                }
+                duration={1}
+                decimals={2}
+                suffix={"%"}
+              />
+              {/* <span>
+                {report.reduce((a, b) => a + b.labour_diff, 0) / report.length}%
+              </span> */}
+            </Fragment>
           ) : (
             <span>0.00%</span>
           )}
 
           <ReportStatItem
-            data={range.map((item) => dailyLabourPercentage(item))}
+            data={report.map((item) => item.labour_percentage)}
             range={range}
             color="rgb(253,128,158)"
           />
@@ -203,39 +253,28 @@ const ReportsPage = () => {
           </tr>
         </thead>
         <tbody>
-          {range.map((date) => {
-            const formattedDate = format(date, "dd/MM/yyyy");
-            const formattedDateAlt = format(date, "yyyy-MM-dd");
-            const labourPercentage = (
-              (report.total_cost[formattedDateAlt] /
-                getForecastValues(date)?.actual) *
-              100
-            ).toFixed(2);
-
-            const labourDiff = (
-              labourPercentage - getForecastValues(date)?.labourGoal
-            ).toFixed(2);
-
+          {report.map((item) => {
             if (report) {
               return (
                 <tr>
-                  {/* (getWeeklyCost([date], getCost) / getWeeklyCost([date],
-                  getAmount)) * 100 ).toFixed(2); */}
-                  <td className="bold">{formattedDate}</td>
-                  <td>
-                    {report.shifts.find((d) => d.day == formattedDateAlt)?.c} /{" "}
-                    {report.total_hours[formattedDateAlt]}hrs
+                  <td className="bold">
+                    {format(parseISO(item.date), "dd/MM/yyyy")}
                   </td>
-                  <td>£{report.total_cost[formattedDateAlt]}</td>
-                  <td>£{getForecastValues(date)?.actual}</td>
                   <td>
-                    {labourPercentage}% (
+                    {item.total_shifts} / {item.total_hours}hrs
+                  </td>
+                  <td>£{item.total_cost}</td>
+                  <td>£{item.revenue}</td>
+                  <td>
+                    {item.labour_percentage}% (
                     <span
                       className={`${
-                        labourDiff > 0 ? "percentage--red" : "percentage--green"
+                        item.labour_diff > 0
+                          ? "percentage--red"
+                          : "percentage--green"
                       }`}
                     >
-                      {labourDiff}%
+                      {item.labour_diff}%
                     </span>
                     )
                   </td>

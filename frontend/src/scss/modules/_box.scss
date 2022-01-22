@@ -2,7 +2,8 @@
   display: flex;
   list-style-type: none;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  // margin-bottom: 2rem;
+  flex-wrap: wrap;
   &__item {
     background-color: white;
     border-radius: 10px;
@@ -10,6 +11,26 @@
     padding: 2rem 2rem;
     @extend .shadow;
     min-height: 250px;
+    // transition: 1s ease width, 0.2s ease opacity;
+    margin-bottom: 2rem;
+    // display: block;
+    .fa-expand {
+      cursor: pointer;
+      transition: 0.2s ease color;
+      &:hover {
+        color: $pink;
+      }
+    }
+    &.hide {
+      width: calc(33.33% - 1rem);
+    }
+    &.active {
+      width: 100%;
+      order: 0;
+    }
+    &:not(.active) {
+      order: 1;
+    }
     span {
       font-size: 32px;
       font-weight: bold;

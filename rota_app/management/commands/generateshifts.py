@@ -32,4 +32,3 @@ class Command(BaseCommand):
                 employee = employees[random.randint(0, len(employees)-1)]
                 shift = Shift(date=date, start_time="09:00", end_time="17:00", employee=employee, department=department, stage="Published", owner=department.owner)
                 shift.save()
-                print(shift)
