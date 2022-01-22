@@ -12,6 +12,7 @@ const NoShift = (props) => {
     financialMode,
     setOpen,
     setShiftFormInfo,
+    setEditShift,
   } = props;
   const date = format(result, "yyyy-MM-dd");
   const permissions = useSelector(
@@ -58,6 +59,7 @@ const NoShift = (props) => {
           <i
             class="fas fa-plus"
             onClick={() => {
+              setEditShift(false);
               setOpen(true);
               setShiftFormInfo({ employee, date, shiftDepartment });
             }}

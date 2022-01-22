@@ -8,7 +8,11 @@ const ShiftModal = ({ open, setOpen, editShift, shiftFormInfo }) => {
       <SmallModal
         open={open}
         setOpen={setOpen}
-        title={editShift ? `Edit ${editShift.name}` : "Add a new shift"}
+        title={
+          editShift
+            ? `Edit ${editShift.employee.full_name}'s Shift`
+            : "Add a new shift"
+        }
         size={"-md"}
       >
         <ShiftForm

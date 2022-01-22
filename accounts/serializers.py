@@ -69,32 +69,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     business = BusinessSerializer()
-    all_permissions = serializers.SerializerMethodField()
-    department_admin = DepartmentSerializer(read_only=True, many=True)
     employee = EmployeeSerializer(required=False, read_only=True, many=True)
-    # site_admin = serializers.SerializerMethodField()
-
-    def get_all_permissions(self, obj):
-        permissions = []
-        for i in obj.groups.all():
-            for perm in i.permissions.all():
-                permissions.append(perm.codename)
-        for i in obj.user_permissions.all():
-            permissions.append(i.codename)
-        return list(dict.fromkeys(permissions))
-    # def get_site_admin(self, obj):
-    #     user_employees = Employee.objects.filter(user=obj.id, site_admin=True).distinct()
-    #     site_ids = []
-    #     for i in user_employees:
-    #         print(i)
-    #         site_id = Site.objects.filter(department_site__pos_department__position=i).first().id
-    #         site_ids.append(site_id)
-    #     return site_ids
-
+    
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'employee',
-                  'all_permissions', 'groups', 'date_joined', 'business', 'department_admin',)
+                  'groups', 'date_joined', 'business',)
         depth = 3
 
 

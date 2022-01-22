@@ -54,7 +54,6 @@ const initialState = {
   },
   uuid_success: false,
   business: { plan: "F" },
-  site_admin: false,
   sitesettings: {},
 };
 
@@ -101,15 +100,6 @@ export default function (state = initialState, action) {
           ? action.payload[0]
           : state.current.site;
 
-      let isSiteAdminGet = (user) => {
-        return user.business
-          ? true
-          : action.payload.find((site) => site.id == current_site)
-          ? action.payload
-              .find((site) => site.id == current_site)
-              .admins.includes(user.id)
-          : false;
-      };
       return {
         ...state,
         sites: action.payload,
@@ -117,7 +107,6 @@ export default function (state = initialState, action) {
           ...state.current,
           site: current_site,
         },
-        site_admin: isSiteAdminGet(action.user),
       };
 
     case ADD_SITE:
@@ -172,15 +161,6 @@ export default function (state = initialState, action) {
       return newState;
     case SET_SITE:
       localStorage.setItem("current_site", action.payload);
-      let isSiteAdmin = (user) => {
-        return user.business
-          ? true
-          : state.sites.find((site) => site.id == action.payload.id)
-          ? state.sites
-              .find((site) => site.id == action.payload.id)
-              .admins.includes(user.id)
-          : false;
-      };
       return {
         ...state,
         current: {
@@ -190,7 +170,6 @@ export default function (state = initialState, action) {
           business: state.sites.find((item) => item.id == action.payload.id)
             .business,
         },
-        site_admin: isSiteAdmin(action.user),
         departments: [],
         employees: [],
         positions: [],

@@ -7,6 +7,7 @@ import {
   getSites,
   updateSettings,
 } from "../actions/employees";
+import { getPermissionTypes } from "../actions/permissions";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import store from "../store";
 import Rota from "./shifts/Rota";
@@ -113,6 +114,10 @@ const Main = () => {
       }
     }
   }, [current.site]);
+
+  useEffect(() => {
+    dispatch(getPermissionTypes());
+  }, []);
 
   // Props
   const modalProps = {

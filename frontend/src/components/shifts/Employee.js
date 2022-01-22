@@ -90,7 +90,6 @@ const Employee = (props) => {
   let permissions = useSelector(
     (state) => state.employees.current.site.permissions
   );
-  let siteAdmin = permissions.includes("manage_shifts");
 
   return (
     <div

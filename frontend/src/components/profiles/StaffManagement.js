@@ -2,7 +2,6 @@ import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DepartmentPicker from "./dashboard/DepartmentPicker";
 import PositionPicker from "./dashboard/PositionPicker";
-import StaffPicker from "./dashboard/StaffPicker";
 import SitePicker from "./dashboard/SitePicker";
 import { getEmployees, getPositions } from "../../actions/employees";
 import { format } from "date-fns";
@@ -56,7 +55,6 @@ const StaffManagement = ({ modalProps }) => {
                 (item) => item.department.id == current.department.id
               )}
             />
-            <StaffPicker {...modalProps} />
           </Fragment>
         )}
 

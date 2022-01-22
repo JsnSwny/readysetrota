@@ -1,6 +1,14 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import Switch from "react-switch";
 
-const Permissions = () => {
+const Permissions = ({ permissions, setPermissions }) => {
+  const permission_types = useSelector(
+    (state) => state.permissions.permission_types
+  );
+
+  console.log(permissions);
+
   return (
     <div>
       <table className="listing">
@@ -12,31 +20,27 @@ const Permissions = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredDepartments.length > 0 &&
-            filteredDepartments.map((item) => (
-              <tr className="listing__row">
-                <td className="bold">{item.name}</td>
-                <td>{item.number_of_employees}</td>
-                <td className="right">
-                  <div className="action-sm">
-                    <i
-                      class="fas fa-edit"
-                      onClick={() => {
-                        setEditDepartment(item);
-                        setOpen(true);
-                      }}
-                    ></i>
-                    <i
-                      class="fas fa-trash"
-                      onClick={() => {
-                        setSelectedDepartment(item);
-                        setConfirmOpen(true);
-                      }}
-                    ></i>
-                  </div>
-                </td>
-              </tr>
-            ))}
+          {permission_types.map((item) => (
+            <tr>
+              <td>{item.name}</td>
+              <td>{item.description}</td>
+              <td>
+                <Switch
+                  onChange={() => {
+                    if (permissions.includes(item.id)) {
+                      setPermissions(
+                        [...permissions].filter((perm) => perm != item.id)
+                      );
+                    } else {
+                      setPermissions([...permissions, item.id]);
+                    }
+                  }}
+                  checked={permissions.includes(item.id)}
+                  onColor={"#FD809E"}
+                />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

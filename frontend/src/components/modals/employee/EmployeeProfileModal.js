@@ -41,7 +41,6 @@ const EmployeeProfileModal = (props) => {
   const [wage, setWage] = useState(0.0);
   const [wageType, setWageType] = useState("N");
   const [position, setPosition] = useState([]);
-  const [siteAdmin, setSiteAdmin] = useState(false);
   const [currentSelector, setCurrentSelector] = useState("unselected");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -68,14 +67,6 @@ const EmployeeProfileModal = (props) => {
   });
   let error_obj = {};
 
-  const isSiteAdmin = (user_id) => {
-    return sites.find((site) => site.id == current.site.id)
-      ? sites
-          .find((site) => site.id == current.site.id)
-          .admins.includes(user_id)
-      : false;
-  };
-
   const [currentTab, setCurrentTab] = useState("Personal Details");
 
   useEffect(() => {
@@ -85,7 +76,6 @@ const EmployeeProfileModal = (props) => {
       setPosition(update.position.map((item) => item));
       setWage(update.current_wage ? update.current_wage.amount : 0);
       setWageType(update.current_wage ? update.current_wage.type : "N");
-      setSiteAdmin(isSiteAdmin(update.user));
       setAvailability(update.default_availability);
       setPermissions(update.site_permissions);
     }
@@ -154,7 +144,7 @@ const EmployeeProfileModal = (props) => {
       })
     ) {
       if (update) {
-        dispatch(updateEmployee(update.id, employee, siteAdmin, current_site));
+        dispatch(updateEmployee(update.id, employee, current_site));
         toast.success("Employee updated!");
       } else {
         dispatch(addEmployee(employee));
@@ -164,7 +154,6 @@ const EmployeeProfileModal = (props) => {
       setFirstName("");
       setLastName("");
       setPosition("");
-      setSiteAdmin(false);
       onClose();
     } else {
       toast.warn("Form incomplete, check for errors");

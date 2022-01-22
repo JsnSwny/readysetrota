@@ -82,6 +82,7 @@ const RotaEmployeeShifts = ({
             financialMode={financialMode}
             setOpen={setOpen}
             setShiftFormInfo={setShiftFormInfo}
+            setEditShift={setEditShift}
           />
         );
       })}

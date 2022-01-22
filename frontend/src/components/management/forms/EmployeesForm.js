@@ -15,6 +15,7 @@ import { getPositions } from "../../../actions/employees";
 import Wage from "./employees-form/Wage";
 import Status from "./employees-form/Status";
 import { isInViewport } from "../../../utils/hooks/isInViewport";
+import Permissions from "./employees-form/Permissions";
 
 const EmployeesForm = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const EmployeesForm = () => {
   const wageRef = useRef(null);
   const statusRef = useRef(null);
   const rolesRef = useRef(null);
+  const permissionsRef = useRef(null);
 
   const history = useHistory();
   const { formType, employeeId } = useParams();
@@ -39,7 +41,6 @@ const EmployeesForm = () => {
   const [wageType, setWageType] = useState("N");
   const [positionList, setPositionList] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [siteAdmin, setSiteAdmin] = useState(false);
   const [permissions, setPermissions] = useState([]);
   const [startWorkingDate, setStartWorkingDate] = useState(new Date());
   const [endWorkingDate, setEndWorkingDate] = useState("");
@@ -57,7 +58,7 @@ const EmployeesForm = () => {
       ]);
       setWage(employee.current_wage ? employee.current_wage.amount : 0);
       setWageType(employee.current_wage ? employee.current_wage.type : "N");
-      setPermissions(employee.site_permissions);
+      setPermissions(employee.permissions.map((item) => item.id));
 
       setStartWorkingDate(
         employee.current_status.start_date
@@ -117,12 +118,14 @@ const EmployeesForm = () => {
       position_id: positionList.map((pos) => pos.id),
       business_id: current.business.id,
       default_availability: availability,
-      permissions,
+      permissions_id: permissions,
       start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
       end_working_date: endWorkingDate
         ? format(endWorkingDate, "yyyy-MM-dd")
         : "",
     };
+
+    console.log(employee);
 
     if (formType == "edit") {
       dispatch(updateEmployee(currentEmployee.id, employee));
@@ -179,8 +182,9 @@ const EmployeesForm = () => {
 
           <TabItem
             title="Permissions"
-            current={false}
+            current={isInViewport(permissionsRef)}
             setCurrent={setCurrentSection}
+            scroll={() => scrollToRef(permissionsRef)}
           />
           <TabItem
             title="Availability and Holidays"
@@ -224,6 +228,16 @@ const EmployeesForm = () => {
                 <h3>Status</h3>
               </div>
               <Status {...statusProps} />
+            </div>
+
+            <div className="employees-form" ref={permissionsRef}>
+              <div className="form-block__heading">
+                <h3>Permissions</h3>
+              </div>
+              <Permissions
+                permissions={permissions}
+                setPermissions={setPermissions}
+              />
             </div>
 
             <div className="form-bottom-banner">

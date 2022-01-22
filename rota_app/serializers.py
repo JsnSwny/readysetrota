@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, Leave
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, Leave, PermissionType
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -62,11 +62,14 @@ class BasicDepartmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'business',)
         depth = 1
 
+class PermissionTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermissionType
+        fields = '__all__'
+
+
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    admins = BasicUserSerializer(read_only=True, many=True)
-    admins_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(
-    ), source='admins', write_only=True, many=True, required=False)
     owner = BasicUserSerializer(read_only=True)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
@@ -77,7 +80,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ('id', 'name', 'admins', 'admins_id', 'owner', 'business',
+        fields = ('id', 'name', 'owner', 'business',
                   'business_id', 'number_of_employees', 'site', 'site_id',)
         depth = 1
 
@@ -111,6 +114,10 @@ class BasicPositionSerializer(serializers.ModelSerializer):
 
 class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
+    permissions = PermissionTypeSerializer(read_only=True, many=True)
+    permissions_id = serializers.PrimaryKeyRelatedField(
+        queryset=PermissionType.objects.all(), source='permissions', write_only=True, many=True)
+
     default_availability = serializers.JSONField()
     position_id = serializers.PrimaryKeyRelatedField(
         queryset=Position.objects.all(), source='position', write_only=True, many=True)
@@ -165,6 +172,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
         last_archived_employee = Employee.objects.filter(
             business=validated_data.get('business'), archived=True).last()
         instance = super().update(instance, validated_data)
+
+        print(instance.permissions)
+        print(instance.position)
+
         user = instance.user
 
         wage_type = self.context['request'].query_params.get(
@@ -261,6 +272,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         position = validated_data.pop('position')
+        permissions = validated_data.pop('permissions')
+
         site = self.context['request'].query_params.get('site')
         employee = Employee.objects.create(**validated_data)
         number = random.randint(1000,9999)
@@ -268,6 +281,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
             number = random.randint(1000,9999)
         employee.pin = number
         employee.position.set(position)
+        employee.permissions.set(permissions)
 
         employee.save()
 
@@ -306,8 +320,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return employee
 
 
-class EmployeeListSerializer(serializers.ModelSerializer):
+class AdminEmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
+    permissions = PermissionTypeSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(
@@ -318,7 +333,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
 
     def get_site_permissions(self, obj):
         if(obj.user != None):
@@ -344,8 +359,9 @@ class WageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AdminEmployeeListSerializer(serializers.ModelSerializer):
+class EmployeeListSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
+    permissions = PermissionTypeSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()
     business_id = serializers.PrimaryKeyRelatedField(
@@ -389,7 +405,7 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin', 'created_at')
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin', 'created_at')
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -609,7 +625,7 @@ class SiteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Site
-        fields = ('id', 'name', 'business', 'business_id', 'admins',
+        fields = ('id', 'name', 'business', 'business_id', 
                   'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions',)
         depth: 1
 
@@ -622,21 +638,6 @@ class SiteSerializer(serializers.ModelSerializer):
                 setattr(settings, attr, value)
 
             settings.save()
-
-        # user = self.context['request'].user
-        # permissions = self.context['request'].query_params.get('permissions')
-        # permissions = permissions.split(',') if isinstance(permissions, str) else permissions
-        # all_perms = get_perms(user, instance)
-        # diff = np.setdiff1d(all_perms,permissions)
-        # for i in diff:
-        #     print(f'Removing {i}')
-        #     remove_perm(i, user, obj=instance)
-
-        # for i in permissions:
-        #     print(f'Assigning {i}')
-        #     assign_perm(i, user, obj=instance)
-
-        # print(get_perms(user, instance))
 
         return instance
 
@@ -672,3 +673,4 @@ class ForecastSerializer(serializers.ModelSerializer):
     class Meta:
         model = Forecast
         fields = ('id', 'date', 'site_id', 'predicted', 'labourGoal', 'actual',)
+

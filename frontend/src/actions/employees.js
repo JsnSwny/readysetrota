@@ -35,6 +35,7 @@ import {
   UPDATE_SETTINGS,
   START_AVAILABILITY,
   FORECAST_LOADING,
+  SET_ACTIVE_PERMISSIONS,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -198,15 +199,7 @@ export const addSite = (site) => (dispatch, getState) => {
 
 export const updateSite = (id, site) => (dispatch, getState) => {
   axios
-    .put(
-      `/api/sites/${id}${
-        site.hasOwnProperty("permissions")
-          ? `/?permissions=${site.permissions}/`
-          : "/"
-      }`,
-      site,
-      tokenConfig(getState)
-    )
+    .put(`/api/sites/${id}`, site, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_SITE,
@@ -265,7 +258,6 @@ export const getEmployees =
   (archived = false, department = false, start_date, end_date) =>
   (dispatch, getState) => {
     let current = getState().employees.current;
-    let site_admin = true;
     let query = "";
 
     if (current.site.id > 0) {
@@ -287,7 +279,7 @@ export const getEmployees =
 
     axios
       .get(
-        `/api/employeelist${site_admin ? "admin" : ""}/?${query}&archived=${
+        `/api/employeelist/?${query}&archived=${
           !archived ? false : ""
         }&ordering=archived,first_name,last_name,`,
         tokenConfig(getState)
@@ -296,6 +288,25 @@ export const getEmployees =
         dispatch({
           type: GET_EMPLOYEES,
           payload: res.data,
+        });
+
+        const perm_list = getState().permissions.permission_types;
+
+        const current_user = getState().auth.user;
+
+        if (!current_user.business) {
+          perm_list = [];
+          const current_employee = getState().employees.employees.find(
+            (item) => item.user == current_user.id
+          );
+          if (current_employee) {
+            perm_list = current_employee.permissions;
+          }
+        }
+
+        dispatch({
+          type: SET_ACTIVE_PERMISSIONS,
+          payload: perm_list,
         });
       })
       .catch((err) => console.log(err.response));
@@ -354,15 +365,6 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
         type: UPDATE_EMPLOYEE,
         payload: res.data,
       });
-      if (update.user) {
-        dispatch(
-          updateSite(current.site.id, {
-            ...current.site,
-            admins: current.site.admins.filter((item) => item != update.user),
-            business_id: current.site.business.id,
-          })
-        );
-      }
       dispatch(resetErrors());
     })
 
@@ -385,6 +387,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
         payload: res.data,
         current_dep: getState().employees.current.department,
       });
+
       dispatch(resetErrors());
 
       // Remove later and update number of employees through reducer

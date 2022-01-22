@@ -10,6 +10,7 @@ import stats from "./stats";
 import availability from "./availability";
 import timeclock from "./timeclock";
 import report from "./report";
+import permissions from "./permissions";
 
 const appReducer = combineReducers({
   shifts,
@@ -23,6 +24,7 @@ const appReducer = combineReducers({
   availability,
   timeclock,
   report,
+  permissions,
 });
 
 const rootReducer = (state, action) => {

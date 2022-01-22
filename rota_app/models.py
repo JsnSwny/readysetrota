@@ -29,31 +29,23 @@ class Business(models.Model):
     trial_end = models.DateField(null=True, blank=True)
     subscription_cancellation = models.DateField(null=True, blank=True)
 
+class PermissionType(models.Model):
+    name = models.CharField(max_length=30)
+    code_name = models.CharField(max_length=30)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'[{self.id}]: {self.name}'
+
 
 class Site(models.Model):
     name = models.CharField(max_length=100)
     business = models.ForeignKey(
         Business, related_name="site_business", on_delete=models.CASCADE, null=True, blank=True)
-    admins = models.ManyToManyField(
-        User, related_name="site_admin", blank=True)
     history = HistoricalRecords()
 
     def __str__(self):
         return f'{self.name} (ID: {self.id})'
-
-    class Meta:
-        permissions = [
-            ('manage_departments', 'Manage Departments'),
-            ('manage_positions', 'Manage Positions'),
-            ('manage_employees', 'Manage Employees'),
-            ('manage_shifts', 'Manage Shifts'),
-            ('manage_wages', 'Manage Employee Wages'),
-            ('create_forecasts', 'Create Forecasts'),
-            ('view_forecasts', 'View Forecasts'),
-            ('manage_availabilities', 'Manage Availabilities'),
-            ('view_stats', 'View Stats'),
-            ('approve_shifts', 'Approve Shifts'),
-        ]
 
 
 class Department(models.Model):
@@ -63,8 +55,6 @@ class Department(models.Model):
         return f'{self.name} - {self.owner}'
     owner = models.ForeignKey(
         User, related_name="departments", on_delete=models.CASCADE)
-    admins = models.ManyToManyField(
-        User, related_name="department_admin", blank=True)
     site = models.ForeignKey(Site, related_name="department_site",
                              on_delete=models.CASCADE, null=True, blank=True)
     business = models.ForeignKey(
@@ -105,6 +95,8 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=25)
     position = models.ManyToManyField(
         Position, related_name="position", blank=True)
+    permissions = models.ManyToManyField(
+        PermissionType, related_name="employee_permissions", blank=True)
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True, related_name="employee")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -122,7 +114,7 @@ class Employee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'[{self.id}]: {self.first_name} {self.last_name}'
 
 
 class EmployeeStatus(models.Model):
@@ -344,3 +336,16 @@ class ShiftSwap(models.Model):
     employee_approved = models.BooleanField(null=True)
     admin_approved = models.BooleanField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# class EmployeePermissions(models.Model):
+#     employee = models.ForeignKey(
+#         Employee, related_name="employee_permission", on_delete=models.CASCADE)
+#     permissions = models.ManyToManyField(
+#         PermissionType, related_name="employee_permission_type")
+
+#     def __str__(self):
+#         return f'{self.employee.first_name} {self.employee.last_name} ({self.permissions.count()})'
+
+

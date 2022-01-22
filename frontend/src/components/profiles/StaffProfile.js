@@ -43,8 +43,6 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
   );
   const [interval, setInterval] = useState([]);
 
-  let siteAdmin = useSelector((state) => state.employees.site_admin);
-
   const [currentEmployee, setCurrentEmployee] = useState(false);
 
   let employee_id = parseInt(id_param) || user.id;
@@ -97,14 +95,6 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
       dispatch(getUserLeave(employee.id));
     }
   }, [employee]);
-
-  // if(siteAdmin && !employees.some(item => item.id == employee_id)) {
-  //   return <Redirect to="" />;
-  // }
-
-  if (!siteAdmin && id_param) {
-    return <Redirect to="" />;
-  }
 
   let startRange = startOfWeek(new Date(), {
     weekStartsOn: 1,

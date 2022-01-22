@@ -1,9 +1,9 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock, PermissionType
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
                           DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
                           ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer, TimeClockSerializer)
+                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer, TimeClockSerializer, PermissionTypeSerializer)
 from datetime import date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -344,3 +344,7 @@ class ForecastViewSet(viewsets.ModelViewSet):
 class SiteSettingsViewSet(viewsets.ModelViewSet):
     serializer_class = SiteSettingsSerializer
     queryset = SiteSettings.objects.all()
+
+class PermissionTypeViewSet(viewsets.ModelViewSet):
+    serializer_class = PermissionTypeSerializer
+    queryset = PermissionType.objects.all()
