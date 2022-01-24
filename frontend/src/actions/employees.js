@@ -162,11 +162,31 @@ export const getSites = () => (dispatch, getState) => {
   let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
   axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
+    let perm_list = getState().permissions.permission_types;
+
+    const current_user = getState().auth.user;
+
+    if (!current_user.business) {
+      perm_list = [];
+      const current_employee = current_user.employee.find(
+        (item) => item.business.id == res.data[0].business.id
+      );
+      if (current_employee) {
+        perm_list = current_employee.permissions;
+      }
+    }
+
+    dispatch({
+      type: SET_ACTIVE_PERMISSIONS,
+      payload: perm_list.map((item) => item.code_name),
+    });
+
     dispatch({
       type: GET_SITES,
       payload: res.data,
       user: user,
     });
+
     let business = res.data[0].business;
     dispatch({
       type: SET_BUSINESS,
@@ -289,25 +309,6 @@ export const getEmployees =
           type: GET_EMPLOYEES,
           payload: res.data,
         });
-
-        const perm_list = getState().permissions.permission_types;
-
-        const current_user = getState().auth.user;
-
-        if (!current_user.business) {
-          perm_list = [];
-          const current_employee = getState().employees.employees.find(
-            (item) => item.user == current_user.id
-          );
-          if (current_employee) {
-            perm_list = current_employee.permissions;
-          }
-        }
-
-        dispatch({
-          type: SET_ACTIVE_PERMISSIONS,
-          payload: perm_list,
-        });
       })
       .catch((err) => console.log(err.response));
   };
@@ -351,15 +352,7 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
     query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
   }
   axios
-    .put(
-      `/api/employees/${update}/?${query}${
-        employee.hasOwnProperty("permissions")
-          ? `&permissions=${employee.permissions}`
-          : ""
-      }`,
-      employee,
-      tokenConfig(getState)
-    )
+    .put(`/api/employees/${update}/?${query}`, employee, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_EMPLOYEE,

@@ -16,19 +16,14 @@ import {
   startOfWeek,
 } from "date-fns";
 import Loading from "../common/Loading";
-import Employee from "./Employee";
-import NoShift from "./NoShift";
-import Shift from "./Shift";
 import Title from "../common/Title";
 import FinancialBar from "./FinancialBar";
 import RotaActions from "./RotaActions";
-import ShiftModal from "./ShiftModal";
-import RotaPositionList from "./RotaPositionList";
-import RotaEmployeeShifts from "./RotaEmployeeShifts";
 import RotaEmployees from "./RotaEmployees";
 import RotaDepartmentList from "./RotaDepartmentList";
+import ShiftModal from "./ShiftModal";
 
-const Rota = ({ modalProps }) => {
+const Rota = () => {
   const dispatch = useDispatch();
 
   let date = useSelector((state) => state.shifts.date);
@@ -110,20 +105,8 @@ const Rota = ({ modalProps }) => {
   return (
     <div>
       {permissions.includes("manage_shifts") && (
-        <FinancialBar
-          {...modalProps}
-          dates={result}
-          financialMode={financialMode}
-        />
+        <FinancialBar dates={result} financialMode={financialMode} />
       )}
-
-      <ShiftModal
-        open={open}
-        setOpen={setOpen}
-        editShift={editShift}
-        shiftFormInfo={shiftFormInfo}
-        editShift={editShift}
-      />
 
       <div className="banner">
         <div className="wrapper--md flex-container--between-start">
@@ -138,6 +121,13 @@ const Rota = ({ modalProps }) => {
         financialMode={financialMode}
         setFinancialMode={setFinancialMode}
         updateShifts={updateShifts}
+      />
+      <ShiftModal
+        open={open}
+        setOpen={setOpen}
+        editShift={editShift}
+        shiftFormInfo={shiftFormInfo}
+        editShift={editShift}
       />
       <div>
         {isLoading || loading.employees ? (

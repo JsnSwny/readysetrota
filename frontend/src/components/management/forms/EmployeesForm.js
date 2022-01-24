@@ -125,8 +125,6 @@ const EmployeesForm = () => {
         : "",
     };
 
-    console.log(employee);
-
     if (formType == "edit") {
       dispatch(updateEmployee(currentEmployee.id, employee));
       // toast.success("Employee updated!");

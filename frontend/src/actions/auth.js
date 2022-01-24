@@ -35,7 +35,6 @@ export const loadUser = () => (dispatch, getState) => {
       dispatch({
         type: USER_LOADED,
         payload: res.data,
-        department: getState().employees.current_department,
       });
     })
     .catch((err) => {

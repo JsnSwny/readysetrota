@@ -18,7 +18,7 @@ const Shift = (props) => {
     setEditShift,
   } = props;
   const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
 
   return (
@@ -32,7 +32,7 @@ const Shift = (props) => {
               : ""
           } ${result <= addDays(new Date(), -1) ? "date-before" : ""} `}
       >
-        {permissions.includes("manage_shifts") && financialMode == "predicted" && (
+        {permissions.includes("create_shifts") && financialMode == "predicted" && (
           <i
             class="fas fa-plus fa-plus--white"
             onClick={() => {
@@ -48,13 +48,13 @@ const Shift = (props) => {
 
         {shifts.map((shift) => (
           <Fragment key={shift.id}>
-            {!permissions.includes("manage_shifts") &&
+            {!permissions.includes("create_shifts") &&
             shift.stage != "Published" ? (
               ""
             ) : (
               <div
                 onClick={() => {
-                  if (permissions.includes("manage_shifts")) {
+                  if (permissions.includes("create_shifts")) {
                     setOpen(true);
                     setEditShift(shift);
                     setShiftFormInfo({
@@ -65,7 +65,7 @@ const Shift = (props) => {
                   }
                 }}
                 className={`shift__wrapper ${
-                  permissions.includes("manage_shifts") ? "edit" : ""
+                  permissions.includes("create_shifts") ? "edit" : ""
                 }`}
               >
                 <div className="flex-container--align-center">

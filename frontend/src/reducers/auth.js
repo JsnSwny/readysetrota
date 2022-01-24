@@ -46,11 +46,6 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
-        business:
-          action.payload.business != null ||
-          action.payload.department_admin.some(
-            (item) => item.id == parseInt(action.department)
-          ),
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:

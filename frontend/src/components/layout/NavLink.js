@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 const NavLink = ({ title, link, alignRight, perms }) => {
   const location = useLocation().pathname;
   let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   if (perms && !permissions.some((item) => perms.includes(item))) {
     return false;

@@ -3,6 +3,7 @@ from .api import (ShiftViewSet, EmployeeViewSet, PositionViewSet,
 DepartmentViewSet, BusinessViewSet, AvailabilityViewSet, 
 ShiftListViewSet, EmployeeListViewSet, SiteViewSet, AdminEmployeeListViewSet,
 BasicPositionViewSet, ForecastViewSet, SiteSettingsViewSet, LeaveViewSet, TimeClockViewSet, PermissionTypeViewSet)
+from .views import GetReportData, GetStats
 from .views import CheckUUID
 from django.urls import path, include
 
@@ -31,9 +32,13 @@ router.register('forecast', ForecastViewSet, 'forecast')
 router.register('sitesettings', SiteSettingsViewSet, 'sitesettings')
 router.register('permission-types', PermissionTypeViewSet, 'permission-types')
 
+# router.register('report', GetReportData, 'report')
+
 
 
 urlpatterns = [
+    path('stats/', GetStats.as_view(), name='stats'),
+    path('report/',GetReportData.as_view(),name='report'), 
     path('', include(router.urls)),
     
 ]

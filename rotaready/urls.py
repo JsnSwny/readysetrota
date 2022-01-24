@@ -19,9 +19,9 @@ urlpatterns = [
     path('cancel/', Cancel.as_view(), name='cancel'),
     path('sendmessage/', sendMessage.as_view(), name='sendMessage'),
     path('webhook/', webhook, name='webhook'),
-    path('stats/', GetStats.as_view(), name='stats'),
+    # path('stats/', GetStats.as_view(), name='stats'),
     path('timeclock/', GetTimeclock.as_view(), name='timeclock'),
-    path('api-view/report/', GetReportData.as_view(), name='report'),
+    # path('api-view/report/', GetReportData.as_view(), name='report'),
 ]
 
 if settings.DEBUG:

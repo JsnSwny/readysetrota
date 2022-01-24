@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -473,9 +474,6 @@ def costAndHours(date, based_on):
 
     total_cost = Decimal(0)
     total_hours = 0
-
-    print(based_on)
-
     if(based_on == "predicted"):
         shifts = Shift.objects.filter(stage="Published", date=date).values('employee', 'start_time', 'end_time', 'break_length')
         
@@ -521,6 +519,8 @@ from collections import defaultdict
 
 class GetReportData(APIView):
 
+    permission_classes = (permissions.AllowAny,)
+
     def daterange(self, start_date, end_date):
         for n in range(int((end_date - start_date).days)):
             yield end_date - timedelta(n)
@@ -533,8 +533,6 @@ class GetReportData(APIView):
         site_id = request.query_params.get('site_id')
 
         based_on = request.query_params.get('based_on')
-        print(based_on)
-
         total_cost = []
         total_hours = []
         forecast_dif_obj = {}

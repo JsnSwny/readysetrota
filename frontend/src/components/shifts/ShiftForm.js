@@ -41,10 +41,6 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(shiftFormInfo);
-
-    console.log(startTime);
-
     const shiftObj = {
       employee_id: shiftFormInfo.employee.id,
       start_time: startTime.value,
@@ -56,8 +52,6 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
       position_id: [],
       department_id: shiftFormInfo.shiftDepartment,
     };
-
-    console.log(shiftObj);
 
     editShift
       ? dispatch(updateShift(editShift.id, shiftObj))

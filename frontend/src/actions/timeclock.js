@@ -57,11 +57,9 @@ export const getTimeclocks = (date) => (dispatch, getState) => {
 };
 
 export const updateTimeclock = (id, obj) => (dispatch, getState) => {
-  console.log("UPDATING TIMECLOCK");
   axios
     .put(`/api/timeclocks/${id}/`, obj, tokenConfig(getState))
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: UPDATE_TIMECLOCK,
         payload: res.data,

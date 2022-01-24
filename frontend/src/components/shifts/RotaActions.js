@@ -13,7 +13,7 @@ const RotaActions = ({
 }) => {
   const dispatch = useDispatch();
   const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   const user = useSelector((state) => state.auth.user);
   const shifts = useSelector((state) => state.shifts.shifts);
@@ -25,12 +25,15 @@ const RotaActions = ({
   const business = useSelector((state) => state.employees.business);
   const current = useSelector((state) => state.employees.current);
 
+  console.log(permissions);
+  console.log("test");
+
   const [publishDropdown, setPublishDropdown] = useState(false);
   return (
     <div className="rotaFunctions flex-container--between wrapper--md">
       <div className="rotaFunctions__wrapper">
         <div className="rotaFunctions__button-list">
-          {permissions.includes("manage_shifts") && (
+          {permissions.includes("publish_shifts") && (
             <div className="dropdown">
               <div className="dropdown__wrapper">
                 <div

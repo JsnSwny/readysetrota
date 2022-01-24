@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business, Position, Site, SiteSettings
+from rota_app.models import UserProfile, Employee, Department, Business, Position, Site, SiteSettings, PermissionType
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
@@ -53,16 +53,22 @@ class DepartmentSerializer(serializers.ModelSerializer):
         model = Department
         fields = ('id', 'name',)
 
+class PermissionTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermissionType
+        fields = '__all__'
+
 
 class EmployeeSerializer(serializers.ModelSerializer):
     position = BasicPositionSerializer(read_only=True, many=True)
     business = BusinessSerializer(read_only=True)
     default_availability = serializers.JSONField()
+    permissions = PermissionTypeSerializer(read_only=True, many=True)
 
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'business', 'default_availability', 'business_id', 'pin',)
+                  'position', 'permissions', 'business', 'default_availability', 'business_id', 'pin',)
 
         # User Serializer
 
@@ -70,7 +76,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     business = BusinessSerializer()
     employee = EmployeeSerializer(required=False, read_only=True, many=True)
-    
+
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'employee',

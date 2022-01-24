@@ -27,7 +27,7 @@ import StatsItem from "./dashboard/StatsItem";
 const StaffProfile = ({ modalProps, setDashboardView }) => {
   const dispatch = useDispatch();
 
-  const { setOpen, setType, setExtra } = modalProps;
+  // const { setOpen, setType, setExtra } = modalProps;
   let user = useSelector((state) => state.auth.user);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 7));
@@ -39,7 +39,7 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
   let leave = useSelector((state) => state.availability.leave);
   let stats = useSelector((state) => state.stats.stats);
   let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   const [interval, setInterval] = useState([]);
 
@@ -155,16 +155,14 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
             />
           </h1>
         </div>
-        {permissions &&
-          permissions.includes("manage_shifts") &&
-          permissions.includes("manage_wages") && (
-            <p
-              className="banner__link"
-              onClick={() => setDashboardView("business")}
-            >
-              View Site Dashboard
-            </p>
-          )}
+        {permissions && permissions.includes("view_report") && (
+          <p
+            className="banner__link"
+            onClick={() => setDashboardView("business")}
+          >
+            View Site Dashboard
+          </p>
+        )}
       </div>
 
       <div className="dashboard wrapper--md">
@@ -263,11 +261,11 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
             <div className="flex-container--between">
               <h3 className="title-sm title--margin-top">Requests</h3>
               <button
-                onClick={() => {
-                  setOpen(true);
-                  setType("holiday");
-                  setExtra({ employee: employee });
-                }}
+                // onClick={() => {
+                //   setOpen(true);
+                //   setType("holiday");
+                //   setExtra({ employee: employee });
+                // }}
                 class="dashboardHolidays__request"
               >
                 Make Request

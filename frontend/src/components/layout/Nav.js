@@ -12,9 +12,6 @@ const Nav = () => {
   let user = useSelector((state) => state.auth.user);
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
-  const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
-  );
 
   const dispatch = useDispatch();
   return (
@@ -32,6 +29,7 @@ const Nav = () => {
                 <ul className="nav__list">
                   <NavLink title="Dashboard" link="" />
                   <NavLink title="Rota" link="rota" />
+                  <NavLink title="Reports" link="reports" />
                   <NavLink
                     title="Management"
                     link="departments"

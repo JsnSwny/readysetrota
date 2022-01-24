@@ -36,10 +36,6 @@ class BusinessFilter(django_filters.FilterSet):
 
 
 class BusinessViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = BusinessSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = BusinessFilter
@@ -49,10 +45,6 @@ class BusinessViewSet(viewsets.ModelViewSet):
 
 
 class ShiftListViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = ShiftListSerializer
     queryset = Shift.objects.all()
 
@@ -69,10 +61,6 @@ class TimeClockFilter(django_filters.FilterSet):
         fields = ['date', 'department', 'department__site']
 
 class TimeClockViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = TimeClockSerializer
     queryset = TimeClock.objects.all()
 
@@ -83,10 +71,6 @@ class TimeClockViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date', 'start_time')
 
 class ShiftViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = ShiftSerializer
     queryset = Shift.objects.all()
 
@@ -114,10 +98,6 @@ class EmployeeFilter(django_filters.FilterSet):
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = EmployeeSerializer
 
     queryset = Employee.objects.all()
@@ -137,10 +117,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
 
 class EmployeeListViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = EmployeeListSerializer
 
     queryset = Employee.objects.all()
@@ -179,9 +155,6 @@ def clearEmployees(position):
 
 
 class PositionViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = PositionSerializer
 
     def perform_create(self, serializer):
@@ -209,9 +182,6 @@ class DepartmentFilter(django_filters.FilterSet):
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = DepartmentSerializer
     queryset = Department.objects.all()
     filter_backends = (DjangoFilterBackend, OrderingFilter)
@@ -231,10 +201,8 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
         departments = Department.objects.filter(
             pos_department__position__user=self.request.user)
-        for i in self.request.user.site_admin.all():
-            departments = departments | Department.objects.filter(site=i)
 
-        return departments.distinct()
+        return departments
 
     def perform_create(self, serializer):
         business = int(self.request.query_params.get('business'))
@@ -255,10 +223,6 @@ class AvailabilityFilter(django_filters.FilterSet):
 
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
     serializer_class = AvailabilitySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = AvailabilityFilter
@@ -277,10 +241,6 @@ class LeaveFilter(django_filters.FilterSet):
 
 
 class LeaveViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
     serializer_class = LeaveSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = LeaveFilter
@@ -296,19 +256,14 @@ class SiteFilter(django_filters.FilterSet):
 
 
 class SiteViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
             business = self.request.user.business
             return Site.objects.filter(business=business)
         sites = Site.objects.filter(
             department_site__pos_department__position__user=self.request.user)
-        sites = sites | self.request.user.site_admin.all()
 
-        return sites.distinct()
+        return sites
 
     def destroy(self, request, *args, **kwargs):
         departments = Department.objects.filter(site=self.get_object().id)
@@ -331,9 +286,6 @@ class ForecastFilter(django_filters.FilterSet):
 
 
 class ForecastViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = ForecastSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = ForecastFilter
@@ -346,5 +298,6 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
     queryset = SiteSettings.objects.all()
 
 class PermissionTypeViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = PermissionTypeSerializer
     queryset = PermissionType.objects.all()

@@ -11,7 +11,6 @@ const PrivateRoute = ({
   component: Component,
   modalProps,
   confirmProps,
-  admin,
   perms,
   title,
   ...rest
@@ -22,13 +21,10 @@ const PrivateRoute = ({
   let sites = useSelector((state) => state.employees.sites);
   let loading = useSelector((state) => state.loading);
   let business = useSelector((state) => state.employees.business);
-  let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+  let employees = useSelector((state) => state.employees.employees);
+  const permissions = useSelector(
+    (state) => state.permissions.active_permissions
   );
-  let hasPerm = true;
-  if (perms) {
-    hasPerm = user && permissions.some((item) => perms.includes(item));
-  }
 
   useEffect(() => {
     if (auth.user) {
@@ -58,7 +54,7 @@ const PrivateRoute = ({
           return false;
         } else if (!auth.isAuthenticated) {
           if (url == "/") {
-            return <Landing {...modalProps} />;
+            return <Landing />;
           } else {
             if (url.includes("/join")) {
               return (
@@ -81,7 +77,7 @@ const PrivateRoute = ({
           }
         } else {
           if (perms) {
-            if (!hasPerm) {
+            if (!permissions.some((item) => perms.includes(item))) {
               return (
                 <Redirect
                   to={{

@@ -7,8 +7,6 @@ const Permissions = ({ permissions, setPermissions }) => {
     (state) => state.permissions.permission_types
   );
 
-  console.log(permissions);
-
   return (
     <div>
       <table className="listing">

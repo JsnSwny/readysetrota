@@ -16,7 +16,7 @@ const NoShift = (props) => {
   } = props;
   const date = format(result, "yyyy-MM-dd");
   const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   let leave = useSelector((state) => state.availability.leave);
   let showAdd = true;
@@ -54,7 +54,7 @@ const NoShift = (props) => {
     >
       {!isHoliday &&
         showAdd &&
-        permissions.includes("manage_shifts") &&
+        permissions.includes("create_shifts") &&
         financialMode == "predicted" && (
           <i
             class="fas fa-plus"

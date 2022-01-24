@@ -5,6 +5,7 @@ from guardian.admin import GuardedModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
 
+
 class SiteAdmin(GuardedModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)

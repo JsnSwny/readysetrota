@@ -23,7 +23,6 @@ const Employees = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
-    console.log(employees);
     if (employees.length > 0) {
       setFilteredEmployees(employees);
     }

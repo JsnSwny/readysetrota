@@ -23,7 +23,6 @@ const DateBubblePicker = ({ currentDate, setCurrentDate, maxDate }) => {
     if (maxDate) {
       range = range.filter((item) => item <= maxDate);
     }
-    console.log("RANGE", range);
     setDateRange(range);
   }, [currentDate]);
 

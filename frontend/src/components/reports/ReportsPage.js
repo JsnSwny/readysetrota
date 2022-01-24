@@ -71,7 +71,6 @@ const ReportsPage = () => {
             "
           />
         </div>
-        {console.log(basedOn)}
         <div className="list-banner__right">
           <Select
             className="react-select-container"
@@ -85,12 +84,12 @@ const ReportsPage = () => {
             placeholder={"Select which values to use"}
           />
           <a
-            href={`/api-view/report/?site_id=${
-              current.site.id
-            }&start_date=${format(startDate, "dd/MM/yyyy")}&end_date=${format(
-              endDate,
+            href={`/report/?site_id=${current.site.id}&start_date=${format(
+              startDate,
               "dd/MM/yyyy"
-            )}&based_on=${basedOn.value}&exportData=true`}
+            )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${
+              basedOn.value
+            }&exportData=true`}
             className="btn-3 btn-3--export"
             target="_blank"
           >

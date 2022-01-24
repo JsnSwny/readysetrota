@@ -28,7 +28,6 @@ import PrivacyPolicy from "./landing/PrivacyPolicy";
 
 import { ToastContainer } from "react-toastify";
 import TermsAndConditions from "./landing/TermsAndConditions";
-import CreateShift from "./modals/CreateShift";
 
 import AdminPanel from "./profiles/dashboard/AdminPanel";
 import Checkout from "./accounts/Checkout";
@@ -52,30 +51,12 @@ import ReportsPage from "./reports/ReportsPage";
 const Main = () => {
   const dispatch = useDispatch();
 
-  // Use state
-  const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
-  const [forecastDate, setForecastDate] = useState(false);
-  const [type, setType] = useState("");
-  const [shiftInfo, setShiftInfo] = useState({});
-  const [holidayEmployee, setHolidayEmployee] = useState({});
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1000);
-  const [extra, setExtra] = useState({});
-
   // Selectors
   let departments = useSelector((state) => state.employees.departments);
   let current = useSelector((state) => state.employees.current);
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites);
   let auth = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
 
   // Use effect
   useEffect(() => {
@@ -119,77 +100,28 @@ const Main = () => {
     dispatch(getPermissionTypes());
   }, []);
 
-  // Props
-  const modalProps = {
-    setOpen,
-    setUpdate,
-    setType,
-    setShiftInfo,
-    setForecastDate,
-    setHolidayEmployee,
-    setExtra,
-  };
-
   return (
     <Router>
       <ScrollToTop />
       <ToastContainer position="bottom-center" autoClose={2500} />
-      <CreateShift
-        open={open}
-        type={type}
-        onConfirm={() => {
-          setOpen(false);
-        }}
-        onClose={() => {
-          setOpen(false);
-          store.dispatch(resetErrors());
-        }}
-        update={update}
-        sidebarOpen={sidebarOpen}
-        {...shiftInfo}
-        forecastDate={forecastDate ? format(forecastDate, "yyyy-MM-dd") : false}
-        holidayEmployee={holidayEmployee}
-        extra={extra}
-      />
       <Nav />
       <div className={`App`}>
         <Switch>
-          <PrivateRoute
-            path="/"
-            exact
-            component={Home}
-            user_only_pass={true}
-            modalProps={modalProps}
-          />
-          <Route
-            path="/beta"
-            render={(props) => <Beta {...props} {...modalProps} />}
-          />
-          <Route
-            path="/landing"
-            render={(props) => <Landing {...props} {...modalProps} />}
-          />
+          <PrivateRoute path="/" exact component={Home} user_only_pass={true} />
+          <Route path="/beta" render={(props) => <Beta {...props} />} />
+          <Route path="/landing" render={(props) => <Landing {...props} />} />
+
+          <PrivateRoute path="/rota" exact component={Rota} title="Rota" />
 
           <PrivateRoute
-            path="/rota"
-            exact
-            component={Rota}
-            modalProps={modalProps}
-            title="Rota"
-          />
-
-          <PrivateRoute
-            admin={true}
             perms={["manage_availabilities"]}
             path="/availability"
             exact
             component={Availability}
-            modalProps={modalProps}
             title="Availability"
           />
 
           <PrivateRoute
-            admin={true}
             perms={["manage_departments"]}
             path="/departments"
             exact
@@ -198,7 +130,6 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
             perms={["manage_positions"]}
             path="/positions"
             exact
@@ -207,7 +138,6 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
             perms={["manage_employees"]}
             path="/employees"
             exact
@@ -216,12 +146,7 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
-            perms={[
-              "manage_departments",
-              "manage_positions",
-              "manage_employees",
-            ]}
+            perms={["manage_employees"]}
             path="/employees/:formType/:employeeId?"
             exact
             component={EmployeesForm}
@@ -229,8 +154,7 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
-            perms={["manage_shifts"]}
+            perms={["manage_timeclock"]}
             path="/timesheet"
             exact
             component={TimeclockPage}
@@ -238,8 +162,7 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
-            perms={["manage_shifts"]}
+            perms={["manage_forecast"]}
             path="/forecasting"
             exact
             component={ForecastPage}
@@ -247,19 +170,14 @@ const Main = () => {
           />
 
           <PrivateRoute
-            admin={true}
+            perms={["view_report"]}
             path="/reports"
             exact
             component={ReportsPage}
             title="Reports"
           />
 
-          <PrivateRoute
-            admin={true}
-            path="/admin-panel"
-            exact
-            component={AdminPanel}
-          />
+          <PrivateRoute path="/admin-panel" exact component={AdminPanel} />
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
           <Route path="/privacy" component={PrivacyPolicy} />
