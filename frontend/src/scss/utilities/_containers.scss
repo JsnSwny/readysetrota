@@ -98,6 +98,10 @@
     justify-content: space-between;
     align-items: flex-end;
   }
+  &--end {
+    @extend .flex-container;
+    justify-content: flex-end;
+  }
   &--wrap {
     @extend .flex-container;
     flex-wrap: wrap;

@@ -1,4 +1,4 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock, PermissionType
+from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock, PermissionType, Wage
 from rest_framework import viewsets, permissions
 from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
                           DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
@@ -301,3 +301,6 @@ class PermissionTypeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = PermissionTypeSerializer
     queryset = PermissionType.objects.all()
+
+class WageViewSet(viewsets.ModelViewSet):
+    queryset = Wage.objects.all()

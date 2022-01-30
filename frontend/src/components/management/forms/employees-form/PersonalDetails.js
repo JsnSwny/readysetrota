@@ -33,7 +33,7 @@ const PersonalDetails = ({
           ></input>
         </div>
       </div>
-      <div className="flex-container--between">
+      {/* <div className="flex-container--between">
         <div className="form__control--half">
           <label className="form-block__label">Email</label>
           <input
@@ -44,7 +44,7 @@ const PersonalDetails = ({
             value={email}
           ></input>
         </div>
-      </div>
+      </div> */}
     </Fragment>
   );
 };

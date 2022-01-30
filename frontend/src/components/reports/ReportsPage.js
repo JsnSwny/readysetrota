@@ -125,8 +125,8 @@ const ReportsPage = () => {
             <span>0</span>
           )}
           <ReportStatItem
-            data={report.map((item) => item.total_shifts)}
-            range={range}
+            data={[...report].reverse().map((item) => item.total_shifts)}
+            range={[...range].reverse()}
             color="rgb(255,211,0)"
           />
         </li>
@@ -161,8 +161,10 @@ const ReportsPage = () => {
             <span>£0</span>
           )}
           <ReportStatItem
-            data={report.map((item) => parseInt(item.total_cost))}
-            range={range}
+            data={[...report]
+              .reverse()
+              .map((item) => parseInt(item.total_cost))}
+            range={[...range].reverse()}
             color="rgb(34,198,240)"
           />
         </li>
@@ -194,8 +196,8 @@ const ReportsPage = () => {
             <span>£0</span>
           )}
           <ReportStatItem
-            data={report.map((item) => parseInt(item.revenue))}
-            range={range}
+            data={[...report].reverse().map((item) => parseInt(item.revenue))}
+            range={[...range].reverse()}
             color="rgb(91,208,117)"
           />
         </li>
@@ -235,8 +237,8 @@ const ReportsPage = () => {
           )}
 
           <ReportStatItem
-            data={report.map((item) => item.labour_percentage)}
-            range={range}
+            data={[...report].map((item) => item.labour_percentage)}
+            range={[...range].reverse()}
             color="rgb(253,128,158)"
           />
         </li>

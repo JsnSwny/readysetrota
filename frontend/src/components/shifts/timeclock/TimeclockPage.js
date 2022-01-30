@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { startOfToday, format } from "date-fns";
 import DateBubblePicker from "../../common/DateBubblePicker";
 import TimeclockModal from "./TimeclockModal";
+import { getShifts } from "../../../actions/shifts";
+import TimeclockList from "./TimeclockList";
 
 const TimeclockPage = () => {
   const dispatch = useDispatch();
@@ -32,6 +34,7 @@ const TimeclockPage = () => {
 
   useEffect(() => {
     dispatch(getTimeclocks(currentDate));
+    dispatch(getShifts(currentDate, currentDate));
   }, [currentDate]);
 
   useEffect(() => {
@@ -140,85 +143,15 @@ const TimeclockPage = () => {
           </tr>
         </thead>
         <tbody>
-          {newTimeclocks.map((item, idx) => {
-            return (
-              <tr className="listing__row listing-timesheet">
-                <td>
-                  <Select
-                    className="react-select-container"
-                    classNamePrefix="react-select-table"
-                    onChange={(e) => {
-                      handleChange(idx, "employee", e.value);
-                    }}
-                    options={employeeSelectList}
-                    autoFocus
-                    value={employeeSelectList.filter((e) => {
-                      return e.value.id == item.employee?.id;
-                    })}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input--table"
-                    type="text"
-                    value={item.clock_in}
-                    onChange={(e) => {
-                      handleChange(idx, "clock_in", e.target.value);
-                    }}
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitTimeclock(item, idx)
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input--table"
-                    type="number"
-                    value={item.break_length}
-                    onChange={(e) => {
-                      handleChange(idx, "break_length", e.target.value);
-                    }}
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitTimeclock(item, idx)
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input--table"
-                    type="text"
-                    value={item.clock_out}
-                    onChange={(e) => {
-                      handleChange(idx, "clock_out", e.target.value);
-                    }}
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitTimeclock(item, idx)
-                    }
-                  />
-                </td>
-                <td className="right">
-                  <div className="action-sm">
-                    <i
-                      className={`fas fa-check listing-timesheet__save ${
-                        timeclockIsAltered(item) && "show"
-                      }`}
-                      onClick={() => {
-                        submitTimeclock(item, idx);
-                      }}
-                    ></i>
-
-                    <i
-                      class="fas fa-trash"
-                      onClick={() => {
-                        setSelectedTimeclock(item);
-                        setConfirmOpen(true);
-                      }}
-                    ></i>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+          <TimeclockList
+            handleChange={handleChange}
+            employeeSelectList={employeeSelectList}
+            submitTimeclock={submitTimeclock}
+            timeclockIsAltered={timeclockIsAltered}
+            setSelectedTimeclock={setSelectedTimeclock}
+            setConfirmOpen={setConfirmOpen}
+            items={newTimeclocks}
+          />
         </tbody>
       </table>
     </div>

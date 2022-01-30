@@ -345,12 +345,12 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
 export const updateEmployee = (update, employee) => (dispatch, getState) => {
   let current = getState().employees.current;
   let query = "";
-  if (employee.wage_type) {
-    query += `&wage_type=${employee.wage_type}&wage=${employee.wage}`;
-  }
   if (employee.start_working_date) {
     query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
   }
+
+  query += `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
+  console.log(query);
   axios
     .put(`/api/employees/${update}/?${query}`, employee, tokenConfig(getState))
     .then((res) => {
@@ -368,9 +368,11 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
 
+  let wageQuery = `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
+
   axios
     .post(
-      `/api/employees/?business=${current.business.id}&wage_type=${employee.wage_type}&wage=${employee.wage}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}&site=${current.site.id}`,
+      `/api/employees/?business=${current.business.id}${wageQuery}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}&site=${current.site.id}`,
       employee,
       tokenConfig(getState)
     )

@@ -109,6 +109,11 @@
     padding: 0 2rem;
   }
 
+  &__row {
+    &.active {
+      background-color: rgba($green, 0.3);
+    }
+  }
   .profile-picture {
     margin-right: 0.75rem;
   }

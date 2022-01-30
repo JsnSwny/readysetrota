@@ -141,7 +141,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
             start_date__lte=datetime.now()).order_by('-start_date')
         if wage:
             wage = wage[0]
-            return {'type': wage.wage_type, 'amount': wage.wage}
+            return {'id': wage.id, 'type': wage.wage_type, 'amount': wage.wage, 'start_date': wage.start_date}
         return None
         # return (wage.wage_type, wage.wage)
 
@@ -173,10 +173,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
             business=validated_data.get('business'), archived=True).last()
         instance = super().update(instance, validated_data)
 
-        print(instance.permissions)
-        print(instance.position)
-
         user = instance.user
+
+        start_date = self.context['request'].query_params.get(
+            'start_date')
+
+        print(start_date)
 
         wage_type = self.context['request'].query_params.get(
             'wage_type')
@@ -222,31 +224,18 @@ class EmployeeSerializer(serializers.ModelSerializer):
         if wage:
             wage_obj = Wage.objects.filter(
                 employee=instance).order_by('-start_date').first()
-            if not wage_obj or wage_obj.wage_type != wage_type or wage_obj.wage != float(wage):
-                if wage_obj and str(wage_obj.start_date) == datetime.now().strftime('%Y-%m-%d'):
-                    wage_obj.wage = wage
-                    wage_obj.wage_type = wage_type
-                else:
-                    if wage_obj:
-                        wage_obj.end_date = datetime.now()
-                    wage_obj.save()
-                    wage_obj = Wage(employee=instance, wage_type=wage_type,
-                                    wage=wage, start_date=datetime.now())
-                    wage_obj.save()
+            if not wage_obj:
+                wage_obj = Wage(employee=instance, wage_type=wage_type,
+                                wage=wage, start_date=start_date)
+                wage_obj.save()
+            else:
+                start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+                wage_obj.end_date = start_date_obj - timedelta(days=1)
+                wage_obj.save()
 
-                if wage_obj:
-                    wage_obj.save()
-
-            shifts = Shift.objects.filter(
-                date__gte=datetime.now(), employee=instance)
-            if wage_obj and wage_obj.wage_type == "H":
-                for i in shifts:
-                    i.wage = wage_obj.wage
-                    i.save()
-            elif wage_obj and wage_obj.wage_type == "S":
-                for i in shifts:
-                    i.wage = 0
-                    i.save()
+                wage_obj = Wage(employee=instance, wage_type=wage_type,
+                                wage=wage, start_date=start_date)
+                wage_obj.save()
 
         if user:
             site = instance.position.all().first().department.site
@@ -284,6 +273,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
         employee.permissions.set(permissions)
 
         employee.save()
+        
+        start_date = self.context['request'].query_params.get(
+            'start_date')
 
         wage_type = self.context['request'].query_params.get(
             'wage_type')
@@ -292,7 +284,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'wage')
 
         wage_obj = Wage(employee=employee, wage_type=wage_type,
-                        wage=wage, start_date=datetime.now())
+                        wage=wage, start_date=start_date)
         wage_obj.save()
 
         start_working_date = self.context['request'].query_params.get(
@@ -392,7 +384,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
 
         if wage:
             wage = wage[0]
-            return {'type': wage.wage_type, 'amount': wage.wage}
+            return {'id': wage.id, 'type': wage.wage_type, 'amount': wage.wage, 'start_date': wage.start_date}
         return None
 
     def get_current_status(self, instance):
@@ -435,12 +427,10 @@ class TimeClockSerializer(serializers.ModelSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
         queryset=Department.objects.all(), source='department', write_only=True, required=False)
 
-    
-
     class Meta:
         model = TimeClock
         fields = ('id', 'clock_in', 'clock_out', 'break_length',
-                  'employee', 'employee_id', 'length', 'stage', 'department', 'department_id', 'date')
+                  'employee', 'employee_id', 'length', 'stage', 'department', 'department_id', 'date', 'shift',)
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:
@@ -528,14 +518,16 @@ class ShiftListSerializer(serializers.ModelSerializer):
         instance = Shift.objects.create(**validated_data)
         instance.positions.set(position)
 
-        if(timeclock):
-            tc, created = TimeClock.objects.get_or_create(
-                shift=instance, defaults=timeclock)
-            if not created:
-                for attr, value in timeclock.items():
-                    setattr(tc, attr, value)
-            tc.save()
 
+        end_time = datetime.strptime(instance.end_time, '%H:%M').time()
+
+        tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department)
+                
+        print(tc.date)
+
+        tc.save()
+
+        print(tc)
         return instance
 
     def update(self, instance, validated_data):
@@ -585,7 +577,7 @@ class TimeclockShiftSerializer(serializers.ModelSerializer):
     timeclock = TimeClockSerializer(required=False)
     class Meta:
         model = Shift
-        fields = ('id', 'date', 'start_time', 'end_time', 'break_length', 'timeclock')
+        fields = ('id', 'date', 'start_time', 'end_time', 'break_length', 'timeclock',)
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):

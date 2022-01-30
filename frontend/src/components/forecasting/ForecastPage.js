@@ -9,11 +9,8 @@ import {
 } from "../../actions/timeclock";
 import {
   startOfWeek,
-  startOfYear,
   endOfWeek,
-  endOfYear,
   format,
-  eachWeekOfInterval,
   eachDayOfInterval,
   parseISO,
   isAfter,
@@ -103,6 +100,7 @@ const ForecastPage = () => {
         predicted: 0,
         labourGoal: 0,
         actual: 0,
+        shift: null,
       };
     }
     return !(JSON.stringify(obj) === JSON.stringify(originalObj));

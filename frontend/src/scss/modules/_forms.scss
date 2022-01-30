@@ -174,6 +174,7 @@
     -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+    border: 0.5px solid #dee6ee;
     padding: 0 8px;
     min-height: 38px;
     margin-right: 20px;
@@ -361,11 +362,12 @@
 }
 
 .form-bottom-banner {
+  border-top: 0.5px solid #dee6ee;
   position: fixed;
   bottom: 0;
   right: 0;
   left: 300px;
-  padding: 1.5rem 0;
+  padding: 0.5rem 0;
   background-color: white;
   .wrapper--sm {
     display: flex;
@@ -453,6 +455,27 @@
   }
 }
 
+.listing-wage {
+  @extend .listing-timesheet;
+  td,
+  th {
+    padding: 0 1.5rem !important;
+  }
+  td {
+    border-right: 1px solid #ddd;
+
+    &:first-child {
+      width: 15%;
+    }
+    &:not(:first-child):not(:last-child) {
+      width: calc(75% / 3);
+    }
+    &:last-child {
+      width: 10%;
+    }
+  }
+}
+
 .react-select {
   &__control {
     -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2) !important;
@@ -527,5 +550,10 @@
   @extend .shadow;
   padding: 2rem;
   border-radius: 5px;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
+  &--wage {
+    h4 {
+      margin-top: 1rem;
+    }
+  }
 }

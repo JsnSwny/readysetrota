@@ -9,7 +9,7 @@ import {
   updateEmployee,
   getEmployees,
 } from "../../../actions/employees";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, addDays } from "date-fns";
 import Roles from "./employees-form/Roles";
 import { getPositions } from "../../../actions/employees";
 import Wage from "./employees-form/Wage";
@@ -44,6 +44,7 @@ const EmployeesForm = () => {
   const [permissions, setPermissions] = useState([]);
   const [startWorkingDate, setStartWorkingDate] = useState(new Date());
   const [endWorkingDate, setEndWorkingDate] = useState("");
+  const [wageDate, setWageDate] = useState(new Date());
 
   useEffect(() => {
     if (employeeId && employees.length > 0) {
@@ -53,11 +54,12 @@ const EmployeesForm = () => {
       setFirstName(employee.first_name);
       setLastName(employee.last_name);
       setPositionList(employee.position.map((item) => item));
+      if (employee.wage) {
+        setWageDate(addDays(parseISO(employee.wage[0].start_date), 1));
+      }
       setSelectedDepartments([
         ...new Set(employee.position.map((item) => item.department)),
       ]);
-      setWage(employee.current_wage ? employee.current_wage.amount : 0);
-      setWageType(employee.current_wage ? employee.current_wage.type : "N");
       setPermissions(employee.permissions.map((item) => item.id));
 
       setStartWorkingDate(
@@ -89,6 +91,8 @@ const EmployeesForm = () => {
     wageType,
     setWageType,
     currentEmployee,
+    wageDate,
+    setWageDate,
   };
 
   const statusProps = {
@@ -113,8 +117,12 @@ const EmployeesForm = () => {
     const employee = {
       first_name: firstName,
       last_name: lastName,
-      wage: wage,
-      wage_type: wageType,
+      wage: {
+        wage: parseFloat(wage),
+        wage_type: wageType,
+        start_date: format(wageDate, "yyyy-MM-dd"),
+      },
+
       position_id: positionList.map((pos) => pos.id),
       business_id: current.business.id,
       default_availability: availability,
@@ -214,7 +222,7 @@ const EmployeesForm = () => {
               />
             </div>
 
-            <div className="employees-form" ref={wageRef}>
+            <div className="employees-form employees-form--wage" ref={wageRef}>
               <div className="form-block__heading">
                 <h3>Wage</h3>
               </div>
@@ -239,7 +247,7 @@ const EmployeesForm = () => {
             </div>
 
             <div className="form-bottom-banner">
-              <div className="wrapper--sm">
+              <div className="wrapper--xs flex-container--end">
                 <button type="submit" className="btn-3">
                   {formType == "create" ? "Create Employee" : "Save"}
                 </button>
