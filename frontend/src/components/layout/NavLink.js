@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 
-const NavLink = ({ title, link, alignRight, perms }) => {
+const NavLink = ({ title, link, perms, dropdown }) => {
   const location = useLocation().pathname;
   let permissions = useSelector(
     (state) => state.permissions.active_permissions
@@ -12,17 +12,38 @@ const NavLink = ({ title, link, alignRight, perms }) => {
   if (perms && !permissions.some((item) => perms.includes(item))) {
     return false;
   }
-  return (
-    <li
-      className={`nav__item ${alignRight ? "align" : ""} ${
-        link == "" && location == "/"
-          ? "active"
-          : link && location.includes(link)
+
+  const isActive = (sublink) => {
+    if (!sublink) {
+      return link == "" && location == "/"
+        ? "active"
+        : !dropdown
+        ? link && location.includes(link)
           ? "active"
           : ""
-      }`}
-    >
-      <Link to={`/${link}`}>{title}</Link>
+        : location.includes(link) ||
+          dropdown.some((item) => location.includes(item.link))
+        ? "active"
+        : "";
+    } else {
+      return location.includes(sublink) ? "active" : "";
+    }
+  };
+
+  return (
+    <li className={`nav__item ${isActive()}`}>
+      <Link className="nav__item-link" to={`/${link}`}>
+        {title} {dropdown ? <i class="fas fa-angle-down"></i> : ""}
+      </Link>
+      {dropdown && (
+        <ul className="nav__dropdown">
+          {dropdown.map((item) => (
+            <li className={`${isActive(item.link)}`}>
+              <Link to={item.link}>{item.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </li>
   );
 };

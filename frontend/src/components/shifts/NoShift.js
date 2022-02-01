@@ -52,19 +52,16 @@ const NoShift = (props) => {
         showAvailabilities && isHoliday ? "holiday" : ""
       }`}
     >
-      {!isHoliday &&
-        showAdd &&
-        permissions.includes("create_shifts") &&
-        financialMode == "predicted" && (
-          <i
-            class="fas fa-plus"
-            onClick={() => {
-              setEditShift(false);
-              setOpen(true);
-              setShiftFormInfo({ employee, date, shiftDepartment });
-            }}
-          ></i>
-        )}
+      {!isHoliday && showAdd && permissions.includes("create_shifts") && (
+        <i
+          class="fas fa-plus"
+          onClick={() => {
+            setEditShift(false);
+            setOpen(true);
+            setShiftFormInfo({ employee, date, shiftDepartment });
+          }}
+        ></i>
+      )}
       {showAvailabilities && (
         <Fragment>
           <p className={`shift__text`}>

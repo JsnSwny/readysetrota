@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import ConfirmModal from "../../layout/confirm/ConfirmModal";
 import { numberWithCommas } from "../../Utilities";
 import ManagementPage from "../ManagementPage";
+import { copyToClipboard } from "../../../utils/copyToClipboard";
+import { toast } from "react-toastify";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -81,7 +83,29 @@ const Employees = () => {
                   </span>
                   {item.full_name}
                 </td>
-                <td className="highlight">jason@readysetcore.com</td>
+                {item.user ? (
+                  <td>{item.user.email}</td>
+                ) : (
+                  <td>
+                    <p
+                      className="highlight"
+                      onClick={(e) => {
+                        toast.info(
+                          <div>
+                            {`${item.first_name} ${item.last_name}`}
+                            <br /> UUID copied! <br /> <br />{" "}
+                            <small>{item.uuid}</small>
+                          </div>
+                        );
+                        copyToClipboard(
+                          `www.readysetrota.com/join/${item.uuid}/`
+                        );
+                      }}
+                    >
+                      Copy invite link
+                    </p>
+                  </td>
+                )}
                 <td>
                   {item.current_wage &&
                     `£${numberWithCommas(item.current_wage.amount)} per ${

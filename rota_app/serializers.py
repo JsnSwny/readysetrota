@@ -39,20 +39,9 @@ class BusinessSerializer(serializers.ModelSerializer):
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
-    business = BusinessSerializer()
-    number_of_employees = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name',
-                  'business', 'number_of_employees',)
-
-    def get_number_of_employees(self, obj):
-        employees = Employee.objects.filter(
-            position__department=obj.id, status__start_date__lte=date.today(
-            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
-        return len(employees)
-
+        fields = ('id', 'first_name', 'last_name', 'email',)
 
 class BasicDepartmentSerializer(serializers.ModelSerializer):
     business = BusinessSerializer(read_only=True)
@@ -321,11 +310,12 @@ class AdminEmployeeListSerializer(serializers.ModelSerializer):
         queryset=Business.objects.all(), source='business', write_only=True)
     full_name = serializers.SerializerMethodField()
     site_permissions = serializers.SerializerMethodField()
+    user = BasicUserSerializer()
 
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived',)
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'site_permissions', 'archived', 'user',)
 
     def get_site_permissions(self, obj):
         if(obj.user != None):
@@ -364,6 +354,8 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
 
+    user = BasicUserSerializer()
+
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
 
@@ -397,7 +389,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin', 'created_at')
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'site_permissions', 'archived', 'pin', 'created_at', 'user',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):

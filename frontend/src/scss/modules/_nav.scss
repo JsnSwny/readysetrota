@@ -1,7 +1,8 @@
 .nav {
   background-color: white;
   @extend .shadow;
-  height: 60px;
+  border: none !important;
+  height: 45px;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,10 +12,8 @@
     height: 100%;
   }
   &__list {
-    display: flex;
-    justify-content: center;
     height: 100%;
-    width: 100%;
+    display: flex;
     list-style-type: none;
   }
   li {
@@ -26,31 +25,15 @@
     &.align {
       align-items: flex-end;
     }
-    i {
-      margin-bottom: 5px;
-    }
-    &.active {
-      color: $pink;
-    }
-
-    a {
-      transition: 0.2s ease color;
-      &:hover {
-        color: $pink;
-      }
-      @include wi-mq(tablet) {
-        font-size: 14px;
-      }
-      @include wi-mq(stamp) {
-        font-size: 12px;
-      }
-    }
   }
   &__section {
-    width: 33.33%;
     height: 100%;
     display: flex;
     align-items: center;
+    &--links {
+      flex: 1;
+      margin-left: 2rem;
+    }
     &:nth-child(1) {
       @include wi-mq(mobile) {
         display: none;
@@ -69,26 +52,18 @@
     cursor: pointer;
     &:hover {
       .nav__profileDropdown {
-        display: block;
+        transform: scale(1);
+      }
+      .fa-angle-down {
+        transform: rotate(180deg);
       }
     }
-    .fa-caret-down {
-      margin-left: 5px;
+    .fa-angle-down {
+      margin-left: 0.5rem;
+      transition: 0.2s ease transform;
     }
     .fa-user {
-      background-color: $blue;
-      color: white;
-      border-radius: 50%;
-      height: 35px;
-      width: 35px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      @include wi-mq(mobile) {
-        height: 30px;
-        width: 30px;
-        font-size: 14px;
-      }
+      font-size: 20px;
     }
   }
   &__profileDropdown {
@@ -104,7 +79,8 @@
     text-align: right;
     cursor: default;
     @extend .shadow;
-    display: none;
+    transition: 0.1s ease transform;
+    transform: scale(0);
     &-link {
       cursor: pointer;
       display: block;
@@ -136,12 +112,78 @@
   }
   &__item {
     font-family: "Signika Negative", sans-serif;
-    margin: 0 20px;
-    @include wi-mq(tablet) {
-      margin: 0 10px;
+    font-size: 14px;
+    letter-spacing: 0.02rem;
+    color: $blue;
+    // width: 125px;
+    font-weight: bold;
+    position: relative;
+    transition: 0.2s ease background-color, 0.2s ease color;
+    &-link {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1.5rem;
+      min-width: 110px;
     }
-    @include wi-mq(mobile) {
-      margin: 0 5px;
+    &.active {
+      color: white;
+      background-color: $pink;
+    }
+    &:hover {
+      &:not(.active) {
+        background-color: rgba($pink, 0.4);
+      }
+      .nav__dropdown {
+        transform: scale(1);
+      }
+      .fa-angle-down {
+        transform: rotate(180deg);
+      }
+    }
+    .fa-angle-down {
+      transition: 0.2s ease transform;
+      margin-left: 0.5rem;
+    }
+  }
+  &__dropdown {
+    transform: scale(0);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    @extend .shadow;
+    border: none;
+    transition: 0.2s ease background-color, 0.2s ease color, 0.1s ease transform;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    li {
+      color: black;
+      cursor: pointer;
+      &:not(:last-child) {
+        border-bottom: 0.5px solid #dee6ee;
+      }
+      &:hover {
+        background-color: rgba($pink, 0.2);
+      }
+      &.active {
+        background-color: $pink;
+        color: white;
+      }
+      &:last-child {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      a {
+        width: 100%;
+        padding: 0.75rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 }

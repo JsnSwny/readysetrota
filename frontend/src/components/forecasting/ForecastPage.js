@@ -62,6 +62,21 @@ const ForecastPage = () => {
     initDateRange();
   }, [currentDate]);
 
+  const isAltered = (obj) => {
+    let originalObj = forecast.find((item) => item.id == obj.id);
+    if (!originalObj) {
+      originalObj = {
+        id: null,
+        date: obj.date,
+        predicted: 0,
+        labourGoal: 0,
+        actual: 0,
+      };
+    }
+
+    return !(JSON.stringify(obj) === JSON.stringify(originalObj));
+  };
+
   useEffect(() => {
     let rangeTemp = [];
     if (dateRange.length == 0) {
@@ -69,6 +84,7 @@ const ForecastPage = () => {
     } else {
       rangeTemp = [...dateRange];
     }
+
     forecast.forEach((item) => {
       let rangeObj = rangeTemp.find((r) => r.date == item.date);
       if (rangeObj) {
@@ -80,7 +96,6 @@ const ForecastPage = () => {
         }
       }
     });
-
     setDateRange(rangeTemp);
   }, [forecast]);
 
@@ -89,21 +104,6 @@ const ForecastPage = () => {
     items[i] = { ...items[i], [property]: value };
 
     setDateRange(items);
-  };
-
-  const isAltered = (obj) => {
-    let originalObj = forecast.find((item) => item.id == obj.id);
-    if (!originalObj) {
-      originalObj = {
-        id: null,
-        date: obj.date,
-        predicted: 0,
-        labourGoal: 0,
-        actual: 0,
-        shift: null,
-      };
-    }
-    return !(JSON.stringify(obj) === JSON.stringify(originalObj));
   };
 
   const submitForecast = (item, idx) => {

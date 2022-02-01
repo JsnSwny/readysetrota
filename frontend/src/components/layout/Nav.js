@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
 import GuestLinks from "./GuestLinks";
@@ -12,12 +12,21 @@ const Nav = () => {
   let user = useSelector((state) => state.auth.user);
   let sites = useSelector((state) => state.employees.sites);
   let current = useSelector((state) => state.employees.current);
+  const location = useLocation().pathname;
+
+  const isActive = (link) => {
+    return link == "" && location == "/"
+      ? "active"
+      : link && location.includes(link)
+      ? "active"
+      : "";
+  };
 
   const dispatch = useDispatch();
   return (
     <Fragment>
       <nav className="nav">
-        <div className="nav__container flex-container--between wrapper--md">
+        <div className="nav__container flex-container wrapper--md">
           <div className="nav__section">
             <Link to="/" className="flex-container--align-center">
               <img className="nav__logo" src="/static/media/logo-3.svg" />
@@ -25,20 +34,40 @@ const Nav = () => {
           </div>
           {isAuthenticated ? (
             <Fragment>
-              <div className="nav__section">
+              <div className="nav__section nav__section--links">
                 <ul className="nav__list">
                   <NavLink title="Dashboard" link="" />
-                  <NavLink title="Rota" link="rota" />
-                  <NavLink title="Reports" link="reports" />
                   <NavLink
-                    title="Management"
+                    title="Rota"
+                    link="rota"
+                    dropdown={[
+                      { name: "Timesheet", link: "/timesheet" },
+                      { name: "Timeclock App", link: "/timeclock" },
+                    ]}
+                  ></NavLink>
+                  <NavLink
+                    title="People"
                     link="departments"
                     perms={[
                       "manage_departments",
                       "manage_positions",
                       "manage_employees",
                     ]}
-                  />
+                    dropdown={[
+                      { name: "Departments", link: "/departments" },
+                      { name: "Positions", link: "/positions" },
+                      { name: "Employees", link: "/employees" },
+                    ]}
+                  ></NavLink>
+                  <NavLink
+                    title="Reporting"
+                    link="reports"
+                    dropdown={[
+                      { name: "Forecasting", link: "/forecasting" },
+                      { name: "Reports", link: "/reports" },
+                    ]}
+                  ></NavLink>
+
                   <NavLink
                     title="Availability"
                     link="availability"
@@ -49,8 +78,8 @@ const Nav = () => {
 
               <div className="nav__section">
                 <div className="nav__profile">
-                  <i class="fas fa-user"></i>
-                  <i class="fas fa-caret-down"></i>
+                  <i class="far fa-user"></i>
+                  <i class="fas fa-angle-down"></i>
                   <div className="nav__profileDropdown-container">
                     <div className="nav__profileDropdown">
                       <div>

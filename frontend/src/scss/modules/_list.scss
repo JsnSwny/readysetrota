@@ -172,7 +172,8 @@
       border-bottom: 1px solid #dddddd;
       background-color: white;
       td {
-        &.highlight {
+        .highlight {
+          cursor: pointer;
           color: $pink;
         }
         &.bold {

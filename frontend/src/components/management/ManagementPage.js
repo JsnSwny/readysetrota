@@ -23,7 +23,7 @@ const ManagementPage = ({ children, currentSection }) => {
   return (
     <div className="wrapper--md">
       <div className="banner">
-        <div className="list-title">
+        {/* <div className="list-title">
           {sections.map((item) => (
             <Link
               to={`/${item.title.toLowerCase()}`}
@@ -32,7 +32,7 @@ const ManagementPage = ({ children, currentSection }) => {
               <i class={item.icon}></i> {item.title}
             </Link>
           ))}
-        </div>
+        </div> */}
         <Title name={currentSection} breakWord={false} />
       </div>
       {children}

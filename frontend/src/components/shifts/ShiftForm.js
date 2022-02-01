@@ -8,7 +8,10 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
-  const [breakLength, setBreakLength] = useState(0);
+  const [breakLength, setBreakLength] = useState({
+    value: 0,
+    label: "No break",
+  });
   const [absence, setAbsence] = useState("None");
   const [absenceInfo, setAbsenceInfo] = useState("");
   let popular_times = useSelector((state) => state.shifts.popular_times);
@@ -17,29 +20,32 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
   );
-  const [breakLengthClock, setBreakLengthClock] = useState(0);
 
   useEffect(() => {
-    setStartTime(
-      hours.find((e) => {
-        return e.value == editShift.start_time;
-      })
-    );
-    setEndTime(
-      hours.find((e) => {
-        return e.value == editShift.end_time;
-      })
-    );
-    setBreakLength(
-      breaks.find((e) => {
-        return e.value == editShift.break_length;
-      })
-    );
-    setInfo(editShift.info);
+    if (editShift) {
+      setStartTime(
+        hours.find((e) => {
+          return e.value == editShift.start_time;
+        })
+      );
+      setEndTime(
+        hours.find((e) => {
+          return e.value == editShift.end_time;
+        })
+      );
+      setBreakLength(
+        breaks.find((e) => {
+          return e.value == editShift.break_length;
+        })
+      );
+      setInfo(editShift.info);
+    }
   }, [editShift]);
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    console.log(breakLength);
 
     const shiftObj = {
       employee_id: shiftFormInfo.employee.id,

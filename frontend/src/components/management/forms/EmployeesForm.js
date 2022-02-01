@@ -38,7 +38,7 @@ const EmployeesForm = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [wage, setWage] = useState(0.0);
-  const [wageType, setWageType] = useState("N");
+  const [wageType, setWageType] = useState("H");
   const [positionList, setPositionList] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [permissions, setPermissions] = useState([]);

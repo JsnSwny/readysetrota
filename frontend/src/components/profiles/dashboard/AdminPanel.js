@@ -86,10 +86,6 @@ const AdminPanel = ({ setDashboardView }) => {
       <div className="dashboard wrapper--md">
         <div className="flex-container--align-center">
           <h2 className="title-sm">Shifts</h2>
-          <Link to="/timeclock" className="btn-3 tooltip-activator">
-            Open Timeclock
-            <div className="tooltip tooltip--sm">This will log you out</div>
-          </Link>
         </div>
 
         <hr class="separator" />
