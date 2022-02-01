@@ -219,7 +219,7 @@ export const addSite = (site) => (dispatch, getState) => {
 
 export const updateSite = (id, site) => (dispatch, getState) => {
   axios
-    .put(`/api/sites/${id}`, site, tokenConfig(getState))
+    .put(`/api/sites/${id}/`, site, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: UPDATE_SITE,
@@ -248,6 +248,7 @@ export const deleteSite = (id) => (dispatch, getState) => {
 export const setSite = (id) => (dispatch, getState) => {
   let isLoading = getState().loading.departments ? true : false;
   let user = getState().auth.user;
+  console.log(isLoading);
   if (isLoading) {
     return false;
   }

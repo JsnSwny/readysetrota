@@ -27,12 +27,16 @@
     padding: 6px 20px;
     border-radius: 5px;
     min-width: 170px;
+    font-size: 14px;
     @extend .shadow;
     &:hover {
       background-color: darken($pink, 10%);
     }
     &--export {
       text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
   &-4 {

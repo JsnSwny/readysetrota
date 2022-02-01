@@ -175,22 +175,8 @@ const FinancialBar = ({
                 </div>
                 <div>
                   <Fragment>
-                    £{getWeeklyCost([date], getCost)} /{" "}
-                    <u
-                      onClick={() => {
-                        setOpen(true);
-                        setType("forecast");
-                        setUpdate(
-                          forecast.find(
-                            (item) => item.date == format(date, "yyyy-MM-dd")
-                          )
-                        );
-                        setExtra({ date, type: financialMode });
-                        setForecastDate(date);
-                      }}
-                    >
-                      £{getWeeklyCost([date], getAmount)}
-                    </u>
+                    £{getWeeklyCost([date], getCost)} / £
+                    {getWeeklyCost([date], getAmount)}
                   </Fragment>
                 </div>
                 <div>

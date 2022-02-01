@@ -514,25 +514,18 @@ class ShiftListSerializer(serializers.ModelSerializer):
         end_time = datetime.strptime(instance.end_time, '%H:%M').time()
 
         tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department)
-                
-        print(tc.date)
 
         tc.save()
 
-        print(tc)
         return instance
 
     def update(self, instance, validated_data):
-        timeclock = validated_data.pop('timeclock', [])
         instance = super().update(instance, validated_data)
-        
-        if(timeclock):
-            tc, created = TimeClock.objects.get_or_create(
-                shift=instance, defaults=timeclock)
-            if not created:
-                for attr, value in timeclock.items():
-                    setattr(tc, attr, value)
-                tc.save()
+
+        end_time = datetime.strptime(instance.end_time, '%H:%M').time()
+
+        TimeClock.objects.filter(shift__id=instance.id).update(date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee)
+
         return instance
 
     class Meta:

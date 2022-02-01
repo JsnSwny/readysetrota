@@ -16,10 +16,10 @@
   }
   &--md {
     @extend .wrapper;
-    max-width: calc(100% - 70px);
+    max-width: calc(100% - 2.5rem);
     padding: 0;
     @include wi-mq(mobile) {
-      max-width: calc(100% - 30px);
+      max-width: calc(100% - 1rem);
     }
   }
   &--lg {

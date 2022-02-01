@@ -47,6 +47,7 @@ import Employees from "./management/tables/Employees";
 import ForecastPage from "./forecasting/ForecastPage";
 import ScrollToTop from "./layout/ScrollToTop";
 import ReportsPage from "./reports/ReportsPage";
+import Sites from "./management/tables/Sites";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -119,6 +120,14 @@ const Main = () => {
             exact
             component={Availability}
             title="Availability"
+          />
+
+          <PrivateRoute
+            perms={["manage_sites"]}
+            path="/sites"
+            exact
+            component={Sites}
+            title="Sites"
           />
 
           <PrivateRoute

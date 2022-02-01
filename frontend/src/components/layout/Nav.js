@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/auth";
@@ -6,6 +6,7 @@ import GuestLinks from "./GuestLinks";
 import { setSite } from "../../actions/employees";
 
 import NavLink from "./NavLink";
+import Select from "react-select";
 
 const Nav = () => {
   let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -21,6 +22,11 @@ const Nav = () => {
       ? "active"
       : "";
   };
+
+  const siteOptions = [...sites].map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
 
   const dispatch = useDispatch();
   return (
@@ -47,13 +53,14 @@ const Nav = () => {
                   ></NavLink>
                   <NavLink
                     title="People"
-                    link="departments"
+                    link="employees"
                     perms={[
                       "manage_departments",
                       "manage_positions",
                       "manage_employees",
                     ]}
                     dropdown={[
+                      { name: "Sites", link: "/sites" },
                       { name: "Departments", link: "/departments" },
                       { name: "Positions", link: "/positions" },
                       { name: "Employees", link: "/employees" },
@@ -77,6 +84,23 @@ const Nav = () => {
               </div>
 
               <div className="nav__section">
+                <div>
+                  <Select
+                    className="react-select-container"
+                    classNamePrefix="nav-select"
+                    value={siteOptions.find(
+                      (item) => item.value == current.site.id
+                    )}
+                    onChange={(e) => {
+                      e.value != current.site.id &&
+                        dispatch(
+                          setSite(sites.find((item) => item.id == e.value))
+                        );
+                    }}
+                    options={siteOptions}
+                    placeholder={"Select a site"}
+                  />
+                </div>
                 <div className="nav__profile">
                   <i class="far fa-user"></i>
                   <i class="fas fa-angle-down"></i>
@@ -88,20 +112,6 @@ const Nav = () => {
                           : `${user.first_name} ${user.last_name}`}
                       </div>
                       <div>{user.email}</div>
-                      <hr className="separator--alt-2"></hr>
-                      {sites.map((item) => (
-                        <div
-                          className={`nav__site ${
-                            current.site.id == item.id ? "active" : ""
-                          }`}
-                          onClick={() =>
-                            current.site.id != item.id &&
-                            dispatch(setSite(item))
-                          }
-                        >
-                          {item.name}
-                        </div>
-                      ))}
                       <hr className="separator--alt-2"></hr>
                       {user.business ? (
                         <Link

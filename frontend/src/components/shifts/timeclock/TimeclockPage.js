@@ -34,7 +34,12 @@ const TimeclockPage = () => {
 
   useEffect(() => {
     dispatch(getTimeclocks(currentDate));
-    dispatch(getShifts(currentDate, currentDate));
+    dispatch(
+      getShifts(
+        format(currentDate, "yyyy-MM-dd"),
+        format(currentDate, "yyyy-MM-dd")
+      )
+    );
   }, [currentDate]);
 
   useEffect(() => {
@@ -47,6 +52,10 @@ const TimeclockPage = () => {
         return item;
       }
     });
+
+    console.log(newTimeclocks);
+    console.log(timeclocks);
+    console.log(temp);
 
     setNewTimeclocks(temp);
   }, [timeclocks]);

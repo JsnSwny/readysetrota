@@ -152,6 +152,12 @@
         padding: 0 2rem;
       }
     }
+    @include wi-mq(tablet) {
+      font-size: 12px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 10px;
+    }
   }
   tr {
     // border-bottom: 1px solid #dddddd;
@@ -297,6 +303,7 @@
   border-bottom: 1px solid $light-gray-2;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: flex-end;
   .flex-container--align-center {
     width: auto;
@@ -307,7 +314,7 @@
   &--report {
     .react-select-container {
       margin-right: 1rem;
-      width: 250px;
+      width: 150px;
     }
   }
 }

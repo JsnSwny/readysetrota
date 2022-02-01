@@ -25,9 +25,7 @@ const Employees = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
-    if (employees.length > 0) {
-      setFilteredEmployees(employees);
-    }
+    setFilteredEmployees(employees);
   }, [employees]);
 
   return (
@@ -66,7 +64,7 @@ const Employees = () => {
             <th>
               Wage <i class="fas fa-sort"></i>
             </th>
-            <th>
+            <th className="hide-mobile">
               Created <i class="fas fa-sort"></i>
             </th>
             <th className="right"></th>
@@ -77,7 +75,7 @@ const Employees = () => {
             filteredEmployees.map((item) => (
               <tr className="listing__row">
                 <td className="bold">
-                  <span className="profile-picture">
+                  <span className="profile-picture hide-tablet">
                     {item.first_name.substr(0, 1)}
                     {item.last_name.substr(0, 1)}
                   </span>
@@ -112,7 +110,9 @@ const Employees = () => {
                       item.current_wage.type == "H" ? "hour" : "annum"
                     }`}{" "}
                 </td>
-                <td>{format(parseISO(item.created_at), "do MMM yyyy")}</td>
+                <td className="hide-mobile">
+                  {format(parseISO(item.created_at), "do MMM yyyy")}
+                </td>
                 <ListAction
                   actions={
                     <ul>

@@ -40,7 +40,7 @@ const ReportsPage = () => {
 
   useEffect(() => {
     dispatch(getReportData(startDate, endDate, basedOn.value));
-  }, [basedOn]);
+  }, [basedOn, current.site]);
 
   return (
     <div className="wrapper--md">
@@ -237,7 +237,7 @@ const ReportsPage = () => {
           )}
 
           <ReportStatItem
-            data={[...report].map((item) => item.labour_percentage)}
+            data={[...report].reverse().map((item) => item.labour_percentage)}
             range={[...range].reverse()}
             color="rgb(253,128,158)"
           />
@@ -247,7 +247,7 @@ const ReportsPage = () => {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Shifts / Hours</th>
+            <th className="hide-mobile">Shifts / Hours</th>
             <th>Labour Cost</th>
             <th>Revenue</th>
             <th>Labour Percentage (% Diff)</th>
@@ -261,7 +261,7 @@ const ReportsPage = () => {
                   <td className="bold">
                     {format(parseISO(item.date), "dd/MM/yyyy")}
                   </td>
-                  <td>
+                  <td className="hide-mobile">
                     {item.total_shifts} / {item.total_hours}hrs
                   </td>
                   <td>£{item.total_cost}</td>

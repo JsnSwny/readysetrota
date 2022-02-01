@@ -321,6 +321,12 @@
     &--current {
       background-color: $pink;
     }
+    @include wi-mq(mobile) {
+      &:first-child,
+      &:last-child {
+        display: none;
+      }
+    }
   }
   &__text {
     &--sm {
@@ -342,9 +348,16 @@
 .date-range-selector {
   .react-datepicker-wrapper {
     width: 200px;
+    @include wi-mq(tablet) {
+      width: 100%;
+    }
   }
   p {
     margin: 0 1rem;
+  }
+  @include wi-mq(tablet) {
+    width: 100% !important;
+    margin-bottom: 1rem;
   }
 }
 
@@ -354,5 +367,17 @@
   }
   &--green {
     color: $green;
+  }
+}
+
+.hide-tablet {
+  @include wi-mq(tablet) {
+    display: none !important;
+  }
+}
+
+.hide-mobile {
+  @include wi-mq(mobile) {
+    display: none !important;
   }
 }

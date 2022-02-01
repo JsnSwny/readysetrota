@@ -32,7 +32,7 @@
     align-items: center;
     &--links {
       flex: 1;
-      margin-left: 2rem;
+      margin-left: 1rem;
     }
     &:nth-child(1) {
       @include wi-mq(mobile) {
@@ -105,7 +105,7 @@
     }
   }
   &__logo {
-    height: 35px;
+    height: 30px;
     @include wi-mq(tablet) {
       width: 100px;
     }
@@ -125,7 +125,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 1.5rem;
+      padding: 0 1.2rem;
       min-width: 110px;
     }
     &.active {
@@ -145,7 +145,7 @@
     }
     .fa-angle-down {
       transition: 0.2s ease transform;
-      margin-left: 0.5rem;
+      margin-left: 0.3rem;
     }
   }
   &__dropdown {
@@ -184,6 +184,50 @@
         justify-content: center;
         align-items: center;
       }
+    }
+  }
+  .react-select-container {
+    width: 140px;
+    margin-right: 2rem;
+  }
+
+  .nav-select {
+    &__control {
+      -webkit-box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-color: transparent;
+      border-width: 0;
+      &--is-focused {
+      }
+    }
+
+    &__indicator-separator {
+      display: none;
+    }
+
+    &__label {
+      font-size: 10px;
+    }
+
+    &__placeholder {
+      font-size: 14px;
+    }
+    &__single-value {
+      font-size: 14px;
+    }
+    &__option {
+      &:hover {
+        background-color: rgba($pink, 0.3) !important;
+      }
+      &--is-focused {
+        background-color: rgba($pink, 0.3) !important;
+      }
+      &--is-selected {
+        background-color: $pink !important;
+      }
+      font-size: 14px !important;
     }
   }
 }

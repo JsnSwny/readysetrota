@@ -24,9 +24,7 @@ const Departments = () => {
   }, []);
 
   useEffect(() => {
-    if (departments.length > 0) {
-      setFilteredDepartments(departments);
-    }
+    setFilteredDepartments(departments);
   }, [departments]);
 
   return (

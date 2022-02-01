@@ -33,9 +33,11 @@ export const getReportData =
       type: STATS_LOADING,
     });
     var start = new Date();
+    let current = getState().employees.current;
+    console.log(current);
     axios
       .get(
-        `/api/report/?site_id=1&start_date=${format(
+        `/api/report/?site_id=${current.site.id}&start_date=${format(
           startDate,
           "dd/MM/yyyy"
         )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${basedOn}`

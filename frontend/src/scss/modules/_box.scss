@@ -14,11 +14,20 @@
     // transition: 1s ease width, 0.2s ease opacity;
     margin-bottom: 2rem;
     // display: block;
+    @include wi-mq(laptop-sm) {
+      width: calc(50% - 1rem);
+    }
+    @include wi-mq(mobile) {
+      width: calc(100%);
+    }
     .fa-expand {
       cursor: pointer;
       transition: 0.2s ease color;
       &:hover {
         color: $pink;
+      }
+      @include wi-mq(laptop-sm) {
+        display: none;
       }
     }
     &.hide {

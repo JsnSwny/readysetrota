@@ -67,10 +67,7 @@ const AdminPanel = ({ setDashboardView }) => {
         <div className="flex-container">
           <h1 className="header">
             <div className="title-container">
-              <h4 className="title--sub">Dashboard</h4>
-              <div className="flex-container--center-vh">
-                <h1 className="title--lg">{current.site.name} Dashboard</h1>
-              </div>
+              <h1 className="title--lg">Dashboard</h1>
             </div>
           </h1>
         </div>

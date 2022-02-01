@@ -479,9 +479,6 @@
   @extend .shadow;
   text-align: center;
   font-size: 12px;
-  @include wi-mq(tablet) {
-    bottom: 35px;
-  }
   p {
     &.red {
       color: $red;
@@ -539,6 +536,9 @@
     }
   }
   &__department {
+    &:not(:first-child) {
+      margin-top: 3rem;
+    }
     .rota__position {
       font-size: 14px;
       font-weight: normal;

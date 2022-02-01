@@ -470,12 +470,12 @@ def timeDifference(time1, time2):
     hours = diff.total_seconds() / 3600
     return abs(hours)
 
-def costAndHours(date, based_on):
+def costAndHours(date, based_on, site_id):
 
     total_cost = Decimal(0)
     total_hours = 0
     if(based_on == "predicted"):
-        shifts = Shift.objects.filter(stage="Published", date=date).values('employee', 'start_time', 'end_time', 'break_length')
+        shifts = Shift.objects.filter(stage="Published", date=date, department__site=site_id).values('employee', 'start_time', 'end_time', 'break_length')
         
         for i in shifts:
             employee = i['employee']
@@ -490,7 +490,7 @@ def costAndHours(date, based_on):
             if(wage_at_time):
                 total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
     else:
-        timeclocks = TimeClock.objects.filter(date=date).values('employee', 'clock_in', 'clock_out', 'break_length')
+        timeclocks = TimeClock.objects.filter(date=date, department__site=site_id).values('employee', 'clock_in', 'clock_out', 'break_length')
         for i in timeclocks:
             employee = i['employee']
             wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
@@ -506,7 +506,7 @@ def costAndHours(date, based_on):
                 total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
 
 
-    salaries = Wage.objects.filter(employee__position__department__site=1, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
+    salaries = Wage.objects.filter(employee__position__department__site=site_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
     for salary in salaries:
         total_cost += salary.wage / 52 / 7
 
@@ -544,7 +544,7 @@ class GetReportData(APIView):
 
             date = end_date - timedelta(days=i)
             date_str = date.strftime("%Y-%m-%d")
-            costAndHoursValue = costAndHours(date, based_on)
+            costAndHoursValue = costAndHours(date, based_on, site_id)
 
             obj = {'date': date}
             total_cost = float("{:.2f}".format(costAndHoursValue['total_cost']))

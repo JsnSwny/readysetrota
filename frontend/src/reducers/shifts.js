@@ -117,10 +117,18 @@ export default function (state = initialState, action) {
         ),
       };
     case UPDATE_SHIFT:
+      let new_timeclock = {
+        clock_in: action.payload.start_time,
+        clock_out: action.payload.end_time,
+        break_length: action.payload.break_length,
+      };
       return {
         ...state,
         shifts: state.shifts.map((item) =>
           item.id === action.payload.id ? action.payload : item
+        ),
+        timeclocks: state.shifts.map((item) =>
+          item.shift == action.payload.id ? { ...item, new_timeclock } : item
         ),
       };
     case DELETE_SHIFT:

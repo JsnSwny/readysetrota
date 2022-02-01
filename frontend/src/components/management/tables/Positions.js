@@ -28,9 +28,7 @@ const Positions = () => {
   }, []);
 
   useEffect(() => {
-    if (positions.length > 0) {
-      setFilteredPositions(positions);
-    }
+    setFilteredPositions(positions);
   }, [positions]);
 
   return (

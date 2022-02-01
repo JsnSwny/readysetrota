@@ -421,8 +421,17 @@
 .listing-timesheet {
   th,
   td {
-    @include wi-mq(tablet) {
-      padding: 0 0.5rem !important;
+    &:not(.no-padding) {
+      @include wi-mq(tablet) {
+        padding: 0 0.5rem !important;
+      }
+    }
+    &.no-padding {
+      @include wi-mq(tablet) {
+        .input--table {
+          padding: 0 0.5rem !important;
+        }
+      }
     }
   }
   th {
