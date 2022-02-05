@@ -145,25 +145,7 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
 
   return (
     <Fragment>
-      <div className="banner wrapper--md">
-        <div className="flex-container--between-start">
-          <h1 className="header">
-            <Title
-              name={`${employee ? `Welcome, ${employee.first_name}` : ""}`}
-              subtitle="Staff Dashboard"
-              breakWord={false}
-            />
-          </h1>
-        </div>
-        {permissions && permissions.includes("view_report") && (
-          <p
-            className="banner__link"
-            onClick={() => setDashboardView("business")}
-          >
-            View Site Dashboard
-          </p>
-        )}
-      </div>
+      <Title name={`${employee ? `Welcome, ${employee.first_name}` : ""}`} />
 
       <div className="dashboard wrapper--md">
         <h2 className="title-sm title--margin-top">Your PIN</h2>

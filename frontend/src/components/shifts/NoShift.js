@@ -35,7 +35,6 @@ const NoShift = (props) => {
       }
     }
   }
-
   return (
     <div
       key={result}

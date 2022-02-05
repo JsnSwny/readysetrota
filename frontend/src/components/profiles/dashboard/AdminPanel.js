@@ -63,23 +63,15 @@ const AdminPanel = ({ setDashboardView }) => {
 
   return (
     <Fragment>
-      <div className="banner banner--dashboard wrapper--md">
-        <div className="flex-container">
-          <h1 className="header">
-            <div className="title-container">
-              <h1 className="title--lg">Dashboard</h1>
-            </div>
-          </h1>
-        </div>
-        {!user.business && (
-          <p
-            className="banner__link"
-            onClick={() => setDashboardView("employee")}
-          >
-            View Employee Dashboard
-          </p>
-        )}
-      </div>
+      <Title name="Dashboard" />
+      {!user.business && (
+        <p
+          className="banner__link"
+          onClick={() => setDashboardView("employee")}
+        >
+          View Employee Dashboard
+        </p>
+      )}
       <div className="dashboard wrapper--md">
         <div className="flex-container--align-center">
           <h2 className="title-sm">Shifts</h2>

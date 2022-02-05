@@ -43,7 +43,7 @@ import { loadUser } from "./auth";
 
 import { format, addDays, parseISO } from "date-fns";
 
-import { tokenConfig } from "./auth";
+import { tokenConfig, currentSite } from "./auth";
 
 export const getForecast = (startDate, endDate) => (dispatch, getState) => {
   dispatch({
@@ -248,7 +248,6 @@ export const deleteSite = (id) => (dispatch, getState) => {
 export const setSite = (id) => (dispatch, getState) => {
   let isLoading = getState().loading.departments ? true : false;
   let user = getState().auth.user;
-  console.log(isLoading);
   if (isLoading) {
     return false;
   }
@@ -280,19 +279,9 @@ export const getEmployees =
   (dispatch, getState) => {
     let current = getState().employees.current;
     let query = "";
-
-    if (current.site.id > 0) {
-      query += `&position__department__site=${current.site.id}`;
-    }
-    if (department && current.department.id > 0) {
-      query += `&position__department=${current.department.id}`;
-    }
-    if (localStorage.getItem("show_all_employees") == "false") {
-      if (!start_date) {
-        start_date = format(new Date(), "yyyy-MM-dd");
-        end_date = format(new Date(), "yyyy-MM-dd");
-      }
-    }
+    query += `&position__department__site=${
+      current.site.id ? current.site.id : null
+    }`;
 
     if (start_date && end_date) {
       query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
@@ -300,7 +289,7 @@ export const getEmployees =
 
     axios
       .get(
-        `/api/employeelist/?${query}&archived=${
+        `/api/employeelist/?${query}${currentSite(getState)}&archived=${
           !archived ? false : ""
         }&ordering=archived,first_name,last_name,`,
         tokenConfig(getState)
@@ -351,7 +340,6 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
   }
 
   query += `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
-  console.log(query);
   axios
     .put(`/api/employees/${update}/?${query}`, employee, tokenConfig(getState))
     .then((res) => {
@@ -449,7 +437,6 @@ export const addPosition = (position) => (dispatch, getState) => {
 };
 
 export const updatePosition = (id, position) => (dispatch, getState) => {
-  console.log(position);
   axios
     .put(`/api/positions/${id}/`, position, tokenConfig(getState))
     .then((res) => {
@@ -468,11 +455,7 @@ export const updatePosition = (id, position) => (dispatch, getState) => {
 export const addDepartment = (department) => (dispatch, getState) => {
   let current = getState().employees.current;
   axios
-    .post(
-      `/api/departments/?business=${current.business.id}`,
-      department,
-      tokenConfig(getState)
-    )
+    .post(`/api/departments/`, department, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_DEPARTMENT,

@@ -144,14 +144,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
                 settings = SiteSettings(site=site)
                 settings.save()
-
-                all_perms = get_perms_for_model(Site)
-                for i in all_perms:
-                    assign_perm(i.codename, site.business.owner, site)
-
-                department = Department(
-                    owner=user, business=business, site=site, name="My First Department")
-                department.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
             profile.save()

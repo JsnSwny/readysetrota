@@ -5,11 +5,7 @@ import Title from "../common/Title";
 const TermsAndConditions = () => {
   return (
     <div className="wrapper--sm" style={{ marginTop: "40px" }}>
-      <div className="banner">
-        <h1 className="header">
-          <Title name="Terms and Conditions" breakWord={true} />
-        </h1>
-      </div>
+      <Title name="Terms and Conditions" />
 
       <p>Welcome to readysetrota!</p>
 

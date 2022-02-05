@@ -21,22 +21,10 @@ const ManagementPage = ({ children, currentSection }) => {
   ];
 
   return (
-    <div className="wrapper--md">
-      <div className="banner">
-        {/* <div className="list-title">
-          {sections.map((item) => (
-            <Link
-              to={`/${item.title.toLowerCase()}`}
-              className={currentSection == item.title ? "active" : ""}
-            >
-              <i class={item.icon}></i> {item.title}
-            </Link>
-          ))}
-        </div> */}
-        <Title name={currentSection} breakWord={false} />
-      </div>
-      {children}
-    </div>
+    <Fragment>
+      <Title name={currentSection} />
+      <div className="wrapper--md">{children}</div>
+    </Fragment>
   );
 };
 

@@ -16,7 +16,7 @@ import {
   GET_OPEN_SHIFTS,
   GET_TIMECLOCKS,
 } from "./types";
-import { tokenConfig } from "./auth";
+import { tokenConfig, currentSite } from "./auth";
 import { format } from "date-fns";
 import { getErrors, resetErrors } from "./errors";
 
@@ -63,7 +63,7 @@ export const getShifts =
       .get(
         `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department__site=${
           getState().employees.current.site.id
-        }${
+        }${currentSite(getState)}${
           user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
         }&ordering=date,start_time`,
         tokenConfig(getState)

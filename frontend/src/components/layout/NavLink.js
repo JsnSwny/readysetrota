@@ -33,15 +33,25 @@ const NavLink = ({ title, link, perms, dropdown }) => {
   return (
     <li className={`nav__item ${isActive()}`}>
       <Link className="nav__item-link" to={`/${link}`}>
-        {title} {dropdown ? <i class="fas fa-angle-down"></i> : ""}
+        {title}{" "}
+        {dropdown &&
+        dropdown.some((item) => permissions.includes(item.perm)) ? (
+          <i class="fas fa-angle-down"></i>
+        ) : (
+          ""
+        )}
       </Link>
       {dropdown && (
         <ul className="nav__dropdown">
-          {dropdown.map((item) => (
-            <li className={`${isActive(item.link)}`}>
-              <Link to={item.link}>{item.name}</Link>
-            </li>
-          ))}
+          {dropdown.map(
+            (item) =>
+              !item.perm ||
+              (permissions.some((perm) => item.perm == perm) && (
+                <li className={`${isActive(item.link)}`}>
+                  <Link to={item.link}>{item.name}</Link>
+                </li>
+              ))
+          )}
         </ul>
       )}
     </li>

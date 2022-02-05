@@ -32,7 +32,7 @@ const Rota = () => {
   let employees = useSelector((state) => state.employees.employees);
   let loading = useSelector((state) => state.loading);
   const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let current = useSelector((state) => state.employees.current);
@@ -104,17 +104,16 @@ const Rota = () => {
 
   return (
     <div>
-      {permissions.includes("manage_shifts") && (
+      {permissions.includes("create_shifts") && (
         <FinancialBar dates={result} financialMode={financialMode} />
       )}
 
-      <div className="banner">
-        <div className="wrapper--md flex-container--between-start">
-          <h1 className="header">
-            <Title name="Rota" breakWord={false} />
-          </h1>
+      <div className="title-banner">
+        <div className="wrapper--md">
+          <h1>Rota</h1>
         </div>
       </div>
+
       <RotaActions
         showAvailabilities={showAvailabilities}
         setShowAvailabilities={setShowAvailabilities}
@@ -129,45 +128,40 @@ const Rota = () => {
         shiftFormInfo={shiftFormInfo}
         editShift={editShift}
       />
+      {(isLoading || loading.employees) && <Loading />}
+
       <div>
-        {isLoading || loading.employees ? (
-          <Loading />
-        ) : (
-          <div className="rota wrapper--md">
-            {departments.map(
-              (department, i) =>
-                department.number_of_employees > 0 && (
-                  <div className="rota__department">
-                    <RotaDepartmentList
-                      department={department}
-                      result={result}
-                    />
-                    {positions.map(
-                      (position) =>
-                        position.department.id == department.id &&
-                        employees.filter((employee) =>
-                          employee.position.some((pos) => position.id == pos.id)
-                        ).length > 0 && (
-                          <Fragment>
-                            <h4 className="rota__position">{position.name}</h4>
-                            <RotaEmployees
-                              department={department}
-                              position={position}
-                              result={result}
-                              financialMode={financialMode}
-                              showAvailabilities={showAvailabilities}
-                              setOpen={setOpen}
-                              setShiftFormInfo={setShiftFormInfo}
-                              setEditShift={setEditShift}
-                            />
-                          </Fragment>
-                        )
-                    )}
-                  </div>
-                )
-            )}
-          </div>
-        )}
+        <div className="rota wrapper--md">
+          {departments.map(
+            (department, i) =>
+              department.number_of_employees > 0 && (
+                <div className="rota__department">
+                  <RotaDepartmentList department={department} result={result} />
+                  {positions.map(
+                    (position) =>
+                      position.department.id == department.id &&
+                      employees.filter((employee) =>
+                        employee.position.some((pos) => position.id == pos.id)
+                      ).length > 0 && (
+                        <Fragment>
+                          <h4 className="rota__position">{position.name}</h4>
+                          <RotaEmployees
+                            department={department}
+                            position={position}
+                            result={result}
+                            financialMode={financialMode}
+                            showAvailabilities={showAvailabilities}
+                            setOpen={setOpen}
+                            setShiftFormInfo={setShiftFormInfo}
+                            setEditShift={setEditShift}
+                          />
+                        </Fragment>
+                      )
+                  )}
+                </div>
+              )
+          )}
+        </div>
       </div>
     </div>
   );

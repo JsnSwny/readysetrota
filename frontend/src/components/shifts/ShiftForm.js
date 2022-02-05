@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { addShift, updateShift } from "../../actions/shifts";
+import React, { useState, useEffect, Fragment } from "react";
+import { addShift, updateShift, deleteShift } from "../../actions/shifts";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import ConfirmModal from "../layout/confirm/ConfirmModal";
 
 const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const dispatch = useDispatch();
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
@@ -12,11 +14,7 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
     value: 0,
     label: "No break",
   });
-  const [absence, setAbsence] = useState("None");
-  const [absenceInfo, setAbsenceInfo] = useState("");
   let popular_times = useSelector((state) => state.shifts.popular_times);
-  const [startTimeClock, setStartTimeClock] = useState("");
-  const [endTimeClock, setEndTimeClock] = useState("");
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
   );
@@ -45,15 +43,13 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(breakLength);
-
     const shiftObj = {
       employee_id: shiftFormInfo.employee.id,
       start_time: startTime.value,
       end_time: endTime.value,
       break_length: breakLength.value,
       date: shiftFormInfo.date,
-      stage: "Published",
+      stage: "Unpublished",
       info,
       position_id: [],
       department_id: shiftFormInfo.shiftDepartment,
@@ -110,82 +106,115 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   ];
 
   return (
-    <form onSubmit={onSubmit} className="form__form shift-form">
-      <div className="flex-container--between form__wrapper">
-        <div className="form__control--third">
-          <label className="form__label">Start Time*:</label>
-          <Select
-            className="react-select-container"
-            classNamePrefix="react-select"
-            onChange={setStartTime}
-            options={hours}
-            autoFocus
-            placeholder={"Select start time"}
-            value={startTime}
-          />
+    <Fragment>
+      {confirmOpen && (
+        <ConfirmModal
+          title={`Are you sure you want to delete this shift? The associated timeclock will be deleted as well`}
+          open={confirmOpen}
+          setOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          action={() => {
+            dispatch(deleteShift(editShift.id));
+            setOpen(false);
+          }}
+        />
+      )}
+      <form onSubmit={onSubmit} className="form__form shift-form">
+        <div className="flex-container--between form__wrapper">
+          <div className="form__control--third">
+            <label className="form__label">Start Time*:</label>
+            <Select
+              className="react-select-container"
+              classNamePrefix="react-select"
+              onChange={setStartTime}
+              options={hours}
+              autoFocus
+              placeholder={"Select start time"}
+              value={startTime}
+            />
+          </div>
+          <div className="form__control--third">
+            <label className="form__label">Break:</label>
+            <Select
+              className="react-select-container"
+              classNamePrefix="react-select"
+              onChange={setBreakLength}
+              options={breaks}
+              placeholder={"Select break length"}
+              value={breakLength}
+            />
+          </div>
+          <div className="form__control--third">
+            <label className="form__label">End Time*:</label>
+            <Select
+              className="react-select-container"
+              classNamePrefix="react-select"
+              onChange={setEndTime}
+              options={hours}
+              placeholder={"Select end time"}
+              value={endTime}
+            />
+          </div>
         </div>
-        <div className="form__control--third">
-          <label className="form__label">Break:</label>
-          <Select
-            className="react-select-container"
-            classNamePrefix="react-select"
-            onChange={setBreakLength}
-            options={breaks}
-            placeholder={"Select break length"}
-            value={breakLength}
-          />
+        <ul className="tag-container--sm">
+          {popular_times.map((item, i) => (
+            <li
+              key={i}
+              className="tag clickable"
+              onClick={() => {
+                setStartTime({
+                  value: item.start_time,
+                  label: item.start_time,
+                });
+                setEndTime({ value: item.end_time, label: item.end_time });
+                setBreakLength({
+                  value: item.break_length,
+                  label: breaks.find(
+                    (breakItem) => breakItem.value == item.break_length
+                  ).label,
+                });
+              }}
+            >
+              {item.start_time} - {item.end_time}{" "}
+              {item.break_length > 0 && `(${item.break_length})`}
+            </li>
+          ))}
+        </ul>
+        <div className="form__control">
+          <label className="form__label">Info:</label>
+          <textarea
+            className="form__input textarea"
+            type="text"
+            name="info"
+            onChange={(e) => setInfo(e.target.value)}
+            value={info}
+            rows="2"
+          ></textarea>
         </div>
-        <div className="form__control--third">
-          <label className="form__label">End Time*:</label>
-          <Select
-            className="react-select-container"
-            classNamePrefix="react-select"
-            onChange={setEndTime}
-            options={hours}
-            placeholder={"Select end time"}
-            value={endTime}
-          />
+        <hr />
+        <div
+          className={`${
+            editShift
+              ? "shift-form__buttons flex-container--between"
+              : "flex-container--end"
+          }`}
+        >
+          <button className="btn-3" type="submit" value="Add Shift">
+            {editShift ? "Save" : "Add Shift"}
+          </button>
+          {editShift && (
+            <button
+              className="btn-3 btn-3--red"
+              value="Delete Shift"
+              onClick={() => setConfirmOpen(true)}
+              type="button"
+            >
+              Delete
+            </button>
+          )}
         </div>
-      </div>
-      <ul className="tag-container--sm">
-        {popular_times.map((item, i) => (
-          <li
-            key={i}
-            className="tag clickable"
-            onClick={() => {
-              setStartTime({ value: item.start_time, label: item.start_time });
-              setEndTime({ value: item.end_time, label: item.end_time });
-              setBreakLength({
-                value: item.break_length,
-                label: breaks.find(
-                  (breakItem) => breakItem.value == item.break_length
-                ).label,
-              });
-            }}
-          >
-            {item.start_time} - {item.end_time}{" "}
-            {item.break_length > 0 && `(${item.break_length})`}
-          </li>
-        ))}
-      </ul>
-      <div className="form__control">
-        <label className="form__label">Info:</label>
-        <textarea
-          className="form__input textarea"
-          type="text"
-          name="info"
-          onChange={(e) => setInfo(e.target.value)}
-          value={info}
-          rows="2"
-        ></textarea>
-      </div>
-      <hr />
-      <div className="button-container">
-        <button className="btn-3" type="submit" value="Add Shift">
-          {editShift ? "Save" : "Add Shift"}
-        </button>
-      </div>
-    </form>
+      </form>
+    </Fragment>
   );
 };
 

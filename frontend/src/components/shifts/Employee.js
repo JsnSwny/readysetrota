@@ -88,7 +88,7 @@ const Employee = (props) => {
   };
 
   let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
 
   return (
@@ -112,7 +112,7 @@ const Employee = (props) => {
           `${financialMode == "actual" ? "actual" : "predicted"}`
         )}{" "}
         Hours{" "}
-        {permissions.includes("manage_wages") &&
+        {permissions.includes("view_wages") &&
           getTotalWage() != 0.0 &&
           `(£${getTotalWage(`${financialMode == "actual" ? "p" : ""}`)})`}
       </p>

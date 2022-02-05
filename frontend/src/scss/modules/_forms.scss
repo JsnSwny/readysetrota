@@ -312,6 +312,7 @@
 .form-block {
   margin-left: 300px;
   padding-bottom: 5rem;
+  margin-top: 5rem;
   &__heading {
     margin-bottom: 2rem;
     h4 {
@@ -320,7 +321,7 @@
       color: $light-gray-2;
     }
     h3 {
-      font-size: 32px;
+      font-size: 24px;
       span {
         font-weight: normal;
       }
@@ -407,6 +408,13 @@
       text-align: center;
     }
   }
+  &__buttons {
+    button {
+      &:first-child {
+        order: 2;
+      }
+    }
+  }
 }
 
 .input--table {
@@ -415,6 +423,9 @@
   border: none;
   &:focus {
     outline: none;
+  }
+  @include wi-mq(mobile) {
+    font-size: 8px;
   }
 }
 

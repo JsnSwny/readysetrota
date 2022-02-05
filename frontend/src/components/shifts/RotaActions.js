@@ -25,9 +25,6 @@ const RotaActions = ({
   const business = useSelector((state) => state.employees.business);
   const current = useSelector((state) => state.employees.current);
 
-  console.log(permissions);
-  console.log("test");
-
   const [publishDropdown, setPublishDropdown] = useState(false);
   return (
     <div className="rotaFunctions flex-container--between wrapper--md">

@@ -123,115 +123,114 @@ const ForecastPage = () => {
   };
 
   return (
-    <div className="wrapper--md">
-      {confirmOpen && selectedTimeclock && (
-        <ConfirmModal
-          title={`Are you sure you want to delete this timeclock?`}
-          open={confirmOpen}
-          setOpen={setConfirmOpen}
-          setConfirmOpen={setConfirmOpen}
-          action={() => {
-            dispatch(deleteTimeclock(selectedTimeclock.id));
-          }}
-        />
-      )}
+    <Fragment>
+      <Title name="Forecasting" />
+      <div className="wrapper--md">
+        {confirmOpen && selectedTimeclock && (
+          <ConfirmModal
+            title={`Are you sure you want to delete this timeclock?`}
+            open={confirmOpen}
+            setOpen={setConfirmOpen}
+            setConfirmOpen={setConfirmOpen}
+            action={() => {
+              dispatch(deleteTimeclock(selectedTimeclock.id));
+            }}
+          />
+        )}
 
-      <div className="banner">
-        <Title name="Forecasting" breakWord={false} />
-      </div>
+        <h2>
+          {format(currentDate, "do MMMM yyyy")} -{" "}
+          {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "do MMMM yyyy")}
+        </h2>
+        <div className="list-banner">
+          <WeeklyBubblePicker
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+          />
+          <div className="list-banner__right"></div>
+        </div>
 
-      <h2>
-        {format(currentDate, "do MMMM yyyy")} -{" "}
-        {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "do MMMM yyyy")}
-      </h2>
-      <div className="list-banner">
-        <WeeklyBubblePicker
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-        />
-        <div className="list-banner__right"></div>
-      </div>
-
-      <table className="listing listing-timesheet">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Estimated Revenue (£)</th>
-            <th>Labour Percentage Goal (%)</th>
-            <th>Actual Revenue (£)</th>
-            <th className="right"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {dateRange.map((item, idx) => {
-            return (
-              <tr className="listing__row listing-timesheet">
-                <td className="bold">
-                  {format(parseISO(item.date), "iiii do MMMM")}
-                </td>
-                <td>
-                  <input
-                    className="input--table"
-                    type="number"
-                    step="0.01"
-                    value={item.predicted}
-                    onChange={(e) => {
-                      handleChange(idx, "predicted", e.target.value);
-                    }}
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitForecast(item, idx)
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input--table"
-                    type="number"
-                    step="0.01"
-                    value={item.labourGoal}
-                    onChange={(e) => {
-                      handleChange(idx, "labourGoal", e.target.value);
-                    }}
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitForecast(item, idx)
-                    }
-                  />
-                </td>
-                <td className="no-padding">
-                  <input
-                    className="input--table"
-                    type="number"
-                    step="0.01"
-                    value={item.actual}
-                    onChange={(e) => {
-                      handleChange(idx, "actual", e.target.value);
-                    }}
-                    disabled={
-                      isAfter(parseISO(item.date), new Date()) ? true : false
-                    }
-                    onKeyDown={(e) =>
-                      e.key == "Enter" && submitForecast(item, idx)
-                    }
-                  />
-                </td>
-                <td className="right">
-                  <div className="action-sm">
-                    <i
-                      className={`fas fa-check listing-timesheet__save ${
-                        isAltered(item) && "show"
-                      }`}
-                      onClick={() => {
-                        submitForecast(item, idx);
+        <table className="listing listing-timesheet">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Estimated Revenue (£)</th>
+              <th>Labour Percentage Goal (%)</th>
+              <th>Actual Revenue (£)</th>
+              <th className="right"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {dateRange.map((item, idx) => {
+              return (
+                <tr className="listing__row listing-timesheet">
+                  <td className="bold">
+                    {format(parseISO(item.date), "iiii do MMMM")}
+                  </td>
+                  <td>
+                    <input
+                      className="input--table"
+                      type="number"
+                      step="0.01"
+                      value={item.predicted}
+                      onChange={(e) => {
+                        handleChange(idx, "predicted", e.target.value);
                       }}
-                    ></i>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                      onKeyDown={(e) =>
+                        e.key == "Enter" && submitForecast(item, idx)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="input--table"
+                      type="number"
+                      step="0.01"
+                      value={item.labourGoal}
+                      onChange={(e) => {
+                        handleChange(idx, "labourGoal", e.target.value);
+                      }}
+                      onKeyDown={(e) =>
+                        e.key == "Enter" && submitForecast(item, idx)
+                      }
+                    />
+                  </td>
+                  <td className="no-padding">
+                    <input
+                      className="input--table"
+                      type="number"
+                      step="0.01"
+                      value={item.actual}
+                      onChange={(e) => {
+                        handleChange(idx, "actual", e.target.value);
+                      }}
+                      disabled={
+                        isAfter(parseISO(item.date), new Date()) ? true : false
+                      }
+                      onKeyDown={(e) =>
+                        e.key == "Enter" && submitForecast(item, idx)
+                      }
+                    />
+                  </td>
+                  <td className="right">
+                    <div className="action-sm">
+                      <i
+                        className={`fas fa-check listing-timesheet__save ${
+                          isAltered(item) && "show"
+                        }`}
+                        onClick={() => {
+                          submitForecast(item, idx);
+                        }}
+                      ></i>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Fragment>
   );
 };
 

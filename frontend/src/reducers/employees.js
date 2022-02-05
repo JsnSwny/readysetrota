@@ -214,14 +214,6 @@ export default function (state = initialState, action) {
         ),
       };
     case GET_EMPLOYEES:
-      // let emp = action.payload;
-      if (!state.current.site.permissions.includes("manage_wages")) {
-        action.payload.forEach((item) => {
-          delete item.wage_type;
-          delete item.wage;
-        });
-      }
-
       return {
         ...state,
         employees: action.payload,

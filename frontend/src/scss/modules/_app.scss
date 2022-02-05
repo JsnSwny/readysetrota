@@ -26,5 +26,8 @@
 // }
 
 .App {
-  margin-top: 100px;
+  margin-top: 45px;
+  @include wi-mq(tablet) {
+    margin-top: 60px;
+  }
 }

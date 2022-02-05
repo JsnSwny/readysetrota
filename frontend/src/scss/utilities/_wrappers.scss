@@ -19,7 +19,13 @@
     max-width: calc(100% - 2.5rem);
     padding: 0;
     @include wi-mq(mobile) {
+      max-width: calc(100% - 2rem);
+    }
+    @include wi-mq(thumb) {
       max-width: calc(100% - 1rem);
+    }
+    @include wi-mq(stamp) {
+      max-width: calc(100% - 0.75rem);
     }
   }
   &--lg {

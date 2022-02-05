@@ -18,7 +18,6 @@ export const getStats =
           }&start_date=${start_date}&end_date=${end_date}`
         )
         .then((res) => {
-          console.log(res.data);
           dispatch({
             type: GET_STATS,
             payload: res.data,
@@ -34,7 +33,6 @@ export const getReportData =
     });
     var start = new Date();
     let current = getState().employees.current;
-    console.log(current);
     axios
       .get(
         `/api/report/?site_id=${current.site.id}&start_date=${format(

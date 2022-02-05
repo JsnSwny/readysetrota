@@ -304,22 +304,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $blue;
+    background-color: white;
     border-radius: 5px;
     margin-right: 0.5rem;
-    color: white;
+    border: 1px solid #dee6ee;
     flex-direction: column;
     cursor: pointer;
     transition: 0.2s ease background-color, 0.2s ease opacity;
     &:hover {
-      background-color: $pink;
-      opacity: 0.8;
+      background-color: rgba($pink, 0.4);
     }
     &--before {
       opacity: 0.5;
     }
     &--current {
       background-color: $pink;
+      color: white;
     }
     @include wi-mq(mobile) {
       &:first-child,

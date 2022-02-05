@@ -45,19 +45,10 @@ const SettingsSite = ({ setSettingsView }) => {
 
   return (
     <Fragment>
-      <div className="banner">
-        <div className="wrapper--sm">
-          <h1 className="header">
-            <Title name={`${current.site.name} Settings`} breakWord={true} />
-          </h1>
-          <p
-            className="banner__link"
-            onClick={() => setSettingsView("Personal")}
-          >
-            View Personal Settings
-          </p>
-        </div>
-      </div>
+      <Title name={`${current.site.name} Settings`} />
+      <p className="banner__link" onClick={() => setSettingsView("Personal")}>
+        View Personal Settings
+      </p>
       <div className="settings wrapper--sm">
         <div className="settings__right">
           <FeaturesSettings />

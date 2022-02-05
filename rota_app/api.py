@@ -98,9 +98,11 @@ class EmployeeFilter(django_filters.FilterSet):
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-    serializer_class = EmployeeSerializer
 
     queryset = Employee.objects.all()
+
+    def get_serializer_class(self):
+        return EmployeeSerializer
 
     def perform_create(self, serializer):
         business = int(self.request.query_params.get('business'))
@@ -205,12 +207,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         return departments
 
     def perform_create(self, serializer):
-        business = int(self.request.query_params.get('business'))
-        business = Business.objects.filter(id=business).first()
-        departments = Department.objects.filter(business=business)
-
-        if business.plan == "F" and len(departments) >= 1:
-            return False
         serializer.save(owner=self.request.user)
 
 

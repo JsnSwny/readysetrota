@@ -53,10 +53,6 @@ const TimeclockPage = () => {
       }
     });
 
-    console.log(newTimeclocks);
-    console.log(timeclocks);
-    console.log(temp);
-
     setNewTimeclocks(temp);
   }, [timeclocks]);
 
@@ -100,70 +96,70 @@ const TimeclockPage = () => {
   };
 
   return (
-    <div className="wrapper--md">
-      {confirmOpen && selectedTimeclock && (
-        <ConfirmModal
-          title={`Are you sure you want to delete this timeclock?`}
-          open={confirmOpen}
-          setOpen={setConfirmOpen}
-          setConfirmOpen={setConfirmOpen}
-          action={() => {
-            dispatch(deleteTimeclock(selectedTimeclock.id));
-          }}
-        />
-      )}
-
-      <TimeclockModal
-        open={open}
-        setOpen={setOpen}
-        extraInfo={{ currentDate, department: current.department }}
-      />
-
-      <div className="banner">
-        <Title name="Timesheet" breakWord={false} />
-      </div>
-      <h2>{format(currentDate, "do MMMM yyyy")}</h2>
-      <div className="list-banner">
-        <DateBubblePicker
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-          maxDate={new Date()}
-        />
-        <div className="list-banner__right">
-          <button
-            className="btn-3"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            + Add Timeclock
-          </button>
-        </div>
-      </div>
-
-      <table className="listing listing-timesheet">
-        <thead>
-          <tr>
-            <th>Employee </th>
-            <th>Start Time</th>
-            <th>Break</th>
-            <th>End Time</th>
-            <th className="right"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <TimeclockList
-            handleChange={handleChange}
-            employeeSelectList={employeeSelectList}
-            submitTimeclock={submitTimeclock}
-            timeclockIsAltered={timeclockIsAltered}
-            setSelectedTimeclock={setSelectedTimeclock}
+    <Fragment>
+      <Title name="Timesheet" />
+      <div className="wrapper--md">
+        {confirmOpen && selectedTimeclock && (
+          <ConfirmModal
+            title={`Are you sure you want to delete this timeclock?`}
+            open={confirmOpen}
+            setOpen={setConfirmOpen}
             setConfirmOpen={setConfirmOpen}
-            items={newTimeclocks}
+            action={() => {
+              dispatch(deleteTimeclock(selectedTimeclock.id));
+            }}
           />
-        </tbody>
-      </table>
-    </div>
+        )}
+
+        <TimeclockModal
+          open={open}
+          setOpen={setOpen}
+          extraInfo={{ currentDate, department: current.department }}
+        />
+
+        <h2>{format(currentDate, "do MMMM yyyy")}</h2>
+        <div className="list-banner">
+          <DateBubblePicker
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            maxDate={new Date()}
+          />
+          <div className="list-banner__right">
+            <button
+              className="btn-3"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              + Add Timeclock
+            </button>
+          </div>
+        </div>
+
+        <table className="listing listing-timesheet">
+          <thead>
+            <tr>
+              <th>Employee </th>
+              <th>Start Time</th>
+              <th>Break</th>
+              <th>End Time</th>
+              <th className="right"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <TimeclockList
+              handleChange={handleChange}
+              employeeSelectList={employeeSelectList}
+              submitTimeclock={submitTimeclock}
+              timeclockIsAltered={timeclockIsAltered}
+              setSelectedTimeclock={setSelectedTimeclock}
+              setConfirmOpen={setConfirmOpen}
+              items={newTimeclocks}
+            />
+          </tbody>
+        </table>
+      </div>
+    </Fragment>
   );
 };
 

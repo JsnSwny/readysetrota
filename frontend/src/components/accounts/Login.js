@@ -25,59 +25,60 @@ const Login = (props) => {
     return (
       <div className="login">
         <div className="login__box">
-          <div className="login__left login__part">
-            <form onSubmit={onSubmit} autoComplete="on">
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  className="form-control input-1"
-                  name="email"
-                  onChange={(e) => {
-                    setUsername(e.target.value);
-                  }}
-                  value={username}
-                  autoComplete="email"
-                />
-                <p className="error">{errors.username}</p>
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input
-                  type="password"
-                  className="form-control input-1"
-                  name="password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  autoComplete="current-password"
-                  value={password}
-                />
-                <p className="error">{errors.password}</p>
-                <p className="error">{errors.non_field_errors}</p>
-              </div>
-              <div className="form-group">
-                <button type="submit" className="btn-2">
-                  Login
-                </button>
-              </div>
-              <p className="login__leftExtra">
-                Don't have an account?{" "}
-                <Link
-                  to={{
-                    pathname: `/register`,
-                    state: {
-                      path,
-                    },
-                  }}
-                >
-                  Register
-                </Link>
-              </p>
-              <p className="login__leftExtra">
-                <a href="/reset_password">Forgot Password? </a>
-              </p>
-            </form>
+          <h2>readysetrota</h2>
+          <hr className="separator" />
+          <form onSubmit={onSubmit} autoComplete="on">
+            <div className="form__control">
+              <label className="form-block__label">Email</label>
+              <input
+                type="email"
+                className="form__input"
+                name="email"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                value={username}
+                autoComplete="email"
+              />
+              <p className="error">{errors.username}</p>
+            </div>
+            <div className="form__control">
+              <label className="form-block__label">Password</label>
+              <input
+                type="password"
+                className="form__input"
+                name="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                autoComplete="current-password"
+                value={password}
+              />
+              <p className="error">{errors.password}</p>
+              <p className="error">{errors.non_field_errors}</p>
+            </div>
+            <div className="form__control">
+              <button type="submit" className="btn-3">
+                Login
+              </button>
+            </div>
+            <p className="login__reset">
+              <a href="/reset_password">Forgot Password? </a>
+            </p>
+          </form>
+          <hr className="separator" />
+          <div className="login__register">
+            <h4>Don't have an account?</h4>
+            <Link
+              to={{
+                pathname: `/register`,
+                state: {
+                  path,
+                },
+              }}
+            >
+              Register
+            </Link>
           </div>
         </div>
       </div>

@@ -186,17 +186,7 @@ const Availability = ({ modalProps }) => {
 
   return (
     <Fragment>
-      <div className="banner wrapper--md">
-        <div className="flex-container--between-start">
-          <h1 className="header">
-            <Title
-              name="Availability and Leave"
-              subtitle="Staff Dashboard"
-              breakWord={false}
-            />
-          </h1>
-        </div>
-      </div>
+      <Title name="Availability and Leave" />
       <div className="wrapper--md">
         <div className="flex-container--between">
           <div className="dashboard__left">

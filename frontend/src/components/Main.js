@@ -92,14 +92,13 @@ const Main = () => {
     if (!loading.sites) {
       if (sites.length > 0) {
         dispatch(getPositions(false));
-        dispatch(getEmployees(true, false));
       }
     }
   }, [current.site]);
 
   useEffect(() => {
     dispatch(getPermissionTypes());
-  }, []);
+  }, [auth.token]);
 
   return (
     <Router>

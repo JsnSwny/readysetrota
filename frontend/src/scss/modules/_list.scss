@@ -143,7 +143,7 @@
     &.right {
       text-align: right;
     }
-    height: 60px;
+    height: 50px;
     padding: 0 2rem;
 
     &.no-padding {
@@ -157,6 +157,11 @@
     }
     @include wi-mq(mobile) {
       font-size: 10px;
+      padding: 0 1rem;
+    }
+    @include wi-mq(thumb) {
+      font-size: 8px;
+      padding: 0.5rem;
     }
   }
   tr {
@@ -219,6 +224,10 @@
         &:hover {
           background-color: rgb(245, 245, 245);
           color: black;
+        }
+        @include wi-mq(thumb) {
+          width: 15px;
+          height: 15px;
         }
       }
     }
@@ -285,15 +294,15 @@
 }
 
 .profile-picture {
-  height: 35px;
-  width: 35px;
+  height: 30px;
+  width: 30px;
   background-color: $pink;
   border-radius: 50%;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  font-size: 16px;
+  font-weight: normal;
+  font-size: 14px;
   color: white;
 }
 

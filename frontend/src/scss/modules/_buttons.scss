@@ -38,6 +38,12 @@
       justify-content: center;
       align-items: center;
     }
+    &--red {
+      background-color: $red;
+      &:hover {
+        background-color: darken($red, 10%);
+      }
+    }
   }
   &-4 {
     @extend .btn;
