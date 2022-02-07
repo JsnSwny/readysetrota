@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 const Employees = () => {
   const dispatch = useDispatch();
   const employees = useSelector((state) => state.employees.employees);
+  const current = useSelector((state) => state.employees.current);
 
   const [filteredEmployees, setFilteredEmployees] = useState({});
   const [selectedEmployee, setSelectedEmployee] = useState("");
@@ -27,6 +28,10 @@ const Employees = () => {
   useEffect(() => {
     setFilteredEmployees(employees);
   }, [employees]);
+
+  useEffect(() => {
+    dispatch(getEmployees(true, false));
+  }, [current.site]);
 
   return (
     <ManagementPage currentSection="Employees">

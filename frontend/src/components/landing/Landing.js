@@ -30,23 +30,21 @@ const Landing = ({ setOpen, setType }) => {
               readysetrota is an intuitive application which aims to make your
               life easier
             </p>
-            <button
-              onClick={() => {
-                setOpen(true);
-                setType("register");
-              }}
-            >
-              Try it for FREE
-            </button>
-            <button
-              onClick={() => {
-                setShowVideo(true);
-                document.body.style.overflow = "hidden";
-              }}
-              className="blue"
-            >
-              Watch Demo
-            </button>
+            <div className="hero__btn-wrapper">
+              <Link className="hero__btn" to="/register">
+                Try it for FREE
+              </Link>
+              <button
+                onClick={() => {
+                  setShowVideo(true);
+                  document.body.style.overflow = "hidden";
+                }}
+                className="hero__btn blue"
+              >
+                Watch Demo
+              </button>
+            </div>
+
             <small>Full Release Coming October 26th</small>
           </div>
           <img className="hero__image" src="static/media/hero-image.svg" />

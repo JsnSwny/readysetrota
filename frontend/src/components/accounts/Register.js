@@ -7,7 +7,7 @@ const Register = (props) => {
   let path = false;
   if (props.location.state) {
     path = props.location.state.path.url;
-    if (!path.includes("/join")) {
+    if (path && !path.includes("/join")) {
       path = false;
     }
   }
@@ -47,131 +47,142 @@ const Register = (props) => {
     return (
       <div className="login">
         <div className="login__box">
-          <div className="login__left login__part">
-            <form onSubmit={onSubmit}>
-              {!path && (
-                <div className="form-group">
-                  <label>What role are you?</label>
-                  <div className="flex-container">
-                    <span
-                      className={`form-control ${
-                        role == "User" ? "active" : ""
-                      } btn-toggle`}
-                      onClick={() => {
-                        setRole("User");
-                      }}
-                    >
-                      Employee
-                    </span>
-                    <span
-                      className={`form-control ${
-                        role == "Business" ? "active" : ""
-                      } btn-toggle`}
-                      onClick={() => {
-                        setRole("Business");
-                      }}
-                    >
-                      Business
-                    </span>
-                  </div>
-                  <p className="error">{errors.role}</p>
-                </div>
-              )}
-
-              {role == "Business" && (
-                <div className="form-group">
-                  <label>Business Name</label>
-                  <input
-                    type="text"
-                    className="form-control input-1"
-                    name="business_name"
-                    onChange={(e) => {
-                      setBusinessName(e.target.value);
+          <h2>Register</h2>
+          <hr className="separator" />
+          <form onSubmit={onSubmit}>
+            {!path && (
+              <div className="form__control">
+                <label>What role are you?</label>
+                <div className="flex-container">
+                  <span
+                    className={`form-control ${
+                      role == "User" ? "active" : ""
+                    } btn-toggle`}
+                    onClick={() => {
+                      setRole("User");
                     }}
-                    value={businessName}
-                  />
-                  <p className="error">{errors.businessName}</p>
+                  >
+                    Employee
+                  </span>
+                  <span
+                    className={`form-control ${
+                      role == "Business" ? "active" : ""
+                    } btn-toggle`}
+                    onClick={() => {
+                      setRole("Business");
+                    }}
+                  >
+                    Business
+                  </span>
                 </div>
-              )}
-              {role == "User" && (
-                <Fragment>
-                  <div className="form-group">
-                    <label>First Name</label>
-                    <input
-                      type="text"
-                      className="form-control input-1"
-                      name="business_name"
-                      onChange={(e) => {
-                        setFirstName(e.target.value);
-                      }}
-                      value={firstName}
-                    />
-                    <p className="error">{errors.first_name}</p>
-                  </div>
-                  <div className="form-group">
-                    <label>Last Name</label>
-                    <input
-                      type="text"
-                      className="form-control input-1"
-                      name="business_name"
-                      onChange={(e) => {
-                        setLastName(e.target.value);
-                      }}
-                      value={lastName}
-                    />
-                    <p className="error">{errors.last_name}</p>
-                  </div>
-                </Fragment>
-              )}
+                <p className="error">{errors.role}</p>
+              </div>
+            )}
 
-              <div className="form-group">
-                <label>Email</label>
+            {role == "Business" && (
+              <div className="form__control">
+                <label className="form__label">Business Name</label>
                 <input
                   type="text"
-                  className="form-control input-1"
-                  name="email"
+                  className="form__input"
+                  name="business_name"
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setBusinessName(e.target.value);
                   }}
-                  value={email}
+                  value={businessName}
                 />
-                <p className="error">{errors.username}</p>
+                <p className="error">{errors.businessName}</p>
               </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input
-                  type="password"
-                  className="form-control input-1"
-                  name="password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  value={password}
-                />
-                <p className="error">{errors.password}</p>
-              </div>
-              <div className="form-group">
-                <label>Confirm Password</label>
-                <input
-                  type="password"
-                  className="form-control input-1"
-                  name="password"
-                  onChange={(e) => {
-                    setPassword2(e.target.value);
-                  }}
-                  value={password2}
-                />
-                <p className="error">{errors.password2}</p>
-              </div>
-              <div className="form-group">
-                <button type="submit" className="btn-2">
-                  Register
-                </button>
-              </div>
-              <p className="login__leftExtra">
-                Already have an account? <Link to="/login">Login</Link>
-              </p>
-            </form>
+            )}
+            {role == "User" && (
+              <Fragment>
+                <div className="form__control">
+                  <label className="form__label">First Name</label>
+                  <input
+                    type="text"
+                    className="form__input"
+                    name="business_name"
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                    }}
+                    value={firstName}
+                  />
+                  <p className="error">{errors.first_name}</p>
+                </div>
+                <div className="form__control">
+                  <label className="form__label">Last Name</label>
+                  <input
+                    type="text"
+                    className="form__input"
+                    name="business_name"
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                    }}
+                    value={lastName}
+                  />
+                  <p className="error">{errors.last_name}</p>
+                </div>
+              </Fragment>
+            )}
+
+            <div className="form__control">
+              <label className="form__label">Email</label>
+              <input
+                type="text"
+                className="form__input"
+                name="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
+              />
+              <p className="error">{errors.username}</p>
+            </div>
+            <div className="form__control">
+              <label className="form__label">Password</label>
+              <input
+                type="password"
+                className="form__input"
+                name="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                value={password}
+              />
+              <p className="error">{errors.password}</p>
+            </div>
+            <div className="form__control">
+              <label className="form__label">Confirm Password</label>
+              <input
+                type="password"
+                className="form__input"
+                name="password"
+                onChange={(e) => {
+                  setPassword2(e.target.value);
+                }}
+                value={password2}
+              />
+              <p className="error">{errors.password2}</p>
+            </div>
+            <div className="form__control">
+              <button type="submit" className="btn-3">
+                Register
+              </button>
+            </div>
+          </form>
+          <hr className="separator" />
+          <div className="login__register">
+            <h4>Already have an account?</h4>
+            <Link
+              to={{
+                pathname: `/login`,
+                state: {
+                  path,
+                },
+              }}
+            >
+              Login
+            </Link>
           </div>
         </div>
       </div>

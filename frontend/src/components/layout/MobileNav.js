@@ -26,9 +26,12 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
           <div className="mobile-nav__heading">
             <h4>
               {auth.user.first_name}{" "}
-              {!auth.user.business && auth.user.last_name}
+              {!auth.user.business && auth.user.last_name}{" "}
+              <Link to="/settings" onClick={() => closeNav()}>
+                <i class="fas fa-cog"></i>
+              </Link>
             </h4>
-            <i className="fas fa-times" onClick={() => setMobileNav(false)}></i>
+            <i className="fas fa-times" onClick={() => closeNav()}></i>
           </div>
           <Select
             className="react-select-container--mobile"
@@ -37,7 +40,7 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
             onChange={(e) => {
               e.value != current.site.id &&
                 dispatch(setSite(sites.find((item) => item.id == e.value)));
-              setMobileNav(false);
+              closeNav();
             }}
             options={siteOptions}
             placeholder={"Select a site"}

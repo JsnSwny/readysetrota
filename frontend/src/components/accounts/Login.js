@@ -25,11 +25,11 @@ const Login = (props) => {
     return (
       <div className="login">
         <div className="login__box">
-          <h2>readysetrota</h2>
+          <h2>Login</h2>
           <hr className="separator" />
           <form onSubmit={onSubmit} autoComplete="on">
             <div className="form__control">
-              <label className="form-block__label">Email</label>
+              <label className="form__label">Email</label>
               <input
                 type="email"
                 className="form__input"
@@ -43,7 +43,7 @@ const Login = (props) => {
               <p className="error">{errors.username}</p>
             </div>
             <div className="form__control">
-              <label className="form-block__label">Password</label>
+              <label className="form__label">Password</label>
               <input
                 type="password"
                 className="form__input"

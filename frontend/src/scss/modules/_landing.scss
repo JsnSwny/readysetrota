@@ -241,40 +241,44 @@
         position: initial;
       }
     }
-    button {
-      background-color: $pink;
-      padding: 10px 0;
-      width: 175px;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
+    &__btn-wrapper {
+      .hero__btn {
+        background-color: $pink;
+        padding: 10px 0;
+        width: 175px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        display: inline-block;
+        text-align: center;
 
-      border-radius: 5px;
-      transition: 0.2s ease background-color;
-      cursor: pointer;
-      &:not(:last-of-type) {
-        margin-right: 30px;
-      }
-      @include wi-mq(mobile) {
-        width: calc(50% - 10px);
-        &:not(:last-of-type) {
-          margin-right: 10px;
+        border-radius: 5px;
+        transition: 0.2s ease background-color;
+        cursor: pointer;
+        &:first-child {
+          margin-right: 30px;
         }
-      }
-      @include wi-mq(stamp) {
-        width: 100%;
-        &:not(:last-of-type) {
-          margin-right: 0;
-          margin-bottom: 10px;
+        @include wi-mq(mobile) {
+          width: calc(50% - 10px);
+          &:first-child {
+            margin-right: 10px;
+          }
         }
-      }
-      &:hover {
-        background-color: darken($pink, 10%);
-      }
-      &.blue {
-        background-color: $blue;
+        @include wi-mq(stamp) {
+          width: 100%;
+          &:first-child {
+            margin-right: 0;
+            margin-bottom: 10px;
+          }
+        }
         &:hover {
-          background-color: lighten($blue, 10%);
+          background-color: darken($pink, 10%);
+        }
+        &.blue {
+          background-color: $blue;
+          &:hover {
+            background-color: lighten($blue, 10%);
+          }
         }
       }
     }

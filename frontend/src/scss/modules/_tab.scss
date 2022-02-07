@@ -28,6 +28,9 @@
   &.active {
     left: 0;
   }
+  @include wi-mq(tablet) {
+    display: none;
+  }
 }
 
 .tab-wrapper {

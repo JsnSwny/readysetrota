@@ -128,7 +128,7 @@ const Rota = () => {
         shiftFormInfo={shiftFormInfo}
         editShift={editShift}
       />
-      {(isLoading || loading.employees) && <Loading />}
+      {isLoading && <Loading />}
 
       <div>
         <div className="rota wrapper--md">

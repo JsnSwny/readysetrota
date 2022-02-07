@@ -43,7 +43,7 @@ const Nav = () => {
         <div className="nav__container flex-container wrapper--md">
           <div className="nav__section">
             <Link to="/" className="flex-container--align-center">
-              <img className="nav__logo" src="/static/media/logo-3.svg" />
+              <img className="nav__logo" src="/static/media/nav-logo.svg" />
             </Link>
           </div>
           {isAuthenticated ? (

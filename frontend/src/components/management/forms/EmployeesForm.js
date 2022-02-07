@@ -54,7 +54,8 @@ const EmployeesForm = () => {
       setFirstName(employee.first_name);
       setLastName(employee.last_name);
       setPositionList(employee.position.map((item) => item));
-      if (employee.wage) {
+
+      if (employee.wage.length > 0) {
         setWageDate(addDays(parseISO(employee.wage[0].start_date), 1));
       }
       setSelectedDepartments([
@@ -63,13 +64,13 @@ const EmployeesForm = () => {
       setPermissions(employee.permissions.map((item) => item.id));
 
       setStartWorkingDate(
-        employee.current_status.start_date
+        employee.current_status?.start_date
           ? parseISO(employee.current_status.start_date)
           : new Date()
       );
 
       setEndWorkingDate(
-        employee.current_status.end_date
+        employee.current_status?.end_date
           ? parseISO(employee.current_status.end_date)
           : ""
       );
@@ -247,7 +248,10 @@ const EmployeesForm = () => {
             </div>
 
             <div className="form-bottom-banner">
-              <div className="wrapper--xs flex-container--end">
+              <div className="wrapper--xs flex-container--between-center">
+                <Link to="/employees" className="tab__link">
+                  Back
+                </Link>
                 <button type="submit" className="btn-3">
                   {formType == "create" ? "Create Employee" : "Save"}
                 </button>

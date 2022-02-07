@@ -336,7 +336,11 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
   let current = getState().employees.current;
   let query = "";
   if (employee.start_working_date) {
-    query += `&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}`;
+    query += `&start_working_date=${employee.start_working_date}${
+      employee.end_working_date
+        ? `&end_working_date=${employee.end_working_date}`
+        : ""
+    }`;
   }
 
   query += `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
@@ -361,7 +365,13 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 
   axios
     .post(
-      `/api/employees/?business=${current.business.id}${wageQuery}&start_working_date=${employee.start_working_date}&end_working_date=${employee.end_working_date}&site=${current.site.id}`,
+      `/api/employees/?business=${
+        current.business.id
+      }${wageQuery}&start_working_date=${employee.start_working_date}${
+        employee.end_working_date
+          ? `&end_working_date=${employee.end_working_date}`
+          : ""
+      }&site=${current.site.id}`,
       employee,
       tokenConfig(getState)
     )

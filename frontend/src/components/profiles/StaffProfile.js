@@ -23,8 +23,9 @@ import { GET_LEAVE } from "../../actions/types";
 import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../actions/stats";
 import StatsItem from "./dashboard/StatsItem";
+import HolidayModal from "./HolidayModal";
 
-const StaffProfile = ({ modalProps, setDashboardView }) => {
+const StaffProfile = ({ setDashboardView }) => {
   const dispatch = useDispatch();
 
   // const { setOpen, setType, setExtra } = modalProps;
@@ -38,6 +39,7 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
   let loading = useSelector((state) => state.loading);
   let leave = useSelector((state) => state.availability.leave);
   let stats = useSelector((state) => state.stats.stats);
+  const [open, setOpen] = useState(false);
   let permissions = useSelector(
     (state) => state.permissions.active_permissions
   );
@@ -145,6 +147,7 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
 
   return (
     <Fragment>
+      <HolidayModal open={open} setOpen={setOpen} />
       <Title name={`${employee ? `Welcome, ${employee.first_name}` : ""}`} />
 
       <div className="dashboard wrapper--md">
@@ -243,11 +246,9 @@ const StaffProfile = ({ modalProps, setDashboardView }) => {
             <div className="flex-container--between">
               <h3 className="title-sm title--margin-top">Requests</h3>
               <button
-                // onClick={() => {
-                //   setOpen(true);
-                //   setType("holiday");
-                //   setExtra({ employee: employee });
-                // }}
+                onClick={() => {
+                  setOpen(true);
+                }}
                 class="dashboardHolidays__request"
               >
                 Make Request

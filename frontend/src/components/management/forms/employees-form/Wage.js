@@ -82,7 +82,7 @@ const Wage = ({
             dateFormat="MMMM do yyyy"
             minDate={
               currentEmployee && currentEmployee.wage
-                ? addDays(parseISO(currentEmployee.wage[0].start_date), 1)
+                ? addDays(parseISO(currentEmployee.wage[0]?.start_date), 1)
                 : null
             }
           />

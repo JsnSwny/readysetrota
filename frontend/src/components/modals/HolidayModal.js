@@ -85,15 +85,6 @@ const HolidayModal = ({ onClose, extra }) => {
               className="form__input"
               dateFormat="MMMM do yyyy"
             />
-            {/* <input
-            className="form__input"
-            type="date"
-            name="start_working_date"
-            onChange={(e) => setStartWorkingDate(e.target.value)}
-            autoFocus
-            value={format(startWorkingDate, "do MMM yyyy")}
-          ></input>
-          <p className="error">{errors.first_name}</p> */}
           </div>
           <div className="form__control--half">
             <label className="form__label">End Date*</label>
