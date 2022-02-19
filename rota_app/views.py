@@ -478,17 +478,18 @@ def costAndHours(date, based_on, site_id):
         shifts = Shift.objects.filter(stage="Published", date=date, department__site=site_id).values('employee', 'start_time', 'end_time', 'break_length')
         
         for i in shifts:
-            employee = i['employee']
-            wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
-            start_time = i['start_time'].strftime('%H:%M')
-            start_time = datetime.strptime(start_time, '%H:%M')
-            end_time = datetime.strptime(i['end_time'], '%H:%M')
-            total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
+            if i['end_time'] != "Finish":
+                employee = i['employee']
+                wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
+                start_time = i['start_time'].strftime('%H:%M')
+                start_time = datetime.strptime(start_time, '%H:%M')
+                end_time = datetime.strptime(i['end_time'], '%H:%M')
+                total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
 
-            total_hours += total_length
+                total_hours += total_length
 
-            if(wage_at_time):
-                total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
+                if(wage_at_time):
+                    total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
     else:
         timeclocks = TimeClock.objects.filter(date=date, department__site=site_id).values('employee', 'clock_in', 'clock_out', 'break_length')
         for i in timeclocks:
