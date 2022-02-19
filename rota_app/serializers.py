@@ -126,7 +126,7 @@ class BasicPositionSerializer(serializers.ModelSerializer):
 class PermissionCodeNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = PermissionType
-        fields = ('code_name',)
+        fields = ('id', 'code_name',)
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

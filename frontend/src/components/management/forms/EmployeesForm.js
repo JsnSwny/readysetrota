@@ -36,6 +36,9 @@ const EmployeesForm = () => {
   const sites = useSelector((state) => state.employees.sites);
   const current = useSelector((state) => state.employees.current);
   const loading = useSelector((state) => state.loading);
+  const activePermissions = useSelector(
+    (state) => state.permissions.active_permissions
+  );
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -62,9 +65,12 @@ const EmployeesForm = () => {
       setLastName(employee.last_name);
       setPositionList(employee.position.map((item) => item));
 
-      if (employee.wage.length > 0) {
-        setWageDate(addDays(parseISO(employee.wage[0].start_date), 1));
+      if (employee.wage) {
+        if (employee.wage.length > 0) {
+          setWageDate(addDays(parseISO(employee.wage[0].start_date), 1));
+        }
       }
+
       setSelectedDepartments([
         ...new Set(employee.position.map((item) => item.department)),
       ]);
@@ -137,7 +143,6 @@ const EmployeesForm = () => {
         return error_obj[k] == true;
       })
     ) {
-      console.log(permissions);
       const employee = {
         first_name: firstName,
         last_name: lastName,
@@ -202,12 +207,15 @@ const EmployeesForm = () => {
             setCurrent={setCurrentSection}
             scroll={() => scrollToRef(rolesRef)}
           />
-          <TabItem
-            title="Wage"
-            current={isInViewport(wageRef)}
-            setCurrent={setCurrentSection}
-            scroll={() => scrollToRef(wageRef)}
-          />
+
+          {activePermissions.includes("view_wages") && (
+            <TabItem
+              title="Wage"
+              current={isInViewport(wageRef)}
+              setCurrent={setCurrentSection}
+              scroll={() => scrollToRef(wageRef)}
+            />
+          )}
           <TabItem
             title="Status"
             current={isInViewport(statusRef)}
@@ -251,12 +259,17 @@ const EmployeesForm = () => {
               />
             </div>
 
-            <div className="employees-form employees-form--wage" ref={wageRef}>
-              <div className="form-block__heading">
-                <h3>Wage</h3>
+            {activePermissions.includes("view_wages") && (
+              <div
+                className="employees-form employees-form--wage"
+                ref={wageRef}
+              >
+                <div className="form-block__heading">
+                  <h3>Wage</h3>
+                </div>
+                <Wage {...wageProps} />
               </div>
-              <Wage {...wageProps} />
-            </div>
+            )}
 
             <div className="employees-form" ref={statusRef}>
               <div className="form-block__heading">

@@ -163,7 +163,6 @@ export const getSites = () => (dispatch, getState) => {
   let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
 
-  console.log("getting sites");
   axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
     let perm_list = getState().permissions.permission_types;
 
@@ -176,10 +175,6 @@ export const getSites = () => (dispatch, getState) => {
       const current_employee = current_user.employee.find(
         (item) => item.business.id == res.data[0].business.id
       );
-
-      console.log(res.data[0]);
-      console.log(res.data);
-      console.log(current_employee);
 
       if (current_employee) {
         perm_list = current_employee.permissions;

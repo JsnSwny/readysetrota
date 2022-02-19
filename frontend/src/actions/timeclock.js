@@ -47,7 +47,6 @@ export const getTimeclocks = (date) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_TIMECLOCKS,
         payload: res.data,
