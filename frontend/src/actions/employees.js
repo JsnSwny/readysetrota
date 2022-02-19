@@ -162,10 +162,14 @@ export const getSites = () => (dispatch, getState) => {
   let current_site = getState().employees.current.site.id;
   let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
+
+  console.log("getting sites");
   axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
     let perm_list = getState().permissions.permission_types;
 
     const current_user = getState().auth.user;
+
+    console.log(current_user);
 
     if (!current_user.business) {
       perm_list = [];
@@ -254,6 +258,31 @@ export const deleteSite = (id) => (dispatch, getState) => {
 export const setSite = (id) => (dispatch, getState) => {
   let isLoading = getState().loading.departments ? true : false;
   let user = getState().auth.user;
+
+  let site = getState().employees.sites.find((item) => item.id == id);
+
+  let perm_list = getState().permissions.permission_types;
+
+  const current_user = getState().auth.user;
+
+  console.log(current_user);
+
+  if (!current_user.business) {
+    perm_list = [];
+    const current_employee = current_user.employee.find(
+      (item) => item.business.id == site.business.ids
+    );
+
+    if (current_employee) {
+      perm_list = current_employee.permissions;
+    }
+  }
+
+  dispatch({
+    type: SET_ACTIVE_PERMISSIONS,
+    payload: perm_list.map((item) => item.code_name),
+  });
+
   if (isLoading) {
     return false;
   }
