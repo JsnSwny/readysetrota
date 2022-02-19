@@ -172,6 +172,11 @@ export const getSites = () => (dispatch, getState) => {
       const current_employee = current_user.employee.find(
         (item) => item.business.id == res.data[0].business.id
       );
+
+      console.log(res.data[0]);
+      console.log(res.data);
+      console.log(current_employee);
+
       if (current_employee) {
         perm_list = current_employee.permissions;
       }
