@@ -270,7 +270,7 @@ export const setSite = (id) => (dispatch, getState) => {
   if (!current_user.business) {
     perm_list = [];
     const current_employee = current_user.employee.find(
-      (item) => item.business.id == site.business.ids
+      (item) => item.business.id == site.business.id
     );
 
     if (current_employee) {

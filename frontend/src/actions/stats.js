@@ -46,5 +46,6 @@ export const getReportData =
           type: GET_REPORT_DATA,
           payload: res.data,
         });
-      });
+      })
+      .catch((err) => console.log(err.response));
   };

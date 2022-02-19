@@ -61,7 +61,6 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
               link="/rota"
               openDropdown={openDropdown}
               setOpenDropdown={setOpenDropdown}
-              perms={["manage_timeclock"]}
             >
               <MobileSublink
                 title="Timesheet"
