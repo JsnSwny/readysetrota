@@ -571,7 +571,9 @@ class GetReportData(APIView):
                     obj['revenue'] = float(forecast['predicted'])
                 else:
                     obj['revenue'] = float(forecast['actual'])
-                labour_percentage = ((total_cost) / obj['revenue']) * 100
+                labour_percentage = 0.00
+                if obj['revenue'] > 0:
+                    labour_percentage = ((total_cost) / obj['revenue']) * 100
                 obj['labour_percentage'] = float(f"{labour_percentage:.2f}")
                 obj['labour_diff'] = float(f"{Decimal(obj['labour_percentage']) - forecast['labourGoal']:.2f}")
             else:
