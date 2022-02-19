@@ -581,5 +581,11 @@
     h4 {
       margin-top: 1rem;
     }
+    &__selector {
+      @include wi-mq(tablet) {
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
   }
 }

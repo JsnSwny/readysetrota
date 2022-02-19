@@ -182,6 +182,14 @@
     tr {
       border-bottom: 1px solid #dddddd;
       background-color: white;
+      &.archived {
+        background-color: rgba(#ffffff, 0.4);
+        td {
+          &:not(.right) {
+            opacity: 0.4;
+          }
+        }
+      }
       td {
         .highlight {
           cursor: pointer;
@@ -314,6 +322,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-end;
+  font-size: 14px;
   .flex-container--align-center {
     width: auto;
   }

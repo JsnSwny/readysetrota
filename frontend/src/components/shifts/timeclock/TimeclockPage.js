@@ -7,7 +7,7 @@ import {
   updateTimeclock,
   deleteTimeclock,
 } from "../../../actions/timeclock";
-import { getEmployees } from "../../../actions/employees";
+import { getAllEmployees, getEmployees } from "../../../actions/employees";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import { startOfToday, format } from "date-fns";
@@ -37,10 +37,15 @@ const TimeclockPage = () => {
     dispatch(
       getShifts(
         format(currentDate, "yyyy-MM-dd"),
-        format(currentDate, "yyyy-MM-dd")
+        format(currentDate, "yyyy-MM-dd"),
+        true
       )
     );
   }, [currentDate]);
+
+  useEffect(() => {
+    dispatch(getEmployees(true, false, currentDate, currentDate));
+  }, [current.site]);
 
   useEffect(() => {
     let temp = [...timeclocks];

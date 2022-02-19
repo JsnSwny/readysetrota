@@ -3,6 +3,7 @@ import { addShift, updateShift, deleteShift } from "../../actions/shifts";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import ConfirmModal from "../layout/confirm/ConfirmModal";
+import { getErrors } from "../../actions/errors";
 
 const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
   );
+  let errors = useSelector((state) => state.errors.msg);
 
   useEffect(() => {
     if (editShift) {
@@ -43,23 +45,36 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const shiftObj = {
-      employee_id: shiftFormInfo.employee.id,
-      start_time: startTime.value,
-      end_time: endTime.value,
-      break_length: breakLength.value,
-      date: shiftFormInfo.date,
-      stage: "Unpublished",
-      info,
-      position_id: [],
-      department_id: shiftFormInfo.shiftDepartment,
+    let error_obj = {
+      start_time: startTime.value ? true : "This field is required",
+      end_time: endTime.value ? true : "This field is required",
     };
 
-    editShift
-      ? dispatch(updateShift(editShift.id, shiftObj))
-      : dispatch(addShift(shiftObj));
+    dispatch(getErrors(error_obj, 400));
 
-    setOpen(false);
+    if (
+      Object.keys(error_obj).every((k) => {
+        return error_obj[k] == true;
+      })
+    ) {
+      const shiftObj = {
+        employee_id: shiftFormInfo.employee.id,
+        start_time: startTime.value,
+        end_time: endTime.value,
+        break_length: breakLength.value,
+        date: shiftFormInfo.date,
+        stage: "Unpublished",
+        info,
+        position_id: [],
+        department_id: shiftFormInfo.shiftDepartment,
+      };
+
+      editShift
+        ? dispatch(updateShift(editShift.id, shiftObj))
+        : dispatch(addShift(shiftObj));
+
+      setOpen(false);
+    }
   };
 
   let minutes = ["00"];
@@ -90,6 +105,8 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
           )
     );
   }
+
+  let endHours = [...hours, { value: "Finish", label: "Finish" }];
 
   //   hours = hours.filter((item) => timeInRange(item));
 
@@ -132,6 +149,7 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
               placeholder={"Select start time"}
               value={startTime}
             />
+            <p className="error">{errors.start_time}</p>
           </div>
           <div className="form__control--third">
             <label className="form__label">Break:</label>
@@ -150,10 +168,11 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
               className="react-select-container"
               classNamePrefix="react-select"
               onChange={setEndTime}
-              options={hours}
+              options={endHours}
               placeholder={"Select end time"}
               value={endTime}
             />
+            <p className="error">{errors.end_time}</p>
           </div>
         </div>
         <ul className="tag-container--sm">

@@ -8,6 +8,7 @@ import {
   addEmployee,
   updateEmployee,
   getEmployees,
+  getAllEmployees,
 } from "../../../actions/employees";
 import { parseISO, format, addDays } from "date-fns";
 import Roles from "./employees-form/Roles";
@@ -16,6 +17,8 @@ import Wage from "./employees-form/Wage";
 import Status from "./employees-form/Status";
 import { isInViewport } from "../../../utils/hooks/isInViewport";
 import Permissions from "./employees-form/Permissions";
+import { getErrors } from "../../../actions/errors";
+import { toast } from "react-toastify";
 
 const EmployeesForm = () => {
   const dispatch = useDispatch();
@@ -29,7 +32,7 @@ const EmployeesForm = () => {
   const { formType, employeeId } = useParams();
   let [currentEmployee, setCurrentEmployee] = useState(false);
   const [currentSection, setCurrentSection] = useState("Personal Details");
-  const employees = useSelector((state) => state.employees.employees);
+  const all_employees = useSelector((state) => state.employees.all_employees);
   const sites = useSelector((state) => state.employees.sites);
   const current = useSelector((state) => state.employees.current);
   const loading = useSelector((state) => state.loading);
@@ -47,8 +50,12 @@ const EmployeesForm = () => {
   const [wageDate, setWageDate] = useState(new Date());
 
   useEffect(() => {
-    if (employeeId && employees.length > 0) {
-      let employee = employees.find((item) => item.id == employeeId);
+    dispatch(getAllEmployees());
+  }, [current.site]);
+
+  useEffect(() => {
+    if (employeeId && all_employees.length > 0) {
+      let employee = all_employees.find((item) => item.id == employeeId);
 
       setCurrentEmployee(employee);
       setFirstName(employee.first_name);
@@ -75,7 +82,7 @@ const EmployeesForm = () => {
           : ""
       );
     }
-  }, [employees]);
+  }, [all_employees]);
 
   const personalDetailsProps = {
     firstName,
@@ -115,33 +122,53 @@ const EmployeesForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const employee = {
-      first_name: firstName,
-      last_name: lastName,
-      wage: {
-        wage: parseFloat(wage),
-        wage_type: wageType,
-        start_date: format(wageDate, "yyyy-MM-dd"),
-      },
 
-      position_id: positionList.map((pos) => pos.id),
-      business_id: current.business.id,
-      default_availability: availability,
-      permissions_id: permissions,
-      start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
-      end_working_date: endWorkingDate
-        ? format(endWorkingDate, "yyyy-MM-dd")
-        : "",
+    let error_obj = {
+      first_name: firstName ? true : "This field is required",
+      last_name: lastName ? true : "This field is required",
+      position_list:
+        positionList.length > 0 ? true : "You must select at least 1 position",
     };
 
-    if (formType == "edit") {
-      dispatch(updateEmployee(currentEmployee.id, employee));
-      // toast.success("Employee updated!");
+    dispatch(getErrors(error_obj, 400));
+
+    if (
+      Object.keys(error_obj).every((k) => {
+        return error_obj[k] == true;
+      })
+    ) {
+      const employee = {
+        first_name: firstName,
+        last_name: lastName,
+        wage: wage > 0 &&
+          wageType &&
+          wageDate && {
+            wage: parseFloat(wage),
+            wage_type: wageType,
+            start_date: format(wageDate, "yyyy-MM-dd"),
+          },
+
+        position_id: positionList.map((pos) => pos.id),
+        business_id: current.business.id,
+        default_availability: availability,
+        permissions_id: permissions,
+        start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
+        end_working_date: endWorkingDate
+          ? format(endWorkingDate, "yyyy-MM-dd")
+          : "",
+      };
+
+      if (formType == "edit") {
+        dispatch(updateEmployee(currentEmployee.id, employee));
+        // toast.success("Employee updated!");
+      } else {
+        dispatch(addEmployee(employee));
+        // toast.success("Employee added!");
+      }
+      history.push("/employees");
     } else {
-      dispatch(addEmployee(employee));
-      // toast.success("Employee added!");
+      toast.error("There are errors in your submission");
     }
-    history.push("/employees");
   };
 
   const scrollToRef = (ref) => {

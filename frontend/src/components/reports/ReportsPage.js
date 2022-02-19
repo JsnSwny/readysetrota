@@ -83,7 +83,7 @@ const ReportsPage = () => {
               placeholder={"Select which values to use"}
             />
             <a
-              href={`/report/?site_id=${current.site.id}&start_date=${format(
+              href={`api/report/?site_id=${current.site.id}&start_date=${format(
                 startDate,
                 "dd/MM/yyyy"
               )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${

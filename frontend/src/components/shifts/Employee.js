@@ -19,7 +19,7 @@ const Employee = (props) => {
       .filter(
         (item) =>
           item.department == department &&
-          item.employee.id == employee &&
+          item.employee?.id == employee &&
           item.absence == "None"
       )
       .map((item) =>
@@ -60,7 +60,7 @@ const Employee = (props) => {
     let shifts_filtered = shifts.filter(
       (item) =>
         item.date == formatDate &&
-        item.employee.id == employee.id &&
+        item.employee?.id == employee.id &&
         item.absence == "None" &&
         item.wage > 0
     );

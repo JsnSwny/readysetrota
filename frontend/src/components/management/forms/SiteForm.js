@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addSite, updateSite } from "../../../actions/employees";
 import { toast } from "react-toastify";
+import { getErrors } from "../../../actions/errors";
 
 const SiteForm = ({ setOpen, editSite }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const current = useSelector((state) => state.employees.current);
+  let errors = useSelector((state) => state.errors.msg);
 
   useEffect(() => {
     setName(editSite.name);
@@ -14,14 +16,27 @@ const SiteForm = ({ setOpen, editSite }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    let siteObj = {
-      name,
-      business_id: current.business.id,
+
+    let error_obj = {
+      name: name ? true : "This field is required",
     };
-    !editSite
-      ? dispatch(addSite(siteObj))
-      : dispatch(updateSite(editSite.id, siteObj));
-    setOpen(false);
+
+    dispatch(getErrors(error_obj, 400));
+
+    if (
+      Object.keys(error_obj).every((k) => {
+        return error_obj[k] == true;
+      })
+    ) {
+      let siteObj = {
+        name,
+        business_id: current.business.id,
+      };
+      !editSite
+        ? dispatch(addSite(siteObj))
+        : dispatch(updateSite(editSite.id, siteObj));
+      setOpen(false);
+    }
   };
 
   return (
@@ -36,6 +51,7 @@ const SiteForm = ({ setOpen, editSite }) => {
           autoFocus
           value={name}
         ></input>
+        <p className="error">{errors.name}</p>
       </div>
       <hr />
       <div className="button-container">

@@ -19,7 +19,6 @@ def getPermList(self):
         if(Business.objects.filter(owner=user)):
             perm_list = list(PermissionType.objects.all().values_list('code_name'))
             perm_list = [item for t in perm_list for item in t]
-            print(perm_list)
         else:
             employee = Employee.objects.get(user=user, position__department__site=site)
 
@@ -134,14 +133,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
     permissions = PermissionCodeNameSerializer(read_only=True, many=True)
     permissions_id = serializers.PrimaryKeyRelatedField(
-        queryset=PermissionType.objects.all(), source='permissions', write_only=True, many=True)
+        queryset=PermissionType.objects.all(), source='permissions', write_only=True, many=True, required=False)
 
-    default_availability = serializers.JSONField()
+    default_availability = serializers.JSONField(required=False)
     position_id = serializers.PrimaryKeyRelatedField(
-        queryset=Position.objects.all(), source='position', write_only=True, many=True)
+        queryset=Position.objects.all(), source='position', write_only=True, many=True, required=False)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
-        queryset=Business.objects.all(), source='business', write_only=True)
+        queryset=Business.objects.all(), source='business', write_only=True, required=False)
 
     full_name = serializers.SerializerMethodField()
 
@@ -149,9 +148,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
 
+    total_shifts = serializers.SerializerMethodField()
+
     def get_wage(self, instance):
         wages = instance.wage.all().order_by('-start_date')
         return WageSerializer(wages, read_only=True, many=True).data
+
+    def get_total_shifts(self, obj):
+        return Shift.objects.filter(employee=obj).count()
 
     def get_current_wage(self, instance):
         wage = instance.wage.all().filter(
@@ -188,8 +192,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         start_date = self.context['request'].query_params.get(
             'start_date')
 
-        print(start_date)
-
         wage_type = self.context['request'].query_params.get(
             'wage_type')
 
@@ -201,27 +203,19 @@ class EmployeeSerializer(serializers.ModelSerializer):
         end_working_date = self.context['request'].query_params.get(
             'end_working_date')
 
+        current_status = EmployeeStatus.objects.filter(
+            employee=instance).order_by('-start_date').first()
+
         if validated_data.get('archived') == True:
-            instance.first_name = 'Anonymous'
-            if last_archived_employee:
-                if last_archived_employee.first_name == "Anonymous":
-                    value = int(
-                        last_archived_employee.last_name.replace('Employee ', ''))
-                else:
-                    value = 0
-                instance.last_name = 'Employee ' + str(value + 1)
-            else:
-                instance.last_name = 'Employee 1'
-            instance.save()
+            if not current_status.end_date:
+                current_status.end_date=datetime.today()
+                current_status.save()
 
             shifts = Shift.objects.filter(
                 employee=instance, date__gt=datetime.today()).delete()
 
-        current_status = EmployeeStatus.objects.filter(
-            employee=instance).order_by('-start_date').first()
-
         if start_working_date:
-            if current_status:
+            if current_status and not current_status.end_date:
                 current_status.start_date = start_working_date
                 if end_working_date != "":
                     current_status.end_date = end_working_date
@@ -230,6 +224,15 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 new_status = EmployeeStatus(
                     employee=instance, start_date=start_working_date, end_date=end_working_date)
                 new_status.save()
+                if current_status:
+                    start_date_obj = datetime.strptime(start_working_date, '%Y-%m-%d')
+                    if(start_date_obj.date() == current_status.end_date):
+                        current_status.delete()
+                    else:
+                        if current_status.end_date >= start_date_obj.date():
+                            current_status.end_date = start_date_obj - timedelta(days=1)
+                            current_status.save()
+                    
 
         if wage:
             wage_obj = Wage.objects.filter(
@@ -267,6 +270,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
             for i in permissions:
                 assign_perm(i, user, obj=site)
 
+        instance.save()
+
         return instance
 
     def create(self, validated_data):
@@ -293,9 +298,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
         wage = self.context['request'].query_params.get(
             'wage')
 
-        wage_obj = Wage(employee=employee, wage_type=wage_type,
-                        wage=wage, start_date=start_date)
-        wage_obj.save()
+        if wage:
+            wage_obj = Wage(employee=employee, wage_type=wage_type,
+                            wage=wage, start_date=start_date)
+            wage_obj.save()
 
         start_working_date = self.context['request'].query_params.get(
             'start_working_date')
@@ -365,6 +371,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
+    total_shifts = serializers.SerializerMethodField()
 
     user = BasicUserSerializer()
 
@@ -379,6 +386,9 @@ class EmployeeListSerializer(serializers.ModelSerializer):
             removeFields(ret, ["business", "permissions", "uuid", "owner", "archived", "pin", "created_at", "current_status", "user"])
 
         return ret 
+
+    def get_total_shifts(self, obj):
+        return Shift.objects.filter(employee=obj).count()
 
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
@@ -405,7 +415,7 @@ class EmployeeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'uuid', 'user', 'owner',
-                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'archived', 'pin', 'created_at', 'user',)
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'archived', 'pin', 'created_at', 'user', 'total_shifts',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):
@@ -508,12 +518,13 @@ class ShiftListSerializer(serializers.ModelSerializer):
         return ret 
 
     def get_wage(self, obj):
-        employee = Employee.objects.get(id=obj.employee_id)
-        wages = Wage.objects.filter(
-                employee=employee, start_date__lte=obj.date).filter(Q(end_date__gte=obj.date) | Q(end_date=None)).first()
-        if wages:
-            if wages.wage_type == "H":
-                return wages.wage
+        if obj.employee_id:
+            employee = Employee.objects.get(id=obj.employee_id)
+            wages = Wage.objects.filter(
+                    employee=employee, start_date__lte=obj.date).filter(Q(end_date__gte=obj.date) | Q(end_date=None)).first()
+            if wages:
+                if wages.wage_type == "H":
+                    return wages.wage
         return 0
 
     def get_length(self, obj):
@@ -538,9 +549,11 @@ class ShiftListSerializer(serializers.ModelSerializer):
         timeclock = validated_data.pop('timeclock', [])
         instance = Shift.objects.create(**validated_data)
         instance.positions.set(position)
+        end_time = None
 
 
-        end_time = datetime.strptime(instance.end_time, '%H:%M').time()
+        if instance.end_time != "Finish":
+            end_time = datetime.strptime(instance.end_time, '%H:%M').time()
 
         tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department)
 

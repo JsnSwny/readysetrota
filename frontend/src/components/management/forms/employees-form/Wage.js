@@ -51,12 +51,11 @@ const Wage = ({
               type="number"
               name="wage"
               onChange={(e) => setWage(e.target.value)}
-              autoFocus
               value={wage}
               min="0"
               step=".01"
             ></input>
-            <div>
+            <div className="employees-form--wage__selector">
               per{" "}
               <span
                 className={`${wageType == "H" ? "active" : ""}`}

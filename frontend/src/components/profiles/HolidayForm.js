@@ -24,6 +24,12 @@ const HolidayForm = ({ setOpen }) => {
     // };
     // dispatch(getErrors(error_obj, 400));
 
+    // if (
+    //   Object.keys(error_obj).every((k) => {
+    //     return error_obj[k] == true;
+    //   })
+    // ) {
+
     dispatch(
       addLeave({
         leave_type: leaveType,

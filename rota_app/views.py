@@ -492,18 +492,20 @@ def costAndHours(date, based_on, site_id):
     else:
         timeclocks = TimeClock.objects.filter(date=date, department__site=site_id).values('employee', 'clock_in', 'clock_out', 'break_length')
         for i in timeclocks:
-            employee = i['employee']
-            wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
-            start_time = i['clock_in'].strftime('%H:%M')
-            start_time = datetime.strptime(start_time, '%H:%M')
-            end_time = i['clock_out'].strftime('%H:%M')
-            end_time = datetime.strptime(end_time, '%H:%M')
-            total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
+            if i['clock_out']:
+                employee = i['employee']
+                wage_at_time = Wage.objects.filter(wage_type="H", employee__id=employee).order_by('-start_date').first()
+                start_time = i['clock_in'].strftime('%H:%M')
+                start_time = datetime.strptime(start_time, '%H:%M')
+                
+                end_time = i['clock_out'].strftime('%H:%M')
+                end_time = datetime.strptime(end_time, '%H:%M')
+                total_length = timeDifference(start_time, end_time) - (i['break_length'] / 60)
 
-            total_hours += total_length
+                total_hours += total_length
 
-            if(wage_at_time):
-                total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
+                if(wage_at_time):
+                    total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
 
 
     salaries = Wage.objects.filter(employee__position__department__site=site_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
@@ -540,6 +542,7 @@ class GetReportData(APIView):
         delta = end_date - start_date
         start = time.process_time()
         dataObj = []
+
         for i in range(delta.days+1):
 
             date = end_date - timedelta(days=i)
@@ -583,8 +586,7 @@ class GetReportData(APIView):
             dataObj.append(obj)
 
         exportData = bool(request.query_params.get('exportData'))
-        
-
+    
 
         if exportData == True:
             n_shifts = 0

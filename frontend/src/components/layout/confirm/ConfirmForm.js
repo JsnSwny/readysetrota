@@ -1,6 +1,6 @@
 import React from "react";
 
-const ConfirmForm = ({ setOpen, title, action }) => {
+const ConfirmForm = ({ setOpen, title, action, actionTitle }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     action();
@@ -15,7 +15,7 @@ const ConfirmForm = ({ setOpen, title, action }) => {
       <hr />
       <div className="button-container">
         <button className="btn-3" type="submit" value="Delete">
-          Delete
+          {actionTitle ? actionTitle : "Delete"}
         </button>
       </div>
     </form>

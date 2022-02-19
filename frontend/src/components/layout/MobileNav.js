@@ -27,7 +27,7 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
             <h4>
               {auth.user.first_name}{" "}
               {!auth.user.business && auth.user.last_name}{" "}
-              <Link to="/settings" onClick={() => closeNav()}>
+              <Link to="/changepassword" onClick={() => closeNav()}>
                 <i class="fas fa-cog"></i>
               </Link>
             </h4>

@@ -20,7 +20,6 @@ const TimeclockList = ({
             handleChange(idx, "employee", e.value);
           }}
           options={employeeSelectList}
-          autoFocus
           value={employeeSelectList.filter((e) => {
             return e.value.id == item.employee?.id;
           })}

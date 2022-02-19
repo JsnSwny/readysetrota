@@ -17,5 +17,4 @@ class Command(BaseCommand):
             while len(Employee.objects.filter(pin=number)) > 0:
                 number = random.randint(1000,9999)
             employee.pin = number
-            print(employee.id, number)
             employee.save()

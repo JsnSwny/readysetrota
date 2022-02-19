@@ -32,5 +32,3 @@ class Command(BaseCommand):
 
             forecast = Forecast(date=date, site=site, predicted=predicted, actual=actual, labourGoal=labourGoal)
             forecast.save()
-
-        print("Done.")

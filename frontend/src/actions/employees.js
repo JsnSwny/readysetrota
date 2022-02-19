@@ -36,6 +36,7 @@ import {
   START_AVAILABILITY,
   FORECAST_LOADING,
   SET_ACTIVE_PERMISSIONS,
+  GET_ALL_EMPLOYEES,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -303,6 +304,31 @@ export const getEmployees =
       .catch((err) => console.log(err.response));
   };
 
+export const getAllEmployees =
+  (archived = false) =>
+  (dispatch, getState) => {
+    let current = getState().employees.current;
+    let query = "";
+    query += `&position__department__site=${
+      current.site.id ? current.site.id : null
+    }`;
+
+    axios
+      .get(
+        `/api/employeelist/?${query}${currentSite(
+          getState
+        )}&ordering=archived,first_name,last_name,`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        dispatch({
+          type: GET_ALL_EMPLOYEES,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log(err.response));
+  };
+
 export const setDepartment = (id) => (dispatch, getState) => {
   let isLoading = getState().loading.positions || getState().loading.employees;
   if (isLoading) {
@@ -332,6 +358,28 @@ export const deleteEmployee = (id) => (dispatch, getState) => {
     });
 };
 
+export const batchDeleteEmployees = (items) => (dispatch, getState) => {
+  axios
+    .all(
+      items.map((item) =>
+        axios.put(
+          `/api/employees/${item.id}/`,
+          { ...item, archived: true },
+          tokenConfig(getState)
+        )
+      )
+    )
+    .then((responseArr) => {
+      items.forEach((item, idx) => {
+        dispatch({
+          type: UPDATE_EMPLOYEE,
+          payload: responseArr[idx].data,
+        });
+      });
+    })
+    .catch((err) => console.log(err.response));
+};
+
 export const updateEmployee = (update, employee) => (dispatch, getState) => {
   let current = getState().employees.current;
   let query = "";
@@ -342,8 +390,10 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
         : ""
     }`;
   }
+  if (employee.wage) {
+    query += `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
+  }
 
-  query += `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
   axios
     .put(`/api/employees/${update}/?${query}`, employee, tokenConfig(getState))
     .then((res) => {
@@ -361,7 +411,10 @@ export const updateEmployee = (update, employee) => (dispatch, getState) => {
 export const addEmployee = (employee) => (dispatch, getState) => {
   let current = getState().employees.current;
 
-  let wageQuery = `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
+  let wageQuery = "";
+  if (employee.wage) {
+    wageQuery = `&wage=${employee.wage.wage}&wage_type=${employee.wage.wage_type}&start_date=${employee.wage.start_date}`;
+  }
 
   axios
     .post(
@@ -383,10 +436,6 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       });
 
       dispatch(resetErrors());
-
-      // Remove later and update number of employees through reducer
-      dispatch(getDepartments());
-      dispatch(getSites());
     })
     .catch((err) => console.log(err.response));
 };

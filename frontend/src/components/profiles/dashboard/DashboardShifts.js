@@ -147,8 +147,8 @@ const DashboardShifts = () => {
                   </small>
 
                   <p>
-                    {item.employee.first_name}{" "}
-                    <strong>{item.employee.last_name}</strong>
+                    {item.employee?.first_name}{" "}
+                    <strong>{item.employee?.last_name}</strong>
                   </p>
                   <p>
                     {item.start_time} - {item.end_time}

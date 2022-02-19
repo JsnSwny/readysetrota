@@ -10,6 +10,7 @@ const Roles = ({
 }) => {
   const departments = useSelector((state) => state.employees.departments);
   const positions = useSelector((state) => state.employees.positions);
+  let errors = useSelector((state) => state.errors.msg);
 
   const [departmentSearch, setDepartmentSearch] = useState("");
   const [filteredDepartments, setFilteredDepartments] = useState([]);
@@ -128,6 +129,7 @@ const Roles = ({
               </div>
             </div>
           ))}
+        <p className="error">{errors.position_list}</p>
       </div>
     </div>
   );

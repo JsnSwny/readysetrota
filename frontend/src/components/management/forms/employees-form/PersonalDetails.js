@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const PersonalDetails = ({
   firstName,
@@ -8,6 +9,7 @@ const PersonalDetails = ({
   email,
   setEmail,
 }) => {
+  let errors = useSelector((state) => state.errors.msg);
   return (
     <Fragment>
       <div className="flex-container--between">
@@ -21,6 +23,7 @@ const PersonalDetails = ({
             autoFocus
             value={firstName}
           ></input>
+          <p className="error">{errors.first_name}</p>
         </div>
         <div className="form__control--half">
           <label className="form-block__label">Last name*</label>
@@ -31,6 +34,7 @@ const PersonalDetails = ({
             onChange={(e) => setLastName(e.target.value)}
             value={lastName}
           ></input>
+          <p className="error">{errors.last_name}</p>
         </div>
       </div>
       {/* <div className="flex-container--between">

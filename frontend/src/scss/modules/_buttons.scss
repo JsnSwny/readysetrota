@@ -44,6 +44,20 @@
         background-color: darken($red, 10%);
       }
     }
+    &--toggle {
+      transition: 0.2s ease opacity;
+      background-color: $blue;
+      &:hover {
+        background-color: $blue;
+      }
+      &.active {
+        opacity: 1;
+        background-color: $pink;
+        &:hover {
+          background-color: $pink;
+        }
+      }
+    }
   }
   &-4 {
     @extend .btn;

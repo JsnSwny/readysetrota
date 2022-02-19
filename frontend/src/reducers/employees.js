@@ -33,6 +33,7 @@ import {
   ADD_FORECAST,
   UPDATE_FORECAST,
   UPDATE_SETTINGS,
+  GET_ALL_EMPLOYEES,
 } from "../actions/types";
 import { format, parseISO } from "date-fns";
 
@@ -41,6 +42,7 @@ const initialState = {
   sites: [],
   holidays: [],
   employees: [],
+  all_employees: [],
   positions: [],
   all_positions: [],
   departments: [],
@@ -173,6 +175,7 @@ export default function (state = initialState, action) {
         departments: [],
         employees: [],
         positions: [],
+        all_employees: [],
       };
     case ADD_AVAILABILITY:
       return {
@@ -217,6 +220,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         employees: action.payload,
+      };
+    case GET_ALL_EMPLOYEES:
+      return {
+        ...state,
+        all_employees: action.payload,
       };
     case GET_POSITIONS:
       return {
@@ -306,6 +314,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         employees: [...state.employees, action.payload],
+        all_employees: [...state.all_employees, action.payload].sort((a, b) =>
+          a.current_status.end_date === b.current_status.end_date
+            ? 0
+            : a.current_status.end_date
+            ? 1
+            : -1
+        ),
         business: {
           ...state.business,
           number_of_employees: state.business.number_of_employees + 1,
@@ -318,12 +333,26 @@ export default function (state = initialState, action) {
         employees: state.employees.map((item) =>
           item.id === action.payload.id ? action.payload : item
         ),
+        all_employees: state.all_employees
+          .map((item) =>
+            item.id === action.payload.id ? action.payload : item
+          )
+          .sort((a, b) =>
+            a.current_status.end_date === b.current_status.end_date
+              ? 0
+              : a.current_status.end_date
+              ? 1
+              : -1
+          ),
       };
 
     case DELETE_EMPLOYEE:
       return {
         ...state,
         employees: state.employees.filter(
+          (employee) => employee.id !== action.payload
+        ),
+        all_employees: state.all_employees.filter(
           (employee) => employee.id !== action.payload
         ),
       };
