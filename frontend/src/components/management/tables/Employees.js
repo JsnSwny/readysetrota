@@ -206,19 +206,23 @@ const Employees = () => {
                     }`}{" "}
                 </td>
                 <td className="hide-tablet">
-                  {format(
-                    parseISO(item.current_status.start_date),
-                    "dd/MM/yyyy"
-                  )}{" "}
-                  -{" "}
-                  {item.current_status.end_date
-                    ? format(
-                        parseISO(item.current_status.end_date),
+                  {item.current_status && (
+                    <Fragment>
+                      {format(
+                        parseISO(item.current_status.start_date),
                         "dd/MM/yyyy"
-                      )
-                    : "Present"}
+                      )}{" "}
+                      -{" "}
+                      {item.current_status.end_date
+                        ? format(
+                            parseISO(item.current_status.end_date),
+                            "dd/MM/yyyy"
+                          )
+                        : "Present"}
+                    </Fragment>
+                  )}
                 </td>
-                {isArchived(item.current_status.end_date) ? (
+                {isArchived(item.current_status?.end_date) ? (
                   <ListAction
                     actions={
                       <ul>
