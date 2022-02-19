@@ -255,9 +255,9 @@ class SiteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
             business = self.request.user.business
-            return Site.objects.filter(business=business)
+            return Site.objects.filter(business=business).distinct()
         sites = Site.objects.filter(
-            department_site__pos_department__position__user=self.request.user)
+            department_site__pos_department__position__user=self.request.user).distinct()
 
         return sites
 
