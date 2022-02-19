@@ -80,3 +80,6 @@ class Command(BaseCommand):
 
                 employee.save()
                 employee.position.add(random.choice(positions))
+
+            print(user)
+            print(random_password)
