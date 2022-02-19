@@ -259,13 +259,11 @@ export const setSite = (id) => (dispatch, getState) => {
   let isLoading = getState().loading.departments ? true : false;
   let user = getState().auth.user;
 
-  let site = getState().employees.sites.find((item) => item.id == id);
+  let site = getState().employees.sites.find((item) => item.id == id.id);
 
   let perm_list = getState().permissions.permission_types;
 
   const current_user = getState().auth.user;
-
-  console.log(current_user);
 
   if (!current_user.business) {
     perm_list = [];
