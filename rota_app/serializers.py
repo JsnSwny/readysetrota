@@ -20,7 +20,7 @@ def getPermList(self):
             perm_list = list(PermissionType.objects.all().values_list('code_name'))
             perm_list = [item for t in perm_list for item in t]
         else:
-            employee = Employee.objects.get(user=user, position__department__site=site)
+            employee = Employee.objects.filter(user=user, position__department__site=site).first()
 
             perm_list = [perm.code_name for perm in employee.permissions.all()]
 
