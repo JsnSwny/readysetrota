@@ -305,9 +305,6 @@ export const getEmployees =
   (dispatch, getState) => {
     let current = getState().employees.current;
     let query = "";
-    query += `&position__department__site=${
-      current.site.id ? current.site.id : null
-    }`;
 
     if (start_date && end_date) {
       query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
