@@ -137,6 +137,7 @@ const EmployeesForm = () => {
         return error_obj[k] == true;
       })
     ) {
+      console.log(permissions);
       const employee = {
         first_name: firstName,
         last_name: lastName,
