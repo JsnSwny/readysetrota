@@ -121,7 +121,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 class EmployeeListViewSet(viewsets.ModelViewSet):
     serializer_class = EmployeeListSerializer
 
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.all().distinct()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
