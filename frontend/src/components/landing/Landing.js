@@ -186,13 +186,17 @@ const Landing = ({ setOpen, setType }) => {
             >
               <i class="fab fa-linkedin"></i>
             </a>
-            <a className="footer__link" href="#" target="_blank">
+            <a
+              className="footer__link"
+              href="https://www.instagram.com/readysetrota"
+              target="_blank"
+            >
               <i class="fab fa-instagram"></i>
             </a>
 
             <a
               className="footer__link"
-              href="https://www.facebook.com/readysetcore"
+              href="https://www.facebook.com/readysetrota"
               target="_blank"
             >
               <i class="fab fa-facebook-square"></i>
