@@ -50,35 +50,6 @@ const Register = (props) => {
           <h2>Register</h2>
           <hr className="separator" />
           <form onSubmit={onSubmit}>
-            {!path && (
-              <div className="form__control">
-                <label>What role are you?</label>
-                <div className="flex-container">
-                  <span
-                    className={`form-control ${
-                      role == "User" ? "active" : ""
-                    } btn-toggle`}
-                    onClick={() => {
-                      setRole("User");
-                    }}
-                  >
-                    Employee
-                  </span>
-                  <span
-                    className={`form-control ${
-                      role == "Business" ? "active" : ""
-                    } btn-toggle`}
-                    onClick={() => {
-                      setRole("Business");
-                    }}
-                  >
-                    Business
-                  </span>
-                </div>
-                <p className="error">{errors.role}</p>
-              </div>
-            )}
-
             {role == "Business" && (
               <div className="form__control">
                 <label className="form__label">Business Name</label>
