@@ -139,7 +139,7 @@ const Rota = () => {
                 (position) =>
                   position.department.id == department.id &&
                   employees.filter((employee) =>
-                    employee.position.some((pos) => position.id == pos.id)
+                    employee.position.includes(position.id)
                   ).length > 0 && (
                     <Fragment>
                       <h4 className="rota__position">{position.name}</h4>

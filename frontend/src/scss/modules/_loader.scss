@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  pointer-events: none;
   &__circle {
     border: 16px solid #2a2a2a;
     border-radius: 50%;

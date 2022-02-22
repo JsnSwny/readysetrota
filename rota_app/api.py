@@ -1,19 +1,11 @@
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Leave, TimeClock, PermissionType, Wage
+from .models import *
 from rest_framework import viewsets, permissions
-from .serializers import (ShiftSerializer, EmployeeSerializer, PositionSerializer,
-                          DepartmentSerializer, BusinessSerializer, AvailabilitySerializer,
-                          ShiftListSerializer, EmployeeListSerializer, SiteSerializer, AdminEmployeeListSerializer,
-                          BasicPositionSerializer, ForecastSerializer, SiteSettingsSerializer, LeaveSerializer, TimeClockSerializer, PermissionTypeSerializer)
-from datetime import date
+from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter, SearchFilter
-from django_filters import FilterSet, DateFilter, DateRangeFilter
+from rest_framework.filters import OrderingFilter
+from django_filters import DateFilter
 import django_filters
-from django.contrib.auth.models import User
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.db.models import F, Case, When, Q
-# Booking Viewset
+from django.db.models import Q
 
 
 class ShiftFilter(django_filters.FilterSet):
@@ -27,6 +19,84 @@ class ShiftFilter(django_filters.FilterSet):
         model = Shift
         fields = ['date', 'employee', 'department', 'department__site',
                   'employee__user__id', 'absence__not', 'open_shift', 'stage',]
+
+class ShiftViewSet(viewsets.ModelViewSet):
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ShiftSerializer
+        else:
+            return ShiftListSerializer  
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Shift.objects.filter(department__site__business=self.request.user.business)
+
+        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
+
+        shifts = Shift.objects.filter(department__in=user_departments)
+        return shifts
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = ShiftFilter
+    ordering_fields = ('date', 'start_time')
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class EmployeeFilter(django_filters.FilterSet):
+    status__start_date = DateFilter(lookup_expr='lte')
+    status__end_date = DateFilter(method='check_end_date')
+    site = django_filters.NumberFilter(field_name='position__department__site')
+
+    def check_end_date(self, queryset, name, value):
+        return queryset.filter(Q(status__end_date__gte=value) | Q(status__end_date=None))
+
+    class Meta:
+        model = Employee
+        fields = ['status__start_date', 'status__end_date', 'site', 'archived']
+
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+
+    queryset = Employee.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            management = self.request.query_params.get('management') == "True"
+
+            print(management)
+
+            if management:
+                return EmployeeListSerializer
+            else:
+                return MinEmployeeListSerializer
+        else:
+            return EmployeeSerializer  
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Employee.objects.filter(position__department__site__business=self.request.user.business)
+
+        user_employees = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        employees = Employee.objects.filter(
+            position__department__site__in=user_employees)
+
+        return employees
+
+    def perform_create(self, serializer):
+        business = int(self.request.query_params.get('business'))
+        business = Business.objects.filter(id=business).first()
+        total_employees = business.total_employees
+        current_employees = Employee.objects.filter(business=business)
+        if len(current_employees) >= total_employees:
+            return False
+        serializer.save(owner=self.request.user)
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = EmployeeFilter
+    ordering_fields = ('archived', 'first_name', 'last_name',)
 
 
 class BusinessFilter(django_filters.FilterSet):
@@ -43,18 +113,6 @@ class BusinessViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Business.objects.filter(owner=self.request.user)
 
-
-class ShiftListViewSet(viewsets.ModelViewSet):
-    serializer_class = ShiftListSerializer
-    queryset = Shift.objects.all()
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_class = ShiftFilter
-    ordering_fields = ('date', 'start_time')
-
 class TimeClockFilter(django_filters.FilterSet):
     class Meta:
         model = TimeClock
@@ -70,68 +128,7 @@ class TimeClockViewSet(viewsets.ModelViewSet):
 
     ordering_fields = ('date', 'start_time')
 
-class ShiftViewSet(viewsets.ModelViewSet):
-    serializer_class = ShiftSerializer
-    queryset = Shift.objects.all()
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_class = ShiftFilter
-    ordering_fields = ('date', 'clock_in')
-
-
-class EmployeeFilter(django_filters.FilterSet):
-    position__department = django_filters.NumberFilter(distinct=True)
-    position__department__site = django_filters.NumberFilter(distinct=True)
-    status__start_date = DateFilter(lookup_expr='lte')
-    status__end_date = DateFilter(method='check_end_date')
-
-    def check_end_date(self, queryset, name, value):
-        return queryset.filter(Q(status__end_date__gte=value) | Q(status__end_date=None))
-
-    class Meta:
-        model = Employee
-        fields = ['status__start_date', 'status__end_date', 'position__department',
-                  'position__department__site', 'business', 'archived']
-
-
-class EmployeeViewSet(viewsets.ModelViewSet):
-
-    queryset = Employee.objects.all()
-
-    def get_serializer_class(self):
-        return EmployeeSerializer
-
-    def perform_create(self, serializer):
-        business = int(self.request.query_params.get('business'))
-        business = Business.objects.filter(id=business).first()
-        total_employees = business.total_employees
-        current_employees = Employee.objects.filter(business=business)
-        if len(current_employees) >= total_employees:
-            return False
-        serializer.save(owner=self.request.user)
-
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = EmployeeFilter
-    ordering_fields = ('first_name', 'archived', 'last_name', 'position__department',)
-
-
-class EmployeeListViewSet(viewsets.ModelViewSet):
-    serializer_class = EmployeeListSerializer
-
-    queryset = Employee.objects.all().distinct()
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = EmployeeFilter
-    ordering_fields = ('first_name', 'archived', 'last_name',)
-
-
-class AdminEmployeeListViewSet(EmployeeListViewSet, viewsets.ModelViewSet):
-    serializer_class = AdminEmployeeListSerializer
 
 
 class PositionFilter(django_filters.FilterSet):
@@ -176,11 +173,11 @@ class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
 
 
 class DepartmentFilter(django_filters.FilterSet):
-    site__id = django_filters.NumberFilter()
+    site = django_filters.NumberFilter(field_name='site__id')
 
     class Meta:
         model = Department
-        fields = ['site__id', 'name']
+        fields = ['site', 'name']
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -201,8 +198,10 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, "business"):
             return Department.objects.filter(business=self.request.user.business)
 
+        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
+
         departments = Department.objects.filter(
-            pos_department__position__user=self.request.user)
+            Q(id__in=user_departments) | Q(owner=self.request.user))
 
         return departments
 

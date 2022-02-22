@@ -16,6 +16,7 @@ import {
   ADD_TIMECLOCK,
   DELETE_TIMECLOCK,
   UPDATE_TIMECLOCK,
+  UPDATE_DATE_RANGE,
 } from "../actions/types";
 import { format, addDays, startOfWeek } from "date-fns";
 
@@ -63,12 +64,17 @@ export default function (state = initialState, action) {
         ...state,
         isLoading: true,
       };
+    case UPDATE_DATE_RANGE:
+      return {
+        ...state,
+        date: action.date,
+        end_date: action.enddate,
+      };
+
     case GET_ALL_SHIFTS:
       return {
         ...state,
         shifts: action.payload,
-        date: !action.list ? action.date : state.date,
-        end_date: !action.list ? action.enddate : state.end_date,
         isLoading: false,
       };
 

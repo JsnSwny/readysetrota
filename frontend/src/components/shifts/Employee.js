@@ -18,7 +18,7 @@ const Employee = (props) => {
     return shifts
       .filter(
         (item) =>
-          item.department == department &&
+          item.department.id == department &&
           item.employee?.id == employee &&
           item.absence == "None"
       )
@@ -103,7 +103,7 @@ const Employee = (props) => {
         to={`/employees/edit/${employee.id}`}
         className="rotaEmployee__name"
       >
-        {employee.first_name} <strong>{employee.last_name}</strong>
+        {employee.full_name}
       </Link>
 
       <p className="rotaEmployee__hours">

@@ -16,6 +16,7 @@ const Positions = () => {
 
   let positions = useSelector((state) => state.employees.positions);
   const employees = useSelector((state) => state.employees.employees);
+  const departments = useSelector((state) => state.employees.departments);
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);

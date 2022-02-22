@@ -4,13 +4,33 @@ from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
 from django.db.models import Q
-from guardian.shortcuts import get_perms, remove_perm, assign_perm
-from guardian.shortcuts import get_objects_for_user, get_user_perms, get_perms_for_model
 import numpy as np
 import random
 
+def gettingStartedValues(obj):
+    uncomplete = []
+    if Department.objects.filter(business=obj).count() == 0:
+        uncomplete.append('departments')
+
+    if Position.objects.filter(department__business=obj).count() == 0:
+        uncomplete.append('positions')
+
+    if Employee.objects.filter(position__department__business=obj).count() == 0:
+        uncomplete.append('employees')
+
+    if Shift.objects.filter(department__business=obj).count() == 0:
+        uncomplete.append('shifts')
+
+    if Shift.objects.filter(department__business=obj, stage="Published").count() == 0:
+        uncomplete.append('publish')
+
+    if Forecast.objects.filter(site__business=obj).count() == 0:
+        uncomplete.append('forecast')
+    print(Department.objects.filter(business=obj))
+    return uncomplete
+
 def getPermList(self):
-    site = self.context['request'].query_params.get('current_site', None)
+    site = self.context['request'].query_params.get('site', None)
     perm_list = []
     if site:
         site = Site.objects.get(pk=site)
@@ -56,26 +76,7 @@ class BusinessSerializer(serializers.ModelSerializer):
         return len(employees)
 
     def get_getting_started(self, obj):
-        uncomplete = []
-        if Department.objects.filter(business=obj).count() == 0:
-            uncomplete.append('departments')
-
-        if Position.objects.filter(department__business=obj).count() == 0:
-            uncomplete.append('positions')
-
-        if Employee.objects.filter(position__department__business=obj).count() == 0:
-            uncomplete.append('employees')
-
-        if Shift.objects.filter(department__business=obj).count() == 0:
-            uncomplete.append('shifts')
-
-        if Shift.objects.filter(department__business=obj, stage="Published").count() == 0:
-            uncomplete.append('publish')
-
-        if Forecast.objects.filter(site__business=obj).count() == 0:
-            uncomplete.append('forecast')
-
-        return uncomplete
+        return gettingStartedValues(obj)
 
     def create(self, validated_data):
         business = Business.objects.create(**validated_data)
@@ -94,12 +95,9 @@ class BasicUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'email',)
 
 class BasicDepartmentSerializer(serializers.ModelSerializer):
-    business = BusinessSerializer(read_only=True)
-
     class Meta:
         model = Department
-        fields = ('id', 'name', 'business',)
-        depth = 1
+        fields = ('id', 'name',)
 
 class PermissionTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -129,26 +127,22 @@ class DepartmentSerializer(serializers.ModelSerializer):
             )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
+class BasicPositionSerializer(serializers.ModelSerializer):
+    department = BasicDepartmentSerializer(read_only=True)
+    class Meta:
+        model = Position
+        fields = ('id', 'name', 'department',)
 
-class PositionSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer(read_only=True)
+class PositionSerializer(BasicPositionSerializer, serializers.ModelSerializer):
+    owner = BasicUserSerializer(read_only=True)
     department_id = serializers.PrimaryKeyRelatedField(
         queryset=Department.objects.all(), source='department', write_only=True, required=False)
-    business = BusinessSerializer(read_only=True)
-    business_id = serializers.PrimaryKeyRelatedField(
-        queryset=Business.objects.all(), source='business', write_only=True, required=False)
-
     class Meta:
         model = Position
-        fields = '__all__'
-        depth = 3
+        fields = ('__all__')
 
 
-class BasicPositionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Position
-        fields = ('id', 'name', 'department', 'order',)
-        depth = 1
+
 
 class PermissionCodeNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -238,7 +232,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 current_status.end_date=datetime.today()
                 current_status.save()
 
-            shifts = Shift.objects.filter(
+            Shift.objects.filter(
                 employee=instance, date__gt=datetime.today()).delete()
 
         if start_working_date:
@@ -276,26 +270,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 wage_obj = Wage(employee=instance, wage_type=wage_type,
                                 wage=wage, start_date=start_date)
                 wage_obj.save()
-
-        if user:
-            site = instance.position.all().first().department.site
-
-            permissions_query = self.context['request'].query_params.get(
-                'permissions')
-            permissions = []
-            if permissions_query:
-                permissions = self.context['request'].query_params.get(
-                    'permissions')
-                permissions = permissions.split(',') if isinstance(
-                    permissions, str) else permissions
-
-            all_perms = get_perms(user, site)
-            diff = np.setdiff1d(all_perms, permissions)
-            for i in diff:
-                remove_perm(i, user, obj=site)
-
-            for i in permissions:
-                assign_perm(i, user, obj=site)
 
         instance.save()
 
@@ -355,28 +329,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return employee
 
 
-class AdminEmployeeListSerializer(serializers.ModelSerializer):
-    position = BasicPositionSerializer(read_only=True, many=True)
-    permissions = PermissionCodeNameSerializer(read_only=True, many=True)
-    business = BusinessSerializer(read_only=True)
-    default_availability = serializers.JSONField()
-    business_id = serializers.PrimaryKeyRelatedField(
-        queryset=Business.objects.all(), source='business', write_only=True)
-    full_name = serializers.SerializerMethodField()
-    user = BasicUserSerializer()
-
-    class Meta:
-        model = Employee
-        fields = ('id', 'full_name', 'first_name', 'last_name', 'user', 'owner',
-                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'archived', 'user',)
-
-
-    def get_full_name(self, obj):
-        if obj.first_name:
-            return f'{obj.first_name} {obj.last_name}'
-        return 'Open Shift'
-
-
 class WageSerializer(serializers.ModelSerializer):
     wage = serializers.SerializerMethodField()
 
@@ -388,35 +340,12 @@ class WageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class EmployeeListSerializer(serializers.ModelSerializer):
-    position = BasicPositionSerializer(read_only=True, many=True)
-    permissions = PermissionCodeNameSerializer(read_only=True, many=True)
-    default_availability = serializers.JSONField()
-    business_id = serializers.PrimaryKeyRelatedField(
-        queryset=Business.objects.all(), source='business', write_only=True)
+
+class MinEmployeeListSerializer(serializers.ModelSerializer):
+
     full_name = serializers.SerializerMethodField()
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
-    current_status = serializers.SerializerMethodField()
-    total_shifts = serializers.SerializerMethodField()
-
-    user = BasicUserSerializer()
-
-    def to_representation(self, obj):
-        ret = super(EmployeeListSerializer, self).to_representation(obj)
-        perm_list = getPermList(self)
-
-        if 'view_wages' not in perm_list:
-            removeFields(ret, ["current_wage", "wage"])
-        
-        if 'manage_employees' not in perm_list:
-            removeFields(ret, ["business", "permissions", "uuid", "owner", "archived", "pin", "created_at", "current_status", "user"])
-
-        return ret 
-
-    def get_total_shifts(self, obj):
-        return Shift.objects.filter(employee=obj).count()
-
     def get_full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
 
@@ -431,6 +360,51 @@ class EmployeeListSerializer(serializers.ModelSerializer):
         if wage:
             wage = wage[0]
             return {'id': wage.id, 'type': wage.wage_type, 'amount': wage.wage, 'start_date': wage.start_date}
+
+    def to_representation(self, obj):
+        ret = super(MinEmployeeListSerializer, self).to_representation(obj)
+
+        perm_list = getPermList(self)
+
+        if 'view_wages' not in perm_list:
+            removeFields(ret, ["current_wage", "wage"])
+
+        return ret
+        
+    
+    class Meta:
+        model = Employee
+        fields = ('id', 'full_name', 'position', 'wage', 'current_wage',)
+
+class EmployeeListSerializer(MinEmployeeListSerializer, serializers.ModelSerializer):
+    position = BasicPositionSerializer(read_only=True, many=True)
+    permissions = PermissionCodeNameSerializer(read_only=True, many=True)
+    default_availability = serializers.JSONField()
+    business_id = serializers.PrimaryKeyRelatedField(
+        queryset=Business.objects.all(), source='business', write_only=True)
+    
+    
+   
+    current_status = serializers.SerializerMethodField()
+    total_shifts = serializers.SerializerMethodField()
+
+    user = BasicUserSerializer()
+
+    def to_representation(self, obj):
+        ret = super(EmployeeListSerializer, self).to_representation(obj)
+
+        perm_list = getPermList(self)
+
+        if 'view_wages' not in perm_list:
+            removeFields(ret, ["current_wage", "wage"])
+        
+        if 'manage_employees' not in perm_list:
+            removeFields(ret, ["business", "permissions", "uuid", "owner", "archived", "pin", "created_at", "current_status", "user"])
+
+        return ret
+
+    def get_total_shifts(self, obj):
+        return Shift.objects.filter(employee=obj).count()
 
     def get_current_status(self, instance):
         status = instance.status.all().order_by('-start_date')
@@ -455,7 +429,7 @@ class CheckUUIDSerializer(serializers.ModelSerializer):
 class ShiftEmployeeSerializer(EmployeeListSerializer, serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'full_name', 'first_name', 'last_name', 'position')
+        fields = ('id',)
 
 
 class TimeClockSerializer(serializers.ModelSerializer):
@@ -525,14 +499,15 @@ class ShiftListSerializer(serializers.ModelSerializer):
     length = serializers.SerializerMethodField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(
     ), source='positions', write_only=True, many=True, required=False)
-    employee = ShiftEmployeeSerializer(read_only=True)
     wage = serializers.SerializerMethodField()
 
-    timeclock = TimeClockSerializer(required=False)
+    # timeclock = TimeClockSerializer(required=False)
     total_cost = serializers.SerializerMethodField()
 
     def to_representation(self, obj):
         ret = super(ShiftListSerializer, self).to_representation(obj)
+
+
         perm_list = getPermList(self)
 
         if 'create_shifts' not in perm_list:
@@ -600,7 +575,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'open_shift', 'employee', 'break_length', 'positions', 'info', 'id',
-                  'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'timeclock', 'total_cost',)
+                  'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
 
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
@@ -666,13 +641,12 @@ class SiteSerializer(serializers.ModelSerializer):
     unpublished_shifts = serializers.SerializerMethodField(read_only=True)
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
-    permissions = serializers.SerializerMethodField(read_only=True)
     tasks = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 
-                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions', 'tasks',)
+                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'tasks',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -687,16 +661,11 @@ class SiteSerializer(serializers.ModelSerializer):
 
         return instance
 
-    def get_permissions(self, obj):
-        return get_perms(self.context['request'].user, obj)
 
     def create(self, validated_data):
         site = Site.objects.create(**validated_data)
         settings = SiteSettings(site=site)
         settings.save()
-        all_perms = get_perms_for_model(Site)
-        for i in all_perms:
-            assign_perm(i.codename, site.business.owner, site)
         site.save()
         return site
 

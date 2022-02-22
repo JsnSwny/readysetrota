@@ -159,9 +159,7 @@ const AvailabilityCalendar = (props) => {
                               ? "unmarked"
                               : ""
                           }`
-                        : employee.default_availability[
-                            getDay(date) == 0 ? 6 : getDay(date) - 1
-                          ].name
+                        : "unmarked"
                     }`}
                   >
                     {!isHoliday &&

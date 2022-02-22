@@ -50,6 +50,8 @@ const Employees = () => {
     }
   };
 
+  console.log(employees);
+
   const isArchived = (date) => {
     return parseISO(date) <= new Date();
   };

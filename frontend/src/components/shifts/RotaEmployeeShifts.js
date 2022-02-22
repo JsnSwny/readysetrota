@@ -22,7 +22,7 @@ const RotaEmployeeShifts = ({
   var getEmployeeShift = (employee, date, department) =>
     shifts.filter((obj) => {
       return obj.employee &&
-        obj.employee.id === employee &&
+        obj.employee === employee &&
         obj.date === date &&
         obj.department == department
         ? permissions.includes("create_shifts")
@@ -31,19 +31,17 @@ const RotaEmployeeShifts = ({
         : "";
     });
 
-  console.log(shifts);
-
   const isAvailable = (employee, date) => {
     let available = availability.filter(
       (item) =>
         item.employee.id == employee.id &&
         item.date == format(date, "yyyy-MM-dd")
     )[0];
-    if (!available) {
-      date = parseISO(date);
-      available =
-        employee.default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
-    }
+    // if (!available) {
+    //   date = parseISO(date);
+    //   available =
+    //     employee.default_availability[getDay(date) == 0 ? 6 : getDay(date) - 1];
+    // }
 
     return available;
   };
@@ -53,10 +51,6 @@ const RotaEmployeeShifts = ({
         const format_date = format(result, "yyyy-MM-dd");
 
         let shifts = getEmployeeShift(employee.id, format_date, department.id);
-
-        console.log(shifts);
-        console.log(department);
-        console.log(format_date);
 
         if (financialMode == "actual") {
           shifts = shifts.filter((item) => item.stage == "Published");

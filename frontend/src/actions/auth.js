@@ -179,7 +179,7 @@ export const currentSite = (getState) => {
   const site = getState().employees.current.site;
 
   if (site) {
-    return `&current_site=${site.id}`;
+    return `&site=${site.id}`;
   } else {
     return false;
   }

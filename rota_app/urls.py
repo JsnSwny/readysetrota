@@ -1,22 +1,14 @@
 from rest_framework import routers
-from .api import (ShiftViewSet, EmployeeViewSet, PositionViewSet, 
-DepartmentViewSet, BusinessViewSet, AvailabilityViewSet, 
-ShiftListViewSet, EmployeeListViewSet, SiteViewSet, AdminEmployeeListViewSet,
-BasicPositionViewSet, ForecastViewSet, SiteSettingsViewSet, LeaveViewSet, TimeClockViewSet, PermissionTypeViewSet, WageViewSet)
+from .api import *
 from .views import GetReportData, GetStats
-from .views import CheckUUID
 from django.urls import path, include
 
 router = routers.DefaultRouter()
-router.register('shifts', ShiftListViewSet, 'shifts')
-router.register('shiftlist', ShiftViewSet, 'shiftlist')
+router.register('shifts', ShiftViewSet, 'shifts')
 
 router.register('timeclocks', TimeClockViewSet, 'timeclocks')
 
 router.register('employees', EmployeeViewSet, 'employees')
-
-router.register('employeelist', EmployeeListViewSet, 'employeelist')
-router.register('employeelistadmin', AdminEmployeeListViewSet, 'employeelistadmin')
 
 router.register('positions', PositionViewSet, 'positions')
 router.register('positionslist', BasicPositionViewSet, 'positionslist')

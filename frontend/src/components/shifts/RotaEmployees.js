@@ -25,7 +25,7 @@ const RotaEmployees = ({
   return (
     <div className="rota__list">
       {employees
-        .filter((emp) => emp.position.some((pos) => pos.id == position.id))
+        .filter((emp) => emp.position.includes(position.id))
         .map((employee, i) => (
           <div key={employee.id} className="rota__container">
             <Employee

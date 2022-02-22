@@ -30,8 +30,6 @@ const PrivateRoute = ({
     document.title = title ? `${title} | readysetrota` : "readysetrota";
   }, [title]);
 
-  console.log(auth);
-
   if (
     auth &&
     auth.isAuthenticated &&

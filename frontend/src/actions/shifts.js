@@ -13,8 +13,7 @@ import {
   PUBLISHED_SHIFTS,
   SWAP_SHIFTS,
   GET_SWAP_REQUESTS,
-  GET_OPEN_SHIFTS,
-  GET_TIMECLOCKS,
+  UPDATE_DATE_RANGE,
 } from "./types";
 import { tokenConfig, currentSite } from "./auth";
 import { format } from "date-fns";
@@ -59,9 +58,16 @@ export const getShifts =
     dispatch({
       type: SHIFTS_LOADING,
     });
+    if (!list) {
+      dispatch({
+        type: UPDATE_DATE_RANGE,
+        date: startdate,
+        enddate: enddate,
+      });
+    }
     axios
       .get(
-        `/api/shiftlist/?date_after=${startdate}&date_before=${enddate}&department__site=${
+        `/api/shifts/?date_after=${startdate}&date_before=${enddate}&department__site=${
           getState().employees.current.site.id
         }${currentSite(getState)}${
           user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
@@ -72,8 +78,6 @@ export const getShifts =
         dispatch({
           type: GET_ALL_SHIFTS,
           payload: res.data,
-          date: startdate,
-          enddate: enddate,
           list,
         });
       })
@@ -87,7 +91,7 @@ export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
   });
   axios
     .get(
-      `/api/shiftlist/?date_after=${startDate}&date_before=${endDate}&stage=Published&department__site=${
+      `/api/shifts/?date_after=${startDate}&date_before=${endDate}&stage=Published&department__site=${
         getState().employees.current.site.id
       }
       &ordering=date,start_time`,
@@ -106,7 +110,7 @@ export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
 export const getAbsences = (startdate, site) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shiftlist/?date_after=${startdate}&department__site=${
+      `/api/shifts/?date_after=${startdate}&department__site=${
         getState().employees.current.site.id
       }&absence__not=None&ordering=date,start_time`,
       tokenConfig(getState)
@@ -125,7 +129,7 @@ export const getAbsences = (startdate, site) => (dispatch, getState) => {
 export const getShiftsByID = (id, user) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shiftlist/?date_after=${format(new Date(), "yyyy-MM-dd")}${
+      `/api/shifts/?date_after=${format(new Date(), "yyyy-MM-dd")}${
         user ? `&employee__user__id=${id}` : `&employee= ${id}`
       }&ordering=date,start_time`,
       tokenConfig(getState)

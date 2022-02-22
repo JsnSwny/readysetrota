@@ -298,34 +298,25 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
     });
 };
 
-export const getEmployees =
-  (archived = false, department = false, start_date, end_date) =>
-  (dispatch, getState) => {
-    let current = getState().employees.current;
-    let query = "";
-    query += `&position__department__site=${
-      current.site.id ? current.site.id : null
-    }`;
+export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
+  let query = "";
+  if (start_date && end_date) {
+    query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
+  }
 
-    if (start_date && end_date) {
-      query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
-    }
-
-    axios
-      .get(
-        `/api/employeelist/?${query}${currentSite(getState)}&archived=${
-          !archived ? false : ""
-        }&ordering=archived,first_name,last_name,`,
-        tokenConfig(getState)
-      )
-      .then((res) => {
-        dispatch({
-          type: GET_EMPLOYEES,
-          payload: res.data,
-        });
-      })
-      .catch((err) => console.log(err.response));
-  };
+  axios
+    .get(
+      `/api/employees/?${query}${currentSite(getState)}`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_EMPLOYEES,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err.response));
+};
 
 export const getAllEmployees =
   (archived = false) =>
@@ -338,7 +329,7 @@ export const getAllEmployees =
 
     axios
       .get(
-        `/api/employeelist/?${query}${currentSite(
+        `/api/employees/?management=True${query}${currentSite(
           getState
         )}&ordering=archived,first_name,last_name,`,
         tokenConfig(getState)
@@ -467,11 +458,6 @@ export const getPositions =
   (department = false) =>
   (dispatch, getState) => {
     let current = getState().employees.current;
-
-    let query = "";
-    if (current.department.id > 0) {
-      query += `&department=${current.department.id}`;
-    }
     axios
       .get(
         `/api/positionslist/?department__site=${current.site.id}`,
@@ -586,19 +572,8 @@ export const deleteDepartment = (id) => (dispatch, getState) => {
 
 // Get Department
 export const getDepartments = () => (dispatch, getState) => {
-  let current_site = getState().employees.current.site.id;
-  let current_department = getState().employees.current.department.id;
   axios
-    .get(
-      `/api/departments/${
-        getState().employees.current.site != 0
-          ? `?site__id=${
-              getState().employees.current.site.id
-            }&current_department=${current_department}`
-          : ""
-      }`,
-      tokenConfig(getState)
-    )
+    .get(`/api/departments/?${currentSite(getState)}`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: GET_DEPARTMENTS,

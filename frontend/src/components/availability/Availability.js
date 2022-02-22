@@ -148,26 +148,26 @@ const Availability = ({ modalProps }) => {
         employee.id,
       ];
       return true;
-    } else if (
-      employee.default_availability[
-        getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
-      ].name != "unselected"
-    ) {
-      if (
-        employee.default_availability[
-          getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
-        ].name == "available"
-      ) {
-        values["available"] = [...values.available, employee.id];
-        return true;
-      } else if (
-        employee.default_availability[
-          getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
-        ].name == "unavailable"
-      ) {
-        values["unavailable"] = [...values.unavailable, employee.id];
-        return true;
-      }
+      // } else if (
+      //   employee.default_availability[
+      //     getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
+      //   ].name != "unselected"
+      // ) {
+      //   if (
+      //     employee.default_availability[
+      //       getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
+      //     ].name == "available"
+      //   ) {
+      //     values["available"] = [...values.available, employee.id];
+      //     return true;
+      //   } else if (
+      //     employee.default_availability[
+      //       getDay(parseISO(date)) == 0 ? 6 : getDay(parseISO(date)) - 1
+      //     ].name == "unavailable"
+      //   ) {
+      //     values["unavailable"] = [...values.unavailable, employee.id];
+      //     return true;
+      //   }
     } else {
       values["none"] = [...values.none, employee.id];
       return true;

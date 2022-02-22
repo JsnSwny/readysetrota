@@ -17,7 +17,7 @@ const PositionForm = ({ setOpen, editPosition }) => {
     if (editPosition) {
       setName(editPosition.name);
       setDepartment({
-        value: editPosition.department.id,
+        value: editPosition.department,
         label: editPosition.department.name,
       });
     }
@@ -39,7 +39,7 @@ const PositionForm = ({ setOpen, editPosition }) => {
     ) {
       const positionObj = {
         name,
-        business_id: current.business.id,
+        business: current.business.id,
         department_id: department.value,
       };
 
