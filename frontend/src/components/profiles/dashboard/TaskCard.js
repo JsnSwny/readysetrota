@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TaskCard = ({ title, icon, text, button, colour }) => {
+const TaskCard = ({ title, icon, text, button, colour, link }) => {
   return (
     <div className={`taskCard ${colour}`}>
       <div className="taskCard__content">
@@ -13,7 +13,8 @@ const TaskCard = ({ title, icon, text, button, colour }) => {
       </div>
 
       <div className="flex-container--end-center taskCard__link">
-        <Link to="/rota">{button}</Link> <i className="fas fa-angle-right"></i>
+        <Link to={`/${link}`}>{button}</Link>{" "}
+        <i className="fas fa-angle-right"></i>
       </div>
     </div>
   );

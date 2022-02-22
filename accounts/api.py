@@ -6,6 +6,7 @@ from django.contrib.auth.models import update_last_login
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
@@ -19,6 +20,7 @@ class RegisterAPI(generics.GenericAPIView):
         })
 # Login API
 class LoginAPI(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):

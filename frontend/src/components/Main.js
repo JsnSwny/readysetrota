@@ -59,22 +59,27 @@ const Main = () => {
   let sites = useSelector((state) => state.employees.sites);
   let auth = useSelector((state) => state.auth);
 
-  // Use effect
   useEffect(() => {
-    if (sites.length == 0) {
-      dispatch(getSites());
-    }
-    if (current.site.id > 0) {
-      dispatch(getDepartments());
-      if (sites.length > 0) {
-        dispatch(
-          updateSettings(
-            sites.find((item) => item.id == current.site.id).sitesettings
-          )
-        );
+    if (
+      !auth.isLoading &&
+      auth.user &&
+      (auth.user.employee.length > 0 || auth.user.business)
+    ) {
+      if (sites.length == 0) {
+        dispatch(getSites());
+      }
+      if (current.site?.id > 0) {
+        dispatch(getDepartments());
+        if (sites.length > 0) {
+          dispatch(
+            updateSettings(
+              sites.find((item) => item.id == current.site.id).sitesettings
+            )
+          );
+        }
       }
     }
-  }, [current.site.id, auth.token, auth.user]);
+  }, [current.site?.id, auth.token, auth.user]);
 
   useEffect(() => {
     if (!loading.departments && !loading.sites) {

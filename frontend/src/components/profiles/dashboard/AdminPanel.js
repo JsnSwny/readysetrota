@@ -22,6 +22,7 @@ import Carousel from "./Carousel";
 import gettingStartedList from "./gettingStartedList.json";
 import { useOnClickOutside } from "../../../utils/hooks/useOnClickOutside";
 import TaskCard from "./TaskCard";
+import auth from "../../../reducers/auth";
 
 const AdminPanel = ({ setDashboardView }) => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const AdminPanel = ({ setDashboardView }) => {
   const uncompleteList = useSelector(
     (state) => state.employees.current.business.getting_started
   );
+
+  const auth = useSelector((state) => state.auth);
 
   const tasks = useSelector((state) => state.employees.current.site.tasks);
 
@@ -70,8 +73,8 @@ const AdminPanel = ({ setDashboardView }) => {
   }, [startDate, endDate, current.site]);
 
   useEffect(() => {
-    dispatch(getSites());
-  }, []);
+    if (!auth.isLoading) dispatch(getSites());
+  }, [auth]);
 
   useEffect(() => {
     dispatch(
@@ -171,6 +174,7 @@ const AdminPanel = ({ setDashboardView }) => {
             }
             button="Go to rota"
             colour={tasks.shifts > 0 ? "red" : "green"}
+            link="rota"
           />
           <TaskCard
             icon="fa-umbrella-beach"
@@ -182,6 +186,7 @@ const AdminPanel = ({ setDashboardView }) => {
             }
             button="Go to holidays"
             colour={tasks.holidays > 0 ? "red" : "green"}
+            link="availability"
           />
           <TaskCard
             icon="fa-user"
@@ -193,6 +198,7 @@ const AdminPanel = ({ setDashboardView }) => {
             }
             button="Go to employees"
             colour={tasks.uninvited > 0 ? "red" : "green"}
+            link="employees"
           />
           <TaskCard
             icon="fa-money-bill"
@@ -204,6 +210,7 @@ const AdminPanel = ({ setDashboardView }) => {
               </p>
             }
             button="Go to forecast"
+            link="forecasting"
             colour={tasks.actual_revenue > 0 ? "red" : "green"}
           />
         </div>

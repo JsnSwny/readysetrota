@@ -159,8 +159,6 @@ export const endTrial = (id) => (dispatch, getState) => {
 };
 
 export const getSites = () => (dispatch, getState) => {
-  let current_site = getState().employees.current.site.id;
-  let current_department = getState().employees.current.department.id;
   let user = getState().auth.user;
 
   axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
@@ -614,6 +612,7 @@ export const getDepartments = () => (dispatch, getState) => {
 export const checkUUID = (uuid, userid) => (dispatch, getState) => {
   axios
     .get("/api-view/checkuuid", {
+      ...tokenConfig(getState),
       params: {
         uuid,
         userid,
@@ -626,12 +625,6 @@ export const checkUUID = (uuid, userid) => (dispatch, getState) => {
         dispatch({
           type: UUID_SUCCESS,
           payload: 0,
-        });
-        axios.get("/api/sites/", tokenConfig(getState)).then((res) => {
-          dispatch({
-            type: GET_SITES,
-            payload: res.data,
-          });
         });
         dispatch(loadUser());
       }

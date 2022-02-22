@@ -171,7 +171,7 @@ const Landing = ({ setOpen, setType }) => {
       <footer className="footer">
         <div className="wrapper--lg flex-container--between">
           <div>
-            <img src="static/media/logo-3.svg" />
+            <img src="static/media/nav-logo.svg" />
             <p>
               <Link to="privacy">Privacy Policy</Link> |{" "}
               <Link to="terms">Terms and Conditions</Link>

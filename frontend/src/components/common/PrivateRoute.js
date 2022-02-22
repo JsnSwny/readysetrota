@@ -27,19 +27,17 @@ const PrivateRoute = ({
   );
 
   useEffect(() => {
-    if (auth.user) {
-      dispatch(getSites());
-      if (modalProps) {
-        modalProps.setOpen(false);
-      }
-    }
-  }, [auth]);
-
-  useEffect(() => {
     document.title = title ? `${title} | readysetrota` : "readysetrota";
   }, [title]);
 
-  if (auth && auth.isAuthenticated && loading.sites) {
+  console.log(auth);
+
+  if (
+    auth &&
+    auth.isAuthenticated &&
+    (auth.user.employee.length > 0 || auth.user.business) &&
+    loading.sites
+  ) {
     return false;
   }
 
