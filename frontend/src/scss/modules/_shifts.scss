@@ -230,7 +230,6 @@
 .rotaFunctions {
   margin-bottom: 40px;
   &__wrapper {
-    width: 33.33%;
     display: flex;
     @include wi-mq(laptop) {
       width: auto;
