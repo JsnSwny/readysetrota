@@ -14,6 +14,7 @@
 .carousel {
   width: 100%;
   position: relative;
+  overflow: hidden;
   &__left,
   &__right {
     position: absolute;
