@@ -168,8 +168,6 @@ export const getSites = () => (dispatch, getState) => {
 
     const current_user = getState().auth.user;
 
-    console.log(current_user);
-
     if (!current_user.business) {
       perm_list = [];
       const current_employee = current_user.employee.find(

@@ -51,6 +51,7 @@ const DepartmentForm = ({ setOpen, editDepartment }) => {
           onChange={(e) => setName(e.target.value)}
           autoFocus
           value={name}
+          autoComplete="off"
         ></input>
         <p className="error">{errors.name}</p>
       </div>

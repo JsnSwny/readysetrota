@@ -13,8 +13,8 @@ const DepartmentPicker = (props) => {
   let current = useSelector((state) => state.employees.current);
   let plan = useSelector((state) => state.employees.business.plan);
   let loading = useSelector((state) => state.loading);
-  let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+  const permissions = useSelector(
+    (state) => state.permissions.active_permissions
   );
   let user = useSelector((state) => state.auth.user);
 

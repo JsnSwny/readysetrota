@@ -306,8 +306,7 @@ class ExportShifts(APIView):
         result = generate_pdf('shifts.html', file_object=resp, context={
                               'shifts': shifts, 'employee': employee}, )
         return result
-
-
+        
 class ExportAllShifts(APIView):
     def get(self, request):
         shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
@@ -321,7 +320,8 @@ class ExportAllShifts(APIView):
             
         site = Site.objects.get(pk=request.query_params.get('id'))
         resp = HttpResponse(content_type='application/pdf')
-        resp['Content-Disposition'] = 'inline; filename="rota.pdf"'
+        resp['Content-Disposition'] = 'attachment; filename="rota.pdf"'
+        
         result = generate_pdf('allshifts.html', file_object=resp, context={
                               'all_shifts': all_shifts, 'start_date': request.query_params.get('start_date'), 'end_date': request.query_params.get('end_date'), 'site': site.name}, )
         return result
@@ -521,8 +521,6 @@ from collections import defaultdict
 
 
 class GetReportData(APIView):
-
-    permission_classes = (permissions.AllowAny,)
 
     def daterange(self, start_date, end_date):
         for n in range(int((end_date - start_date).days)):

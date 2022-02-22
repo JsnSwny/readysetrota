@@ -47,3 +47,28 @@
     width: 675px;
   }
 }
+
+.video-modal {
+  width: 80%;
+  @include wi-mq(mobile) {
+    width: calc(100% - 1rem);
+  }
+  video {
+    width: 100%;
+  }
+  .heading {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: $secondary-font-family;
+    font-size: 20px;
+    p {
+      font-size: 16px;
+    }
+    .fa-times {
+      cursor: pointer;
+    }
+    align-items: center;
+  }
+}

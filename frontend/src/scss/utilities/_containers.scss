@@ -102,6 +102,11 @@
     @extend .flex-container;
     justify-content: flex-end;
   }
+  &--end-center {
+    @extend .flex-container;
+    justify-content: flex-end;
+    align-items: center;
+  }
   &--wrap {
     @extend .flex-container;
     flex-wrap: wrap;

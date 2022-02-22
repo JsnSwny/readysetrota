@@ -62,6 +62,7 @@ const PositionForm = ({ setOpen, editPosition }) => {
           onChange={(e) => setName(e.target.value)}
           autoFocus
           value={name}
+          autoComplete="off"
         ></input>
         <p className="error">{errors.name}</p>
       </div>

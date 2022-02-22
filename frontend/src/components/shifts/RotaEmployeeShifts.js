@@ -17,7 +17,7 @@ const RotaEmployeeShifts = ({
   const shifts = useSelector((state) => state.shifts.shifts);
   let availability = useSelector((state) => state.employees.availability);
   const permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+    (state) => state.permissions.active_permissions
   );
   var getEmployeeShift = (employee, date, department) =>
     shifts.filter((obj) => {
@@ -25,11 +25,13 @@ const RotaEmployeeShifts = ({
         obj.employee.id === employee &&
         obj.date === date &&
         obj.department == department
-        ? permissions.includes("manage_shifts")
+        ? permissions.includes("create_shifts")
           ? true
           : obj.stage == "Published"
         : "";
     });
+
+  console.log(shifts);
 
   const isAvailable = (employee, date) => {
     let available = availability.filter(
@@ -51,6 +53,10 @@ const RotaEmployeeShifts = ({
         const format_date = format(result, "yyyy-MM-dd");
 
         let shifts = getEmployeeShift(employee.id, format_date, department.id);
+
+        console.log(shifts);
+        console.log(department);
+        console.log(format_date);
 
         if (financialMode == "actual") {
           shifts = shifts.filter((item) => item.stage == "Published");

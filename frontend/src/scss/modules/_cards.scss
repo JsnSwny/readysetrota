@@ -1,0 +1,51 @@
+.taskCard {
+  background-color: white;
+  padding: 1.5rem 2rem;
+  @extend .shadow;
+  border-radius: 5px;
+  width: calc(25% - 1rem);
+  font-family: $secondary-font-family;
+  display: flex;
+  flex-direction: column;
+  &.green {
+    .taskCard__content {
+      i {
+        color: $green;
+      }
+    }
+    span {
+      color: $green;
+    }
+  }
+  &.red {
+    .taskCard__content {
+      i {
+        color: $red;
+      }
+    }
+    span {
+      color: $red;
+    }
+  }
+  &__content {
+    display: flex;
+    flex: 1;
+    h3 {
+      font-size: 20px;
+    }
+    span {
+      font-weight: bold;
+    }
+    i {
+      font-size: 54px;
+      margin-right: 1.5rem;
+    }
+  }
+  &__link {
+    color: $pink;
+    margin-top: 1rem;
+    i {
+      margin-left: 0.5rem;
+    }
+  }
+}

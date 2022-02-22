@@ -11,8 +11,8 @@ const FinancialBar = ({
   setForecastDate,
   setExtra,
 }) => {
-  let permissions = useSelector(
-    (state) => state.employees.current.site.permissions
+  const permissions = useSelector(
+    (state) => state.permissions.active_permissions
   );
   let business = useSelector((state) => state.employees.business);
   let employees = useSelector((state) => state.employees.employees);

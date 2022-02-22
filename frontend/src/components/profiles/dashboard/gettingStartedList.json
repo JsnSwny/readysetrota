@@ -1,0 +1,52 @@
+{
+    "items": [
+        {
+            "title": "Create a Department",
+            "description": "Let's start by creating a department within your site (e.g 'Floor')",
+            "buttonText": "Create your first department",
+            "uncompleteTag": "departments",
+            "link": "/departments",
+            "videoURL": "/static/media/videos/create-department.webm"
+        },
+        {
+            "title": "Create a Position",
+            "description": "Once you have a department, you can create positions to break up the roles in your site (e.g Bartender)",
+            "buttonText": "Create your first position",
+            "uncompleteTag": "positions",
+            "link": "/positions",
+            "videoURL": "/static/media/videos/create-department.webm"
+        },
+        {
+            "title": "Create an Employee",
+            "description": "Now that your business hierarchy is coming to life, it's time to create your first employee",
+            "buttonText": "Create your first employee",
+            "uncompleteTag": "employees",
+            "link": "/employees",
+            "videoURL": "/static/media/videos/create-department.webm"
+        },
+        {
+            "title": "Create a Shift",
+            "description": "This is the reason you're here, let's start building your first rota",
+            "buttonText": "Create your first shift",
+            "uncompleteTag": "shifts",
+            "link": "/rota",
+            "videoURL": "/static/media/videos/create-department.webm"
+        },
+        {
+            "title": "Publish your rota",
+            "description": "Easy isn't it? Go ahead and publish your first rota",
+            "buttonText": "Publish your rota",
+            "uncompleteTag": "publish",
+            "link": "/rota",
+            "videoURL": "/static/media/videos/create-department.webm"
+        },
+        {
+            "title": "Create a Forecast",
+            "description": "Get more financial information from your rota by setting up forecasts per day",
+            "buttonText": "Create your first forecast",
+            "uncompleteTag": "forecast",
+            "link": "/forecasting",
+            "videoURL": "/static/media/videos/create-department.webm"
+        }
+    ]
+}

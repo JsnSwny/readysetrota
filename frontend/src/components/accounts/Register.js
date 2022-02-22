@@ -61,6 +61,7 @@ const Register = (props) => {
                     setBusinessName(e.target.value);
                   }}
                   value={businessName}
+                  autoFocus
                 />
                 <p className="error">{errors.businessName}</p>
               </div>

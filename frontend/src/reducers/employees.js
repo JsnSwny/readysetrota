@@ -100,7 +100,7 @@ export default function (state = initialState, action) {
           !action.payload.some((item) => item.id == state.current.site.id)) &&
         action.payload.length > 0
           ? action.payload[0]
-          : state.current.site;
+          : action.payload.find((item) => item.id == state.current.site.id);
 
       return {
         ...state,

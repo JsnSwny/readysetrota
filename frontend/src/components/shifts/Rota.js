@@ -132,35 +132,32 @@ const Rota = () => {
 
       <div>
         <div className="rota wrapper--md">
-          {departments.map(
-            (department, i) =>
-              department.number_of_employees > 0 && (
-                <div className="rota__department">
-                  <RotaDepartmentList department={department} result={result} />
-                  {positions.map(
-                    (position) =>
-                      position.department.id == department.id &&
-                      employees.filter((employee) =>
-                        employee.position.some((pos) => position.id == pos.id)
-                      ).length > 0 && (
-                        <Fragment>
-                          <h4 className="rota__position">{position.name}</h4>
-                          <RotaEmployees
-                            department={department}
-                            position={position}
-                            result={result}
-                            financialMode={financialMode}
-                            showAvailabilities={showAvailabilities}
-                            setOpen={setOpen}
-                            setShiftFormInfo={setShiftFormInfo}
-                            setEditShift={setEditShift}
-                          />
-                        </Fragment>
-                      )
-                  )}
-                </div>
-              )
-          )}
+          {departments.map((department, i) => (
+            <div className="rota__department">
+              <RotaDepartmentList department={department} result={result} />
+              {positions.map(
+                (position) =>
+                  position.department.id == department.id &&
+                  employees.filter((employee) =>
+                    employee.position.some((pos) => position.id == pos.id)
+                  ).length > 0 && (
+                    <Fragment>
+                      <h4 className="rota__position">{position.name}</h4>
+                      <RotaEmployees
+                        department={department}
+                        position={position}
+                        result={result}
+                        financialMode={financialMode}
+                        showAvailabilities={showAvailabilities}
+                        setOpen={setOpen}
+                        setShiftFormInfo={setShiftFormInfo}
+                        setEditShift={setEditShift}
+                      />
+                    </Fragment>
+                  )
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

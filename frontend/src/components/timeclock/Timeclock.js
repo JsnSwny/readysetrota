@@ -44,7 +44,7 @@ const Timeclock = () => {
 
   useEffect(() => {
     if (current.site && current.site.id) {
-      if (permissions.includes("manage_shifts")) {
+      if (permissions.includes("create_shifts")) {
         localStorage.setItem("timeclock_site", current.site.id);
         if (!loading.sites && auth.isAuthenticated) {
           dispatch(logout());
@@ -72,7 +72,7 @@ const Timeclock = () => {
   }, [success]);
 
   if (current.site && current.site.id) {
-    if (!permissions.includes("manage_shifts")) {
+    if (!permissions.includes("create_shifts")) {
       return <Redirect to="/" />;
     }
   }

@@ -9,6 +9,7 @@ import { getReportData } from "../../actions/stats";
 import ReportStatItem from "./ReportStatItem";
 import Select from "react-select";
 import CountUp from "react-countup";
+import axios from "axios";
 
 const ReportsPage = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const ReportsPage = () => {
   const [activeGraph, setActiveGraph] = useState(false);
   const current = useSelector((state) => state.employees.current);
   const [basedOn, setBasedOn] = useState({ value: "actual", label: "Actual" });
+  const auth = useSelector((state) => state.auth);
 
   const options = [
     { value: "actual", label: "Actual" },
@@ -41,6 +43,34 @@ const ReportsPage = () => {
   useEffect(() => {
     dispatch(getReportData(startDate, endDate, basedOn.value));
   }, [basedOn, current.site]);
+
+  const exportReport = () => {
+    const token = auth.token;
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      responseType: "blob",
+    };
+
+    if (token) {
+      config.headers["Authorization"] = `Token ${token}`;
+    }
+    axios
+      .get(
+        `api/report/?site_id=${current.site.id}&start_date=${format(
+          startDate,
+          "dd/MM/yyyy"
+        )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${
+          basedOn.value
+        }&exportData=true`,
+        config
+      )
+      .then((response) => {
+        window.open(URL.createObjectURL(response.data));
+      });
+  };
 
   return (
     <Fragment>
@@ -82,18 +112,9 @@ const ReportsPage = () => {
               ]}
               placeholder={"Select which values to use"}
             />
-            <a
-              href={`api/report/?site_id=${current.site.id}&start_date=${format(
-                startDate,
-                "dd/MM/yyyy"
-              )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${
-                basedOn.value
-              }&exportData=true`}
-              className="btn-3 btn-3--export"
-              target="_blank"
-            >
+            <button onClick={exportReport} className="btn-3 btn-3--export">
               Export
-            </a>
+            </button>
           </div>
         </div>
         <ul className="report-boxes">

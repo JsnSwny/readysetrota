@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSites } from "../../../actions/employees";
 import Title from "../../common/Title";
@@ -9,6 +9,7 @@ import {
   addDays,
   addMonths,
   eachDayOfInterval,
+  addBusinessDays,
 } from "date-fns";
 import { getTodayShifts } from "../../../actions/shifts";
 import { Bar, Line } from "react-chartjs-2";
@@ -16,10 +17,16 @@ import { getStats } from "../../../actions/stats";
 import DashboardShifts from "./DashboardShifts";
 import StatsItem from "./StatsItem";
 import { Link } from "react-router-dom";
+import GettingStartedItem from "./GettingStartedItem";
+import Carousel from "./Carousel";
+import gettingStartedList from "./gettingStartedList.json";
+import { useOnClickOutside } from "../../../utils/hooks/useOnClickOutside";
+import TaskCard from "./TaskCard";
 
 const AdminPanel = ({ setDashboardView }) => {
   const dispatch = useDispatch();
 
+  const [direction, setDirection] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 7));
 
@@ -28,7 +35,21 @@ const AdminPanel = ({ setDashboardView }) => {
   let shifts = useSelector((state) => state.shifts.shifts);
   let isLoading = useSelector((state) => state.shifts.isLoading);
   let user = useSelector((state) => state.auth.user);
+  const width = useSelector((state) => state.responsive.width);
+  const uncompleteList = useSelector(
+    (state) => state.employees.current.business.getting_started
+  );
+
+  const tasks = useSelector((state) => state.employees.current.site.tasks);
+
   const [interval, setInterval] = useState([]);
+
+  const [currentStarted, setCurrentStarted] = useState(false);
+
+  const carouselContainer = useRef();
+
+  const ref = useRef();
+  useOnClickOutside(ref, () => setCurrentStarted(false));
 
   useEffect(() => {
     setInterval(
@@ -61,20 +82,134 @@ const AdminPanel = ({ setDashboardView }) => {
     );
   }, [current.department]);
 
+  const getStartingPos = () => {
+    return gettingStartedList.items.findIndex((item) =>
+      uncompleteList.includes(item.uncompleteTag)
+    );
+  };
+
+  if (uncompleteList) console.log(getStartingPos());
+
+  const itemsInCarousel = () => {
+    if (width > 1600) {
+      return 4;
+    } else if (width > 1000) {
+      return 3;
+    } else if (width > 600) {
+      return 2;
+    } else {
+      return 1;
+    }
+  };
+
+  if (uncompleteList) console.log(getStartingPos());
+
   return (
     <Fragment>
-      <Title name="Dashboard" />
-      {!user.business && (
-        <p
-          className="banner__link"
-          onClick={() => setDashboardView("employee")}
-        >
-          View Employee Dashboard
-        </p>
+      {currentStarted && (
+        <div className="modal-container">
+          <div className="video-modal" ref={ref}>
+            <div className="heading">
+              <div>
+                <h3>{currentStarted.title}</h3>
+                <p>{currentStarted.description}</p>
+              </div>
+
+              <i
+                class="fas fa-times"
+                onClick={() => {
+                  setCurrentStarted(false);
+                }}
+              ></i>
+            </div>
+            <video src={currentStarted.videoURL} muted loop autoPlay></video>
+          </div>
+        </div>
       )}
       <div className="dashboard wrapper--md">
+        <h1 className="big-title">
+          Hey {user.first_name}, Welcome to readysetrota
+        </h1>
         <div className="flex-container--align-center">
-          <h2 className="title-sm">Shifts</h2>
+          <h2 className="title-sm">Getting started</h2>
+        </div>
+
+        <hr class="separator" />
+
+        {uncompleteList && (
+          <div ref={carouselContainer}>
+            <Carousel
+              startingPos={getStartingPos() == -1 ? 0 : getStartingPos()}
+              itemsInCarousel={itemsInCarousel()}
+              carouselContainer={carouselContainer}
+            >
+              {gettingStartedList.items.map((item, idx) => (
+                <GettingStartedItem
+                  startedObj={item}
+                  pos={idx}
+                  setCurrentStarted={setCurrentStarted}
+                />
+              ))}
+            </Carousel>
+          </div>
+        )}
+
+        <div className="dashboard__header">
+          <h2 className="title-sm title--margin-top">Tasks</h2>
+        </div>
+
+        <hr class="separator" />
+
+        <div className="tasks flex-container--between">
+          <TaskCard
+            icon="fa-briefcase"
+            title="Publish Shifts"
+            text={
+              <p>
+                You have <span>{tasks.shifts}</span> shift to approve
+              </p>
+            }
+            button="Go to rota"
+            colour={tasks.shifts > 0 ? "red" : "green"}
+          />
+          <TaskCard
+            icon="fa-umbrella-beach"
+            title="Approve Holidays"
+            text={
+              <p>
+                You have <span>{tasks.holidays}</span> holiday to approve
+              </p>
+            }
+            button="Go to holidays"
+            colour={tasks.holidays > 0 ? "red" : "green"}
+          />
+          <TaskCard
+            icon="fa-user"
+            title="Invite Employees"
+            text={
+              <p>
+                You have <span>{tasks.uninvited}</span> uninvited employees
+              </p>
+            }
+            button="Go to employees"
+            colour={tasks.uninvited > 0 ? "red" : "green"}
+          />
+          <TaskCard
+            icon="fa-money-bill"
+            title="Actual Revenue"
+            text={
+              <p>
+                You have <span>{tasks.actual_revenue}</span> actual revenues to
+                input
+              </p>
+            }
+            button="Go to forecast"
+            colour={tasks.actual_revenue > 0 ? "red" : "green"}
+          />
+        </div>
+
+        <div className="flex-container--align-center">
+          <h2 className="title-sm title--margin-top">Today's Shifts</h2>
         </div>
 
         <hr class="separator" />
@@ -89,37 +224,7 @@ const AdminPanel = ({ setDashboardView }) => {
           )}
         </div>
         <div className="dashboard__header">
-          <h2 className="title-sm title--margin-top">Analytics Overview</h2>
-          <select
-            className="dashboard__select"
-            onChange={(e) => {
-              let values = e.target.value.split(" ");
-              let num = parseInt(values[0]);
-              if (num < 0) {
-                setStartDate(new Date());
-                if (values[1] == "D") {
-                  setEndDate(addDays(new Date(), -num));
-                } else if (values[1] == "M") {
-                  setEndDate(addMonths(new Date(), -num));
-                }
-              } else {
-                setEndDate(new Date());
-                if (values[1] == "D") {
-                  setStartDate(addDays(new Date(), -num));
-                } else if (values[1] == "M") {
-                  setStartDate(addMonths(new Date(), -num));
-                }
-              }
-            }}
-          >
-            <option value="-7 D">This week</option>
-            <option value="7 D">Last week</option>
-            <option value="14 D">Last 2 weeks</option>
-            <option value="30 D">Last 30 Days</option>
-            <option value="3 M">Last 3 Months</option>
-            <option value="6 M">Last 6 Months</option>
-            <option value="12 M">Last 12 Months</option>
-          </select>
+          <h2 className="title-sm title--margin-top">This Week's Analytics</h2>
         </div>
         <hr class="separator" />
         {stats && interval.length > 0 && (

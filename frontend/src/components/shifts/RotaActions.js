@@ -3,6 +3,7 @@ import { publish, sendForApproval } from "../../actions/shifts";
 import { useDispatch, useSelector } from "react-redux";
 import { parseISO, addDays } from "date-fns";
 import RotaDatePicker from "./RotaDatePicker";
+import axios from "axios";
 
 const RotaActions = ({
   showAvailabilities,
@@ -24,6 +25,30 @@ const RotaActions = ({
   const enddate = useSelector((state) => state.shifts.end_date);
   const business = useSelector((state) => state.employees.business);
   const current = useSelector((state) => state.employees.current);
+  const auth = useSelector((state) => state.auth);
+
+  const exportShifts = () => {
+    const token = auth.token;
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      responseType: "blob",
+    };
+
+    if (token) {
+      config.headers["Authorization"] = `Token ${token}`;
+    }
+    axios
+      .get(
+        `/exportall?start_date=${date}&end_date=${enddate}&id=${current.site.id}`,
+        config
+      )
+      .then((response) => {
+        window.open(URL.createObjectURL(response.data));
+      });
+  };
 
   const [publishDropdown, setPublishDropdown] = useState(false);
   return (
@@ -62,7 +87,7 @@ const RotaActions = ({
                     publishDropdown ? "active" : ""
                   }`}
                 >
-                  {permissions.includes("manage_shifts") &&
+                  {permissions.includes("create_shifts") &&
                     !user.business &&
                     settings.shift_approval && (
                       <div
@@ -120,17 +145,16 @@ const RotaActions = ({
               </div>
             )}
 
-          <a
+          <button
             className={`rotaFunctions__button ${
               shifts.filter((item) => item.stage == "Published").length == 0
                 ? "disabled"
                 : ""
             }`}
-            href={`${`/exportall?start_date=${date}&end_date=${enddate}&id=${current.site.id}`}`}
-            target="_blank"
+            onClick={exportShifts}
           >
             Export <i className="fas fa-file-download"></i>
-          </a>
+          </button>
         </div>
       </div>
       <div className="rotaFunctions__wrapper">

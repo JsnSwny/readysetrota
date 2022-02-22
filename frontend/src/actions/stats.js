@@ -1,6 +1,7 @@
 import { GET_STATS, STATS_LOADING, GET_REPORT_DATA } from "./types";
 import axios from "axios";
 import { format } from "date-fns";
+import { tokenConfig, currentSite } from "./auth";
 
 export const getStats =
   (stat_type, id, start_date, end_date, currentFilter) =>
@@ -15,7 +16,8 @@ export const getStats =
             stat_type == "business"
               ? `&currentFilter=${currentFilter}&id=${id}`
               : `&employee_id=${id}`
-          }&start_date=${start_date}&end_date=${end_date}`
+          }&start_date=${start_date}&end_date=${end_date}`,
+          tokenConfig(getState)
         )
         .then((res) => {
           dispatch({
@@ -38,7 +40,8 @@ export const getReportData =
         `/api/report/?site_id=${current.site.id}&start_date=${format(
           startDate,
           "dd/MM/yyyy"
-        )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${basedOn}`
+        )}&end_date=${format(endDate, "dd/MM/yyyy")}&based_on=${basedOn}`,
+        tokenConfig(getState)
       )
       .then((res) => {
         var elapsed = new Date() - start;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { Carousel } from "react-responsive-carousel";
 import employees from "../../../reducers/employees";
 import {
   format,
@@ -122,7 +121,8 @@ const DashboardShifts = () => {
             return (
               <div className="carousel__card">
                 <div className={`carousel__time ${!isFirstTime ? "hide" : ""}`}>
-                  {item.start_time}
+                  <h3>{item.start_time}</h3>
+                  <p>{format(parseISO(item.date), "EEEE")}</p>
                 </div>
                 <div
                   className={`carousel__timeline ${
@@ -140,30 +140,29 @@ const DashboardShifts = () => {
                       : ""
                   }`}
                 >
-                  <small>
+                  {/* <small>
                     {departments.length > 0 &&
                       departments.find((dep) => dep.id == item.department)
                         ?.name}
-                  </small>
+                  </small> */}
 
-                  <p>
-                    {item.employee?.first_name}{" "}
-                    <strong>{item.employee?.last_name}</strong>
-                  </p>
-                  <p>
-                    {item.start_time} - {item.end_time}
-                  </p>
-                  <small>
+                  <h3>
+                    {item.employee?.first_name} {item.employee?.last_name}
+                  </h3>
+                  <h4>
+                    {item.start_time} - {item.end_time} ({item.length}hrs)
+                  </h4>
+                  <small className="timeUntil">
                     <TimeDifference date={item.date} time={item.start_time} />
                   </small>
                 </div>
-                <div className="carousel__day">
+                {/* <div className="carousel__day">
                   {parseISO(item.date) < addDays(new Date(), -1)
                     ? "Yesterday"
                     : parseISO(item.date) > addDays(new Date(), 0)
                     ? "Tomorrow"
                     : "Today"}
-                </div>
+                </div> */}
               </div>
             );
           })}

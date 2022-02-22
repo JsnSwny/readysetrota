@@ -43,15 +43,39 @@ class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
     name = serializers.CharField(required=False)
 
+    getting_started = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Business
         fields = ('id', 'name', 'plan', 'total_employees',
-                  'subscription_cancellation', 'number_of_employees', 'trial_end',)
+                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'getting_started',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id, status__start_date__lte=date.today(
         )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
+
+    def get_getting_started(self, obj):
+        uncomplete = []
+        if Department.objects.filter(business=obj).count() == 0:
+            uncomplete.append('departments')
+
+        if Position.objects.filter(department__business=obj).count() == 0:
+            uncomplete.append('positions')
+
+        if Employee.objects.filter(position__department__business=obj).count() == 0:
+            uncomplete.append('employees')
+
+        if Shift.objects.filter(department__business=obj).count() == 0:
+            uncomplete.append('shifts')
+
+        if Shift.objects.filter(department__business=obj, stage="Published").count() == 0:
+            uncomplete.append('publish')
+
+        if Forecast.objects.filter(site__business=obj).count() == 0:
+            uncomplete.append('forecast')
+
+        return uncomplete
 
     def create(self, validated_data):
         business = Business.objects.create(**validated_data)
@@ -59,6 +83,9 @@ class BusinessSerializer(serializers.ModelSerializer):
         settings.save()
 
         return business
+
+
+    
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
@@ -640,11 +667,12 @@ class SiteSerializer(serializers.ModelSerializer):
     sitesettings = SiteSettingsSerializer(many=False, required=False)
     name = serializers.CharField(required=False)
     permissions = serializers.SerializerMethodField(read_only=True)
+    tasks = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Site
         fields = ('id', 'name', 'business', 'business_id', 
-                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions',)
+                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'permissions', 'tasks',)
         depth: 1
 
     def update(self, instance, validated_data):
@@ -682,6 +710,18 @@ class SiteSerializer(serializers.ModelSerializer):
         shifts = Shift.objects.filter(
             department__site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
+
+    def get_tasks(self, obj):
+        tasks = {}
+
+        tasks["shifts"] = Shift.objects.filter(department__site=obj, stage="Unpublished").count()
+        tasks["holidays"] = Leave.objects.filter(site=obj, status="Pending").count()
+        tasks["uninvited"] = Employee.objects.filter(position__department__site=obj, user=None).count()
+        tasks["actual_revenue"] = Forecast.objects.filter(actual=0, site=obj, date__lte=datetime.today()).count()
+
+
+        return tasks
+
 
 
 class ForecastSerializer(serializers.ModelSerializer):
