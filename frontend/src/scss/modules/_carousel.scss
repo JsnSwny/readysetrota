@@ -1,13 +1,13 @@
 :root {
-  --card-width: calc((var(--vw) - 70px) / 5);
+  --card-width: calc((var(--vw) - 70px) / 4);
   @include wi-mq(laptop) {
-    --card-width: calc((var(--vw) - 70px) / 4);
-  }
-  @include wi-mq(tablet) {
     --card-width: calc((var(--vw) - 70px) / 3);
   }
+  @include wi-mq(tablet) {
+    --card-width: calc((var(--vw) - 70px) / 2);
+  }
   @include wi-mq(mobile) {
-    --card-width: calc((var(--vw) - 30px) / 2);
+    --card-width: calc((var(--vw) - 30px) / 1);
   }
 }
 
