@@ -91,8 +91,6 @@ const AdminPanel = ({ setDashboardView }) => {
     );
   };
 
-  if (uncompleteList) console.log(getStartingPos());
-
   const itemsInCarousel = () => {
     if (width > 1600) {
       return 4;
@@ -104,8 +102,6 @@ const AdminPanel = ({ setDashboardView }) => {
       return 1;
     }
   };
-
-  if (uncompleteList) console.log(getStartingPos());
 
   return (
     <Fragment>

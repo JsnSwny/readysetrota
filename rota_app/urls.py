@@ -20,8 +20,6 @@ router.register('sites', SiteViewSet, 'sites')
 
 router.register('leave', LeaveViewSet, 'leaves')
 
-router.register('wages', WageViewSet, 'wages')
-
 router.register('forecast', ForecastViewSet, 'forecast')
 router.register('sitesettings', SiteSettingsViewSet, 'sitesettings')
 router.register('permission-types', PermissionTypeViewSet, 'permission-types')

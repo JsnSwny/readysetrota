@@ -26,15 +26,15 @@ def gettingStartedValues(obj):
 
     if Forecast.objects.filter(site__business=obj).count() == 0:
         uncomplete.append('forecast')
-    print(Department.objects.filter(business=obj))
     return uncomplete
 
-def getPermList(self):
-    site = self.context['request'].query_params.get('site', None)
+def getPermList(request, site=False):
+    if not site:
+        site = request.query_params.get('site', None)
     perm_list = []
     if site:
         site = Site.objects.get(pk=site)
-        user = self.context['request'].user
+        user = request.user
         
         if(Business.objects.filter(owner=user)):
             perm_list = list(PermissionType.objects.all().values_list('code_name'))
@@ -43,7 +43,6 @@ def getPermList(self):
             employee = Employee.objects.filter(user=user, position__department__site=site).first()
 
             perm_list = [perm.code_name for perm in employee.permissions.all()]
-
     return perm_list
 
 def removeFields(ret, items):
@@ -168,6 +167,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     wage = serializers.SerializerMethodField()
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
+
+    owner = BasicUserSerializer(required=False)
 
     total_shifts = serializers.SerializerMethodField()
 
@@ -364,7 +365,7 @@ class MinEmployeeListSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         ret = super(MinEmployeeListSerializer, self).to_representation(obj)
 
-        perm_list = getPermList(self)
+        perm_list = getPermList(self.context['request'])
 
         if 'view_wages' not in perm_list:
             removeFields(ret, ["current_wage", "wage"])
@@ -393,7 +394,7 @@ class EmployeeListSerializer(MinEmployeeListSerializer, serializers.ModelSeriali
     def to_representation(self, obj):
         ret = super(EmployeeListSerializer, self).to_representation(obj)
 
-        perm_list = getPermList(self)
+        perm_list = getPermList(self.context['request'])
 
         if 'view_wages' not in perm_list:
             removeFields(ret, ["current_wage", "wage"])
@@ -508,7 +509,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
         ret = super(ShiftListSerializer, self).to_representation(obj)
 
 
-        perm_list = getPermList(self)
+        perm_list = getPermList(self.context['request'])
 
         if 'create_shifts' not in perm_list:
             removeFields(ret, ["absence", "absence_info", "wage"])

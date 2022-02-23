@@ -446,7 +446,6 @@ export const addEmployee = (employee) => (dispatch, getState) => {
       dispatch({
         type: ADD_EMPLOYEE,
         payload: res.data,
-        current_dep: getState().employees.current.department,
       });
 
       dispatch(resetErrors());

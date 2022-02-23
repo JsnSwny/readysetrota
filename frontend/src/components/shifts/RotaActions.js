@@ -128,22 +128,21 @@ const RotaActions = ({
               ></i>
             </div>
           )}
-          {permissions.includes("manage_availabilities") &&
-            business.plan != "F" && (
-              <div
-                onClick={() => {
-                  setShowAvailabilities(!showAvailabilities);
-                }}
-                className="rotaFunctions__button"
-              >
-                Availabilities{" "}
-                <i
-                  className={`fas ${
-                    showAvailabilities ? "fa-eye" : "fa-eye-slash"
-                  }`}
-                ></i>
-              </div>
-            )}
+          {permissions.includes("create_shifts") && (
+            <div
+              onClick={() => {
+                setShowAvailabilities(!showAvailabilities);
+              }}
+              className="rotaFunctions__button"
+            >
+              Availabilities{" "}
+              <i
+                className={`fas ${
+                  showAvailabilities ? "fa-eye" : "fa-eye-slash"
+                }`}
+              ></i>
+            </div>
+          )}
 
           <button
             className={`rotaFunctions__button ${

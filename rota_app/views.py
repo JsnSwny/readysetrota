@@ -33,6 +33,9 @@ import pandas as pd
 from django.db.models import Q
 import time
 from django.forms.models import model_to_dict
+from .permissions import *
+from .serializers import getPermList
+from django.http import HttpResponseForbidden
 
 
 db = sqlite3.connect(':memory:')
@@ -107,6 +110,12 @@ class Publish(APIView):
     def get(self, request):
         business = request.query_params.get('business')
         all_shifts = {}
+
+        site_id = request.query_params.get('site_id')
+        perm_list = getPermList(request, site_id)
+
+        if "publish_shifts" not in perm_list:
+            return HttpResponseForbidden()
 
         if business != "false":
             all_shifts = Shift.objects.filter(date__gte=date.today(), department__site=request.query_params.get(
@@ -522,16 +531,24 @@ from collections import defaultdict
 
 class GetReportData(APIView):
 
+    # permission_classes = (CanViewReportData,)
+
     def daterange(self, start_date, end_date):
         for n in range(int((end_date - start_date).days)):
             yield end_date - timedelta(n)
 
     def get(self, request):
+        site_id = request.query_params.get('site_id')
+        perm_list = getPermList(request, site_id)
+
+        if "view_report" not in perm_list:
+            return HttpResponseForbidden()
+
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         start_date = datetime.strptime(start_date, '%d/%m/%Y')
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
-        site_id = request.query_params.get('site_id')
+        
 
         based_on = request.query_params.get('based_on')
         total_cost = []

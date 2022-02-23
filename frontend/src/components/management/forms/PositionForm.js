@@ -17,7 +17,7 @@ const PositionForm = ({ setOpen, editPosition }) => {
     if (editPosition) {
       setName(editPosition.name);
       setDepartment({
-        value: editPosition.department,
+        value: editPosition.department.id,
         label: editPosition.department.name,
       });
     }

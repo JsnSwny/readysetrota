@@ -148,10 +148,13 @@ const StaffProfile = ({ setDashboardView }) => {
   return (
     <Fragment>
       <HolidayModal open={open} setOpen={setOpen} />
-      <Title name={`${employee ? `Welcome, ${employee.first_name}` : ""}`} />
+      {/* <Title name={`${employee ? `Welcome, ${employee.first_name}` : ""}`} /> */}
 
       <div className="dashboard wrapper--md">
-        <h2 className="title-sm title--margin-top">Your PIN</h2>
+        <h1 className="big-title">
+          Hey {user.first_name}, Welcome to readysetrota
+        </h1>
+        <h2 className="title-sm">Your PIN</h2>
         <hr class="separator" />
         {employee && (
           <p>

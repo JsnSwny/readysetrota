@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { updateWage } from "../../../../actions/wages";
 import Select from "react-select";
 
 const WageForm = ({ setOpen, editWage }) => {

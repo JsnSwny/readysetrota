@@ -6,44 +6,183 @@ from rest_framework.filters import OrderingFilter
 from django_filters import DateFilter
 import django_filters
 from django.db.models import Q
+from .serializers import getPermList
+from rest_framework import status
+from rest_framework.response import Response
+from .permissions import *
+from .serializers import getPermList
+
+# -------------
+# MIXINS
+# -------------
+
+class ViewSetActionPermissionMixin:
+    def get_permissions(self):
+        try:
+            return [
+                permission()
+                for permission in self.permission_action_classes[self.action]
+            ]
+        except KeyError:
+            if self.action:
+                action_func = getattr(self, self.action, {})
+                action_func_kwargs = getattr(action_func, "kwargs", {})
+                permission_classes = action_func_kwargs.get(
+                    "permission_classes"
+                )
+            else:
+                permission_classes = None
+
+            return [
+                permission()
+                for permission in (
+                    permission_classes or self.permission_classes
+                )
+            ]
 
 
-class ShiftFilter(django_filters.FilterSet):
-    date = django_filters.DateFromToRangeFilter()
-    department = django_filters.NumberFilter(distinct=True)
-    department__site = django_filters.NumberFilter(distinct=True)
-    absence__not = django_filters.CharFilter(
-        field_name='absence', exclude=True)
+# -------------
+# BUSINESS
+# -------------
 
+class BusinessFilter(django_filters.FilterSet):
     class Meta:
-        model = Shift
-        fields = ['date', 'employee', 'department', 'department__site',
-                  'employee__user__id', 'absence__not', 'open_shift', 'stage',]
+        model = Business
+        fields = ['id']
 
-class ShiftViewSet(viewsets.ModelViewSet):
+class BusinessViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    serializer_class = BusinessSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = BusinessFilter
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ShiftSerializer
-        else:
-            return ShiftListSerializer  
+    permission_action_classes = {
+        'create': [CanCreateBusiness],
+        'update': [CanModifyBusiness],
+        'destroy': [CanModifyBusiness],
+    }
+
+    def get_queryset(self):
+        return Business.objects.filter(owner=self.request.user)
+
+# -------------
+# SITES
+# -------------
+
+class SiteFilter(django_filters.FilterSet):
+    class Meta:
+        model = Employee
+        fields = ['business']
+
+
+class SiteViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    permission_action_classes = {
+        'create': [CanCreateSites],
+        'update': [CanModifySites],
+        'destroy': [CanModifySites],
+    }
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            return Shift.objects.filter(department__site__business=self.request.user.business)
+            business = self.request.user.business
+            return Site.objects.filter(business=business).distinct()
+        sites = Site.objects.filter(
+            department_site__pos_department__position__user=self.request.user).distinct()
+
+        return sites
+
+    def destroy(self, request, *args, **kwargs):
+        departments = Department.objects.filter(site=self.get_object().id)
+        for i in departments:
+            positions = Position.objects.filter(department=i.id)
+            for j in positions:
+                clearEmployees(j)
+                j.delete()
+
+        return super(SiteViewSet, self).destroy(request, *args, **kwargs)
+    serializer_class = SiteSerializer
+
+# -------------
+# DEPARTMENTS
+# -------------
+
+class DepartmentFilter(django_filters.FilterSet):
+    site = django_filters.NumberFilter(field_name='site__id')
+
+    class Meta:
+        model = Department
+        fields = ['site', 'name']
+
+
+class DepartmentViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    serializer_class = DepartmentSerializer
+    queryset = Department.objects.all()
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = DepartmentFilter
+
+    permission_action_classes = {
+        'create': [CanCreateDepartments],
+        'update': [CanModifyDepartments],
+        'destroy': [CanModifyDepartments],
+    }
+
+    def destroy(self, request, *args, **kwargs):
+        positions = Position.objects.filter(department=self.get_object().id)
+        for i in positions:
+            clearEmployees(i)
+            i.delete()
+
+        return super(DepartmentViewSet, self).destroy(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Department.objects.filter(business=self.request.user.business)
 
         user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
 
-        shifts = Shift.objects.filter(department__in=user_departments)
-        return shifts
+        departments = Department.objects.filter(
+            Q(id__in=user_departments) | Q(owner=self.request.user))
 
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_class = ShiftFilter
-    ordering_fields = ('date', 'start_time')
+        return departments
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+# -------------
+# POSITIONS
+# -------------
+
+class PositionFilter(django_filters.FilterSet):
+    department = django_filters.NumberFilter()
+    department__business = django_filters.NumberFilter()
+
+    class Meta:
+        model = Position
+        fields = ['department', 'department__business',
+                  'department__site', 'business', 'department__site']
+
+
+class PositionViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    serializer_class = PositionSerializer
+
+    permission_action_classes = {
+        'create': [CanCreatePositions],
+        'update': [CanModifyPositions],
+        'destroy': [CanModifyPositions],
+    }
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = PositionFilter
+    queryset = Position.objects.all()
+
+class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
+    serializer_class = BasicPositionSerializer
+
+# -------------
+# EMPLOYEES
+# -------------
 
 class EmployeeFilter(django_filters.FilterSet):
     status__start_date = DateFilter(lookup_expr='lte')
@@ -58,22 +197,24 @@ class EmployeeFilter(django_filters.FilterSet):
         fields = ['status__start_date', 'status__end_date', 'site', 'archived']
 
 
-class EmployeeViewSet(viewsets.ModelViewSet):
+class EmployeeViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
-    queryset = Employee.objects.all()
+    permission_action_classes = {
+        'create': [CanCreateEmployees],
+        'update': [CanModifyEmployees],
+        'destroy': [CanModifyEmployees],
+    }
 
     def get_serializer_class(self):
         if self.action == 'list':
             management = self.request.query_params.get('management') == "True"
-
-            print(management)
 
             if management:
                 return EmployeeListSerializer
             else:
                 return MinEmployeeListSerializer
         else:
-            return EmployeeSerializer  
+            return EmployeeSerializer 
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
@@ -98,116 +239,55 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     filter_class = EmployeeFilter
     ordering_fields = ('archived', 'first_name', 'last_name',)
 
+# -------------
+# SHIFTS
+# -------------
 
-class BusinessFilter(django_filters.FilterSet):
-    class Meta:
-        model = Business
-        fields = ['id']
-
-
-class BusinessViewSet(viewsets.ModelViewSet):
-    serializer_class = BusinessSerializer
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_class = BusinessFilter
-
-    def get_queryset(self):
-        return Business.objects.filter(owner=self.request.user)
-
-class TimeClockFilter(django_filters.FilterSet):
-    class Meta:
-        model = TimeClock
-        fields = ['date', 'department', 'department__site']
-
-class TimeClockViewSet(viewsets.ModelViewSet):
-    serializer_class = TimeClockSerializer
-    queryset = TimeClock.objects.all()
-
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_class = TimeClockFilter
-
-
-    ordering_fields = ('date', 'start_time')
-
-
-
-
-class PositionFilter(django_filters.FilterSet):
-    department = django_filters.NumberFilter()
-    department__business = django_filters.NumberFilter()
+class ShiftFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
+    department = django_filters.NumberFilter(distinct=True)
+    department__site = django_filters.NumberFilter(distinct=True)
+    absence__not = django_filters.CharFilter(
+        field_name='absence', exclude=True)
 
     class Meta:
-        model = Position
-        fields = ['department', 'department__business',
-                  'department__site', 'business', 'department__site']
+        model = Shift
+        fields = ['date', 'employee', 'department', 'department__site',
+                  'employee__user__id', 'absence__not', 'open_shift', 'stage',]
 
+class ShiftViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
-def clearEmployees(position):
-    employees = Employee.objects.filter(position=position)
-    for i in employees:
-        if len(i.position.all()) <= 1:
-            i.delete()
+    permission_action_classes = {
+        'create': [CanCreateShifts],
+        'update': [CanModifyShifts],
+        'destroy': [CanModifyShifts],
+    }
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ShiftSerializer
         else:
-            shifts = Shift.objects.filter(employee=i)
-            for j in shifts:
-                if j.department == position.department:
-                    j.delete()
-
-
-class PositionViewSet(viewsets.ModelViewSet):
-    serializer_class = PositionSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    def destroy(self, request, *args, **kwargs):
-        clearEmployees(self.get_object())
-        return super(PositionViewSet, self).destroy(request, *args, **kwargs)
-
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = PositionFilter
-    queryset = Position.objects.all()
-
-
-class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
-    serializer_class = BasicPositionSerializer
-
-
-class DepartmentFilter(django_filters.FilterSet):
-    site = django_filters.NumberFilter(field_name='site__id')
-
-    class Meta:
-        model = Department
-        fields = ['site', 'name']
-
-
-class DepartmentViewSet(viewsets.ModelViewSet):
-    serializer_class = DepartmentSerializer
-    queryset = Department.objects.all()
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = DepartmentFilter
-
-    def destroy(self, request, *args, **kwargs):
-        positions = Position.objects.filter(department=self.get_object().id)
-        for i in positions:
-            clearEmployees(i)
-            i.delete()
-
-        return super(DepartmentViewSet, self).destroy(request, *args, **kwargs)
+            return ShiftListSerializer  
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            return Department.objects.filter(business=self.request.user.business)
+            return Shift.objects.filter(department__site__business=self.request.user.business)
 
         user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
 
-        departments = Department.objects.filter(
-            Q(id__in=user_departments) | Q(owner=self.request.user))
+        shifts = Shift.objects.filter(department__in=user_departments)
+        return shifts
 
-        return departments
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = ShiftFilter
+    ordering_fields = ('date', 'start_time')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+# -------------
+# AVAILABILITY
+# -------------
 
 class AvailabilityFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
@@ -218,12 +298,91 @@ class AvailabilityFilter(django_filters.FilterSet):
 
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
+    permission_action_classes = {
+        'create': [IsAvailabilityOwner],
+        'update': [IsAvailabilityOwner],
+        'destroy': [IsAvailabilityOwner],
+    }
     serializer_class = AvailabilitySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = AvailabilityFilter
     ordering_fields = ('date',)
-    queryset = Availability.objects.all().distinct()
 
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Availability.objects.filter(site__business=self.request.user.business)
+
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+
+        availabilities = Availability.objects.filter(site__in=user_sites)
+        return availabilities
+
+# -------------
+# FORECAST
+# -------------
+
+class ForecastFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
+
+    class Meta:
+        model = Forecast
+        fields = ['date', 'site__id']
+
+
+class ForecastViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    serializer_class = ForecastSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_class = ForecastFilter
+    ordering_fields = ('date',)
+
+    permission_action_classes = {
+        'create': [CanCreateForecast],
+        'update': [CanModifyForecast],
+        'destroy': [CanModifyForecast],
+    }
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Forecast.objects.filter(site__business=self.request.user.business)
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        forecasts = Forecast.objects.filter(site__in=user_sites)
+        return forecasts
+
+# -------------
+# TIMECLOCK
+# -------------
+
+class TimeClockFilter(django_filters.FilterSet):
+    class Meta:
+        model = TimeClock
+        fields = ['date', 'department', 'department__site']
+
+class TimeClockViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
+    serializer_class = TimeClockSerializer
+    queryset = TimeClock.objects.all()
+
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = TimeClockFilter
+
+    permission_action_classes = {
+        'create': [CanCreateTimeclock],
+        'update': [CanModifyTimeclock],
+        'destroy': [CanModifyTimeclock],
+    }
+
+
+    ordering_fields = ('date', 'start_time')
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return TimeClock.objects.filter(department__site__business=self.request.user.business)
+        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
+        timeclocks = TimeClock.objects.filter(department__in=user_departments)
+        return timeclocks
+
+# -------------
+# LEAVE
+# -------------
 
 class LeaveFilter(django_filters.FilterSet):
     start_date = DateFilter(lookup_expr='lte')
@@ -241,61 +400,29 @@ class LeaveViewSet(viewsets.ModelViewSet):
     filter_class = LeaveFilter
     filter_fields = {'approved': ['isnull']}
     ordering_fields = ('created_at',)
-    queryset = Leave.objects.all().distinct()
 
-
-class SiteFilter(django_filters.FilterSet):
-    class Meta:
-        model = Employee
-        fields = ['business']
-
-
-class SiteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            business = self.request.user.business
-            return Site.objects.filter(business=business).distinct()
-        sites = Site.objects.filter(
-            department_site__pos_department__position__user=self.request.user).distinct()
+            return Leave.objects.filter(site__business=self.request.user.business)
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        leaves = Leave.objects.filter(site__in=user_sites)
+        return leaves
 
-        return sites
-
-    def destroy(self, request, *args, **kwargs):
-        departments = Department.objects.filter(site=self.get_object().id)
-        for i in departments:
-            positions = Position.objects.filter(department=i.id)
-            for j in positions:
-                clearEmployees(j)
-                j.delete()
-
-        return super(SiteViewSet, self).destroy(request, *args, **kwargs)
-    serializer_class = SiteSerializer
-
-
-class ForecastFilter(django_filters.FilterSet):
-    date = django_filters.DateFromToRangeFilter()
-
-    class Meta:
-        model = Forecast
-        fields = ['date', 'site__id']
-
-
-class ForecastViewSet(viewsets.ModelViewSet):
-    serializer_class = ForecastSerializer
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filter_class = ForecastFilter
-    ordering_fields = ('date',)
-    queryset = Forecast.objects.all()
-
+# -------------
+# OTHER
+# -------------
 
 class SiteSettingsViewSet(viewsets.ModelViewSet):
     serializer_class = SiteSettingsSerializer
-    queryset = SiteSettings.objects.all()
+    
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return SiteSettings.objects.filter(site__business=self.request.user.business)
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        settings = SiteSettings.objects.filter(site__in=user_sites)
+        return settings
 
 class PermissionTypeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = PermissionTypeSerializer
     queryset = PermissionType.objects.all()
-
-class WageViewSet(viewsets.ModelViewSet):
-    queryset = Wage.objects.all()

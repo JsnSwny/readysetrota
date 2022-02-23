@@ -307,10 +307,10 @@ export default function (state = initialState, action) {
         positions: [],
       };
     case ADD_EMPLOYEE:
-      let foundIndex = state.sites.findIndex(
-        (item) => item.id == action.payload.position[0].department.site.id
-      );
-      state.sites[foundIndex].number_of_employees++;
+      // let foundIndex = state.sites.findIndex(
+      //   (item) => item.id == action.payload.position[0].department.site.id
+      // );
+      // state.sites[foundIndex].number_of_employees++;
       return {
         ...state,
         employees: [...state.employees, action.payload],
