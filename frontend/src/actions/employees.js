@@ -300,6 +300,7 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 
 export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
   let query = "";
+
   if (start_date && end_date) {
     query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
   }

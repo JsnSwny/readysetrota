@@ -168,8 +168,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
     current_wage = serializers.SerializerMethodField()
     current_status = serializers.SerializerMethodField()
 
-    owner = BasicUserSerializer(required=False)
-
     total_shifts = serializers.SerializerMethodField()
 
     def get_wage(self, instance):

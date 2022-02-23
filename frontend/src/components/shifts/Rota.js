@@ -51,7 +51,7 @@ const Rota = () => {
     dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
-    dispatch(getEmployees(true, false, start_date, end_date));
+    dispatch(getEmployees(start_date, end_date));
   };
 
   const updateWidth = (force, device, date, add) => {
