@@ -10,9 +10,8 @@ import {
 } from "date-fns";
 import { isInViewport } from "../../utils/hooks/isInViewport";
 
-const ShiftItem = ({ item, interval, setMonth }) => {
+const ShiftItem = ({ item, interval, setMonth, refObj }) => {
   const shifts = useSelector((state) => state.shifts.shifts);
-  const ref = useRef(null);
   const middleOfMonth = (date) => {
     let monthInterval = eachDayOfInterval({
       start: startOfMonth(date),
@@ -26,20 +25,21 @@ const ShiftItem = ({ item, interval, setMonth }) => {
   const isActive = (date, index) => {
     let middle = middleOfMonth(date);
     if (!middle) return false;
-
+    console.log(refObj);
+    return true;
     return isInViewport(ref);
   };
 
-  useEffect(() => {
-    isInViewport(ref);
-  }, []);
+  // useEffect(() => {
+  //   isInViewport(ref);
+  // }, []);
 
   const getShiftsByDate = (date) => {
     return shifts.filter((shift) => isEqual(parseISO(shift.date), date));
   };
   return (
     <li
-      ref={ref}
+      ref={refObj}
       className={`yshifts-calendar__item ${isActive(item) ? "" : "hide"}`}
     >
       <h3 className="yshifts-calendar__date">{format(item, "d")}</h3>

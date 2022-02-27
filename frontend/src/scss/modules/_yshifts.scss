@@ -3,7 +3,6 @@
     list-style-type: none;
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem;
     li {
       text-align: center;
       width: 100%;
@@ -23,6 +22,25 @@
   }
   &__month {
     font-size: 32px;
+    background-color: white;
+    border-top: 0.1px solid #dfdfdf;
+    border-right: 0.1px solid #dfdfdf;
+    border-left: 0.1px solid #dfdfdf;
+    text-align: center;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+    font-family: $secondary-font-family;
+  }
+  &__bar {
+    position: fixed;
+    top: 45px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    @extend .shadow;
   }
 }
 
@@ -31,6 +49,7 @@
   display: flex;
   flex-wrap: wrap;
   border: 0.1px solid #dfdfdf;
+  margin-top: 170px;
   &__item {
     width: calc(100% / 7);
     height: calc((100vh / 5) - 20px);
@@ -44,9 +63,14 @@
         color: $light-gray-2;
       }
     }
+    &.today {
+      border: 1px solid $pink;
+    }
   }
   &__date {
     color: $pink;
+    font-family: $secondary-font-family;
+    margin-bottom: 0.75rem;
   }
   &__shift {
     background-color: $pink;
@@ -55,5 +79,6 @@
     margin-top: 0.5rem;
     padding: 0.2rem 1rem;
     width: fit-content;
+    font-size: 14px;
   }
 }
