@@ -50,7 +50,17 @@ const Nav = () => {
             <Fragment>
               <div className="nav__section nav__section--links">
                 <ul className="nav__list">
-                  <NavLink title="Dashboard" link="" />
+                  <NavLink
+                    title="Home"
+                    link=""
+                    dropdown={[
+                      {
+                        name: "Your Shifts",
+                        link: "/shifts",
+                        perm: false,
+                      },
+                    ]}
+                  ></NavLink>
                   <NavLink
                     title="Rota"
                     link="rota"

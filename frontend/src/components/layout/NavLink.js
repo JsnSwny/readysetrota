@@ -21,7 +21,7 @@ const NavLink = ({ title, link, perms, dropdown }) => {
         ? link && location.includes(link)
           ? "active"
           : ""
-        : location.includes(link) ||
+        : (link != "" && location.includes(link)) ||
           dropdown.some((item) => location.includes(item.link))
         ? "active"
         : "";
@@ -29,13 +29,14 @@ const NavLink = ({ title, link, perms, dropdown }) => {
       return location.includes(sublink) ? "active" : "";
     }
   };
-
   return (
     <li className={`nav__item ${isActive()}`}>
       <Link className="nav__item-link" to={`/${link}`}>
         {title}{" "}
         {dropdown &&
-        dropdown.some((item) => permissions.includes(item.perm)) ? (
+        dropdown.some(
+          (item) => !item.perm || permissions.includes(item.perm)
+        ) ? (
           <i class="fas fa-angle-down"></i>
         ) : (
           ""
@@ -45,12 +46,11 @@ const NavLink = ({ title, link, perms, dropdown }) => {
         <ul className="nav__dropdown">
           {dropdown.map(
             (item) =>
-              !item.perm ||
-              (permissions.some((perm) => item.perm == perm) && (
+              (!item.perm || permissions.some((perm) => item.perm == perm)) && (
                 <li className={`${isActive(item.link)}`}>
                   <Link to={item.link}>{item.name}</Link>
                 </li>
-              ))
+              )
           )}
         </ul>
       )}

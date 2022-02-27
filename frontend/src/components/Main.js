@@ -48,6 +48,7 @@ import ForecastPage from "./forecasting/ForecastPage";
 import ScrollToTop from "./layout/ScrollToTop";
 import ReportsPage from "./reports/ReportsPage";
 import Sites from "./management/tables/Sites";
+import YourShifts from "./shifts/YourShifts";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -196,6 +197,7 @@ const Main = () => {
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsAndConditions} />
           <PrivateRoute path="/changepassword" component={ChangePassword} />
+          <PrivateRoute path="/shifts" component={YourShifts} />
           <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />

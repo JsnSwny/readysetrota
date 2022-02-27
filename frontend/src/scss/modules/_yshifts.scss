@@ -1,0 +1,59 @@
+.yshifts {
+  &__dayLabels {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    li {
+      text-align: center;
+      width: 100%;
+      font-family: $secondary-font-family;
+      font-size: 16px;
+      color: #929292;
+      background-color: white;
+      border-top: 0.1px solid #dfdfdf;
+      border-right: 0.1px solid #dfdfdf;
+      border-left: 0.1px solid #dfdfdf;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+
+      align-items: center;
+    }
+  }
+  &__month {
+    font-size: 32px;
+  }
+}
+
+.yshifts-calendar {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  border: 0.1px solid #dfdfdf;
+  &__item {
+    width: calc(100% / 7);
+    height: calc((100vh / 5) - 20px);
+    min-height: 125px;
+    background-color: white;
+    border: 0.1px solid #dfdfdf;
+    padding: 1rem 1.25rem;
+    &.hide {
+      opacity: 0.5;
+      .yshifts-calendar__date {
+        color: $light-gray-2;
+      }
+    }
+  }
+  &__date {
+    color: $pink;
+  }
+  &__shift {
+    background-color: $pink;
+    color: white;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+    padding: 0.2rem 1rem;
+    width: fit-content;
+  }
+}
