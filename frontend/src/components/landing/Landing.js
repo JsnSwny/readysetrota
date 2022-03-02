@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Feature from "./Feature";
 import { Link } from "react-router-dom";
+import HowItWorks from "./HowItWorks";
 
 const Landing = ({ setOpen, setType }) => {
   const [showVideo, setShowVideo] = useState(false);
@@ -34,130 +35,147 @@ const Landing = ({ setOpen, setType }) => {
               <Link className="hero__btn" to="/register">
                 Try it for FREE
               </Link>
+
               <button
                 onClick={() => {
                   setShowVideo(true);
                   document.body.style.overflow = "hidden";
                 }}
-                className="hero__btn blue"
+                className="hero__btn--blue"
               >
-                Watch Demo
+                <i class="fas fa-play-circle"></i> Watch Demo
               </button>
             </div>
-
-            <small>Full Release Coming October 26th</small>
           </div>
           <img className="hero__image" src="static/media/hero-image.svg" />
         </div>
       </section>
       <section className="section section--white">
         <div className="landing__wrapper wrapper--lg">
-          <h2 className="radial-underline">Features</h2>
-          <div className="features">
-            <Feature
-              title="Advanced Availability Management"
-              content="Manage holidays and know exactly who you have available when planning your rota with our advanced availability management."
-            />
-            <Feature
-              title="Labour Forecasting"
-              content="Track employee wages and set daily sales forecasts to get a better representation of labour costs against your revenue."
-            />
-            <Feature
-              title="User Permissions"
-              content="Have full control over what your employees can see and do with our custom user permissions."
-            />
-          </div>
+          <h2>How it works</h2>
+          <HowItWorks />
         </div>
       </section>
       <section className="section">
         <div className="landing__wrapper wrapper--lg">
-          <h2 className="radial-underline">What Our Users Think</h2>
+          <h2>Testimonials</h2>
           <div className="usersThink">
             <div className="usersThink__item">
-              <img src="static/media/montlogo.jpg" />
-              <div className="usersThink__right">
-                <h3>
-                  Paul <strong>Patterson</strong>
-                </h3>
-                <p>
-                  Manager at{" "}
+              <i className="fas fa-quote-left"></i>
+              <blockquote>
+                Using ReadySetRota has saved management a lot of admin time. Not
+                only that, we can now plan rotas more cost effectively thanks to
+                live and accurate staff wage costs. The rota and time sheets
+                have never been so straightforward. It’s a fantastic and
+                innovative tool!
+              </blockquote>
+              <div className="flex-container--align-center">
+                <img src="static/media/montlogo.jpg" />
+                <div className="usersThink__item-details">
+                  <h4>Paul Patterson</h4>
+
                   <a href="https://www.themontgomerie.co.uk">
                     The Montgomerie Restaurant
                   </a>
-                </p>
-                <blockquote>
-                  Using ReadySetRota has saved management a lot of admin time.
-                  Not only that, we can now plan rotas more cost effectively
-                  thanks to live and accurate staff wage costs. The rota and
-                  time sheets have never been so straightforward. It’s a
-                  fantastic and innovative tool!
-                </blockquote>
+                </div>
               </div>
             </div>
-            {/* <div className="usersThink__item">
-              <img src="static/media/dwayne-the-rock-.jpg" />
-              <div className="usersThink__right">
-                <h3>
-                  Paul <strong>Patterson</strong>
-                </h3>
-                <p>
-                  Manager at{" "}
-                  <a href="https://www.themontgomerie.co.uk">
-                    The Montgomerie Restaurant
-                  </a>
-                </p>
-                <blockquote>
-                  Using ReadySetRota has saved management a lot of admin time.
-                  Not only that, we can now plan rotas more cost effectively
-                  thanks to live and accurate staff wage costs. The rota and
-                  time sheets have never been so straightforward. It’s a
-                  fantastic and innovative tool!
-                </blockquote>
+            <div className="usersThink__item alt">
+              <i className="fas fa-quote-left"></i>
+              <blockquote className="alt">
+                Join now and give us your feedback!
+              </blockquote>
+              <div className="flex-container--align-center">
+                <Link className="btn-3" to="/register">
+                  Get Started
+                </Link>
               </div>
-            </div> */}
+            </div>
+            <div className="usersThink__item alt">
+              <i className="fas fa-quote-left"></i>
+              <blockquote className="alt">
+                Join now and give us your feedback!
+              </blockquote>
+              <div className="flex-container--align-center">
+                <Link className="btn-3" to="/register">
+                  Get Started
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section section--white">
         <div className="landing__wrapper wrapper--lg">
-          <h2 className="radial-underline">Pricing</h2>
+          <h2>Pricing</h2>
           <h4 class="landing__subtitle">
             We offer a free and premium plan so that whether you're a small or
             large business, you can benefit from readysetrota.
           </h4>
           <div className="pricing">
             <div className="pricing__item">
-              <h3>Free Plan</h3>
-              <p>
-                Completely <strong>Free</strong>
-              </p>
-              <small>
-                The free plan offers a stripped back version of the application,
-                only allowing the bare minimum of creating employees and shifts.
-                Ideal for small businesses.
-              </small>
-              <button>More Info Coming Soon</button>
+              <p>Free</p>
+              <h3>Basic</h3>
+              <ul>
+                <li>
+                  <i className="fas fa-check-circle"></i> Unlimited Departments
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Up to 15 Employees
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Create and Publish
+                  Shifts
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Export Rota
+                </li>
+              </ul>
+              <Link className="btn-3" to="/register">
+                Get Started
+              </Link>
             </div>
-            <div className="pricing__item pink">
-              <h3>Premium Plan</h3>
+            <div className="pricing__item">
               <p>
-                <strong>£3</strong> per <strong>5</strong> Employees
+                Free <s>£2.50 per 5 employees</s>
               </p>
-              <small>
-                The premium plan includes advanced features to further improve
-                your rota management. These features include availability
-                management, labour forecasting, custom employee permissions and
-                more.
-              </small>
-              <button>More Info Coming Soon</button>
+              <h3>Premium</h3>
+              <ul>
+                <li>
+                  <i className="fas fa-check-circle"></i> Everything in Basic
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Unlimited Sites
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Availability
+                  Management Tracking
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Labour Forecasting
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Time Tracking
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Reporting
+                </li>
+                <li>
+                  <i className="fas fa-check-circle"></i> Custom Employee
+                  Permissions
+                </li>
+              </ul>
+              <Link className="btn-3" to="/register">
+                Get Started
+              </Link>
             </div>
           </div>
         </div>
       </section>
       <section className="landing__banner">
-        <h2>Try it now for FREE</h2>
-        <p>Getting set up is quick and easy</p>
+        <h2>Get Started Now</h2>
+        <p>Try readysetrota for free, getting setup is quick and easy</p>
         <button
           onClick={() => {
             setOpen(true);
@@ -165,7 +183,7 @@ const Landing = ({ setOpen, setType }) => {
           }}
           className="btn-3"
         >
-          Try Now
+          Get Started
         </button>
       </section>
       <footer className="footer">

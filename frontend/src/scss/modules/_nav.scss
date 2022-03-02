@@ -69,6 +69,17 @@
     @include wi-mq(tablet) {
       width: auto;
     }
+    .btn-3 {
+      min-width: auto;
+    }
+    .guest-link {
+      font-size: 14px;
+      margin-right: 2rem;
+      transition: 0.2s ease color;
+      &:hover {
+        color: $pink;
+      }
+    }
   }
   &__profile {
     display: flex;
