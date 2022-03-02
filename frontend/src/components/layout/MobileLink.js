@@ -27,8 +27,7 @@ const MobileLink = ({
           {title}
         </Link>
         {children &&
-          perms &&
-          perms.some((item) => permissions.includes(item)) && (
+          (!perms || perms.some((item) => permissions.includes(item))) && (
             <i
               className={`fas fa-angle-down ${
                 openDropdown == title ? "active" : ""

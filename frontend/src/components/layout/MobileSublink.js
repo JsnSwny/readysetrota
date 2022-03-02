@@ -7,10 +7,9 @@ const MobileSublink = ({ title, link, closeNav, perm }) => {
     (state) => state.permissions.active_permissions
   );
 
-  if (!permissions.includes(perm)) {
+  if (perm && !permissions.includes(perm)) {
     return false;
   }
-
   return (
     <li className="mobile-nav__sublink">
       <Link to={link} onClick={() => closeNav()}>

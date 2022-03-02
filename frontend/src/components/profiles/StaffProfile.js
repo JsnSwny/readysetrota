@@ -24,6 +24,7 @@ import { Bar, Line } from "react-chartjs-2";
 import { getStats } from "../../actions/stats";
 import StatsItem from "./dashboard/StatsItem";
 import HolidayModal from "./HolidayModal";
+import { Link } from "react-router-dom";
 
 const StaffProfile = ({ setDashboardView }) => {
   const dispatch = useDispatch();
@@ -79,8 +80,8 @@ const StaffProfile = ({ setDashboardView }) => {
   useEffect(() => {
     dispatch(
       getShifts(
-        format(new Date(), "yyyy-MM-dd"),
-        "",
+        format(startOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd"),
+        format(endOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd"),
         true,
         user.id == employee_id,
         employee_id
@@ -161,34 +162,12 @@ const StaffProfile = ({ setDashboardView }) => {
             Your PIN is <strong>{employee.pin ? employee.pin : "None"}</strong>
           </p>
         )}
-        <h2 className="title-sm title--margin-top">Your Shifts</h2>
+        <h2 className="title-sm title--margin-top">This Week's Shifts</h2>
         <hr class="separator" />
         {isLoading ? (
           <div class="dot-pulse"></div>
         ) : shifts.length > 0 ? (
           <Fragment>
-            <p>
-              Your next shift is{" "}
-              {shifts[0].date == format(new Date(), "yyyy-MM-dd") ? (
-                <strong>today</strong>
-              ) : (
-                <Fragment>
-                  in{" "}
-                  <strong className="pink">
-                    {differenceInCalendarDays(
-                      parseISO(shifts[0].date),
-                      new Date()
-                    )}{" "}
-                    {differenceInCalendarDays(
-                      parseISO(shifts[0].date),
-                      new Date()
-                    ) == 1
-                      ? "day"
-                      : "days"}
-                  </strong>
-                </Fragment>
-              )}
-            </p>
             <div className="dashboardShiftList">
               <ul className="dashboardShiftList__list--heading">
                 {daysList.map((item) => (
@@ -239,6 +218,9 @@ const StaffProfile = ({ setDashboardView }) => {
                 ))}
               </ul>
             </div>
+            <Link className="btn-3" to="shifts">
+              Calendar View
+            </Link>
           </Fragment>
         ) : (
           <p>You have no upcoming shifts</p>

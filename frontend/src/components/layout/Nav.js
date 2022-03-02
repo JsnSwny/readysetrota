@@ -53,13 +53,15 @@ const Nav = () => {
                   <NavLink
                     title="Home"
                     link=""
-                    dropdown={[
-                      {
-                        name: "Your Shifts",
-                        link: "/shifts",
-                        perm: false,
-                      },
-                    ]}
+                    dropdown={
+                      !user.business && [
+                        {
+                          name: "Your Shifts",
+                          link: "/shifts",
+                          perm: false,
+                        },
+                      ]
+                    }
                   ></NavLink>
                   <NavLink
                     title="Rota"

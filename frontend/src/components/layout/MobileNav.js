@@ -50,9 +50,20 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
             <MobileLink
               closeNav={closeNav}
               icon={"fa-th-large"}
-              title="Dashboard"
+              title="Home"
               link="/"
-            />
+              openDropdown={openDropdown}
+              setOpenDropdown={setOpenDropdown}
+            >
+              {!auth.user.business && (
+                <MobileSublink
+                  title="Your Shifts"
+                  link="/shifts"
+                  closeNav={closeNav}
+                  perm={false}
+                />
+              )}
+            </MobileLink>
 
             <MobileLink
               closeNav={closeNav}

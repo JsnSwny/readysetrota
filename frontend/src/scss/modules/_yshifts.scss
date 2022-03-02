@@ -1,4 +1,4 @@
-.yshifts {
+.calendar {
   &__dayLabels {
     list-style-type: none;
     display: flex;
@@ -39,12 +39,12 @@
     top: 45px;
     left: 0;
     right: 0;
-    z-index: 999;
+    z-index: 10;
     @extend .shadow;
   }
 }
 
-.yshifts-calendar {
+.calendar-dates {
   list-style-type: none;
   display: flex;
   flex-wrap: wrap;
@@ -80,5 +80,43 @@
     padding: 0.2rem 1rem;
     width: fit-content;
     font-size: 14px;
+  }
+}
+
+.calendar-mobile {
+  list-style-type: none;
+  margin: 2rem 0;
+  &__item {
+    background-color: white;
+    @extend .shadow;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  &__date {
+    text-align: center;
+    border-right: #d2d2d2 1px solid;
+    width: 100px;
+    margin: 1rem 0;
+    line-height: 1.1rem;
+    font-family: $secondary-font-family;
+    font-size: 14px;
+    h4 {
+      font-size: 16px;
+    }
+  }
+  &__shift {
+    margin-left: 1rem;
+    line-height: 1.25rem;
+    h4 {
+      color: $pink;
+      font-size: 18px;
+    }
+    p {
+      font-size: 14px;
+      color: $light-gray-2;
+    }
   }
 }
