@@ -44,6 +44,11 @@
   @extend .shadow;
   border-radius: 5px;
   min-width: 400px;
+  @include wi-mq(mobile) {
+    min-width: 0;
+    margin: 0 1rem;
+    width: 100%;
+  }
 }
 
 .login__left {
