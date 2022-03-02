@@ -129,32 +129,42 @@ const AdminPanel = ({ setDashboardView }) => {
         <h1 className="big-title">
           Hey {user.first_name}, Welcome to readysetrota
         </h1>
-        <div className="flex-container--align-center">
-          <h2 className="title-sm">Getting started</h2>
-        </div>
+        {uncompleteList && uncompleteList.length > 0 && (
+          <Fragment>
+            <div className="flex-container--align-center">
+              <h2 className="title-sm">Getting started</h2>
+            </div>
 
-        <hr class="separator" />
+            <hr class="separator" />
 
-        {uncompleteList && (
-          <div ref={carouselContainer}>
-            <Carousel
-              startingPos={getStartingPos() == -1 ? 0 : getStartingPos()}
-              itemsInCarousel={itemsInCarousel()}
-              carouselContainer={carouselContainer}
-            >
-              {gettingStartedList.items.map((item, idx) => (
-                <GettingStartedItem
-                  startedObj={item}
-                  pos={idx}
-                  setCurrentStarted={setCurrentStarted}
-                />
-              ))}
-            </Carousel>
-          </div>
+            <div ref={carouselContainer}>
+              <Carousel
+                startingPos={getStartingPos() == -1 ? 0 : getStartingPos()}
+                itemsInCarousel={itemsInCarousel()}
+                carouselContainer={carouselContainer}
+              >
+                {gettingStartedList.items.map((item, idx) => (
+                  <GettingStartedItem
+                    startedObj={item}
+                    pos={idx}
+                    setCurrentStarted={setCurrentStarted}
+                  />
+                ))}
+              </Carousel>
+            </div>
+          </Fragment>
         )}
 
         <div className="dashboard__header">
-          <h2 className="title-sm title--margin-top">Tasks</h2>
+          <h2
+            className={`title-sm ${
+              uncompleteList && uncompleteList.length > 0
+                ? "title-sm--margin-top"
+                : ""
+            }`}
+          >
+            Tasks
+          </h2>
         </div>
 
         <hr class="separator" />
