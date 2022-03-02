@@ -573,7 +573,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'open_shift', 'employee', 'break_length', 'positions', 'info', 'id',
+        fields = ('date', 'start_time', 'end_time', 'open', 'employee', 'break_length', 'positions', 'info', 'id',
                   'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
 
 

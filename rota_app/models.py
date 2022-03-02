@@ -150,7 +150,6 @@ class Shift(models.Model):
     info = models.TextField(blank=True)
     department = models.ForeignKey(
         Department, related_name="shift_department", on_delete=models.SET_NULL, null=True, blank=True)
-    published = models.BooleanField(default=False)
     history = HistoricalRecords()
 
     STAGE_TYPES = [
@@ -164,7 +163,7 @@ class Shift(models.Model):
         choices=STAGE_TYPES,
         default="Unpublished",
     )
-    open_shift = models.BooleanField(default=False)
+    open = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User, related_name="shifts", on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)

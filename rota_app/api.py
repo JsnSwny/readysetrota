@@ -253,7 +253,7 @@ class ShiftFilter(django_filters.FilterSet):
     class Meta:
         model = Shift
         fields = ['date', 'employee', 'department', 'department__site',
-                  'employee__user__id', 'absence__not', 'open_shift', 'stage',]
+                  'employee__user__id', 'absence__not', 'open', 'stage',]
 
 class ShiftViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
