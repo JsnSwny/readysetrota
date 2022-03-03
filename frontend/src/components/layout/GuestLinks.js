@@ -11,7 +11,7 @@ const GuestLinks = ({ setMobileNav, mobileNav }) => {
         </ul>
       </div>
 
-      <div className="nav__section nav__section--links">
+      <div className="nav__section nav__section--links nav__section--guest">
         <div className="nav__hamburger">
           <i class="fas fa-bars" onClick={() => setMobileNav(!mobileNav)}></i>
         </div>

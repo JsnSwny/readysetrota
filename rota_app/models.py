@@ -166,25 +166,11 @@ class Shift(models.Model):
     open = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User, related_name="shifts", on_delete=models.CASCADE)
-    seen = models.BooleanField(default=False)
     positions = models.ManyToManyField(
         Position, related_name="shift_positions", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     break_length = models.IntegerField(default=0)
-    ABSENCE_TYPES = [
-        ("Authorised", 'Authorised'),
-        ("Unauthorised", 'Unauthorised'),
-        ("Compassionate", 'Compassionate'),
-        ("Other", 'Other'),
-        ("None", 'None')
-    ]
-    absence = models.CharField(
-        max_length=14,
-        choices=ABSENCE_TYPES,
-        default="None",
-    )
-    absence_info = models.TextField(blank=True)
 
     def _get_length(self):
         current_date = date.today()
@@ -198,8 +184,6 @@ class Shift(models.Model):
     def __str__(self):
         return f'{self.id}. {self.date.strftime("%B %d %Y")} {str(self.start_time)[0:5]} - {str(self.end_time)[0:5]} ({self.owner.email})'
 
-    def save(self, *args, **kwargs):
-        super(Shift, self).save(*args, **kwargs)
 class Availability(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
