@@ -150,6 +150,9 @@
   }
   &__logo {
     height: 20px;
+    @include wi-mq(stamp) {
+      width: 100px;
+    }
   }
   &__item {
     font-family: "Signika Negative", sans-serif;
