@@ -73,6 +73,7 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
               openDropdown={openDropdown}
               setOpenDropdown={setOpenDropdown}
             >
+              <MobileSublink title="Rota" link="/rota" closeNav={closeNav} />
               <MobileSublink
                 title="Timesheet"
                 link="/timesheet"
@@ -96,6 +97,12 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
               ]}
             >
               <MobileSublink
+                title="Employees"
+                link="/employees"
+                closeNav={closeNav}
+                perm="manage_employees"
+              />
+              <MobileSublink
                 title="Sites"
                 link="/sites"
                 closeNav={closeNav}
@@ -113,12 +120,6 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
                 closeNav={closeNav}
                 perm="manage_positions"
               />
-              <MobileSublink
-                title="Employees"
-                link="/employees"
-                closeNav={closeNav}
-                perm="manage_employees"
-              />
             </MobileLink>
 
             <MobileLink
@@ -131,16 +132,16 @@ const MobileNav = ({ siteOptions, mobileNav, setMobileNav }) => {
               perms={["manage_positions", "manage_forecast"]}
             >
               <MobileSublink
-                title="Forecasting"
-                link="/forecasting"
-                closeNav={closeNav}
-                perm="manage_forecast"
-              />
-              <MobileSublink
                 title="Reports"
                 link="/reports"
                 closeNav={closeNav}
                 perm="view_report"
+              />
+              <MobileSublink
+                title="Forecasting"
+                link="/forecasting"
+                closeNav={closeNav}
+                perm="manage_forecast"
               />
             </MobileLink>
             <MobileLink

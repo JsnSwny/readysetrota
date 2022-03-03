@@ -56,76 +56,20 @@ const RotaActions = ({
       <div className="rotaFunctions__wrapper">
         <div className="rotaFunctions__button-list">
           {permissions.includes("publish_shifts") && (
-            <div className="dropdown">
-              <div className="dropdown__wrapper">
-                <div
-                  onClick={() => dispatch(publish())}
-                  className={`dropdown__button ${
-                    !user.business && settings.shift_approval
-                      ? shifts.some(
-                          (item) =>
-                            parseISO(item.date) >= addDays(new Date(), -1) &&
-                            item.stage == "Unpublished" &&
-                            item.employee
-                        )
-                        ? ""
-                        : "disabled"
-                      : !shifts.some(
-                          (item) =>
-                            parseISO(item.date) >= addDays(new Date(), -1) &&
-                            item.stage != "Published" &&
-                            item.employee
-                        )
-                      ? "disabled"
-                      : ""
-                  }`}
-                >
-                  Publish
-                </div>
-                <div
-                  className={`dropdown__dropper ${
-                    publishDropdown ? "active" : ""
-                  }`}
-                >
-                  {permissions.includes("create_shifts") &&
-                    !user.business &&
-                    settings.shift_approval && (
-                      <div
-                        className={`dropdown__item ${
-                          !shifts.some((item) => item.stage == "Creation")
-                            ? "disabled"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          dispatch(sendForApproval());
-                          setPublishDropdown(!publishDropdown);
-                        }}
-                      >
-                        Send for Approval
-                      </div>
-                    )}
-                  {permissions.includes("approve_shifts") &&
-                    settings.shift_approval && (
-                      <div
-                        className={`dropdown__item ${
-                          !shifts.some((item) => item.stage == "Approval")
-                            ? "disabled"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          dispatch(approveShifts());
-                          setPublishDropdown(!publishDropdown);
-                        }}
-                      >
-                        Approve Shifts
-                      </div>
-                    )}
-                </div>
-              </div>
-              <i
-                onClick={() => setPublishDropdown(!publishDropdown)}
-                className="fas fa-caret-down"
-              ></i>
+            <div
+              onClick={() => dispatch(publish())}
+              className={`rotaFunctions__button ${
+                !shifts.some(
+                  (item) =>
+                    parseISO(item.date) >= addDays(new Date(), -1) &&
+                    item.stage != "Published" &&
+                    item.employee
+                )
+                  ? "disabled"
+                  : ""
+              }`}
+            >
+              Publish <i className="fas fa-paper-plane"></i>
             </div>
           )}
           {permissions.includes("create_shifts") && (

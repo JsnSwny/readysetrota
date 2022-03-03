@@ -68,6 +68,10 @@ const Nav = () => {
                     link="rota"
                     dropdown={[
                       {
+                        name: "Rota",
+                        link: "/rota",
+                      },
+                      {
                         name: "Timesheet",
                         link: "/timesheet",
                         perm: "manage_timeclock",
@@ -88,6 +92,11 @@ const Nav = () => {
                       "manage_employees",
                     ]}
                     dropdown={[
+                      {
+                        name: "Employees",
+                        link: "/employees",
+                        perm: "manage_employees",
+                      },
                       { name: "Sites", link: "/sites", perm: "manage_sites" },
                       {
                         name: "Departments",
@@ -99,11 +108,6 @@ const Nav = () => {
                         link: "/positions",
                         perm: "manage_positions",
                       },
-                      {
-                        name: "Employees",
-                        link: "/employees",
-                        perm: "manage_employees",
-                      },
                     ]}
                   ></NavLink>
                   <NavLink
@@ -112,14 +116,14 @@ const Nav = () => {
                     perms={["manage_forecast", "view_report"]}
                     dropdown={[
                       {
-                        name: "Forecasting",
-                        link: "/forecasting",
-                        perm: "manage_forecast",
-                      },
-                      {
                         name: "Reports",
                         link: "/reports",
                         perm: "view_report",
+                      },
+                      {
+                        name: "Forecasting",
+                        link: "/forecasting",
+                        perm: "manage_forecast",
                       },
                     ]}
                   ></NavLink>
