@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Feature from "./Feature";
 import { Link } from "react-router-dom";
 import HowItWorks from "./HowItWorks";
+import { toast } from "react-toastify";
 
 const Landing = ({ setOpen, setType }) => {
   const [showVideo, setShowVideo] = useState(false);
@@ -38,8 +39,7 @@ const Landing = ({ setOpen, setType }) => {
 
               <button
                 onClick={() => {
-                  setShowVideo(true);
-                  document.body.style.overflow = "hidden";
+                  toast.error("New demo video coming soon");
                 }}
                 className="hero__btn--blue"
               >
@@ -176,15 +176,9 @@ const Landing = ({ setOpen, setType }) => {
       <section className="landing__banner">
         <h2>Get Started Now</h2>
         <p>Try readysetrota for free, getting setup is quick and easy</p>
-        <button
-          onClick={() => {
-            setOpen(true);
-            setType("register");
-          }}
-          className="btn-3"
-        >
+        <Link to="/register" className="btn-3">
           Get Started
-        </button>
+        </Link>
       </section>
       <footer className="footer">
         <div className="wrapper--lg flex-container--between">
