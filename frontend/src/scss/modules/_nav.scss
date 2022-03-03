@@ -51,6 +51,11 @@
       flex: 1;
       margin-left: 1rem;
     }
+    &:nth-child(1) {
+      @include wi-mq(stamp) {
+        width: 40%;
+      }
+    }
     &:nth-child(2) {
       @include wi-mq(tablet) {
         display: none;
@@ -87,6 +92,9 @@
       transition: 0.2s ease color;
       &:hover {
         color: $pink;
+      }
+      @include wi-mq(mobile) {
+        margin-right: 1rem;
       }
     }
   }
@@ -151,7 +159,7 @@
   &__logo {
     height: 20px;
     @include wi-mq(stamp) {
-      width: 100px;
+      width: 100%;
     }
   }
   &__item {
