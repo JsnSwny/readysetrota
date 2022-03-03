@@ -509,8 +509,6 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
         perm_list = getPermList(self.context['request'])
 
-        if 'create_shifts' not in perm_list:
-            removeFields(ret, ["absence", "absence_info"])
         if 'manage_timeclock' not in perm_list:
             removeFields(ret, ["timeclock"])
         if 'view_wages' not in perm_list:
@@ -574,7 +572,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'open', 'employee', 'break_length', 'positions', 'info', 'id',
-                  'stage', 'absence', 'absence_info', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
+                  'stage', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
 
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):
