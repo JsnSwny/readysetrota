@@ -158,8 +158,8 @@ const AdminPanel = ({ setDashboardView }) => {
         <div className="dashboard__header">
           <h2
             className={`title-sm ${
-              uncompleteList && uncompleteList.length == 0
-                ? "title-sm--margin-top"
+              uncompleteList && uncompleteList.length > 0
+                ? "title--margin-top"
                 : ""
             }`}
           >
