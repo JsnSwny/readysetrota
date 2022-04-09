@@ -145,7 +145,11 @@ export const getShiftsByID = (id, user) => (dispatch, getState) => {
 // Add Employee
 export const addShift = (shift) => (dispatch, getState) => {
   axios
-    .post("/api/shifts/", shift, tokenConfig(getState))
+    .post(
+      `/api/shifts/?site=${getState().employees.current.site.id}`,
+      shift,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: ADD_SHIFT,
@@ -167,7 +171,11 @@ export const addShift = (shift) => (dispatch, getState) => {
 
 export const updateShift = (id, shift) => (dispatch, getState) => {
   axios
-    .put(`/api/shifts/${id}/`, shift, tokenConfig(getState))
+    .put(
+      `/api/shifts/${id}/?site=${getState().employees.current.site.id}`,
+      shift,
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: UPDATE_SHIFT,

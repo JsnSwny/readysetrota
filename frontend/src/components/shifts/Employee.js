@@ -17,10 +17,7 @@ const Employee = (props) => {
   const getHours = (employee, type) => {
     return shifts
       .filter(
-        (item) =>
-          item.department == department &&
-          item.employee == employee &&
-          item.absence == "None"
+        (item) => item.department == department && item.employee == employee
       )
       .map((item) =>
         type == "actual"
@@ -58,11 +55,7 @@ const Employee = (props) => {
   const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter(
-      (item) =>
-        item.date == formatDate &&
-        item.employee == employee.id &&
-        item.absence == "None" &&
-        item.wage > 0
+      (item) => item.date == formatDate && item.employee == employee.id
     );
 
     let hourly = shifts_filtered
