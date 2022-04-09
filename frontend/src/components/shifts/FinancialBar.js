@@ -104,8 +104,6 @@ const FinancialBar = ({
       .map(
         (item) =>
           item.employee &&
-          item.absence == "None" &&
-          item.wage > 0 &&
           (type == "p"
             ? item.timeclock
               ? +parseFloat(item.wage * item.timeclock.length).toFixed(2)
