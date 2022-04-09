@@ -22,6 +22,7 @@ import RotaActions from "./RotaActions";
 import RotaEmployees from "./RotaEmployees";
 import RotaDepartmentList from "./RotaDepartmentList";
 import ShiftModal from "./ShiftModal";
+import OpenShifts from "./OpenShifts";
 
 const Rota = () => {
   const dispatch = useDispatch();
@@ -126,7 +127,6 @@ const Rota = () => {
         setOpen={setOpen}
         editShift={editShift}
         shiftFormInfo={shiftFormInfo}
-        editShift={editShift}
       />
       {isLoading && <Loading />}
 
@@ -135,6 +135,14 @@ const Rota = () => {
           {departments.map((department, i) => (
             <div className="rota__department">
               <RotaDepartmentList department={department} result={result} />
+              {/* <OpenShifts
+                department={department}
+                setOpen={setOpen}
+                setShiftFormInfo={setShiftFormInfo}
+                setEditShift={setEditShift}
+                result={result}
+              /> */}
+
               {positions.map(
                 (position) =>
                   position.department.id == department.id &&
