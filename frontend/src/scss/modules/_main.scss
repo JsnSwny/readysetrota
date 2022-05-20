@@ -7,10 +7,11 @@
   }
   &-sm {
     @extend .title;
-    font-size: 24px;
-    font-family: "Signika Negative", sans-serif;
+    font-size: 18px;
+    font-family: $secondary-font-family;
     line-height: 25px;
     color: $blue;
+    font-weight: normal;
   }
   &--margin-top {
     margin-top: 50px;

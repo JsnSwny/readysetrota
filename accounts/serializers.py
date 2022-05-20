@@ -128,17 +128,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             if validated_data['role'] == "Business":
                 my_group = Group.objects.get(name='Business')
                 my_group.user_set.add(user)
-                customer = stripe.Customer.create(
-                    description="",
-                    name="",
-                    email=validated_data['email']
-                )
                 # SETS END DATE AS PER BETA END DATE
                 business = Business(
                     owner=user, name=validated_data['businessName'], plan="T", trial_end=datetime.datetime(2021, 10, 26).date())
                 business.save()
                 profile = UserProfile(
-                    user=user, role=validated_data['role'], stripe_id=customer.id)
+                    user=user, role=validated_data['role'])
                 site = Site(business=business, name="My First Site")
                 site.save()
 

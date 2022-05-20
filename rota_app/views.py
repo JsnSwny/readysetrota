@@ -36,6 +36,9 @@ from django.forms.models import model_to_dict
 from .permissions import *
 from .serializers import getPermList
 from django.http import HttpResponseForbidden
+import os
+import jsonify
+from django.shortcuts import redirect
 
 
 db = sqlite3.connect(':memory:')
@@ -176,54 +179,6 @@ class Publish(APIView):
         ids = (o.id for o in all_shifts)
         return Response(ids)
 
-
-# def getHoursAndWage(shifts, start_date, end_date, site_id=False, user_id=False):
-#     hours = 0
-#     wage = 0
-#     days_difference = (end_date - start_date) + timedelta(days=1)
-#     for i in shifts:
-#         if i.end_time:
-#             wage_obj = Wage.objects.filter(
-#                 employee=i.employee).order_by('-start_date').first()
-
-#             current_date = date.today()
-#             start = datetime.combine(current_date, i.start_time)
-#             end_time = datetime.strptime(i.end_time, '%H:%M')
-#             end = datetime.combine(current_date, end_time.time())
-#             if (end < start):
-#                 end = end + timedelta(days=1)
-
-#             shift_length = round((end - start).total_seconds() / 3600, 2)
-
-#             hours += shift_length - (i.break_length / 60)
-#             if(wage_obj and wage_obj.wage_type == "H"):
-#                 wage += float(wage_obj.wage) * \
-#                     (shift_length - (i.break_length / 60))
-
-#     employees = []
-
-#     if user_id:
-#         employees = Employee.objects.filter(user__id=user_id).distinct()
-#     if site_id:
-#         employees = Employee.objects.filter(
-#             position__department__site=site_id).distinct()
-#     # if business_id:
-#     #     employees = Employee.objects.filter(
-#     #         position__department__site__business=business_id).distinct()
-    
-#     # Check for employee end date
-#     while start_date <= end_date:
-#         for i in employees:
-#             wage_obj = Wage.objects.filter(employee=i, start_date__lte=start_date).order_by('-start_date').first()
-            
-#             if wage_obj:
-#                 if wage_obj.wage_type == "S":
-#                     wage += float(wage_obj.wage/52/7)
-
-#         start_date += timedelta(days=1)
-
-#     return hours, wage
-
 import sqlite3
 
 
@@ -339,49 +294,89 @@ class ExportAllShifts(APIView):
 
 
 class Charge(APIView):
+    # permission_classes = [AllowAny]
+
+    # def post(self, request, format=None):
+    #     if request.method == 'POST':
+    def post(self, request):
+        return True
+
+
+class CreateCheckoutSession(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        if request.method == 'POST':
-            stripe.api_key = STRIPE_SECRET_KEY
-            pm = ""
-            try:
-                pm = stripe.PaymentMethod.attach(
-                    request.data['payment_method'],
-                    customer=request.data['customer_id'],
-                )
-            except Exception as e:
-                return JsonResponse({"error": e.error.message})
+        domain_url = "http://localhost:8000"
+        stripe.api_key = STRIPE_SECRET_KEY
 
-            stripe.Customer.modify(
-                request.data['customer_id'],
-                invoice_settings={"default_payment_method": pm.id},
+        stripe_id = request.data['stripe_id']
+
+        print(stripe_id)
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                success_url=domain_url + "/billing/?success=true&session_id={CHECKOUT_SESSION_ID}",
+                cancel_url=domain_url + "/billing/?success=false",
+                mode='subscription',
+                line_items=[{
+                    'price': "price_1KyyttE5eS8rS5Q26udlwknx",
+                    'quantity': request.data['quantity'],
+                }],
+                client_reference_id=self.request.user.id,
+                customer=stripe_id
+                
             )
 
-            price = stripe.Price.create(
-                unit_amount=request.data['charge'],
-                currency="gbp",
-                recurring={"interval": request.data['period']},
-                # product="prod_HwsJxT2Z3YkyAt"
-                product="prod_Hzpy6ipUG3MsR3",
-            )
+            return JsonResponse({
+                'id': checkout_session.id
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, safe=False)
+        
 
-            subscription = stripe.Subscription.create(
-                customer=request.data['customer_id'],
-                items=[
-                    {"price": price.id},
-                ],
-            )
+        # try:
+        #     pm = stripe.PaymentMethod.attach(
+        #         request.data['payment_method'],
+        #         customer=request.data['customer_id'],
+        #     )
 
-            if subscription:
-                user = UserProfile.objects.filter(
-                    stripe_id=request.data['customer_id']).first().user
-                business = Business.objects.filter(owner=user).first()
-                business.plan = "P"
-                business.total_employees = request.data['total_employees']
-                business.save()
+        #     stripe.Customer.modify(
+        #         request.data['customer_id'],
+        #         invoice_settings={"default_payment_method": pm.id},
+        #     )
 
-            return Response(subscription)
+        #     subscription = stripe.Subscription.create(
+        #         customer=request.data['customer_id'],
+        #         items=[
+        #             {"price": price.id},
+        #         ],
+        #     )
+
+        #     return jsonify(subscription)
+        # except Exception as e:
+        #     return JsonResponse({"error": e.error.message})
+
+        
+
+        # price = stripe.Price.create(
+        #     unit_amount=request.data['charge'],
+        #     currency="gbp",
+        #     recurring={"interval": request.data['period']},
+        #     # product="prod_HwsJxT2Z3YkyAt"
+        #     product="prod_Hzpy6ipUG3MsR3",
+        # )
+
+        
+
+        # if subscription:
+        #     user = UserProfile.objects.filter(
+        #         stripe_id=request.data['customer_id']).first().user
+        #     business = Business.objects.filter(owner=user).first()
+        #     business.plan = "P"
+        #     business.total_employees = request.data['total_employees']
+        #     business.save()
+
+        # return Response(subscription)
 
 
 class getCustomer(APIView):
@@ -404,6 +399,139 @@ class getCustomer(APIView):
             return JsonResponse(obj)
         else:
             return Response(False)
+
+
+class RetrieveUpcomingInvoice(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        stripe.api_key = STRIPE_SECRET_KEY
+        data = request.data
+        try:
+            quantity = data['quantity']
+            subscriptionId = data['subscriptionId']
+
+            params = dict(
+                customer=data['customerId']
+            )
+
+            if subscriptionId != None:
+                # Retrieve the subscription
+                subscription = stripe.Subscription.retrieve(data['subscriptionId'])
+                params["subscription"] = subscriptionId
+                current_price = subscription['items']['data'][0].price.id
+
+                params["subscription_items"] = [
+                    {
+                        "id": subscription['items']['data'][0].id,
+                        "quantity":quantity
+                    }]
+
+            else:
+                params["subscription_items"] = [
+                    {
+                        "price": price_1KyyttE5eS8rS5Q26udlwknx,
+                        "quantity": quantity
+                    }
+                ]
+
+            # Retrive the Invoice
+            invoice = stripe.Invoice.upcoming(**params)
+            response = {}
+
+            if data['subscriptionId'] != None:
+                current_period_end = subscription.current_period_end
+                immediate_total = 0
+                next_invoice_sum = 0
+
+                for invoiceLineItem in invoice.lines.data:
+                    if invoiceLineItem.period.end == current_period_end:
+                        immediate_total += invoiceLineItem.amount
+                    else:
+                        next_invoice_sum += invoiceLineItem.amount
+
+                response = {
+                    'immediate_total': immediate_total,
+                    'next_invoice_sum': next_invoice_sum,
+                    'invoice': invoice
+                }
+            else:
+                response = {
+                    'invoice': invoice
+                }
+
+            print("SUCCESS")
+            print(response)
+
+            return JsonResponse(response)
+        except Exception as e:
+            print("ERROR")
+            return JsonResponse({'error': str(e)}, safe=False)
+
+
+class UpdateSubscription(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        try:
+            quantity = request.data['quantity']
+            subscriptionId = request.data['subscriptionId']
+            subscription = stripe.Subscription.retrieve(subscriptionId)
+            current_price = subscription['items']['data'][0].price.id
+
+            updatedSubscription = stripe.Subscription.modify(
+                subscriptionId,
+                items=[{
+                    'id': subscription['items']['data'][0].id,
+                    'quantity': quantity,
+                }],
+                expand=['plan.product']
+            )
+
+            invoice = stripe.Invoice.create(
+                customer=subscription.customer,
+                subscription=subscriptionId,
+                description="Change to " + str(quantity) +
+                " seat(s) on the " + str(updatedSubscription.plan.product.name) + " plan"
+            )
+
+            invoice = stripe.Invoice.pay(invoice.id)
+
+            return JsonResponse(updatedSubscription)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, safe=False)
+
+class RetrieveSubscription(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+
+
+        subscriptionId = request.data['subscriptionId']
+
+        try:
+            subscription = stripe.Subscription.retrieve(
+                subscriptionId,
+                expand=['latest_invoice',
+                        'customer.invoice_settings.default_payment_method', 'plan.product']
+            )
+
+            upcoming_invoice = stripe.Invoice.upcoming(subscription=subscriptionId)
+
+            print(subscription)
+
+            return JsonResponse(
+                {
+                "card": subscription.customer.invoice_settings.default_payment_method,
+                "product_description": subscription.plan.product.name,
+                "current_price": subscription.plan.id,
+                "current_quantity": subscription['items']['data'][0].quantity,
+                "invoices": stripe.Invoice.list(subscription=subscriptionId, limit=20),
+                "upcoming_invoice": upcoming_invoice
+                }
+            )
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
 class Cancel(APIView):
@@ -460,15 +588,31 @@ def webhook(request):
         )
     except ValueError as e:
         return HttpResponse(status=200)
-    if event.type == "customer.subscription.deleted":
+
+    if event.type == "checkout.session.completed":
+
+        ref_id = event.data.object.client_reference_id
+        user_profile = UserProfile.objects.get(user__id=ref_id)
+        user_profile.stripe_id = event.data.object.customer
+        user_profile.save()
+
+        print("customer created")
+
+    if event.type == "invoice.paid":
         customer = event.data.object.customer
 
-        user = UserProfile.objects.filter(stripe_id=customer).first().user
+        user = UserProfile.objects.get(stripe_id=customer).user
+
         business = Business.objects.filter(owner=user).first()
-        business.plan = "F"
-        business.total_employees = 15
-        business.subscription_cancellation = None
+        business.plan = "P"
+
+        print(event.data)
+
+        business.subscription_id = event.data.object.subscription
+        business.total_employees = event.data.object.lines.data[-1].quantity
         business.save()
+
+        print("invoice paid")
 
     return HttpResponse(status=200)
 

@@ -109,11 +109,7 @@ const Rota = () => {
         <FinancialBar dates={result} financialMode={financialMode} />
       )}
 
-      <div className="title-banner">
-        <div className="wrapper--md">
-          <h1>Rota</h1>
-        </div>
-      </div>
+      <Title name="Rota" subtitle="Manage your timesheet" />
 
       <RotaActions
         showAvailabilities={showAvailabilities}

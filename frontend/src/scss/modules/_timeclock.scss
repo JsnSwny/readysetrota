@@ -62,7 +62,7 @@
   }
   &__title {
     font-size: 64px;
-    font-family: "Signika Negative", sans-serif;
+    font-family: $secondary-font-family;
     margin-top: 5rem;
     @include wi-mq(tablet) {
       font-size: 48px;
@@ -107,7 +107,7 @@
     &-time {
       font-size: 40px;
       font-weight: bold;
-      font-family: "Signika Negative", sans-serif;
+      font-family: $secondary-font-family;
       @include wi-mq(tablet) {
         font-size: 32px;
       }

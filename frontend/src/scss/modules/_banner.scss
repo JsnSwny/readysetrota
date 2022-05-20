@@ -6,7 +6,7 @@
   justify-content: center;
   position: relative;
   color: black;
-  font-family: "Signika Negative", sans-serif;
+  font-family: $secondary-font-family;
   @include wi-mq(tablet) {
     margin-bottom: 60px;
   }
@@ -33,11 +33,23 @@
 }
 
 .title-banner {
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid #dee6ee;
+  padding-top: 2rem;
+  &::after {
+    content: "";
+    display: block;
+    border-bottom: 1px solid #dee6ee;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
   h1 {
-    font-family: "Signika Negative", sans-serif;
-    font-size: 24px;
+    font-family: $secondary-font-family;
+    font-size: 32px;
+    font-weight: normal;
+  }
+  p {
+    font-family: $secondary-font-family;
+    color: $gray;
+    margin-top: 0.25rem;
+    // font-size: 14px;
   }
 }

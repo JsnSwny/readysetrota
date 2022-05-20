@@ -176,6 +176,16 @@ const Nav = () => {
                         {user.business ? (
                           <Link
                             className="nav__profileDropdown-link"
+                            to="/billing"
+                          >
+                            Subscription & Billing
+                          </Link>
+                        ) : (
+                          ""
+                        )}
+                        {user.business ? (
+                          <Link
+                            className="nav__profileDropdown-link"
                             to="/settings"
                           >
                             Settings

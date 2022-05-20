@@ -103,7 +103,33 @@
 .listing {
   width: 100%;
   margin-bottom: 4rem;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-radius: 5px;
+  border-spacing: 0;
+  tbody:first-child tr:first-child td,
+  thead:first-child tr:first-child th {
+    border-top-width: 0;
+  }
+  thead:first-child tr:first-child td:first-child,
+  thead:first-child tr:first-child th:first-child {
+    border-top-left-radius: 5px;
+  }
+
+  tbody:last-child tr:last-child td:first-child,
+  tbody:last-child tr:last-child th:first-child {
+    border-bottom-left-radius: 5px;
+  }
+
+  thead:first-child tr:first-child td:last-child,
+  thead:first-child tr:first-child th:last-child {
+    border-top-right-radius: 5px;
+  }
+
+  tbody:last-child tr:last-child td:last-child,
+  tbody:last-child tr:last-child th:last-child {
+    border-bottom-right-radius: 5px;
+  }
+
   @extend .shadow;
   .pd {
     padding: 0 2rem;
@@ -125,26 +151,36 @@
     }
   }
   th {
-    text-transform: uppercase;
     font-weight: normal;
     text-align: left;
     .fa-sort {
       margin-left: 0.75rem;
       cursor: pointer;
     }
+    font-size: 12px;
+    @include wi-mq(tablet) {
+      font-size: 10px;
+    }
+    @include wi-mq(mobile) {
+      font-size: 8px;
+      padding: 0 1rem;
+    }
+    @include wi-mq(thumb) {
+      font-size: 6px;
+      padding: 0.5rem;
+    }
+    font-weight: bold;
+    padding: 0.75rem 2rem;
   }
   td,
   th {
     text-align: left;
-    font-size: 14px;
     &.center {
       text-align: center;
     }
     &.right {
       text-align: right;
     }
-    height: 50px;
-    padding: 0 2rem;
 
     &.no-padding {
       padding: 0;
@@ -152,6 +188,11 @@
         padding: 0 2rem;
       }
     }
+  }
+  td {
+    padding: 0 2rem;
+    height: 50px;
+    font-size: 14px;
     @include wi-mq(tablet) {
       font-size: 12px;
     }
@@ -164,13 +205,10 @@
       padding: 0.5rem;
     }
   }
-  tr {
-    // border-bottom: 1px solid #dddddd;
-  }
 
   thead {
-    background-color: $blue;
-    color: white;
+    background-color: #fd809d13;
+    // color: white;
     tr {
       td {
         font-weight: bold;

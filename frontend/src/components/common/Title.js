@@ -1,10 +1,9 @@
 import React, { Fragment } from "react";
 
-const Title = ({ name }) => (
-  <div className="title-banner">
-    <div className="wrapper--md">
-      <h1>{name}</h1>
-    </div>
+const Title = ({ name, subtitle, wrapper = "--md" }) => (
+  <div className={`title-banner wrapper${wrapper}`}>
+    <h1>{name}</h1>
+    {subtitle && <p>{subtitle}</p>}
   </div>
 );
 

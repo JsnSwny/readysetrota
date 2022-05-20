@@ -67,7 +67,7 @@ class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = ('id', 'name', 'plan', 'total_employees',
-                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'getting_started',)
+                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'getting_started', 'subscription_id',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id, status__start_date__lte=date.today(

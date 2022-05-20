@@ -50,6 +50,8 @@ import ReportsPage from "./reports/ReportsPage";
 import Sites from "./management/tables/Sites";
 import YourShifts from "./shifts/YourShifts";
 
+import Billing from "./billing/Billing";
+
 const Main = () => {
   const dispatch = useDispatch();
 
@@ -125,6 +127,13 @@ const Main = () => {
             exact
             component={Availability}
             title="Availability"
+          />
+
+          <PrivateRoute
+            path="/billing"
+            exact
+            component={Billing}
+            title="Billing"
           />
 
           <PrivateRoute

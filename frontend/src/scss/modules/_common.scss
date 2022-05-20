@@ -1,3 +1,26 @@
+.section {
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  h4 {
+    font-weight: normal;
+    font-size: 18px;
+  }
+  p {
+    margin-top: 0.25rem;
+    color: $gray;
+    font-size: 14px;
+  }
+  &::after {
+    content: "";
+    display: block;
+    border-bottom: 1px solid #dee6ee;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+}
+
 .availability-buttons {
   margin: 0 auto;
   margin-top: 20px;
@@ -385,7 +408,7 @@
 .big-title {
   font-size: 40px;
   padding: 4rem 0;
-  font-family: "Signika Negative", sans-serif;
+  font-family: $secondary-font-family;
   color: $blue;
   @include wi-mq(mobile) {
     font-size: 32px;

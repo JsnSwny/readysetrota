@@ -42,4 +42,5 @@ class UserAPI(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
+        print(self.request.user)
         return self.request.user

@@ -16,7 +16,7 @@
     &-title {
       font-size: 24px;
       line-height: 25px;
-      font-family: "Signika Negative", sans-serif;
+      font-family: $secondary-font-family;
       font-weight: normal;
       @include wi-mq(mobile) {
         font-size: 20px;
@@ -132,7 +132,7 @@
     min-width: 50%;
     text-align: center;
     font-weight: normal;
-    font-family: "Signika Negative", sans-serif;
+    font-family: $secondary-font-family;
     @include wi-mq(mobile) {
       font-size: 14px;
     }

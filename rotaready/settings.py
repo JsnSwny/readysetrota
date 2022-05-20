@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['rotaready.herokuapp.com', 'localhost']
 
 
 # Application definition
+CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,8 +47,10 @@ INSTALLED_APPS = [
     'knox',
     'accounts',
     'stripe',
+    'payments',
     'guardian',
     'simple_history',
+    "corsheaders",
 ]
 
 REST_KNOX = {
@@ -73,6 +76,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -178,11 +182,11 @@ CELERY_TAST_SERIALIZER = "json"
 
 # if DEBUG:
 
-# STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
-# STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R'
+STRIPE_SECRET_KEY = 'sk_test_bnBeNTeC54fiqHeqvS5im1nm00rTb3vPdZ'
 # else:
 #     STRIPE_PUBLISHABLE_KEY = 'pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV'
 #     STRIPE_SECRET_KEY = 'sk_live_jF8c4B7h5RdSL2kvQMJqU6M600fSR01u86'
 
-STRIPE_PUBLISHABLE_KEY = 'pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV'
-STRIPE_SECRET_KEY = 'sk_live_jF8c4B7h5RdSL2kvQMJqU6M600fSR01u86'
+# STRIPE_PUBLISHABLE_KEY = 'pk_live_51FuTd1E5eS8rS5Q2BVulz7l7vh0YfoTD7s1saCidaozzz8Lyw3ztrwkAOkTcEbZemRrcl3yalrdGxTnBLZAFzWVX00GTuGNgIV'
+# STRIPE_SECRET_KEY = 'sk_live_jF8c4B7h5RdSL2kvQMJqU6M600fSR01u86'

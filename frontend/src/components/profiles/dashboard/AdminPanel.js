@@ -126,9 +126,11 @@ const AdminPanel = ({ setDashboardView }) => {
         </div>
       )}
       <div className="dashboard wrapper--md">
-        <h1 className="big-title">
-          Hey {user.first_name}, Welcome to readysetrota
-        </h1>
+        <Title
+          subtitle={`Hey ${user.first_name}, Welcome to readysetrota`}
+          name="Dashboard"
+          wrapper="-md"
+        />
         {uncompleteList && uncompleteList.length > 0 && (
           <Fragment>
             <div className="flex-container--align-center">

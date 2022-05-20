@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, GetPopularTimes, Publish, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
+from rota_app.views import CheckUUID, RetrieveSubscription, UpdateSubscription, GetPopularTimes, RetrieveUpcomingInvoice, Publish, CreateCheckoutSession, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -22,6 +22,13 @@ urlpatterns = [
     # path('stats/', GetStats.as_view(), name='stats'),
     path('timeclock/', GetTimeclock.as_view(), name='timeclock'),
     # path('api-view/report/', GetReportData.as_view(), name='report'),
+
+
+    # Subscription
+    path('create-checkout-session/', CreateCheckoutSession.as_view(), name='createCheckoutSession'),
+    path('retrieve-upcoming-invoice/', RetrieveUpcomingInvoice.as_view(), name='retrieveUpcomingInvoice'),
+    path('update-subscription/', UpdateSubscription.as_view(), name='updatedSubscription'),
+    path('retrieve-subscription/', RetrieveSubscription.as_view(), name='retrieveSubscription'),
 ]
 
 if settings.DEBUG:
