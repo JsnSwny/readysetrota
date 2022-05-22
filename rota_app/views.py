@@ -37,7 +37,6 @@ from .permissions import *
 from .serializers import getPermList
 from django.http import HttpResponseForbidden
 import os
-import jsonify
 from django.shortcuts import redirect
 
 
@@ -311,10 +310,9 @@ class CreateCheckoutSession(APIView):
 
         stripe_id = request.data['stripe_id']
 
-        print(stripe_id)
-
         try:
             checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
                 success_url=domain_url + "/billing/?success=true&session_id={CHECKOUT_SESSION_ID}",
                 cancel_url=domain_url + "/billing/?success=false",
                 mode='subscription',
@@ -332,51 +330,37 @@ class CreateCheckoutSession(APIView):
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, safe=False)
-        
 
-        # try:
-        #     pm = stripe.PaymentMethod.attach(
-        #         request.data['payment_method'],
-        #         customer=request.data['customer_id'],
-        #     )
+class CreateSetupCheckoutSession(APIView):
+    permission_classes = [AllowAny]
 
-        #     stripe.Customer.modify(
-        #         request.data['customer_id'],
-        #         invoice_settings={"default_payment_method": pm.id},
-        #     )
+    def post(self, request, format=None):
+        domain_url = "http://localhost:8000"
+        stripe.api_key = STRIPE_SECRET_KEY
 
-        #     subscription = stripe.Subscription.create(
-        #         customer=request.data['customer_id'],
-        #         items=[
-        #             {"price": price.id},
-        #         ],
-        #     )
+        stripe_id = request.data['stripe_id']
 
-        #     return jsonify(subscription)
-        # except Exception as e:
-        #     return JsonResponse({"error": e.error.message})
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                mode='setup',
+                setup_intent_data={
+                    'metadata': {
+                    'subscription_id': 'sub_8epEF0PuRhmltU',
+                    },
+                },
+                success_url=domain_url + '/billing/?success=true&session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + '/billing/?success=false',
+                client_reference_id=self.request.user.id,
+                customer=stripe_id
+                
+            )
 
-        
-
-        # price = stripe.Price.create(
-        #     unit_amount=request.data['charge'],
-        #     currency="gbp",
-        #     recurring={"interval": request.data['period']},
-        #     # product="prod_HwsJxT2Z3YkyAt"
-        #     product="prod_Hzpy6ipUG3MsR3",
-        # )
-
-        
-
-        # if subscription:
-        #     user = UserProfile.objects.filter(
-        #         stripe_id=request.data['customer_id']).first().user
-        #     business = Business.objects.filter(owner=user).first()
-        #     business.plan = "P"
-        #     business.total_employees = request.data['total_employees']
-        #     business.save()
-
-        # return Response(subscription)
+            return JsonResponse({
+                'id': checkout_session.id
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
 class getCustomer(APIView):
@@ -516,50 +500,72 @@ class RetrieveSubscription(APIView):
                         'customer.invoice_settings.default_payment_method', 'plan.product']
             )
 
-            upcoming_invoice = stripe.Invoice.upcoming(subscription=subscriptionId)
+
+
+            upcoming_invoice = None
+            if not subscription.cancel_at_period_end:
+                upcoming_invoice = stripe.Invoice.upcoming(subscription=subscriptionId)
+
+            payment_information = stripe.PaymentMethod.retrieve(
+                subscription.default_payment_method
+            )
 
             print(subscription)
 
             return JsonResponse(
                 {
-                "card": subscription.customer.invoice_settings.default_payment_method,
+                "cancel_at": subscription.cancel_at,
+                "card": payment_information,
                 "product_description": subscription.plan.product.name,
                 "current_price": subscription.plan.id,
                 "current_quantity": subscription['items']['data'][0].quantity,
                 "invoices": stripe.Invoice.list(subscription=subscriptionId, limit=20),
-                "upcoming_invoice": upcoming_invoice
+                "upcoming_invoice": upcoming_invoice,
+                "active": not subscription.cancel_at_period_end,
                 }
             )
         except Exception as e:
             return JsonResponse({'error': str(e)}, safe=False)
 
-
-class Cancel(APIView):
+class CancelSubscription(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
         stripe.api_key = STRIPE_SECRET_KEY
 
-        customer = stripe.Customer.retrieve(request.data['customer_id'])
-        for i in customer['subscriptions']['data']:
-            cancellation = stripe.Subscription.modify(
-                i.id,
-                cancel_at_period_end=True
+        cancellation = stripe.Subscription.modify(
+            request.data['subscriptionId'],
+            cancel_at_period_end=True
+        )
+
+        return JsonResponse({"subscription_cancellation": cancellation})
+
+class ReactivateSubscription(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        stripe.api_key = STRIPE_SECRET_KEY
+
+        subscription = stripe.Subscription.modify(
+            request.data['subscriptionId'],
+            cancel_at_period_end=False
+        )
+
+        return JsonResponse({"subscription": subscription})
+
+class RetrievePaymentMethod(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        stripe.api_key = STRIPE_SECRET_KEY
+
+        try:
+            paymentMethod = stripe.PaymentMethod.retrieve(
+                request.data['paymentMethodId'],
             )
-
-        cancelled_at = datetime.fromtimestamp(cancellation.cancel_at)
-
-        user = UserProfile.objects.filter(
-            stripe_id=request.data['customer_id']).first().user
-        business = Business.objects.filter(owner=user).first()
-
-        business.subscription_cancellation = cancelled_at
-        business.save()
-
-        return JsonResponse({"subscription_cancellation": business.subscription_cancellation})
-
-        # data = serializers.serialize('python', [business,])
-        # return JsonResponse(data[0], safe=False)
+            return JsonResponse(paymentMethod)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
 class sendMessage(APIView):
@@ -590,13 +596,28 @@ def webhook(request):
         return HttpResponse(status=200)
 
     if event.type == "checkout.session.completed":
-
+        customer = event.data.object.customer
         ref_id = event.data.object.client_reference_id
+        print(ref_id)
         user_profile = UserProfile.objects.get(user__id=ref_id)
-        user_profile.stripe_id = event.data.object.customer
+        user_profile.stripe_id = customer
         user_profile.save()
 
-        print("customer created")
+
+        business = Business.objects.filter(owner=user_profile.user).first()
+
+
+        setup_intent_id = event.data.object.setup_intent
+
+        setup_intent = stripe.SetupIntent.retrieve(setup_intent_id)
+
+        stripe.Subscription.modify(
+            business.subscription_id,
+            default_payment_method=setup_intent.payment_method
+        )
+
+        business.payment_method_id = setup_intent.payment_method
+        business.save()
 
     if event.type == "invoice.paid":
         customer = event.data.object.customer
@@ -606,13 +627,25 @@ def webhook(request):
         business = Business.objects.filter(owner=user).first()
         business.plan = "P"
 
-        print(event.data)
 
         business.subscription_id = event.data.object.subscription
         business.total_employees = event.data.object.lines.data[-1].quantity
+        business.payment_method_id = event.data.object.default_payment_method
         business.save()
 
         print("invoice paid")
+
+    if event.type == "customer.subscription.deleted":
+        customer = event.data.object.customer
+
+        user = UserProfile.objects.get(stripe_id=customer).user
+        business = Business.objects.filter(owner=user).first()
+        business.plan = "F"
+        business.subscription_id = None
+        business.total_employees = 15
+        business.save()
+
+        print("subscription cancelled")
 
     return HttpResponse(status=200)
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, RetrieveSubscription, UpdateSubscription, GetPopularTimes, RetrieveUpcomingInvoice, Publish, CreateCheckoutSession, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, Cancel, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
+from rota_app.views import CheckUUID, CreateSetupCheckoutSession, ReactivateSubscription, RetrievePaymentMethod, RetrieveSubscription, UpdateSubscription, GetPopularTimes, RetrieveUpcomingInvoice, Publish, CreateCheckoutSession, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, CancelSubscription, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -16,7 +16,6 @@ urlpatterns = [
     path('api/', include('rota_app.urls')),
     path('charge/', Charge.as_view(), name='charge'),
     path('getCustomer/', getCustomer.as_view(), name='getCustomer'),
-    path('cancel/', Cancel.as_view(), name='cancel'),
     path('sendmessage/', sendMessage.as_view(), name='sendMessage'),
     path('webhook/', webhook, name='webhook'),
     # path('stats/', GetStats.as_view(), name='stats'),
@@ -26,9 +25,13 @@ urlpatterns = [
 
     # Subscription
     path('create-checkout-session/', CreateCheckoutSession.as_view(), name='createCheckoutSession'),
+    path('create-setup-checkout-session/', CreateSetupCheckoutSession.as_view(), name='createSetupCheckoutSession'),
     path('retrieve-upcoming-invoice/', RetrieveUpcomingInvoice.as_view(), name='retrieveUpcomingInvoice'),
     path('update-subscription/', UpdateSubscription.as_view(), name='updatedSubscription'),
     path('retrieve-subscription/', RetrieveSubscription.as_view(), name='retrieveSubscription'),
+    path('cancel-subscription/', CancelSubscription.as_view(), name='cancelSubscription'),
+    path('reactivate-subscription/', ReactivateSubscription.as_view(), name='reactivateSubscription'),
+    path('retrieve-payment-method/', RetrievePaymentMethod.as_view(), name='retrievePaymentMethod'),
 ]
 
 if settings.DEBUG:

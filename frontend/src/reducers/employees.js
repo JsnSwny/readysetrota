@@ -34,6 +34,7 @@ import {
   UPDATE_FORECAST,
   UPDATE_SETTINGS,
   GET_ALL_EMPLOYEES,
+  UPDATE_TOTAL_EMPLOYEES,
 } from "../actions/types";
 import { format, parseISO } from "date-fns";
 
@@ -261,6 +262,22 @@ export default function (state = initialState, action) {
         current: {
           ...state.current,
           business: action.payload,
+        },
+      };
+
+    case UPDATE_TOTAL_EMPLOYEES:
+      return {
+        ...state,
+        business: {
+          ...state.business,
+          total_employees: action.payload,
+        },
+        current: {
+          ...state.current,
+          business: {
+            ...state.current.business,
+            total_employees: action.payload,
+          },
         },
       };
     case CHARGE_COMPLETE:

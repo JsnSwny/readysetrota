@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { format, fromUnixTime } from "date-fns";
-import { getSites } from "../../actions/employees";
+import { updateTotalEmployees } from "../../actions/employees";
+import UpgradeSummary from "./UpgradeSummary";
+import UpgradePlanSummary from "./UpgradePlanSummary";
 
-const UpgradeForm = ({ setOpen, editSite }) => {
+const UpgradeForm = ({ setOpen, setLoading, getSubscriptionInformation }) => {
   const dispatch = useDispatch();
 
   let errors = useSelector((state) => state.errors.msg);
@@ -63,6 +65,8 @@ const UpgradeForm = ({ setOpen, editSite }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     const headerConfig = {
       headers: { Authorization: `Token ${token}` },
     };
@@ -81,8 +85,9 @@ const UpgradeForm = ({ setOpen, editSite }) => {
         headerConfig
       );
 
+      console.log(response);
+
       setUpdatingInvoice(false);
-      setOpen(false);
     } else {
       const obj = {
         quantity: numberOfEmployees,
@@ -95,11 +100,20 @@ const UpgradeForm = ({ setOpen, editSite }) => {
         headerConfig
       );
 
+      console.log(response);
+
       // When the customer clicks on the button, redirect them to Checkout.
       const result = await stripe.redirectToCheckout({
         sessionId: response.data.id,
       });
+
+      console.log(result);
     }
+
+    dispatch(updateTotalEmployees(numberOfEmployees));
+    setLoading(false);
+    setOpen(false);
+    getSubscriptionInformation(business.subscription_id);
   };
   return (
     <form onSubmit={onSubmit} className="form__form">
@@ -121,56 +135,14 @@ const UpgradeForm = ({ setOpen, editSite }) => {
       </div>
       <div className="billing__summary">
         <h3>Summary</h3>
-        <div className="flex-container--between">
-          <p>Current Employees:</p>
-          <p>{business.total_employees}</p>
-        </div>
-        <div className="flex-container--between">
-          <p>
-            <strong>New Employees:</strong>
-          </p>
-          <p>
-            <strong>{Math.ceil(numberOfEmployees / 5) * 5}</strong>
-          </p>
-        </div>
-        <hr />
-        <div className="flex-container--between">
-          <p>Current Cost:</p>
-          <p>
-            £{business.total_employees.toFixed(2)}
-            <span>/per month</span>
-          </p>
-        </div>
-        <div className="flex-container--between">
-          <p>
-            <strong>New Cost:</strong>
-          </p>
-          <p>
-            <strong>
-              £{(Math.ceil(numberOfEmployees / 5) * 5).toFixed(2)}
-              <span>/per month</span>
-            </strong>
-          </p>
-        </div>
-        <hr />
-        <div className="billing__charge">
-          <p>
-            You will be charged{" "}
-            <span>£{(invoiceData.immediate_total / 100).toFixed(2)}</span> today
-          </p>
-          <p>
-            Your next payment of{" "}
-            <span>£{(invoiceData.next_invoice_sum / 100).toFixed(2)}</span> will
-            be due on {console.log(invoiceData)}
-            <span>
-              {Object.keys(invoiceData).length &&
-                format(
-                  fromUnixTime(invoiceData.invoice.next_payment_attempt),
-                  "dd/MM/yyyy"
-                )}
-            </span>
-          </p>
-        </div>
+        {business.subscription_id ? (
+          <UpgradeSummary
+            invoiceData={invoiceData}
+            numberOfEmployees={numberOfEmployees}
+          />
+        ) : (
+          <UpgradePlanSummary numberOfEmployees={numberOfEmployees} />
+        )}
       </div>
 
       {/* <CardElement hidePostalCode={true} /> */}

@@ -28,7 +28,8 @@ class Business(models.Model):
     total_employees = models.IntegerField(default=15)
     trial_end = models.DateField(null=True, blank=True)
     subscription_cancellation = models.DateField(null=True, blank=True)
-    subscription_id=models.CharField(max_length=100)
+    subscription_id=models.CharField(max_length=100, null=True, blank=True)
+    payment_method_id=models.CharField(max_length=100, null=True, blank=True)
 
 class PermissionType(models.Model):
     name = models.CharField(max_length=30)

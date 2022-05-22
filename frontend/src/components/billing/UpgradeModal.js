@@ -4,7 +4,12 @@ import UpgradeForm from "./UpgradeForm";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const UpgradeModal = ({ open, setOpen }) => {
+const UpgradeModal = ({
+  open,
+  setOpen,
+  setLoading,
+  getSubscriptionInformation,
+}) => {
   const stripePromise = loadStripe(
     "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
   );
@@ -17,7 +22,11 @@ const UpgradeModal = ({ open, setOpen }) => {
         size={"-md"}
       >
         <Elements stripe={stripePromise}>
-          <UpgradeForm setOpen={setOpen} />
+          <UpgradeForm
+            setOpen={setOpen}
+            setLoading={setLoading}
+            getSubscriptionInformation={getSubscriptionInformation}
+          />
         </Elements>
       </SmallModal>
     )

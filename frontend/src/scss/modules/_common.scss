@@ -317,6 +317,14 @@
   }
 }
 
+.info {
+  color: $gray;
+  font-size: 14px;
+  strong {
+    color: $pink;
+  }
+}
+
 .date-bubble-picker {
   display: flex;
   list-style-type: none;

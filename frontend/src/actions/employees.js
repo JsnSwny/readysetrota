@@ -37,6 +37,7 @@ import {
   FORECAST_LOADING,
   SET_ACTIVE_PERMISSIONS,
   GET_ALL_EMPLOYEES,
+  UPDATE_TOTAL_EMPLOYEES,
 } from "./types";
 
 import { getErrors, resetErrors } from "./errors";
@@ -158,6 +159,13 @@ export const endTrial = (id) => (dispatch, getState) => {
     });
 };
 
+export const updateTotalEmployees = (quantity) => (dispatch, getState) => {
+  dispatch({
+    type: UPDATE_TOTAL_EMPLOYEES,
+    payload: quantity,
+  });
+};
+
 export const getSites = () => (dispatch, getState) => {
   let user = getState().auth.user;
 
@@ -198,7 +206,7 @@ export const getSites = () => (dispatch, getState) => {
       business.plan == "T" &&
       parseISO(business.trial_end) < new Date()
     ) {
-      dispatch(endTrial(business.id));
+      // dispatch(endTrial(business.id));
     }
     dispatch({
       type: UUID_RESET,

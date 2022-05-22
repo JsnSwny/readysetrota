@@ -4,27 +4,97 @@ import { useSelector } from "react-redux";
 import { addBusinessDays, fromUnixTime, format } from "date-fns";
 import UpgradeModal from "./UpgradeModal";
 import axios from "axios";
+import ConfirmModal from "../layout/confirm/ConfirmModal";
+import Loading from "../common/Loading";
+import PaymentMethod from "./PaymentMethod";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Billing = () => {
+  const stripePromise = loadStripe(
+    "pk_test_51FuTd1E5eS8rS5Q2BTPb8elKj6kQQtMOBi3E1HYWgIL5jAKJv5QGv0UNk6NX4tpEhBbSDVGTYW1Pyo8h2mfNKhR000SiPavZ9R"
+  );
   let business = useSelector((state) => state.employees.business);
   const [invoices, setInvoices] = useState([]);
   const [open, setOpen] = useState(false);
+  const [subscriptionInfo, setSubscriptionInfo] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const getPaymentMethod = (paymentMethodId) => {
+    if (paymentMethodId) {
+      axios
+        .post("/retrieve-payment-method/", { paymentMethodId })
+        .then((res) => console.log(res));
+    }
+  };
 
   const getSubscriptionInformation = (subscriptionId) => {
+    setLoading(true);
     if (subscriptionId)
       axios.post("/retrieve-subscription/", { subscriptionId }).then((res) => {
-        console.log(res);
         setInvoices(res.data.invoices.data);
+        setSubscriptionInfo(res.data);
+        setLoading(false);
       });
+  };
+
+  const cancelSubscription = (subscriptionId) => {
+    setLoading(true);
+    axios.post("/cancel-subscription/", { subscriptionId }).then((res) => {
+      setSubscriptionInfo({
+        ...subscriptionInfo,
+        active: false,
+      });
+      setLoading(false);
+    });
+  };
+
+  const reactivateSubscription = (subscriptionId) => {
+    setLoading(true);
+    axios.post("/reactivate-subscription/", { subscriptionId }).then((res) => {
+      setSubscriptionInfo({
+        ...subscriptionInfo,
+        active: true,
+      });
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
     getSubscriptionInformation(business.subscription_id);
+    if (business.payment_method_id) {
+      getPaymentMethod(business.payment_method_id);
+    }
   }, [business]);
 
   return (
     <Fragment>
-      <UpgradeModal open={open} setOpen={setOpen} />
+      <Loading active={loading} />
+      <UpgradeModal
+        getSubscriptionInformation={getSubscriptionInformation}
+        setLoading={setLoading}
+        open={open}
+        setOpen={setOpen}
+      />
+      {confirmOpen && (
+        <ConfirmModal
+          title={
+            subscriptionInfo.active
+              ? "Are you sure you want to cancel your subscription?"
+              : "Are you sure you want to reactivate your subscription?"
+          }
+          open={confirmOpen}
+          setOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          action={() => {
+            subscriptionInfo.active
+              ? cancelSubscription(business.subscription_id)
+              : reactivateSubscription(business.subscription_id);
+          }}
+          actionTitle="Confirm"
+        />
+      )}
       <Title
         name="Subscription & Billing"
         subtitle="Manage your billing and payment details."
@@ -41,7 +111,8 @@ const Billing = () => {
                 </div>
                 <div className="billing-card__heading-right">
                   <h3>
-                    £10<span>/per month</span>
+                    £{subscriptionInfo.current_quantity}
+                    <span>/per month</span>
                   </h3>
                 </div>
               </div>
@@ -64,41 +135,55 @@ const Billing = () => {
               </div>
             </div>
             <div className="billing-card__bottom flex-container--between-center">
-              <p className="billing-card__cancel">Cancel plan</p>
-              <button
-                onClick={() => {
-                  setOpen(true);
-                  console.log("setting open");
-                }}
-                className="btn-3"
-              >
-                Upgrade plan
-              </button>
+              {subscriptionInfo ? (
+                subscriptionInfo.active ? (
+                  <button
+                    className="text-btn text-btn--red"
+                    onClick={() => setConfirmOpen(true)}
+                  >
+                    Cancel plan
+                  </button>
+                ) : (
+                  <button
+                    className="text-btn text-btn--green"
+                    onClick={() => setConfirmOpen(true)}
+                  >
+                    Reactivate plan
+                  </button>
+                )
+              ) : (
+                <p></p>
+              )}
+              {!business.subscription_id || subscriptionInfo.active ? (
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                  className="btn-3"
+                >
+                  Upgrade plan
+                </button>
+              ) : (
+                subscriptionInfo && (
+                  <p className="info">
+                    Your plan ends on{" "}
+                    <strong>
+                      {format(
+                        fromUnixTime(subscriptionInfo.cancel_at),
+                        "dd/MM/yyyy"
+                      )}
+                    </strong>
+                  </p>
+                )
+              )}
             </div>
           </div>
-
-          <div className="billing-card">
-            <div className="billing-card__top">
-              <div className="flex-container--between billing-card__heading">
-                <div className="billing-card__heading-left">
-                  <h3>Payment method</h3>
-                  <p>Set up your method of payment for your plan.</p>
-                </div>
-                <div className="billing-card__heading-right">
-                  <button>Edit payment method</button>
-                </div>
-              </div>
-              <div className="payment-card-block">
-                <div className="payment-card-block__image"></div>
-                <div className="payment-card-block__details">
-                  <h5>
-                    Visa ending <strong>1234</strong>
-                  </h5>
-                  <p>Exp. 06/24</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Elements stripe={stripePromise}>
+            <PaymentMethod
+              subscriptionInfo={subscriptionInfo}
+              setLoading={setLoading}
+            />
+          </Elements>
         </section>
         <section className="section">
           <div className="section-title">
@@ -108,10 +193,11 @@ const Billing = () => {
           <table className="listing">
             <thead>
               <tr>
-                <th>Invoice Date </th>
-                <th>Status</th>
+                <th>Invoice Date</th>
+                <th>Employees</th>
                 <th>Amount</th>
-                <th>Plan</th>
+                <th>Status</th>
+                <th>Download</th>
               </tr>
             </thead>
             <tbody>
@@ -120,9 +206,16 @@ const Billing = () => {
                   <td className="bold">
                     {format(fromUnixTime(item.created), "MMM d, yyyy")}
                   </td>
-                  <td>{item.status}</td>
+                  <td>{item.lines.data.at(-1).quantity}</td>
                   <td>£{(item.total / 100).toFixed(2)}</td>
-                  <td>Plan</td>
+                  <td>
+                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                  </td>
+                  <td>
+                    <a className="link" href={item.invoice_pdf} target="_blank">
+                      Download
+                    </a>
+                  </td>
                 </tr>
               ))}
             </tbody>
