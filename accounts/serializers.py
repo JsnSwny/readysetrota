@@ -89,6 +89,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     role = serializers.CharField(write_only=True)
     businessName = serializers.CharField(
         write_only=True, required=False, allow_blank=True)
+    numberOfEmployees = serializers.IntegerField(
+        write_only=True, required=False)
     password2 = serializers.CharField(
         style={'input_type': 'password'}, write_only=True)
     first_name = serializers.CharField(required=True)
@@ -97,7 +99,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'password2',
-                  'role', 'businessName', 'first_name', 'last_name',)
+                  'role', 'businessName', 'first_name', 'last_name', 'numberOfEmployees',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -126,14 +128,37 @@ class RegisterSerializer(serializers.ModelSerializer):
             user.last_name = validated_data['last_name']
             user.save()
             if validated_data['role'] == "Business":
-                my_group = Group.objects.get(name='Business')
-                my_group.user_set.add(user)
-                # SETS END DATE AS PER BETA END DATE
-                business = Business(
-                    owner=user, name=validated_data['businessName'], plan="T", trial_end=datetime.datetime(2021, 10, 26).date())
-                business.save()
+                business = Business(owner=user, name=validated_data['businessName'], plan="P")
+
                 profile = UserProfile(
                     user=user, role=validated_data['role'])
+
+                customer = stripe.Customer.create(
+                    name=validated_data['businessName'],
+                    email=validated_data['email']
+                )
+
+                trial_date = datetime.datetime.today() + datetime.timedelta(minutes=2)
+                # trial_date = datetime.datetime.today() + datetime.timedelta(30)
+
+                subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                        'price': 'price_1KyyttE5eS8rS5Q26udlwknx',
+                        'quantity': validated_data['numberOfEmployees']
+                        },
+                    ],
+                    trial_end=trial_date,
+                    
+                )
+
+                business.total_employees = validated_data['numberOfEmployees']
+                business.subscription_id = subscription.id
+                profile.stripe_id = customer.id
+
+                business.save()
+
                 site = Site(business=business, name="My First Site")
                 site.save()
 
@@ -142,6 +167,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
             profile.save()
+
             return user
 
 # Login Serializers

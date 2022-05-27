@@ -134,7 +134,19 @@
   &__bottom {
     padding: 1rem 2rem;
   }
-
+  &__title {
+    display: flex;
+    align-items: center;
+  }
+  &__tag {
+    font-size: 12px;
+    font-weight: normal;
+    background-color: $pink;
+    color: white;
+    padding: 0.1rem 0.2rem;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+  }
   border-radius: 5px;
   width: calc(50% - 1rem);
   display: flex;

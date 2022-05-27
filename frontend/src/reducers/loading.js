@@ -19,6 +19,9 @@ import {
   GET_FORECAST,
   FORECAST_LOADING,
   GET_REPORT_DATA,
+  REGISTER_LOADING,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
 } from "../actions/types";
 
 const initialState = {
@@ -32,6 +35,7 @@ const initialState = {
   stats: true,
   timeclock: false,
   forecast: false,
+  register: false,
 };
 
 export default function (state = initialState, action) {
@@ -45,6 +49,17 @@ export default function (state = initialState, action) {
       return {
         ...state,
         any: false,
+      };
+    case REGISTER_LOADING:
+      return {
+        ...state,
+        register: true,
+      };
+    case REGISTER_SUCCESS:
+    case REGISTER_FAIL:
+      return {
+        ...state,
+        register: false,
       };
     case TIMECLOCK_LOADING:
       return {

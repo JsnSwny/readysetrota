@@ -8,7 +8,7 @@
   }
   &--xs {
     @extend .wrapper;
-    max-width: calc(900px + 4rem);
+    max-width: 650px;
   }
   &--sm {
     @extend .wrapper;

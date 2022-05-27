@@ -339,6 +339,7 @@ class CreateSetupCheckoutSession(APIView):
         stripe.api_key = STRIPE_SECRET_KEY
 
         stripe_id = request.data['stripe_id']
+        subscription_id = request.data['subscription_id']
 
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -361,29 +362,6 @@ class CreateSetupCheckoutSession(APIView):
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, safe=False)
-
-
-class getCustomer(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request, format=None):
-        stripe.api_key = STRIPE_SECRET_KEY
-        try:
-            customer = stripe.Customer.retrieve(request.data['customer_id'])
-        except stripe.error.InvalidRequestError as e:
-            return Response(False)
-
-        subscriptions = stripe.Subscription.list(
-            customer=request.data['customer_id'])['data']
-        if subscriptions:
-            subscriptions = subscriptions[0]
-            obj = {"cancel_at": subscriptions['cancel_at'], "current_period_end": datetime.fromtimestamp(
-                subscriptions['current_period_end']), "amount": subscriptions['plan']['amount'], "interval": subscriptions['plan']['interval'], "status": subscriptions['status'], "cancel_at_period_end": subscriptions['cancel_at_period_end']}
-        # data = serializers.serialize('json', [obj,])
-            return JsonResponse(obj)
-        else:
-            return Response(False)
-
 
 class RetrieveUpcomingInvoice(APIView):
     permission_classes = [AllowAny]
@@ -503,14 +481,18 @@ class RetrieveSubscription(APIView):
 
 
             upcoming_invoice = None
+
+            print(subscription)
+
             if not subscription.cancel_at_period_end:
                 upcoming_invoice = stripe.Invoice.upcoming(subscription=subscriptionId)
 
-            payment_information = stripe.PaymentMethod.retrieve(
-                subscription.default_payment_method
-            )
-
-            print(subscription)
+            payment_information = None
+            if(subscription.default_payment_method):
+                payment_information = stripe.PaymentMethod.retrieve(
+                    subscription.default_payment_method
+                )
+        
 
             return JsonResponse(
                 {
@@ -522,6 +504,8 @@ class RetrieveSubscription(APIView):
                 "invoices": stripe.Invoice.list(subscription=subscriptionId, limit=20),
                 "upcoming_invoice": upcoming_invoice,
                 "active": not subscription.cancel_at_period_end,
+                "trial_end": subscription.trial_end,
+                "status": subscription.status
                 }
             )
         except Exception as e:
@@ -635,6 +619,13 @@ def webhook(request):
 
         print("invoice paid")
 
+    if event.type == "customer.subscription.updated":
+        customer = event.data.object.customer
+
+        print(event.data)
+
+        print("subscription updated")
+
     if event.type == "customer.subscription.deleted":
         customer = event.data.object.customer
 
@@ -642,7 +633,6 @@ def webhook(request):
         business = Business.objects.filter(owner=user).first()
         business.plan = "F"
         business.subscription_id = None
-        business.total_employees = 15
         business.save()
 
         print("subscription cancelled")

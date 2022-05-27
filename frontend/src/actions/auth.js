@@ -10,6 +10,7 @@ import {
   REGISTER_FAIL,
   UUID_SUCCESS,
   SUCCESS,
+  REGISTER_LOADING,
 } from "./types";
 
 import { getErrors } from "./errors";
@@ -118,6 +119,7 @@ export const register =
     businessName,
     first_name,
     last_name,
+    numberOfEmployees,
   }) =>
   (dispatch) => {
     // Headers
@@ -127,6 +129,10 @@ export const register =
       },
     };
 
+    dispatch({
+      type: REGISTER_LOADING,
+    });
+
     // Request Body
     const body = JSON.stringify({
       username,
@@ -135,8 +141,9 @@ export const register =
       email,
       role,
       businessName,
-      first_name: first_name ? first_name : businessName,
-      last_name: last_name ? last_name : businessName,
+      first_name: first_name,
+      last_name: last_name,
+      numberOfEmployees,
     });
 
     axios

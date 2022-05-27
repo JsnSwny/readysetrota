@@ -117,48 +117,6 @@ export const batchApprove = (holidays, val) => (dispatch, getState) => {
     .catch((err) => console.log(err.response));
 };
 
-export const startTrial = (id) => (dispatch, getState) => {
-  axios
-    .put(
-      `/api/business/${id}/`,
-      {
-        trial_end: format(addDays(new Date(), 30), "yyyy-MM-dd"),
-        plan: "T",
-        total_employees: 30,
-      },
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: UPDATE_BUSINESS,
-        payload: res.data,
-      });
-    })
-
-    .catch((err) => {
-      console.log(err.response);
-    });
-};
-
-export const endTrial = (id) => (dispatch, getState) => {
-  axios
-    .put(
-      `/api/business/${id}/`,
-      { plan: "F", total_employees: 15 },
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      dispatch({
-        type: UPDATE_BUSINESS,
-        payload: res.data,
-      });
-    })
-
-    .catch((err) => {
-      console.log(err.response);
-    });
-};
-
 export const updateTotalEmployees = (quantity) => (dispatch, getState) => {
   dispatch({
     type: UPDATE_TOTAL_EMPLOYEES,
@@ -171,6 +129,8 @@ export const getSites = () => (dispatch, getState) => {
 
   axios.get(`/api/sites/`, tokenConfig(getState)).then((res) => {
     let perm_list = getState().permissions.permission_types;
+
+    console.log(res.data);
 
     const current_user = getState().auth.user;
 
@@ -201,13 +161,6 @@ export const getSites = () => (dispatch, getState) => {
       type: SET_BUSINESS,
       payload: res.data.length > 0 ? business : 0,
     });
-    if (
-      business &&
-      business.plan == "T" &&
-      parseISO(business.trial_end) < new Date()
-    ) {
-      // dispatch(endTrial(business.id));
-    }
     dispatch({
       type: UUID_RESET,
     });

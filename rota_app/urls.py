@@ -24,8 +24,6 @@ router.register('forecast', ForecastViewSet, 'forecast')
 router.register('sitesettings', SiteSettingsViewSet, 'sitesettings')
 router.register('permission-types', PermissionTypeViewSet, 'permission-types')
 
-# router.register('report', GetReportData, 'report')
-
 
 
 urlpatterns = [

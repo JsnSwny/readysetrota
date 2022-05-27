@@ -30,13 +30,16 @@ const Billing = () => {
   };
 
   const getSubscriptionInformation = (subscriptionId) => {
-    setLoading(true);
-    if (subscriptionId)
+    if (subscriptionId) {
+      setLoading(true);
+
       axios.post("/retrieve-subscription/", { subscriptionId }).then((res) => {
+        console.log(res.data);
         setInvoices(res.data.invoices.data);
         setSubscriptionInfo(res.data);
         setLoading(false);
       });
+    }
   };
 
   const cancelSubscription = (subscriptionId) => {
@@ -45,6 +48,7 @@ const Billing = () => {
       setSubscriptionInfo({
         ...subscriptionInfo,
         active: false,
+        cancel_at: res.data.subscription_cancellation.cancel_at,
       });
       setLoading(false);
     });
@@ -62,11 +66,14 @@ const Billing = () => {
   };
 
   useEffect(() => {
+    console.log(business);
     getSubscriptionInformation(business.subscription_id);
     if (business.payment_method_id) {
       getPaymentMethod(business.payment_method_id);
     }
   }, [business]);
+
+  console.log(subscriptionInfo);
 
   return (
     <Fragment>
@@ -106,7 +113,12 @@ const Billing = () => {
             <div className="billing-card__top">
               <div className="flex-container--between billing-card__heading">
                 <div className="billing-card__heading-left">
-                  <h3>{business.plan == "P" ? "Premium" : "Free"} Plan</h3>
+                  <h3 className="billing-card__title">
+                    Premium Plan {console.log(subscriptionInfo)}
+                    {subscriptionInfo.status == "trialing" && (
+                      <span className="billing-card__tag">Trial</span>
+                    )}
+                  </h3>
                   <p>You have access to all features.</p>
                 </div>
                 <div className="billing-card__heading-right">
@@ -168,10 +180,11 @@ const Billing = () => {
                   <p className="info">
                     Your plan ends on{" "}
                     <strong>
-                      {format(
-                        fromUnixTime(subscriptionInfo.cancel_at),
-                        "dd/MM/yyyy"
-                      )}
+                      {subscriptionInfo.cancel_at &&
+                        format(
+                          fromUnixTime(subscriptionInfo.cancel_at),
+                          "dd/MM/yyyy"
+                        )}
                     </strong>
                   </p>
                 )

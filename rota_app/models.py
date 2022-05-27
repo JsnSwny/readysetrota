@@ -25,7 +25,7 @@ class Business(models.Model):
         choices=PLANS,
         default="F",
     )
-    total_employees = models.IntegerField(default=15)
+    total_employees = models.IntegerField(default=0)
     trial_end = models.DateField(null=True, blank=True)
     subscription_cancellation = models.DateField(null=True, blank=True)
     subscription_id=models.CharField(max_length=100, null=True, blank=True)

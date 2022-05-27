@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rota_app.views import CheckUUID, CreateSetupCheckoutSession, ReactivateSubscription, RetrievePaymentMethod, RetrieveSubscription, UpdateSubscription, GetPopularTimes, RetrieveUpcomingInvoice, Publish, CreateCheckoutSession, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, Charge, CancelSubscription, webhook, getCustomer, sendMessage, GetStats, GetTimeclock, GetReportData
+from rota_app.views import CheckUUID, CreateSetupCheckoutSession, ReactivateSubscription, RetrievePaymentMethod, RetrieveSubscription, UpdateSubscription, GetPopularTimes, RetrieveUpcomingInvoice, Publish, CreateCheckoutSession, SendForApproval, ApproveShifts, ExportShifts, ExportAllShifts, CancelSubscription, webhook, sendMessage, GetStats, GetTimeclock, GetReportData
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -14,13 +14,9 @@ urlpatterns = [
     path('export', ExportShifts.as_view(), name='export'),
     path('exportall', ExportAllShifts.as_view(), name='exportall'),
     path('api/', include('rota_app.urls')),
-    path('charge/', Charge.as_view(), name='charge'),
-    path('getCustomer/', getCustomer.as_view(), name='getCustomer'),
     path('sendmessage/', sendMessage.as_view(), name='sendMessage'),
     path('webhook/', webhook, name='webhook'),
-    # path('stats/', GetStats.as_view(), name='stats'),
     path('timeclock/', GetTimeclock.as_view(), name='timeclock'),
-    # path('api-view/report/', GetReportData.as_view(), name='report'),
 
 
     # Subscription

@@ -23,14 +23,12 @@ import { resetErrors } from "../actions/errors";
 import ChangePassword from "./accounts/ChangePassword";
 import StaffProfile from "./profiles/StaffProfile";
 import EnterID from "./common/EnterID";
-import Plans from "./accounts/Plans";
 import PrivacyPolicy from "./landing/PrivacyPolicy";
 
 import { ToastContainer } from "react-toastify";
 import TermsAndConditions from "./landing/TermsAndConditions";
 
 import AdminPanel from "./profiles/dashboard/AdminPanel";
-import Checkout from "./accounts/Checkout";
 
 import Settings from "./settings/Settings";
 import Beta from "./landing/Beta";
@@ -210,8 +208,7 @@ const Main = () => {
           <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
           <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
-          <PrivateRoute path="/premium" component={Plans} />
-          <PrivateRoute path="/checkout" component={Checkout} />
+
           <Route path="/timeclock" component={Timeclock} />
         </Switch>
       </div>

@@ -2,10 +2,12 @@ import React from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { addBusinessDays } from "date-fns";
 
 const PaymentMethod = ({ subscriptionInfo, setLoading }) => {
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
+  let business = useSelector((state) => state.employees.business);
 
   const stripe = useStripe();
 
@@ -18,6 +20,7 @@ const PaymentMethod = ({ subscriptionInfo, setLoading }) => {
 
     const obj = {
       stripe_id: user.profile.stripe_id,
+      subscription_id: business.subscription_id,
     };
 
     const response = await axios.post(
@@ -25,9 +28,6 @@ const PaymentMethod = ({ subscriptionInfo, setLoading }) => {
       obj,
       headerConfig
     );
-
-    console.log(response);
-
     // When the customer clicks on the button, redirect them to Checkout.
     const result = await stripe.redirectToCheckout({
       sessionId: response.data.id,
@@ -52,11 +52,10 @@ const PaymentMethod = ({ subscriptionInfo, setLoading }) => {
             </button>
           </div>
         </div>
-        {subscriptionInfo && (
+        {subscriptionInfo.card && (
           <div className="payment-card-block">
             <div className="payment-card-block__image"></div>
             <div className="payment-card-block__details">
-              {console.log(subscriptionInfo)}
               <h5>
                 {subscriptionInfo.card.card.brand} ending{" "}
                 <strong>{subscriptionInfo.card.card.last4}</strong>

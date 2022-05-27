@@ -8,6 +8,8 @@ var concat = require("gulp-concat");
 var sassGlob = require("gulp-sass-glob");
 var cleanCSS = require("gulp-clean-css");
 var wait = require("gulp-wait");
+var uglify = require("gulp-uglify");
+var streamify = require("gulp-streamify");
 
 gulp.task("sass", function () {
   return gulp
@@ -20,10 +22,16 @@ gulp.task("sass", function () {
     .pipe(gulp.dest("frontend/src/css"));
 });
 
-gulp.task(
-  "watch",
-  gulp.series("sass", function () {
-    gulp.watch("frontend/src/scss/**/*.scss", gulp.series(["sass"]));
-    // Other watchers
-  })
-);
+gulp.task("scripts", (done) => {
+  gulp
+    .src(["frontend/static/frontend/main.js"])
+    .pipe(concat("bundle.main.js"))
+    .pipe(streamify(uglify()))
+    .pipe(gulp.dest("frontend/static/frontend"));
+  done();
+});
+
+gulp.task("watch", () => {
+  gulp.watch("frontend/src/scss/**/*.scss", gulp.series(["sass"]));
+  gulp.watch("frontend/static/frontend/main.js", gulp.series("scripts"));
+});
