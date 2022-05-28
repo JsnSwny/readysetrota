@@ -30,6 +30,7 @@ class Business(models.Model):
     subscription_cancellation = models.DateField(null=True, blank=True)
     subscription_id=models.CharField(max_length=100, null=True, blank=True)
     payment_method_id=models.CharField(max_length=100, null=True, blank=True)
+    subscription_status=models.CharField(max_length=100, null=True, blank=True)
 
 class PermissionType(models.Model):
     name = models.CharField(max_length=30)
@@ -95,6 +96,7 @@ def default_availability():
 class Employee(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
+    email = models.CharField(max_length=100, null=True, blank=True)
     position = models.ManyToManyField(
         Position, related_name="position", blank=True)
     permissions = models.ManyToManyField(

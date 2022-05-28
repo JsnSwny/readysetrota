@@ -14,6 +14,7 @@ const RegisterBusinessDetails = ({
       <div className="register__control">
         <label for="first_name">Business name:</label>
         <input
+          required
           autoFocus
           className="register__input"
           type="text"

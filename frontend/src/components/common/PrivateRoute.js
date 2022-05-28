@@ -6,6 +6,7 @@ import Loading from "../common/Loading";
 import Landing from "../landing/Landing";
 import { getSites } from "../../actions/employees";
 import EnterID from "./EnterID";
+import Billing from "../billing/Billing";
 
 const PrivateRoute = ({
   component: Component,
@@ -13,6 +14,7 @@ const PrivateRoute = ({
   confirmProps,
   perms,
   title,
+  redirectComponent: RedirectComponent,
   ...rest
 }) => {
   const dispatch = useDispatch();
@@ -41,6 +43,15 @@ const PrivateRoute = ({
 
   const { computedMatch } = rest;
   let url = computedMatch.url;
+
+  if (
+    business &&
+    business.subscription_status != "trialing" &&
+    business.subscription_status != "active"
+  ) {
+    console.log("go to billing");
+    return <Billing />;
+  }
 
   return (
     <Route

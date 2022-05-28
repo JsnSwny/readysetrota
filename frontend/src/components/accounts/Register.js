@@ -102,7 +102,6 @@ const Register = (props) => {
             <span
               className="register__button register__button--aqua"
               onClick={() => {
-                console.log(stage);
                 setStage(stage - 1);
               }}
             >
@@ -149,9 +148,7 @@ const Register = (props) => {
               stage >= 1 ? "post-active" : ""
             }`}
           >
-            <div className="progress__counter" onClick={() => setStage(1)}>
-              1
-            </div>
+            <div className="progress__counter">1</div>
             <div className="progress__name">Personal Details</div>
           </div>
           <div
@@ -159,9 +156,7 @@ const Register = (props) => {
               stage >= 2 ? "post-active" : ""
             }`}
           >
-            <div className="progress__counter" onClick={() => setStage(2)}>
-              2
-            </div>
+            <div className="progress__counter">2</div>
             <div className="progress__name">Business Details</div>
           </div>
           <div
@@ -169,9 +164,7 @@ const Register = (props) => {
               stage >= 3 ? "post-active" : ""
             }`}
           >
-            <div className="progress__counter" onClick={() => setStage(3)}>
-              3
-            </div>
+            <div className="progress__counter">3</div>
             <div className="progress__name">Password</div>
           </div>
         </div>

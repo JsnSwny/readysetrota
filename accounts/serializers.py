@@ -156,6 +156,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 business.total_employees = validated_data['numberOfEmployees']
                 business.subscription_id = subscription.id
                 profile.stripe_id = customer.id
+                business.subscription_status = subscription.status
 
                 business.save()
 

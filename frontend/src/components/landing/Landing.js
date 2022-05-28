@@ -34,17 +34,17 @@ const Landing = ({ setOpen, setType }) => {
             </p>
             <div className="hero__btn-wrapper">
               <Link className="hero__btn" to="/register">
-                Try it for FREE
+                Start 30-day free trial
               </Link>
 
-              <button
+              {/* <button
                 onClick={() => {
                   toast.error("New demo video coming soon");
                 }}
                 className="hero__btn--blue"
               >
                 <i class="fas fa-play-circle"></i> Watch Demo
-              </button>
+              </button> */}
             </div>
           </div>
           <img className="hero__image" src="static/media/hero-image.svg" />
@@ -114,7 +114,7 @@ const Landing = ({ setOpen, setType }) => {
             large business, you can benefit from readysetrota.
           </h4>
           <div className="pricing">
-            <div className="pricing__item">
+            {/* <div className="pricing__item">
               <p>Free</p>
               <h3>Basic</h3>
               <ul>
@@ -135,18 +135,17 @@ const Landing = ({ setOpen, setType }) => {
               <Link className="btn-3" to="/register">
                 Get Started
               </Link>
-            </div>
+            </div> */}
             <div className="pricing__item">
-              <p>
-                Free <s>£2.50 per 5 employees</s>
-              </p>
+              <p>£5/per 5 employees</p>
               <h3>Premium</h3>
               <ul>
-                <li>
+                {/* <li>
                   <i className="fas fa-check-circle"></i> Everything in Basic
-                </li>
+                </li> */}
                 <li>
-                  <i className="fas fa-check-circle"></i> Unlimited Sites
+                  <i className="fas fa-check-circle"></i> Unlimited Sites and
+                  Departments
                 </li>
                 <li>
                   <i className="fas fa-check-circle"></i> Availability
@@ -175,9 +174,11 @@ const Landing = ({ setOpen, setType }) => {
       </section>
       <section className="landing__banner">
         <h2>Get Started Now</h2>
-        <p>Try readysetrota for free, getting setup is quick and easy</p>
+        <p>
+          Start your free 30-day trial today, getting setup is quick and easy
+        </p>
         <Link to="/register" className="btn-3">
-          Get Started
+          Start 30-day free trial
         </Link>
       </section>
       <footer className="footer">

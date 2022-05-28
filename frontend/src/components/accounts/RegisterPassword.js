@@ -11,6 +11,7 @@ const RegisterPassword = ({
       <div className="register__control">
         <label for="first_name">Password:</label>
         <input
+          required
           autoFocus
           className="register__input"
           type="password"
@@ -21,6 +22,7 @@ const RegisterPassword = ({
       <div className="register__control">
         <label for="first_name">Confirm password:</label>
         <input
+          required
           className="register__input"
           type="password"
           value={password2}

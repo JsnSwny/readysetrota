@@ -37,6 +37,16 @@ const PersonalDetails = ({
           <p className="error">{errors.last_name}</p>
         </div>
       </div>
+      <div className="form__control">
+        <label className="form-block__label">Email</label>
+        <input
+          className="form__input"
+          type="email"
+          name="email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        ></input>
+      </div>
       {/* <div className="flex-container--between">
         <div className="form__control--half">
           <label className="form-block__label">Email</label>

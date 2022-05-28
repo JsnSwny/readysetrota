@@ -52,11 +52,11 @@ const initialState = {
     department: localStorage.getItem("current_department")
       ? localStorage.getItem("current_department")
       : {},
-    business: {},
+    business: false,
     site: { permissions: [] },
   },
   uuid_success: false,
-  business: { plan: "F" },
+  business: false,
   sitesettings: {},
 };
 

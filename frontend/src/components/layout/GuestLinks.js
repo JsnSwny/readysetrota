@@ -20,7 +20,7 @@ const GuestLinks = ({ setMobileNav, mobileNav }) => {
             Login
           </Link>
           <Link className="btn-3" to="/register">
-            Start Trial
+            Start free trial
           </Link>
         </div>
       </div>

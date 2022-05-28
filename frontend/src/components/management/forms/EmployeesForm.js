@@ -146,6 +146,7 @@ const EmployeesForm = () => {
       const employee = {
         first_name: firstName,
         last_name: lastName,
+        email: email,
         wage: wage > 0 &&
           wageType &&
           wageDate && {
@@ -240,7 +241,7 @@ const EmployeesForm = () => {
       </div>
 
       <div className="form-block">
-        <div className="wrapper--xs">
+        <div className="wrapper--sm">
           <form onSubmit={onSubmit}>
             <div className="employees-form" ref={personalRef}>
               <div className="form-block__heading">
@@ -291,7 +292,7 @@ const EmployeesForm = () => {
             </div>
 
             <div className="form-bottom-banner">
-              <div className="wrapper--xs flex-container--between-center">
+              <div className="wrapper--sm flex-container--between-center">
                 <Link to="/employees" className="tab__link">
                   Back
                 </Link>

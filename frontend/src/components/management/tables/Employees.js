@@ -176,29 +176,7 @@ const Employees = () => {
                   </span>
                   {item.full_name}
                 </td>
-                {item.user ? (
-                  <td>{item.user.email}</td>
-                ) : (
-                  <td>
-                    <p
-                      className="highlight"
-                      onClick={(e) => {
-                        toast.info(
-                          <div>
-                            {`${item.first_name} ${item.last_name}`}
-                            <br /> UUID copied! <br /> <br />{" "}
-                            <small>{item.uuid}</small>
-                          </div>
-                        );
-                        copyToClipboard(
-                          `www.readysetrota.com/join/${item.uuid}/`
-                        );
-                      }}
-                    >
-                      Copy invite link
-                    </p>
-                  </td>
-                )}
+                {item.email ? <td>{item.email}</td> : <td></td>}
                 <td>
                   {item.current_wage &&
                     `£${numberWithCommas(item.current_wage.amount)} per ${

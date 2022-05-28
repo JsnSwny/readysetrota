@@ -423,7 +423,6 @@ class RetrieveUpcomingInvoice(APIView):
                 }
 
             print("SUCCESS")
-            print(response)
 
             return JsonResponse(response)
         except Exception as e:
@@ -482,22 +481,24 @@ class RetrieveSubscription(APIView):
 
             upcoming_invoice = None
 
-            print(subscription)
-
             if not subscription.cancel_at_period_end:
                 upcoming_invoice = stripe.Invoice.upcoming(subscription=subscriptionId)
 
-            payment_information = None
-            if(subscription.default_payment_method):
-                payment_information = stripe.PaymentMethod.retrieve(
-                    subscription.default_payment_method
-                )
+            # payment_information = None
+            # if(subscription.default_payment_method):
+            #     payment_information = stripe.PaymentMethod.retrieve(
+            #         subscription.default_payment_method
+            #     )
+
+
+            print(subscription.customer)
+
         
 
             return JsonResponse(
                 {
                 "cancel_at": subscription.cancel_at,
-                "card": payment_information,
+                "card": subscription.customer.invoice_settings.default_payment_method,
                 "product_description": subscription.plan.product.name,
                 "current_price": subscription.plan.id,
                 "current_quantity": subscription['items']['data'][0].quantity,
@@ -582,7 +583,6 @@ def webhook(request):
     if event.type == "checkout.session.completed":
         customer = event.data.object.customer
         ref_id = event.data.object.client_reference_id
-        print(ref_id)
         user_profile = UserProfile.objects.get(user__id=ref_id)
         user_profile.stripe_id = customer
         user_profile.save()
@@ -593,15 +593,17 @@ def webhook(request):
 
         setup_intent_id = event.data.object.setup_intent
 
-        setup_intent = stripe.SetupIntent.retrieve(setup_intent_id)
 
-        stripe.Subscription.modify(
-            business.subscription_id,
-            default_payment_method=setup_intent.payment_method
-        )
+        if(setup_intent_id):
+            setup_intent = stripe.SetupIntent.retrieve(setup_intent_id)
 
-        business.payment_method_id = setup_intent.payment_method
-        business.save()
+            stripe.Customer.modify(
+                customer,
+                invoice_settings={'default_payment_method': setup_intent.payment_method}
+            )
+
+            business.payment_method_id = setup_intent.payment_method
+            business.save()
 
     if event.type == "invoice.paid":
         customer = event.data.object.customer
@@ -619,12 +621,50 @@ def webhook(request):
 
         print("invoice paid")
 
-    if event.type == "customer.subscription.updated":
+    if event.type == "invoice.payment_succeeded":
+        pi = stripe.PaymentIntent.retrieve(
+            event.data.object.payment_intent,
+        )
+
+        stripe.Customer.modify(
+            pi.customer,
+            invoice_settings={'default_payment_method': pi.payment_method}
+        )
+
+        print("payment intent")
+
+        print(pi)
+
+    if event.type == "invoice.payment_failed":
         customer = event.data.object.customer
 
-        print(event.data)
+        user = UserProfile.objects.get(stripe_id=customer).user
 
-        print("subscription updated")
+        business = Business.objects.filter(owner=user).first()
+        business.plan = "P"
+
+
+        business.subscription_id = event.data.object.subscription
+        business.total_employees = event.data.object.lines.data[-1].quantity
+        business.payment_method_id = event.data.object.default_payment_method
+        business.save()
+
+    if event.type == "customer.subscription.created":
+        customer = event.data.object.customer
+        user = UserProfile.objects.get(stripe_id=customer).user
+        business = Business.objects.filter(owner=user).first()
+        business.subscription_status = event.data.object.status
+        business.save()
+
+    if event.type == "customer.subscription.updated":
+        customer = event.data.object.customer
+        user = UserProfile.objects.get(stripe_id=customer).user
+        business = Business.objects.filter(owner=user).first()
+        business.subscription_status = event.data.object.status
+        business.save()
+
+        # print(event.data)
+
 
     if event.type == "customer.subscription.deleted":
         customer = event.data.object.customer
@@ -633,6 +673,7 @@ def webhook(request):
         business = Business.objects.filter(owner=user).first()
         business.plan = "F"
         business.subscription_id = None
+        business.subscription_status = None
         business.save()
 
         print("subscription cancelled")

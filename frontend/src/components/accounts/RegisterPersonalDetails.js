@@ -14,6 +14,7 @@ const RegisterPersonalDetails = ({
         <div className="register__control--half">
           <label for="first_name">First name:</label>
           <input
+            required
             autoFocus
             className="register__input"
             type="text"
@@ -24,6 +25,7 @@ const RegisterPersonalDetails = ({
         <div className="register__control--half">
           <label for="last_name">Last name:</label>
           <input
+            required
             className="register__input"
             type="text"
             value={lastName}
@@ -34,6 +36,7 @@ const RegisterPersonalDetails = ({
       <div className="register__control">
         <label for="email">Email:</label>
         <input
+          required
           className="register__input"
           type="email"
           value={email}

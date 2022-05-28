@@ -9,6 +9,7 @@ import Loading from "../common/Loading";
 import PaymentMethod from "./PaymentMethod";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import Alert from "../common/Alert";
 
 const Billing = () => {
   const stripePromise = loadStripe(
@@ -102,20 +103,36 @@ const Billing = () => {
           actionTitle="Confirm"
         />
       )}
+
       <Title
         name="Subscription & Billing"
         subtitle="Manage your billing and payment details."
         wrapper=""
       />
+
       <div className="wrapper">
+        {business.subscription_status == "past_due" && (
+          <Alert
+            title="Payment Failure"
+            color="red"
+            message="Your card failed to process a payment. Try updating your payment method."
+          />
+        )}
+        {!business.subscription_status && (
+          <Alert
+            title="Subscription"
+            color="red"
+            message="You are not currently on a subscription. It's time to upgrade!"
+          />
+        )}
         <section className="section flex-container--between">
           <div className="billing-card">
             <div className="billing-card__top">
               <div className="flex-container--between billing-card__heading">
                 <div className="billing-card__heading-left">
                   <h3 className="billing-card__title">
-                    Premium Plan {console.log(subscriptionInfo)}
-                    {subscriptionInfo.status == "trialing" && (
+                    Premium Plan
+                    {business.subscription_status == "trialing" && (
                       <span className="billing-card__tag">Trial</span>
                     )}
                   </h3>

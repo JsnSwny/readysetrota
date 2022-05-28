@@ -376,11 +376,11 @@
   @include wi-mq(tablet) {
     left: 0;
   }
-  .wrapper--sm {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
+  // .wrapper--sm {
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: flex-end;
+  // }
 }
 
 .wage-input {
