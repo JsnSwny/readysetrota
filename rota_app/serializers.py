@@ -195,7 +195,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Employee
-        fields = ('__all__')
+        fields = '__all__'
 
     def get_full_name(self, obj):
         if obj.first_name:
@@ -415,7 +415,7 @@ class EmployeeListSerializer(MinEmployeeListSerializer, serializers.ModelSeriali
     class Meta:
         model = Employee
         fields = ('id', 'full_name', 'first_name', 'last_name', 'email', 'uuid', 'user', 'owner',
-                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'archived', 'pin', 'created_at', 'user', 'total_shifts',)
+                  'position', 'permissions', 'business', 'business_id', 'default_availability', 'wage', 'current_wage', 'current_status', 'archived', 'pin', 'created_at', 'user', 'total_shifts', 'has_been_invited',)
 
 
 class CheckUUIDSerializer(serializers.ModelSerializer):

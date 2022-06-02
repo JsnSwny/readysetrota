@@ -120,6 +120,7 @@ export const register =
     first_name,
     last_name,
     numberOfEmployees,
+    code,
   }) =>
   (dispatch) => {
     // Headers
@@ -132,7 +133,6 @@ export const register =
     dispatch({
       type: REGISTER_LOADING,
     });
-
     // Request Body
     const body = JSON.stringify({
       username,
@@ -141,9 +141,10 @@ export const register =
       email,
       role,
       businessName,
-      first_name: first_name,
-      last_name: last_name,
+      first_name,
+      last_name,
       numberOfEmployees,
+      code,
     });
 
     axios

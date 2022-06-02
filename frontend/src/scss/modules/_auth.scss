@@ -246,22 +246,37 @@
 
 .register {
   font-family: $secondary-font-family;
-  min-height: calc(100vh - 45px);
+  min-height: calc(100vh - 12rem);
   display: flex;
   flex-direction: column;
 
+  background-color: white;
+  @extend .shadow;
+  border-radius: 5px;
+  padding: 3rem;
+
+  margin: 6rem auto;
+
   &__title {
     text-align: center;
-    margin-top: 6rem;
-
-    font-size: 48px;
+    font-size: 36px;
   }
   &__subtitle {
     text-align: center;
     color: $gray;
+    line-height: 1.5rem;
+    font-size: 18px;
+    margin-top: 0.25rem;
+    strong {
+      color: $pink;
+    }
   }
   .progress {
-    margin: 4rem 0;
+    margin-top: 4rem;
+  }
+
+  &__form {
+    margin-top: 4rem;
   }
 
   &__fields {
@@ -272,9 +287,9 @@
     width: 100%;
     color: white;
     background-color: $pink;
-    border-radius: 10px;
+    border-radius: 5px;
     font-size: 18px;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     text-align: center;
     cursor: pointer;
     transition: 0.2s ease-in-out background-color;
@@ -290,7 +305,6 @@
   }
 
   &__btn-wrapper {
-    margin-bottom: 6rem;
     &--half {
       .register__button {
         width: calc(50% - 0.5rem);
@@ -308,7 +322,7 @@
     margin-bottom: 2rem;
     &--half {
       @extend .register__control;
-      width: calc(50% - 1rem);
+      width: calc(50% - 0.5rem);
     }
     label {
       display: block;
@@ -319,9 +333,11 @@
     width: 100%;
     height: 50px;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
+    border: 1px solid darken(#eeeeee, 10%) !important;
     padding: 0 20px;
     font-size: 18px;
+
     &:focus {
       outline: none;
     }

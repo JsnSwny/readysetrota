@@ -1,0 +1,117 @@
+<html>
+    {% load static %}
+  <head>
+    <title>You have been invited to join readysetrota!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: white;
+        font-family: 'Signika Negative', sans-serif;
+      }
+
+    body {
+        width: 100%;
+    }   
+
+        .email {
+            background-color: white;
+            border-radius: 5px;
+            padding: 4rem 2rem; 
+            width: 100%;
+            margin: 0 auto;
+            background-color: #FD809E;
+        }
+
+      .top-box {
+          text-align: center;
+          width: 100%;
+      }
+
+      img {
+          margin: 0 auto;
+          max-width: 500px;
+      }
+
+      .box {
+          margin-top: 3rem;
+          text-align: center;
+      }
+
+      .heading {
+          font-size: 32px;
+      }
+
+      .content {
+          font-size: 18px;
+          margin-top: 1rem;
+      }
+
+      .content-2 {
+          font-size: 18px;
+      }
+
+      a {
+          background-color: #61c7c9;
+          padding: 0.5rem 1rem;
+          text-align: center;
+          text-decoration: none;
+          display: block;
+          width: 200px;
+          margin: 3rem auto 0 auto;
+          color: white !important;
+          font-size: 18px;
+          font-weight: bold;
+          border-radius: 5px;
+          transition: 0.2s ease-in-out background-color;
+      }
+
+      a:hover {
+        background-color: #4ab4b6;
+      }
+
+      @media only screen and (max-width: 750px) {
+        a {
+            font-size: 16px;
+        }
+
+        .heading {
+            font-size: 24px;
+        }
+
+        .content {
+            font-size: 16px;
+        }
+
+        .content-2 {
+            font-size: 16px;
+            margin-top: 1rem;
+        }
+    }
+
+    </style>
+  </head>
+  <body>
+      <div class="email">
+        <div class="top-box">
+            <img src="https://i.imgur.com/TbJyAJo.png" />
+        </div>
+        <div class="box">
+            <p class="heading">
+                <strong>Hi <span>{{ employee.first_name }}</span>,</strong>  
+            </p>
+            <p class="content">
+                You have been invited to join <strong>{{ business }}</strong> on
+                <strong>readysetrota!</strong>
+            </p>
+            <div class="content-2">Use the button below to set up your account and get started.</div>
+            <a href="http://localhost:8000/join/{{ uuid }}">Get Started</a>
+        </div>
+    </div>
+    
+  </body>
+</html>

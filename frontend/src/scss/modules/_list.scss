@@ -130,6 +130,13 @@
     border-bottom-right-radius: 5px;
   }
 
+  .invite-btn {
+    font-size: 16px;
+    color: $pink;
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
+
   @extend .shadow;
   .pd {
     padding: 0 2rem;

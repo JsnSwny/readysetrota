@@ -9,20 +9,14 @@ import {
 } from "../actions/employees";
 import { getPermissionTypes } from "../actions/permissions";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import store from "../store";
 import Rota from "./shifts/Rota";
-import { format } from "date-fns";
-
 import Register from "./accounts/Register";
 import Login from "./accounts/Login";
 
 import PrivateRoute from "./common/PrivateRoute";
 import Home from "./profiles/Home";
-import { resetErrors } from "../actions/errors";
-
 import ChangePassword from "./accounts/ChangePassword";
 import StaffProfile from "./profiles/StaffProfile";
-import EnterID from "./common/EnterID";
 import PrivacyPolicy from "./landing/PrivacyPolicy";
 
 import { ToastContainer } from "react-toastify";
@@ -47,6 +41,7 @@ import ScrollToTop from "./layout/ScrollToTop";
 import ReportsPage from "./reports/ReportsPage";
 import Sites from "./management/tables/Sites";
 import YourShifts from "./shifts/YourShifts";
+import EmployeeJoin from "./accounts/EmployeeJoin";
 
 import Billing from "./billing/Billing";
 
@@ -207,7 +202,7 @@ const Main = () => {
           <PrivateRoute path="/shifts" component={YourShifts} />
           <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />
-          <PrivateRoute path="/join/:id?" component={EnterID} pass={true} />
+          <Route path="/join/:id" component={EmployeeJoin} />
 
           <Route path="/timeclock" component={Timeclock} />
         </Switch>

@@ -112,6 +112,8 @@ class Employee(models.Model):
     history = HistoricalRecords()
     pin = models.IntegerField(null=True, validators=[MinValueValidator(1000), MaxValueValidator(9999)])
 
+    has_been_invited = models.BooleanField(default=False)
+
     archived = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)

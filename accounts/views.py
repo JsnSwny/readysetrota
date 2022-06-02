@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from . import serializers
@@ -8,6 +9,14 @@ from .serializers import ChangePasswordSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth.password_validation import validate_password
+from rota_app.models import Employee
+from django.core.exceptions import BadRequest
+from django.http import JsonResponse
+from django.core import serializers
+from django.forms.models import model_to_dict
+from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 # Create your views here.
 class ChangePasswordView(UpdateAPIView):
@@ -38,3 +47,47 @@ class ChangePasswordView(UpdateAPIView):
             }
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Verify(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        employee = Employee.objects.get(uuid=request.data['uuid'])
+        if not employee:
+            raise BadRequest('Invalid request.')
+        if employee.user:
+            raise BadRequest('Invalid request.')
+
+        return JsonResponse({"employee": model_to_dict(employee, fields=["first_name", "last_name", "email"]), "business": model_to_dict(employee.business, fields=["name"])})
+        
+class SendInvite(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        uuid = request.data['uuid']
+        email = request.data['email']
+
+        employee = Employee.objects.get(uuid=uuid)
+        business = employee.business.name
+
+        employee.has_been_invited = True
+
+        print(employee)
+
+        employee.save()
+
+        data = {"uuid": uuid, "email": email, "business": business, "employee": employee}
+
+
+        html_body = render_to_string("invite-template.html", data)
+
+        message = EmailMultiAlternatives(
+        subject='You have been invited to join readysetrota!',
+        body="",
+        from_email='readysetrota <jason@readysetrota.com>',
+        to=['jsnswny@gmail.com']
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)
+
+        return Response(True)

@@ -95,11 +95,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         style={'input_type': 'password'}, write_only=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
+    code = serializers.UUIDField(required=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'password2',
-                  'role', 'businessName', 'first_name', 'last_name', 'numberOfEmployees',)
+                  'role', 'businessName', 'first_name', 'last_name', 'numberOfEmployees', 'code',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -167,6 +168,10 @@ class RegisterSerializer(serializers.ModelSerializer):
                 settings.save()
             else:
                 profile = UserProfile(user=user, role=validated_data['role'])
+                code = validated_data['code']
+                employee = Employee.objects.get(uuid=code)
+                employee.user = user
+                employee.save()
             profile.save()
 
             return user

@@ -17,6 +17,7 @@ import { numberWithCommas } from "../../Utilities";
 import ManagementPage from "../ManagementPage";
 import { copyToClipboard } from "../../../utils/copyToClipboard";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,13 @@ const Employees = () => {
 
   const isArchived = (date) => {
     return parseISO(date) <= new Date();
+  };
+
+  const sendInvite = (email, uuid) => {
+    console.log(email, uuid);
+    axios
+      .post("/api/auth/send-invite", { email, uuid })
+      .then((res) => console.log(res));
   };
 
   return (
@@ -176,7 +184,25 @@ const Employees = () => {
                   </span>
                   {item.full_name}
                 </td>
-                {item.email ? <td>{item.email}</td> : <td></td>}
+                {item.email ? (
+                  <td className="flex-container--align-center">
+                    {item.email}{" "}
+                    {!item.user &&
+                      (item.has_been_invited ? (
+                        <i
+                          onClick={() => sendInvite(item.email, item.uuid)}
+                          className="invite-btn fas fa-sync"
+                        ></i>
+                      ) : (
+                        <i
+                          onClick={() => sendInvite(item.email, item.uuid)}
+                          className="invite-btn fas fa-envelope"
+                        ></i>
+                      ))}
+                  </td>
+                ) : (
+                  <td></td>
+                )}
                 <td>
                   {item.current_wage &&
                     `£${numberWithCommas(item.current_wage.amount)} per ${

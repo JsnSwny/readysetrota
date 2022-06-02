@@ -161,11 +161,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'readysetrota@gmail.com'
-EMAIL_HOST_PASSWORD = (os.environ.get("EMAIL_PASSWORD"))
+EMAIL_HOST = 'mail.privateemail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'jason@readysetrota.com'
+EMAIL_HOST_PASSWORD = "***REMOVED***"
 
 django_heroku.settings(locals())
 
