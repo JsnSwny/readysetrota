@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { register, registerEmployee } from "../../actions/auth";
@@ -34,9 +34,15 @@ const EmployeeJoin = () => {
   };
 
   useEffect(() => {
-    axios.post("/api/auth/verify", { uuid: id }).then((res) => {
-      setIdInfo(res.data);
-    });
+    axios
+      .post("/api/auth/verify", { uuid: id })
+      .then((res) => {
+        setIdInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data, err.response.status);
+        setIdInfo(true);
+      });
   }, []);
 
   if (useSelector((state) => state.auth.isAuthenticated)) {
@@ -48,43 +54,53 @@ const EmployeeJoin = () => {
   }
 
   return (
-    <div className="wrapper--xs register">
-      <h1 class="register__title">Hi {idInfo.employee.first_name}</h1>
-      <p class="register__subtitle">
-        You have been invited to join <strong>{idInfo.business.name}</strong>.
-        <br />
-        Fill out the details below to create your account.
-      </p>
-      <form onSubmit={onSubmit} className="register__form">
-        <div className="register__fields">
-          <div className="register__control">
-            <label for="first_name">Password:</label>
-            <input
-              required
-              autoFocus
-              className="register__input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="register__control">
-            <label for="first_name">Confirm password:</label>
-            <input
-              required
-              className="register__input"
-              type="password"
-              value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
-            />
-          </div>
+    <Fragment>
+      {idInfo.has_error ? (
+        <div className="wrapper--xs register register--sm">
+          <h1 class="register__title">Error</h1>
+          <p class="register__subtitle">{idInfo.error}</p>
         </div>
+      ) : (
+        <div className="wrapper--xs register">
+          <h1 class="register__title">Hi {idInfo.employee.first_name}</h1>
+          <p class="register__subtitle">
+            You have been invited to join{" "}
+            <strong>{idInfo.business.name}</strong>.
+            <br />
+            Fill out the details below to create your account.
+          </p>
+          <form onSubmit={onSubmit} className="register__form">
+            <div className="register__fields">
+              <div className="register__control">
+                <label for="first_name">Password:</label>
+                <input
+                  required
+                  autoFocus
+                  className="register__input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="register__control">
+                <label for="first_name">Confirm password:</label>
+                <input
+                  required
+                  className="register__input"
+                  type="password"
+                  value={password2}
+                  onChange={(e) => setPassword2(e.target.value)}
+                />
+              </div>
+            </div>
 
-        <button type="submit" className="register__button">
-          Get started
-        </button>
-      </form>
-    </div>
+            <button type="submit" className="register__button">
+              Get started
+            </button>
+          </form>
+        </div>
+      )}
+    </Fragment>
   );
 };
 

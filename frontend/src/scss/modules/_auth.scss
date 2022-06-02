@@ -257,6 +257,10 @@
 
   margin: 6rem auto;
 
+  &--sm {
+    min-height: 0;
+  }
+
   &__title {
     text-align: center;
     font-size: 36px;

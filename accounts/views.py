@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework import generics
@@ -52,13 +53,17 @@ class Verify(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        employee = Employee.objects.get(uuid=request.data['uuid'])
-        if not employee:
-            raise BadRequest('Invalid request.')
-        if employee.user:
-            raise BadRequest('Invalid request.')
+        try:
+            employee = Employee.objects.get(uuid=request.data['uuid'])
+        except ValidationError:
+            return JsonResponse({"has_error": True, "error": f'"{request.data["uuid"]}" is not a valid join ID'})
 
-        return JsonResponse({"employee": model_to_dict(employee, fields=["first_name", "last_name", "email"]), "business": model_to_dict(employee.business, fields=["name"])})
+        if not employee:
+            return JsonResponse({"has_error": True, "error": "The ID entered isn't associated with an employee."})
+        if employee.user:
+           return JsonResponse({"has_error": True, "error": "This ID is already associated with a user."})
+
+        return JsonResponse({"has_error": False, "employee": model_to_dict(employee, fields=["first_name", "last_name", "email"]), "business": model_to_dict(employee.business, fields=["name"])})
         
 class SendInvite(APIView):
     permission_classes = [AllowAny]
@@ -85,7 +90,7 @@ class SendInvite(APIView):
         subject='You have been invited to join readysetrota!',
         body="",
         from_email='readysetrota <jason@readysetrota.com>',
-        to=['jsnswny@gmail.com']
+        to=[email]
         )
         message.attach_alternative(html_body, "text/html")
         message.send(fail_silently=False)

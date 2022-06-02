@@ -113,6 +113,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             errors['password'] = list(e.messages)
 
         if errors:
+            print(errors)
             raise serializers.ValidationError(errors)
 
         if password != password2:
