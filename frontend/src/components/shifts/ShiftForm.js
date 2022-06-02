@@ -11,6 +11,11 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [info, setInfo] = useState("");
+  const [position, setPosition] = useState("");
+  const [employee, setEmployee] = useState({
+    label: shiftFormInfo.employee.full_name,
+    value: shiftFormInfo.employee.id,
+  });
   const [breakLength, setBreakLength] = useState({
     value: 0,
     label: "No break",
@@ -20,6 +25,8 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
     (state) => state.employees.current.site.sitesettings
   );
   let errors = useSelector((state) => state.errors.msg);
+  const positions = useSelector((state) => state.employees.positions);
+  const employees = useSelector((state) => state.employees.employees);
 
   useEffect(() => {
     if (editShift) {
@@ -36,6 +43,12 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
       setBreakLength(
         breaks.find((e) => {
           return e.value == editShift.break_length;
+        })
+      );
+      console.log(editShift);
+      setPosition(
+        positionOptions.find((e) => {
+          return e.value == editShift.position;
         })
       );
       setInfo(editShift.info);
@@ -58,16 +71,18 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
       })
     ) {
       const shiftObj = {
-        employee_id: shiftFormInfo.employee.id,
+        employee_id: employee.value,
         start_time: startTime.value,
         end_time: endTime.value,
         break_length: breakLength.value,
         date: shiftFormInfo.date,
         stage: "Unpublished",
         info,
-        position_id: [],
+        position_id: position.value,
         department_id: shiftFormInfo.shiftDepartment,
       };
+
+      console.log(shiftObj);
 
       editShift
         ? dispatch(updateShift(editShift.id, shiftObj))
@@ -107,6 +122,16 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   }
 
   let endHours = [...hours, { value: "Finish", label: "Finish" }];
+
+  const employeeOptions = employees.map((item) => ({
+    label: item.full_name,
+    value: item.id,
+  }));
+
+  const positionOptions = positions.map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
 
   //   hours = hours.filter((item) => timeInRange(item));
 
@@ -175,30 +200,58 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
             <p className="error">{errors.end_time}</p>
           </div>
         </div>
-        <ul className="tag-container--sm">
-          {popular_times.map((item, i) => (
-            <li
-              key={i}
-              className="tag clickable"
-              onClick={() => {
-                setStartTime({
-                  value: item.start_time,
-                  label: item.start_time,
-                });
-                setEndTime({ value: item.end_time, label: item.end_time });
-                setBreakLength({
-                  value: item.break_length,
-                  label: breaks.find(
-                    (breakItem) => breakItem.value == item.break_length
-                  ).label,
-                });
-              }}
-            >
-              {item.start_time} - {item.end_time}{" "}
-              {item.break_length > 0 && `(${item.break_length})`}
-            </li>
-          ))}
-        </ul>
+        {popular_times.length > 0 && (
+          <ul className="tag-container--sm">
+            {popular_times.map((item, i) => (
+              <li
+                key={i}
+                className="tag clickable"
+                onClick={() => {
+                  setStartTime({
+                    value: item.start_time,
+                    label: item.start_time,
+                  });
+                  setEndTime({ value: item.end_time, label: item.end_time });
+                  setBreakLength({
+                    value: item.break_length,
+                    label: breaks.find(
+                      (breakItem) => breakItem.value == item.break_length
+                    ).label,
+                  });
+                }}
+              >
+                {item.start_time} - {item.end_time}{" "}
+                {item.break_length > 0 && `(${item.break_length})`}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex-container--between form__wrapper">
+          <div className="form__control--half">
+            <label className="form__label">Employee*:</label>
+            <Select
+              className="react-select-container"
+              classNamePrefix="react-select"
+              onChange={setEmployee}
+              options={employeeOptions}
+              placeholder={"Select employee"}
+              value={employee}
+            />
+            <p className="error">{errors.start_time}</p>
+          </div>
+          <div className="form__control--half">
+            <label className="form__label">Shift Role:</label>
+            <Select
+              className="react-select-container"
+              classNamePrefix="react-select"
+              onChange={setPosition}
+              options={positionOptions}
+              placeholder={"Select shift role"}
+              value={position}
+            />
+          </div>
+        </div>
         <div className="form__control">
           <label className="form__label">Info:</label>
           <textarea

@@ -497,7 +497,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
         queryset=Department.objects.all(), source='department', write_only=True, required=False)
     length = serializers.SerializerMethodField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(
-    ), source='positions', write_only=True, many=True, required=False)
+    ), source='position', write_only=True, required=False)
     wage = serializers.SerializerMethodField()
 
     # timeclock = TimeClockSerializer(required=False)
@@ -544,10 +544,8 @@ class ShiftListSerializer(serializers.ModelSerializer):
         # float(self.get_length(obj)) * float(self.get_wage(obj))
 
     def create(self, validated_data):
-        position = validated_data.pop('positions')
         timeclock = validated_data.pop('timeclock', [])
         instance = Shift.objects.create(**validated_data)
-        instance.positions.set(position)
         end_time = None
 
 
@@ -571,7 +569,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shift
-        fields = ('date', 'start_time', 'end_time', 'open', 'employee', 'break_length', 'positions', 'info', 'id',
+        fields = ('date', 'start_time', 'end_time', 'open', 'employee', 'break_length', 'position', 'info', 'id',
                   'stage', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
 
 

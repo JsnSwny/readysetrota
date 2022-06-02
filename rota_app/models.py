@@ -172,8 +172,7 @@ class Shift(models.Model):
     open = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User, related_name="shifts", on_delete=models.CASCADE)
-    positions = models.ManyToManyField(
-        Position, related_name="shift_positions", blank=True, null=True)
+    position = models.ForeignKey(Position, related_name="shift_positions", blank=True, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     break_length = models.IntegerField(default=0)
