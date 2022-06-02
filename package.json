@@ -48,6 +48,7 @@
     "gulp-useref": "^4.0.1",
     "gulp-wait": "0.0.2",
     "immutability-helper": "^3.1.1",
+    "multiselect-react-dropdown": "^2.0.22",
     "prop-types": "^15.7.2",
     "react-chartjs-2": "^3.0.3",
     "react-clock": "^3.0.0",

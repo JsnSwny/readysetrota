@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Switch from "react-switch";
+import Select from "react-select";
+import Multiselect from "multiselect-react-dropdown";
 
 const Permissions = ({ permissions, setPermissions }) => {
   const permission_types = useSelector(
@@ -9,38 +11,38 @@ const Permissions = ({ permissions, setPermissions }) => {
 
   return (
     <div>
-      <table className="listing">
-        <thead>
-          <tr>
-            <th>Permission</th>
-            <th>Details</th>
-            <th>Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          {permission_types.map((item) => (
-            <tr>
-              <td>{item.name}</td>
-              <td>{item.description}</td>
-              <td>
-                <Switch
-                  onChange={() => {
-                    if (permissions.includes(item.id)) {
-                      setPermissions(
-                        [...permissions].filter((perm) => perm != item.id)
-                      );
-                    } else {
-                      setPermissions([...permissions, item.id]);
-                    }
-                  }}
-                  checked={permissions.includes(item.id)}
-                  onColor={"#FD809E"}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* <Multiselect
+        options={permission_types.map((item) => ({
+          name: item.name,
+          id: item.id,
+        }))}
+        className="react-select"
+        selectedValues={permissions}
+        onSelect={(e) => {
+          setPermissions(e);
+        }}
+        onRemove={(e) => {
+          setPermissions(e);
+        }}
+        displayValue="name" // Property name to display in the dropdown options
+        showCheckbox
+        placeholder={"Select Permission(s)"}
+      /> */}
+      <Select
+        isMulti
+        options={permission_types.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))}
+        className="react-select-container"
+        classNamePrefix="react-select"
+        value={permissions}
+        onChange={(e) => {
+          setPermissions(e);
+        }}
+        placeholder={"Select position(s)"}
+        closeMenuOnSelect={false}
+      />
     </div>
   );
 };

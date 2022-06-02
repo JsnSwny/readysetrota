@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SearchField from "../../SearchField";
 import { useSelector } from "react-redux";
+import Multiselect from "multiselect-react-dropdown";
+import Select from "react-select";
+import { components } from "react-select";
 
 const Roles = ({
   positionList,
@@ -12,125 +15,28 @@ const Roles = ({
   const positions = useSelector((state) => state.employees.positions);
   let errors = useSelector((state) => state.errors.msg);
 
-  const [departmentSearch, setDepartmentSearch] = useState("");
-  const [filteredDepartments, setFilteredDepartments] = useState([]);
-  const [positionSearch, setPositionSearch] = useState("");
-  const [filteredPositions, setFilteredPositions] = useState([]);
+  console.log(positionList);
 
-  useEffect(() => {
-    setPositionList([
-      ...positionList.filter((item) =>
-        selectedDepartments.find((dep) => dep.id == item.department.id)
-      ),
-    ]);
-  }, [selectedDepartments]);
-
-  useEffect(() => {
-    if (departments.length > 0) {
-      setFilteredDepartments(departments);
-    }
-  }, [departments]);
-
-  useEffect(() => {
-    if (positions.length > 0) {
-      setFilteredPositions(positions);
-    }
-  }, [positions]);
+  const options = departments.map((item) => ({
+    label: item.name,
+    options: positions
+      .filter((pos) => pos.department.id == item.id)
+      .map((pos) => ({ label: pos.name, value: pos.id })),
+  }));
 
   return (
     <div className="roles-form">
-      <div className="roles-form__section">
-        <h4>Departments</h4>
-        {selectedDepartments.length > 0 && (
-          <ul className="tag-container">
-            {selectedDepartments.map((item) => (
-              <li className="tag">{item.name}</li>
-            ))}
-          </ul>
-        )}
-
-        <hr />
-        <SearchField
-          placeholder="Search departments..."
-          searchValue={departmentSearch}
-          setSearchValue={setDepartmentSearch}
-          setFilteredObjects={setFilteredDepartments}
-          objs={departments}
-          filterField={"name"}
-        />
-        {filteredDepartments.map((item) => (
-          <div
-            className={`checkbox-container`}
-            onClick={() =>
-              selectedDepartments.find((dep) => dep.id == item.id)
-                ? setSelectedDepartments([
-                    ...selectedDepartments.filter((dep) => dep.id != item.id),
-                  ])
-                : setSelectedDepartments([...selectedDepartments, item])
-            }
-          >
-            <span
-              className={`checkbox--lg ${
-                selectedDepartments.find((dep) => dep.id == item.id)
-                  ? "checked"
-                  : ""
-              }`}
-            >
-              <i className="fas fa-check"></i>
-            </span>{" "}
-            {item.name}
-          </div>
-        ))}
-      </div>
-      <div className="roles-form__section">
-        <h4>Positions</h4>
-        {positionList.length > 0 && (
-          <ul className="roles-form__list tag-container">
-            {positionList.map((item) => (
-              <li className="tag">{item.name}</li>
-            ))}
-          </ul>
-        )}
-
-        <hr />
-        <SearchField
-          placeholder="Search positions..."
-          searchValue={positionSearch}
-          setSearchValue={setPositionSearch}
-          setFilteredObjects={setFilteredPositions}
-          objs={positions}
-          filterField={"name"}
-        />
-        {filteredPositions
-          .filter((item) =>
-            selectedDepartments.find((dep) => dep.id == item.department.id)
-          )
-          .map((item) => (
-            <div
-              className={`checkbox-container`}
-              onClick={() =>
-                positionList.find((pos) => pos.id == item.id)
-                  ? setPositionList([
-                      ...positionList.filter((pos) => pos.id != item.id),
-                    ])
-                  : setPositionList([...positionList, item])
-              }
-            >
-              <span
-                className={`checkbox--lg ${
-                  positionList.find((pos) => pos.id == item.id) ? "checked" : ""
-                }`}
-              >
-                <i className="fas fa-check"></i>
-              </span>{" "}
-              <div>
-                {item.name}
-                <h5>{item.department.name}</h5>
-              </div>
-            </div>
-          ))}
-        <p className="error">{errors.position_list}</p>
-      </div>
+      <Select
+        isMulti
+        options={options}
+        className="react-select-container"
+        classNamePrefix="react-select"
+        value={positionList}
+        onChange={(e) => {
+          setPositionList(e);
+        }}
+        placeholder={"Select position(s)"}
+      />
     </div>
   );
 };

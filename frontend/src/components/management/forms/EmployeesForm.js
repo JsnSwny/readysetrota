@@ -63,7 +63,9 @@ const EmployeesForm = () => {
       setCurrentEmployee(employee);
       setFirstName(employee.first_name);
       setLastName(employee.last_name);
-      setPositionList(employee.position.map((item) => item));
+      setPositionList(
+        employee.position.map((item) => ({ label: item.name, value: item.id }))
+      );
 
       if (employee.wage) {
         if (employee.wage.length > 0) {
@@ -74,7 +76,14 @@ const EmployeesForm = () => {
       setSelectedDepartments([
         ...new Set(employee.position.map((item) => item.department)),
       ]);
-      setPermissions(employee.permissions.map((item) => item.id));
+      setPermissions(
+        employee.permissions.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+
+      setEmail(employee.email);
 
       setStartWorkingDate(
         employee.current_status?.start_date
@@ -155,10 +164,10 @@ const EmployeesForm = () => {
             start_date: format(wageDate, "yyyy-MM-dd"),
           },
 
-        position_id: positionList.map((pos) => pos.id),
+        position_id: positionList.map((pos) => pos.value),
         business_id: current.business.id,
         default_availability: availability,
-        permissions_id: permissions,
+        permissions_id: permissions.map((item) => item.value),
         start_working_date: format(startWorkingDate, "yyyy-MM-dd"),
         end_working_date: endWorkingDate
           ? format(endWorkingDate, "yyyy-MM-dd")
@@ -219,12 +228,6 @@ const EmployeesForm = () => {
               scroll={() => scrollToRef(wageRef)}
             />
           )}
-          <TabItem
-            title="Status"
-            current={isInViewport(statusRef)}
-            setCurrent={setCurrentSection}
-            scroll={() => scrollToRef(statusRef)}
-          />
 
           <TabItem
             title="Permissions"
@@ -273,13 +276,6 @@ const EmployeesForm = () => {
                 <Wage {...wageProps} />
               </div>
             )}
-
-            <div className="employees-form" ref={statusRef}>
-              <div className="form-block__heading">
-                <h3>Status</h3>
-              </div>
-              <Status {...statusProps} />
-            </div>
 
             <div className="employees-form" ref={permissionsRef}>
               <div className="form-block__heading">

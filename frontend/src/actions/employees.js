@@ -272,6 +272,7 @@ export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
       tokenConfig(getState)
     )
     .then((res) => {
+      console.log(res.data);
       dispatch({
         type: GET_EMPLOYEES,
         payload: res.data,
