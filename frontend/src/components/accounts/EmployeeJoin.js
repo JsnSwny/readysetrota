@@ -11,6 +11,9 @@ const EmployeeJoin = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [idInfo, setIdInfo] = useState(false);
+  let errors = useSelector((state) => state.errors.msg);
+
+  console.log(errors);
 
   const { id } = useParams();
 
@@ -91,6 +94,7 @@ const EmployeeJoin = () => {
                   value={password2}
                   onChange={(e) => setPassword2(e.target.value)}
                 />
+                <p className="error">{errors.password}</p>
               </div>
             </div>
 

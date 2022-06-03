@@ -45,12 +45,12 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
           return e.value == editShift.break_length;
         })
       );
-      console.log(editShift);
-      setPosition(
-        positionOptions.find((e) => {
-          return e.value == editShift.position;
-        })
-      );
+      if (editShift.position)
+        setPosition(
+          positionOptions.find((e) => {
+            return e.value == editShift.position.id;
+          })
+        );
       setInfo(editShift.info);
     }
   }, [editShift]);

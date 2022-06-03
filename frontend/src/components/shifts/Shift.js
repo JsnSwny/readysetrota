@@ -68,6 +68,12 @@ const Shift = (props) => {
                   permissions.includes("create_shifts") ? "edit" : ""
                 }`}
               >
+                {shift.position && (
+                  <span className="shift__tag">
+                    {console.log(shift)}
+                    {shift.position.name}
+                  </span>
+                )}
                 <div className="flex-container--align-center">
                   <p
                     className={`shift__time ${!employee ? "open-shift" : ""} ${

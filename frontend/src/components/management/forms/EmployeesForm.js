@@ -141,8 +141,6 @@ const EmployeesForm = () => {
     let error_obj = {
       first_name: firstName ? true : "This field is required",
       last_name: lastName ? true : "This field is required",
-      position_list:
-        positionList.length > 0 ? true : "You must select at least 1 position",
     };
 
     dispatch(getErrors(error_obj, 400));
@@ -172,6 +170,7 @@ const EmployeesForm = () => {
         end_working_date: endWorkingDate
           ? format(endWorkingDate, "yyyy-MM-dd")
           : "",
+        site_id: [current.site.id],
       };
 
       if (formType == "edit") {

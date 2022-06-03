@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { useSelector } from "react-redux";
 
 const RegisterPassword = ({
   password,
@@ -6,6 +7,7 @@ const RegisterPassword = ({
   password2,
   setPassword2,
 }) => {
+  let errors = useSelector((state) => state.errors.msg);
   return (
     <Fragment>
       <div className="register__control">
@@ -28,6 +30,7 @@ const RegisterPassword = ({
           value={password2}
           onChange={(e) => setPassword2(e.target.value)}
         />
+        <p className="error">{errors.password}</p>
       </div>
     </Fragment>
   );

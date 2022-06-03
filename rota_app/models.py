@@ -111,13 +111,12 @@ class Employee(models.Model):
         Business, related_name="employee_business", on_delete=models.CASCADE, null=True, blank=True)
     history = HistoricalRecords()
     pin = models.IntegerField(null=True, validators=[MinValueValidator(1000), MaxValueValidator(9999)])
-
     has_been_invited = models.BooleanField(default=False)
-
     archived = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    site = models.ManyToManyField(
+        Site, related_name="employee_site", blank=True, null=True)
 
     def __str__(self):
         return f'[{self.id}]: {self.first_name} {self.last_name}'

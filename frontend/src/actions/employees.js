@@ -401,7 +401,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
         employee.end_working_date
           ? `&end_working_date=${employee.end_working_date}`
           : ""
-      }&site=${current.site.id}`,
+      }${currentSite(getState)}`,
       employee,
       tokenConfig(getState)
     )

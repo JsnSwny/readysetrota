@@ -51,6 +51,8 @@ def removeFields(ret, items):
             ret.pop(i)
     return ret
 
+    
+
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
@@ -83,6 +85,64 @@ class BusinessSerializer(serializers.ModelSerializer):
         settings.save()
 
         return business
+
+class SiteSerializer(serializers.ModelSerializer):
+    business_id = serializers.PrimaryKeyRelatedField(
+        queryset=Business.objects.all(), source='business', write_only=True, required=False)
+    business = BusinessSerializer(required=False)
+    number_of_employees = serializers.SerializerMethodField(read_only=True)
+    unpublished_shifts = serializers.SerializerMethodField(read_only=True)
+    sitesettings = SiteSettingsSerializer(many=False, required=False)
+    name = serializers.CharField(required=False)
+    tasks = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Site
+        fields = ('id', 'name', 'business', 'business_id', 
+                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'tasks',)
+        depth: 1
+
+    def update(self, instance, validated_data):
+        sitesettings = validated_data.pop('sitesettings', [])
+        instance = super().update(instance, validated_data)
+        if(sitesettings):
+            settings = SiteSettings.objects.get(site=instance)
+            for attr, value in sitesettings.items():
+                setattr(settings, attr, value)
+
+            settings.save()
+
+        return instance
+
+
+    def create(self, validated_data):
+        site = Site.objects.create(**validated_data)
+        settings = SiteSettings(site=site)
+        settings.save()
+        site.save()
+        return site
+
+    def get_number_of_employees(self, obj):
+        employees = Employee.objects.filter(
+            position__department__site=obj.id, status__start_date__lte=date.today(
+            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
+        return len(employees)
+
+    def get_unpublished_shifts(self, obj):
+        shifts = Shift.objects.filter(
+            department__site=obj.id, stage="Unpublished", date__gte=date.today())
+        return len(shifts)
+
+    def get_tasks(self, obj):
+        tasks = {}
+
+        tasks["shifts"] = Shift.objects.filter(department__site=obj, stage="Unpublished").count()
+        tasks["holidays"] = Leave.objects.filter(site=obj, status="Pending").count()
+        tasks["uninvited"] = Employee.objects.filter(position__department__site=obj, user=None).count()
+        tasks["actual_revenue"] = Forecast.objects.filter(actual=0, site=obj, date__lte=datetime.today()).count()
+
+
+        return tasks
 
 
     
@@ -151,6 +211,7 @@ class PermissionCodeNameSerializer(serializers.ModelSerializer):
 
 class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer(read_only=True, many=True)
+    site = SiteSerializer(read_only=True, many=True)
     permissions = PermissionCodeNameSerializer(read_only=True, many=True)
     permissions_id = serializers.PrimaryKeyRelatedField(
         queryset=PermissionType.objects.all(), source='permissions', write_only=True, many=True, required=False)
@@ -158,6 +219,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     default_availability = serializers.JSONField(required=False)
     position_id = serializers.PrimaryKeyRelatedField(
         queryset=Position.objects.all(), source='position', write_only=True, many=True, required=False)
+    site_id = serializers.PrimaryKeyRelatedField(
+        queryset=Site.objects.all(), source='site', write_only=True, many=True, required=False)
     business = BusinessSerializer(read_only=True)
     business_id = serializers.PrimaryKeyRelatedField(
         queryset=Business.objects.all(), source='business', write_only=True, required=False)
@@ -276,15 +339,16 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         position = validated_data.pop('position')
+        site = validated_data.pop('site')
         permissions = validated_data.pop('permissions')
 
-        site = self.context['request'].query_params.get('site')
         employee = Employee.objects.create(**validated_data)
         number = random.randint(1000,9999)
-        while len(Employee.objects.filter(pin=number, position__department__site=site)) > 0:
+        while len(Employee.objects.filter(pin=number, position__department__site=site[0])) > 0:
             number = random.randint(1000,9999)
         employee.pin = number
         employee.position.set(position)
+        employee.site.set(site)
         employee.permissions.set(permissions)
 
         employee.save()
@@ -499,6 +563,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(
     ), source='position', write_only=True, required=False)
     wage = serializers.SerializerMethodField()
+    position = PositionSerializer(read_only=True)
 
     # timeclock = TimeClockSerializer(required=False)
     total_cost = serializers.SerializerMethodField()
@@ -628,63 +693,7 @@ class LeaveSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class SiteSerializer(serializers.ModelSerializer):
-    business_id = serializers.PrimaryKeyRelatedField(
-        queryset=Business.objects.all(), source='business', write_only=True, required=False)
-    business = BusinessSerializer(required=False)
-    number_of_employees = serializers.SerializerMethodField(read_only=True)
-    unpublished_shifts = serializers.SerializerMethodField(read_only=True)
-    sitesettings = SiteSettingsSerializer(many=False, required=False)
-    name = serializers.CharField(required=False)
-    tasks = serializers.SerializerMethodField(read_only=True)
 
-    class Meta:
-        model = Site
-        fields = ('id', 'name', 'business', 'business_id', 
-                  'number_of_employees', 'unpublished_shifts', 'sitesettings', 'tasks',)
-        depth: 1
-
-    def update(self, instance, validated_data):
-        sitesettings = validated_data.pop('sitesettings', [])
-        instance = super().update(instance, validated_data)
-        if(sitesettings):
-            settings = SiteSettings.objects.get(site=instance)
-            for attr, value in sitesettings.items():
-                setattr(settings, attr, value)
-
-            settings.save()
-
-        return instance
-
-
-    def create(self, validated_data):
-        site = Site.objects.create(**validated_data)
-        settings = SiteSettings(site=site)
-        settings.save()
-        site.save()
-        return site
-
-    def get_number_of_employees(self, obj):
-        employees = Employee.objects.filter(
-            position__department__site=obj.id, status__start_date__lte=date.today(
-            )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
-        return len(employees)
-
-    def get_unpublished_shifts(self, obj):
-        shifts = Shift.objects.filter(
-            department__site=obj.id, stage="Unpublished", date__gte=date.today())
-        return len(shifts)
-
-    def get_tasks(self, obj):
-        tasks = {}
-
-        tasks["shifts"] = Shift.objects.filter(department__site=obj, stage="Unpublished").count()
-        tasks["holidays"] = Leave.objects.filter(site=obj, status="Pending").count()
-        tasks["uninvited"] = Employee.objects.filter(position__department__site=obj, user=None).count()
-        tasks["actual_revenue"] = Forecast.objects.filter(actual=0, site=obj, date__lte=datetime.today()).count()
-
-
-        return tasks
 
 
 

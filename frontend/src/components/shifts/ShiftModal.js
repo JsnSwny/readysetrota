@@ -10,7 +10,7 @@ const ShiftModal = ({ open, setOpen, editShift, shiftFormInfo }) => {
         setOpen={setOpen}
         title={
           editShift
-            ? `Edit ${editShift.employee.full_name}'s Shift`
+            ? `Edit ${shiftFormInfo.employee.full_name}'s Shift`
             : "Add a new shift"
         }
         size={"-md"}

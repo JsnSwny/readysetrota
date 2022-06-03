@@ -81,8 +81,7 @@ class CanModifyEmployees(permissions.BasePermission):
 
 class CanCreateEmployees(permissions.BasePermission):
     def has_permission(self, request, view):
-        position_id = request.data['position_id'][0]
-        site_id = Position.objects.get(pk=position_id).department.site.id
+        site_id = request.data['site_id'][0]
         perm_list = getPermList(request, site_id)
         return "manage_employees" in perm_list
 

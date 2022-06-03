@@ -124,7 +124,7 @@ const Rota = () => {
         editShift={editShift}
         shiftFormInfo={shiftFormInfo}
       />
-      {isLoading && <Loading />}
+      <Loading active={isLoading} />
 
       <div>
         <div className="rota wrapper--md">
