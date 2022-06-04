@@ -67,14 +67,13 @@ export const getShifts =
     }
     axios
       .get(
-        `/api/shifts/?date_after=${startdate}&date_before=${enddate}&department__site=${
-          getState().employees.current.site.id
-        }${currentSite(getState)}${
+        `/api/shifts/?date_after=${startdate}&date_before=${enddate}${
           user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
         }&ordering=date,start_time`,
         tokenConfig(getState)
       )
       .then((res) => {
+        console.log(res.data);
         dispatch({
           type: GET_ALL_SHIFTS,
           payload: res.data,

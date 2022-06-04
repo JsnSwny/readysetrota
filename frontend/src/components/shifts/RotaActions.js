@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { parseISO, addDays } from "date-fns";
 import RotaDatePicker from "./RotaDatePicker";
 import axios from "axios";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import { addDepartment } from "../../actions/employees";
 
 const RotaActions = ({
   showAvailabilities,
@@ -11,6 +14,8 @@ const RotaActions = ({
   financialMode,
   setFinancialMode,
   updateShifts,
+  selectedDepartment,
+  setSelectedDepartment,
 }) => {
   const dispatch = useDispatch();
   const permissions = useSelector(
@@ -26,6 +31,16 @@ const RotaActions = ({
   const business = useSelector((state) => state.employees.business);
   const current = useSelector((state) => state.employees.current);
   const auth = useSelector((state) => state.auth);
+  const departments = useSelector((state) => state.employees.departments);
+
+  let departmentOptions = departments.map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
+  departmentOptions = [
+    { label: "All Departments", value: 0 },
+    ...departmentOptions,
+  ];
 
   const exportShifts = () => {
     const token = auth.token;
@@ -50,10 +65,32 @@ const RotaActions = ({
       });
   };
 
+  const handleChange = (newValue, actionMeta) => {
+    if (actionMeta.action == "create-option") {
+      dispatch(
+        addDepartment({
+          name: newValue.label,
+          site_id: current.site.id,
+          business_id: current.business.id,
+        })
+      );
+    } else {
+      setSelectedDepartment(newValue);
+    }
+  };
+
   const [publishDropdown, setPublishDropdown] = useState(false);
   return (
     <div className="rotaFunctions flex-container--between wrapper--md">
       <div className="rotaFunctions__wrapper">
+        <CreatableSelect
+          className="react-select-container"
+          classNamePrefix="react-select"
+          onChange={handleChange}
+          options={departmentOptions}
+          placeholder={"Select a department"}
+          value={selectedDepartment}
+        />
         <div className="rotaFunctions__button-list">
           {permissions.includes("publish_shifts") && (
             <div
@@ -103,25 +140,6 @@ const RotaActions = ({
       <div className="rotaFunctions__wrapper">
         <RotaDatePicker updateShifts={updateShifts} />
       </div>
-
-      {/* <div className="rotaFunctions__wrapper">
-        {permissions.includes("manage_wages") && (
-          <div className={`rotaFunctions__selector ${financialMode}`}>
-            <p
-              onClick={() => setFinancialMode("predicted")}
-              className={`${financialMode == "predicted" ? "selected" : ""}`}
-            >
-              Predicted
-            </p>
-            <p
-              onClick={() => setFinancialMode("actual")}
-              className={`${financialMode == "actual" ? "selected" : ""}`}
-            >
-              Actual
-            </p>
-          </div>
-        )}
-      </div> */}
     </div>
   );
 };

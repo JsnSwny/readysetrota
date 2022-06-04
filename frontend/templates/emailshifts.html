@@ -6,8 +6,104 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        color: black;
+        color: white;
+        font-family: 'Signika Negative', sans-serif;
       }
+
+      body {
+        width: 100%;
+      }   
+
+      .email {
+          background-color: white;
+          border-radius: 5px;
+          padding: 4rem 2rem; 
+          width: 100%;
+          margin: 0 auto;
+          background-color: #FD809E;
+      }
+
+      .top-box {
+          text-align: center;
+          width: 100%;
+      }
+
+      img {
+          margin: 0 auto;
+          max-width: 500px;
+      }
+
+      .box {
+          margin-top: 3rem;
+          text-align: center;
+      }
+
+      .heading {
+          font-size: 32px;
+      }
+
+      .content {
+          font-size: 18px;
+          margin-top: 1rem;
+      }
+
+      .content-2 {
+          font-size: 18px;
+      }
+
+      a {
+          background-color: #61c7c9;
+          padding: 0.5rem 1rem;
+          text-align: center;
+          text-decoration: none;
+          display: block;
+          width: 200px;
+          margin: 3rem auto 0 auto;
+          color: white !important;
+          font-size: 18px;
+          font-weight: bold;
+          border-radius: 5px;
+          transition: 0.2s ease-in-out background-color;
+      }
+
+      a:hover {
+        background-color: #4ab4b6;
+      }
+
+      h3 {
+        font-size: 24px;
+      }
+
+      .shifts__time {
+        font-size: 18px;
+      }
+
+      @media only screen and (max-width: 750px) {
+        a {
+            font-size: 16px;
+        }
+
+        .heading {
+            font-size: 24px;
+        }
+
+        .content {
+            font-size: 16px;
+        }
+
+        .content-2 {
+            font-size: 16px;
+            margin-top: 1rem;
+        }
+
+        h3 {
+          font-size: 20px;
+        }
+        .shifts__time {
+          font-size: 16px;
+          margin-top: 0.5rem;
+        }
+    }
 
       table {
         margin-top: 20px;
@@ -32,42 +128,56 @@
       .updated {
         font-weight: bold;
       }
+
+      .new {
+        margin-left: 0.5rem;
+        background-color: #61c7c9;
+        border-radius: 3px;
+        padding: 0.25rem;
+      }
+
+      .shifts__item {
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .shifts {
+        margin-top: 3rem;
+      }
+
+      
     </style>
   </head>
   <body>
-    <p class="heading">
-      Hi {{ employee.first_name }}, your rota has been
-      <strong>updated!</strong>
-    </p>
-    <br />
-    <p>You can view your rota online at https://www.readysetrota.com</p>
-    <p>Here are your upcoming shifts:</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Info</th>
-          <th>Department</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for shift in shifts %}
 
-        <tr class="{% if not shift.published %} updated{% endif %}">
-          <td>{{ shift.date|date:"l jS F" }}</td>
-          <td>{{ shift.start_time|time:"H:i" }}</td>
-          <td>{{ shift.end_time }}</td>
-          {% if shift.info %}
-          <td>{{ shift.info }}</td>
-          {% else %}
-          <td>N/A</td>
-          {% endif %}
-          <td>{{ shift.department.name }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="email">
+      <div class="top-box">
+          <img src="https://i.imgur.com/TbJyAJo.png" />
+      </div>
+      <div class="box">
+          <p class="heading">
+              <strong>Hi <span>{{ employee.first_name }}</span>,</strong>  
+          </p>
+          <p class="content">
+              Your rota has been 
+              <strong>updated!</strong>
+          </p>
+          
+
+          <div class="content-2">
+            <p>Here are your upcoming shifts:</p>
+          </div>
+          <div class="shifts">
+            {% for shift in shifts %}
+            <div class="shifts__item">
+              <h3>{{ shift.date|date:"l jS F" }}</h3>
+              <p class="shifts__time">{{ shift.start_time|time:"H:i" }} - {{ shift.end_time }} ({{ shift.position.name }})</p>
+            </div>            
+            {% endfor %}
+
+          </div>
+             
+          <a href="http://localhost:8000/">View rota</a>
+      </div>    
   </body>
 </html>

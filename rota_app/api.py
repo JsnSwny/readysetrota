@@ -187,14 +187,14 @@ class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
 class EmployeeFilter(django_filters.FilterSet):
     status__start_date = DateFilter(lookup_expr='lte')
     status__end_date = DateFilter(method='check_end_date')
-    site = django_filters.NumberFilter(field_name='position__department__site')
+    department = django_filters.NumberFilter(field_name='position__department')
 
     def check_end_date(self, queryset, name, value):
         return queryset.filter(Q(status__end_date__gte=value) | Q(status__end_date=None))
 
     class Meta:
         model = Employee
-        fields = ['status__start_date', 'status__end_date', 'site', 'archived']
+        fields = ['status__start_date', 'status__end_date', 'site', 'archived', 'department']
 
 
 class EmployeeViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
@@ -218,7 +218,8 @@ class EmployeeViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            return Employee.objects.filter(position__department__site__business=self.request.user.business).distinct()
+            print(Employee.objects.filter(business=self.request.user.business))
+            return Employee.objects.filter(business=self.request.user.business).distinct()
 
         user_employees = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
         employees = Employee.objects.filter(
@@ -256,7 +257,7 @@ class ShiftFilter(django_filters.FilterSet):
     class Meta:
         model = Shift
         fields = ['date', 'employee', 'department', 'department__site',
-                  'employee__user__id', 'absence__not', 'open', 'stage',]
+                  'employee__user__id', 'absence__not', 'open', 'stage', 'site',]
 
 class ShiftViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
@@ -274,7 +275,7 @@ class ShiftViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            return Shift.objects.filter(department__site__business=self.request.user.business)
+            return Shift.objects.filter(site__business=self.request.user.business)
 
         user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
 

@@ -7,7 +7,6 @@ import NoShift from "./NoShift";
 const RotaEmployeeShifts = ({
   result,
   employee,
-  department,
   financialMode,
   showAvailabilities,
   setOpen,
@@ -19,12 +18,9 @@ const RotaEmployeeShifts = ({
   const permissions = useSelector(
     (state) => state.permissions.active_permissions
   );
-  var getEmployeeShift = (employee, date, department) =>
+  var getEmployeeShift = (employee, date) =>
     shifts.filter((obj) => {
-      return obj.employee &&
-        obj.employee === employee &&
-        obj.date === date &&
-        obj.department == department
+      return obj.employee && obj.employee === employee && obj.date === date
         ? permissions.includes("create_shifts")
           ? true
           : obj.stage == "Published"
@@ -50,7 +46,7 @@ const RotaEmployeeShifts = ({
       {result.map((result) => {
         const format_date = format(result, "yyyy-MM-dd");
 
-        let shifts = getEmployeeShift(employee.id, format_date, department.id);
+        let shifts = getEmployeeShift(employee.id, format_date);
 
         if (financialMode == "actual") {
           shifts = shifts.filter((item) => item.stage == "Published");
@@ -69,7 +65,6 @@ const RotaEmployeeShifts = ({
             {...props}
             shifts={shifts}
             financialMode={financialMode}
-            shiftDepartment={department.id}
             setShiftFormInfo={setShiftFormInfo}
             setOpen={setOpen}
             setEditShift={setEditShift}
@@ -78,7 +73,6 @@ const RotaEmployeeShifts = ({
           <NoShift
             key={result}
             {...props}
-            shiftDepartment={department.id}
             financialMode={financialMode}
             setOpen={setOpen}
             setShiftFormInfo={setShiftFormInfo}

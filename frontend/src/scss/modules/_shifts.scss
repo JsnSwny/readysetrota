@@ -228,7 +228,12 @@
 }
 
 .rotaFunctions {
-  margin-bottom: 40px;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  .react-select-container {
+    min-width: 225px;
+    margin-right: 10px;
+  }
   &__wrapper {
     display: flex;
     @include wi-mq(laptop) {
@@ -520,6 +525,7 @@
   @include wi-mq(tablet) {
     padding-bottom: 110px;
   }
+  
   &__heading {
     .item-block {
       text-align: center;

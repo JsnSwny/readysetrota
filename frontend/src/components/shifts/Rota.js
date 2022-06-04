@@ -19,10 +19,13 @@ import Loading from "../common/Loading";
 import Title from "../common/Title";
 import FinancialBar from "./FinancialBar";
 import RotaActions from "./RotaActions";
-import RotaEmployees from "./RotaEmployees";
-import RotaDepartmentList from "./RotaDepartmentList";
+import Employee from "./Employee";
+import RotaEmployeeShifts from "./RotaEmployeeShifts";
 import ShiftModal from "./ShiftModal";
 import OpenShifts from "./OpenShifts";
+import Select from "react-select";
+
+import QuickAddEmployeeModal from "../management/forms/QuickAddEmployeeModal";
 
 const Rota = () => {
   const dispatch = useDispatch();
@@ -39,6 +42,7 @@ const Rota = () => {
   let current = useSelector((state) => state.employees.current);
   let width = useSelector((state) => state.responsive.width);
   let departments = useSelector((state) => state.employees.departments);
+  const user = useSelector((state) => state.auth.user);
 
   const [showAvailabilities, setShowAvailabilities] = useState(false);
   const [currentDevice, setCurrentDevice] = useState("");
@@ -46,14 +50,34 @@ const Rota = () => {
   const [open, setOpen] = useState(false);
   const [editShift, setEditShift] = useState(false);
   const [shiftFormInfo, setShiftFormInfo] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState({
+    label: "All Departments",
+    value: 0,
+  });
+
+  const [employeeOpen, setEmployeeOpen] = useState(false);
 
   // Update Shifts
   const updateShifts = (start_date, end_date) => {
     dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
-    dispatch(getEmployees(start_date, end_date));
+    console.log(selectedDepartment);
+    dispatch(getEmployees(start_date, end_date, selectedDepartment.value));
   };
+
+  useEffect(() => {
+    checkWidth(true);
+  }, [selectedDepartment]);
+
+  let departmentOptions = departments.map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
+  departmentOptions = [
+    { label: "All Departments", value: 0 },
+    ...departmentOptions,
+  ];
 
   const updateWidth = (force, device, date, add) => {
     if (currentDevice != device || force) {
@@ -109,7 +133,7 @@ const Rota = () => {
         <FinancialBar dates={result} financialMode={financialMode} />
       )}
 
-      <Title name="Rota" subtitle="Manage your timesheet" />
+      {/* <Title name="Rota" subtitle="Manage your timesheet" /> */}
 
       <RotaActions
         showAvailabilities={showAvailabilities}
@@ -117,6 +141,8 @@ const Rota = () => {
         financialMode={financialMode}
         setFinancialMode={setFinancialMode}
         updateShifts={updateShifts}
+        setSelectedDepartment={setSelectedDepartment}
+        selectedDepartment={selectedDepartment}
       />
       <ShiftModal
         open={open}
@@ -124,44 +150,33 @@ const Rota = () => {
         editShift={editShift}
         shiftFormInfo={shiftFormInfo}
       />
+      <QuickAddEmployeeModal open={employeeOpen} setOpen={setEmployeeOpen} />
       <Loading active={isLoading} />
 
       <div>
         <div className="rota wrapper--md">
-          {departments.map((department, i) => (
-            <div className="rota__department">
-              <RotaDepartmentList department={department} result={result} />
-              {/* <OpenShifts
-                department={department}
+          {employees.map((employee, i) => (
+            <div key={employee.id} className="rota__container">
+              <Employee
+                employee={employee}
+                current_employee={false}
+                shifts={[]}
+                user={user}
+                result={result}
+                financialMode={financialMode}
+              />
+              <RotaEmployeeShifts
+                result={result}
+                employee={employee}
+                financialMode={financialMode}
                 setOpen={setOpen}
                 setShiftFormInfo={setShiftFormInfo}
                 setEditShift={setEditShift}
-                result={result}
-              /> */}
-
-              {positions.map(
-                (position) =>
-                  position.department.id == department.id &&
-                  employees.filter((employee) =>
-                    employee.position.includes(position.id)
-                  ).length > 0 && (
-                    <Fragment>
-                      <h4 className="rota__position">{position.name}</h4>
-                      <RotaEmployees
-                        department={department}
-                        position={position}
-                        result={result}
-                        financialMode={financialMode}
-                        showAvailabilities={showAvailabilities}
-                        setOpen={setOpen}
-                        setShiftFormInfo={setShiftFormInfo}
-                        setEditShift={setEditShift}
-                      />
-                    </Fragment>
-                  )
-              )}
+                showAvailabilities={showAvailabilities}
+              />
             </div>
           ))}
+          <button onClick={() => setEmployeeOpen(true)}>+ Add Employee</button>
         </div>
       </div>
     </div>

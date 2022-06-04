@@ -120,11 +120,11 @@ class Publish(APIView):
             return HttpResponseForbidden()
 
         if business != "false":
-            all_shifts = Shift.objects.filter(date__gte=date.today(), department__site=request.query_params.get(
+            all_shifts = Shift.objects.filter(date__gte=date.today(), site=request.query_params.get(
                 'site_id'), stage="Unpublished").exclude(employee__isnull=True)
         else:
             all_shifts = Shift.objects.filter(owner=self.request.user, stage="Unpublished", date__gte=date.today(
-            ), department__site=request.query_params.get('site_id')).exclude(employee__isnull=True)
+            ), site=request.query_params.get('site_id')).exclude(employee__isnull=True)
 
         # shifts_list = list(shifts.values_list('pk', flat=True))
         # new_shifts = Shift.objects.filter(id__in=shifts_list)
@@ -144,10 +144,13 @@ class Publish(APIView):
             if employee.user:
                 shifts = Shift.objects.filter(
                     employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
+
+                print(shifts)
+
                 html_message = render_to_string("emailshifts.html", context={
                                                 'shifts': shifts, 'employee': employee})
                 mail_item = mail.EmailMultiAlternatives(
-                    "Rota Updated - " + today_date, "", "readysetrota@gmail.com", [employee.user.email])
+                    "Rota Updated - " + today_date, "", "readysetrota <jason@readysetrota.com>", [employee.user.email])
                 mail_item.attach_alternative(html_message, "text/html")
                 email.append(mail_item)
         connection.send_messages(email)
@@ -172,7 +175,6 @@ class Publish(APIView):
                 tc.break_length = i.break_length
 
             tc.save()
-
             i.save()
 
         ids = (o.id for o in all_shifts)

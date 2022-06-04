@@ -559,6 +559,8 @@ class ShiftListSerializer(serializers.ModelSerializer):
     ), source='employee', write_only=True, required=False, allow_null=True)
     department_id = serializers.PrimaryKeyRelatedField(
         queryset=Department.objects.all(), source='department', write_only=True, required=False)
+    site_id = serializers.PrimaryKeyRelatedField(
+        queryset=Site.objects.all(), source='site', write_only=True, required=False)
     length = serializers.SerializerMethodField()
     position_id = serializers.PrimaryKeyRelatedField(queryset=Position.objects.all(
     ), source='position', write_only=True, required=False)
@@ -635,7 +637,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shift
         fields = ('date', 'start_time', 'end_time', 'open', 'employee', 'break_length', 'position', 'info', 'id',
-                  'stage', 'department', 'department_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
+                  'stage', 'department', 'department_id', 'site_id', 'employee_id', 'wage', 'length', 'position_id', 'total_cost',)
 
 
 class ShiftSerializer(ShiftListSerializer, serializers.ModelSerializer):

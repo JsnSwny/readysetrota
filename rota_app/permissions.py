@@ -75,7 +75,7 @@ class CanCreatePositions(permissions.BasePermission):
 
 class CanModifyEmployees(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        site_id = obj.position.first().department.site.id
+        site_id = obj.site.first().id
         perm_list = getPermList(request, site_id)
         return "manage_employees" in perm_list
 
@@ -91,14 +91,13 @@ class CanCreateEmployees(permissions.BasePermission):
 
 class CanModifyShifts(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        site_id = obj.department.site.id
+        site_id = obj.site.id
         perm_list = getPermList(request, site_id)
         return "create_shifts" in perm_list
 
 class CanCreateShifts(permissions.BasePermission):
     def has_permission(self, request, view):
-        department_id = request.data['department_id']
-        site_id = Department.objects.get(pk=department_id).site.id
+        site_id = request.data['site_id']
         perm_list = getPermList(request, site_id)
         return "create_shifts" in perm_list
 

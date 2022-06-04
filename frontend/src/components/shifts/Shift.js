@@ -69,10 +69,7 @@ const Shift = (props) => {
                 }`}
               >
                 {shift.position && (
-                  <span className="shift__tag">
-                    {console.log(shift)}
-                    {shift.position.name}
-                  </span>
+                  <span className="shift__tag">{shift.position.name}</span>
                 )}
                 <div className="flex-container--align-center">
                   <p

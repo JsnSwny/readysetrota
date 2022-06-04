@@ -156,6 +156,7 @@ class Shift(models.Model):
     department = models.ForeignKey(
         Department, related_name="shift_department", on_delete=models.SET_NULL, null=True, blank=True)
     history = HistoricalRecords()
+    site = models.ForeignKey(Site, related_name="shift_site", on_delete=models.SET_NULL, null=True, blank=True)
 
     STAGE_TYPES = [
         ("Published", 'Published'),

@@ -259,27 +259,30 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
     });
 };
 
-export const getEmployees = (start_date, end_date) => (dispatch, getState) => {
-  let query = "";
+export const getEmployees =
+  (start_date, end_date, department) => (dispatch, getState) => {
+    let query = "";
 
-  if (start_date && end_date) {
-    query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
-  }
+    if (start_date && end_date) {
+      query += `&status__start_date=${end_date}&status__end_date=${start_date}`;
+    }
 
-  axios
-    .get(
-      `/api/employees/?${query}${currentSite(getState)}`,
-      tokenConfig(getState)
-    )
-    .then((res) => {
-      console.log(res.data);
-      dispatch({
-        type: GET_EMPLOYEES,
-        payload: res.data,
-      });
-    })
-    .catch((err) => console.log(err.response));
-};
+    axios
+      .get(
+        `/api/employees/?${query}${
+          department != 0 ? `&department=${department}` : ""
+        }${currentSite(getState)}`,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        console.log(res.data);
+        dispatch({
+          type: GET_EMPLOYEES,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log(err.response));
+  };
 
 export const getAllEmployees =
   (archived = false) =>

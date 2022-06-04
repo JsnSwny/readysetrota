@@ -24,9 +24,11 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
   let settings = useSelector(
     (state) => state.employees.current.site.sitesettings
   );
+  const current = useSelector((state) => state.employees.current);
   let errors = useSelector((state) => state.errors.msg);
   const positions = useSelector((state) => state.employees.positions);
   const employees = useSelector((state) => state.employees.employees);
+  const departments = useSelector((state) => state.employees.departments);
 
   useEffect(() => {
     if (editShift) {
@@ -80,6 +82,7 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
         info,
         position_id: position.value,
         department_id: shiftFormInfo.shiftDepartment,
+        site_id: current.site.id,
       };
 
       console.log(shiftObj);
@@ -128,9 +131,16 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
     value: item.id,
   }));
 
-  const positionOptions = positions.map((item) => ({
+  console.log(shiftFormInfo.employee.position);
+
+  const positionOptions = departments.map((item) => ({
     label: item.name,
-    value: item.id,
+    options: positions
+      .filter((item) =>
+        shiftFormInfo.employee.position.some((pos) => pos == item.id)
+      )
+      .filter((pos) => pos.department.id == item.id)
+      .map((pos) => ({ label: pos.name, value: pos.id })),
   }));
 
   //   hours = hours.filter((item) => timeInRange(item));
