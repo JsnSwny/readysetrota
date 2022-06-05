@@ -15,8 +15,6 @@ const Roles = ({
   const positions = useSelector((state) => state.employees.positions);
   let errors = useSelector((state) => state.errors.msg);
 
-  console.log(positionList);
-
   const options = departments.map((item) => ({
     label: item.name,
     options: positions

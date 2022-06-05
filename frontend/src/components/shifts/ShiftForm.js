@@ -47,12 +47,23 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
           return e.value == editShift.break_length;
         })
       );
-      if (editShift.position)
-        setPosition(
-          positionOptions.find((e) => {
+      console.log(editShift);
+      console.log(positionOptions);
+      if (editShift.position) {
+        let pos = positionOptions.find((e) => {
+          return e.value == editShift.position.id;
+        });
+
+        if (!pos) {
+          pos = positionOptions.find((e) =>
+            e.options.some((item) => item.value == editShift.position.id)
+          );
+          pos = pos.options.find((e) => {
             return e.value == editShift.position.id;
-          })
-        );
+          });
+        }
+        setPosition(pos);
+      }
       setInfo(editShift.info);
     }
   }, [editShift]);
@@ -84,9 +95,6 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
         department_id: shiftFormInfo.shiftDepartment,
         site_id: current.site.id,
       };
-
-      console.log(shiftObj);
-
       editShift
         ? dispatch(updateShift(editShift.id, shiftObj))
         : dispatch(addShift(shiftObj));

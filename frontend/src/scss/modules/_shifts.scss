@@ -229,7 +229,7 @@
 
 .rotaFunctions {
   margin-bottom: 1rem;
-  padding-top: 1rem;
+  padding-top: 2rem;
   .react-select-container {
     min-width: 225px;
     margin-right: 10px;
@@ -472,12 +472,12 @@
 
 .rota__container {
   display: flex;
-  margin: 0.2rem 0;
-  min-height: 85px;
+  margin: 4px 0;
+  min-height: 70px;
   transition: 0.1s ease opacity;
 
   @include wi-mq(widescreen) {
-    min-height: 65px;
+    min-height: 60px;
   }
   &.open-shifts {
     margin-bottom: 20px;
@@ -525,8 +525,21 @@
   @include wi-mq(tablet) {
     padding-bottom: 110px;
   }
-  
+
+  &__cute-add-btn {
+    font-size: 14px;
+    color: $gray;
+    cursor: pointer;
+    transition: 0.2s ease-in-out color;
+    margin-top: 0.5rem;
+    &:hover {
+      color: $pink;
+    }
+  }
+
   &__heading {
+    margin-bottom: 0.5rem;
+    margin-top: 2rem;
     .item-block {
       text-align: center;
       font-size: 14px;
@@ -576,7 +589,7 @@
   &__tag {
     // background-color: $pink;
     // border-radius: 3px;
-    font-size: 10px;
+    font-size: 12px;
     display: block;
     // width: fit-content;
     // padding: 0.25rem;

@@ -155,6 +155,18 @@ const Rota = () => {
 
       <div>
         <div className="rota wrapper--md">
+          <div className="rota__heading flex-container--between-end">
+            <h2 className="title-sm container-left">Employees</h2>
+
+            <div className="container-right">
+              {result.map((date) => (
+                <div className="item-block">
+                  <p>{format(date, "ccc")}</p>
+                  <p>{format(date, "d MMM")}</p>
+                </div>
+              ))}
+            </div>
+          </div>
           {employees.map((employee, i) => (
             <div key={employee.id} className="rota__container">
               <Employee
@@ -176,7 +188,12 @@ const Rota = () => {
               />
             </div>
           ))}
-          <button onClick={() => setEmployeeOpen(true)}>+ Add Employee</button>
+          <button
+            className="rota__cute-add-btn"
+            onClick={() => setEmployeeOpen(true)}
+          >
+            + Add Employee
+          </button>
         </div>
       </div>
     </div>
