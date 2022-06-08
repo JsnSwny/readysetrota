@@ -348,7 +348,7 @@ class ForecastViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
             return Forecast.objects.filter(site__business=self.request.user.business)
-        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
         forecasts = Forecast.objects.filter(site__in=user_sites)
         return forecasts
 
@@ -359,7 +359,7 @@ class ForecastViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 class TimeClockFilter(django_filters.FilterSet):
     class Meta:
         model = TimeClock
-        fields = ['date', 'department', 'department__site']
+        fields = ['date', 'department', 'site']
 
 class TimeClockViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
     serializer_class = TimeClockSerializer
@@ -379,9 +379,9 @@ class TimeClockViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            return TimeClock.objects.filter(department__site__business=self.request.user.business)
-        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
-        timeclocks = TimeClock.objects.filter(department__in=user_departments)
+            return TimeClock.objects.filter(site__business=self.request.user.business)
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
+        timeclocks = TimeClock.objects.filter(site__in=user_sites)
         return timeclocks
 
 # -------------

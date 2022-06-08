@@ -97,7 +97,7 @@ const EmployeesForm = () => {
           : ""
       );
     }
-  }, [all_employees]);
+  }, [all_employees, employeeId]);
 
   const personalDetailsProps = {
     firstName,
@@ -206,39 +206,14 @@ const EmployeesForm = () => {
           Back to employees
         </Link>
         <div className="tab__list">
-          <TabItem
-            title="Personal Details"
-            current={isInViewport(personalRef)}
-            setCurrent={setCurrentSection}
-            scroll={() => scrollToRef(personalRef)}
-          />
-          <TabItem
-            title="Roles"
-            current={isInViewport(rolesRef)}
-            setCurrent={setCurrentSection}
-            scroll={() => scrollToRef(rolesRef)}
-          />
-
-          {activePermissions.includes("view_wages") && (
-            <TabItem
-              title="Wage"
-              current={isInViewport(wageRef)}
-              setCurrent={setCurrentSection}
-              scroll={() => scrollToRef(wageRef)}
-            />
-          )}
-
-          <TabItem
-            title="Permissions"
-            current={isInViewport(permissionsRef)}
-            setCurrent={setCurrentSection}
-            scroll={() => scrollToRef(permissionsRef)}
-          />
-          <TabItem
-            title="Availability and Holidays"
-            current={false}
-            setCurrent={setCurrentSection}
-          />
+          {all_employees.map((item) => (
+            <Link
+              className={`tab__item ${employeeId == item.id ? "active" : ""}`}
+              to={`/employees/edit/${item.id}`}
+            >
+              {item.full_name}
+            </Link>
+          ))}
         </div>
       </div>
 

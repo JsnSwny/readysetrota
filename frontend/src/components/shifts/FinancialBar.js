@@ -51,6 +51,7 @@ const FinancialBar = ({
 
   const getWage = (date, employee) => {
     let result = employee.wage;
+
     if (result) {
       result.sort((a, b) => {
         return (
@@ -95,11 +96,9 @@ const FinancialBar = ({
   const getHourly = (date, type) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == formatDate);
-    if (type == "p") {
-      shifts_filtered = shifts_filtered.filter(
-        (item) => item.stage == "Published"
-      );
-    }
+
+    console.log(shifts_filtered);
+
     let hourly = shifts_filtered
       .map(
         (item) =>

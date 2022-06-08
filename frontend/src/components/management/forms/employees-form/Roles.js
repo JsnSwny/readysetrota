@@ -34,6 +34,7 @@ const Roles = ({
           setPositionList(e);
         }}
         placeholder={"Select position(s)"}
+        hideSelectedOptions={false}
       />
     </div>
   );

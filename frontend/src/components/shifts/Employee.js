@@ -7,25 +7,18 @@ const Employee = (props) => {
   const {
     employee,
     user,
-    shifts,
     department,
     current_employee,
     result,
     financialMode,
   } = props;
 
-  const getHours = (employee, type) => {
+  const shifts = useSelector((state) => state.shifts.shifts);
+
+  const getHours = (employee) => {
     return shifts
-      .filter(
-        (item) => item.department == department && item.employee == employee
-      )
-      .map((item) =>
-        type == "actual"
-          ? item.timeclock
-            ? item.timeclock.length
-            : 0
-          : item.length
-      )
+      .filter((item) => item.employee == employee)
+      .map((item) => item.length)
       .reduce((a, b) => a + b, 0.0)
       .toFixed(2);
   };
@@ -52,30 +45,24 @@ const Employee = (props) => {
     return 0;
   };
 
-  const getHourly = (date, type) => {
+  const getHourly = (date) => {
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter(
       (item) => item.date == formatDate && item.employee == employee.id
     );
 
     let hourly = shifts_filtered
-      .map((item) =>
-        type == "p"
-          ? item.timeclock
-            ? +parseFloat(item.wage * item.timeclock.length).toFixed(2)
-            : 0
-          : +parseFloat(item.wage * item.length).toFixed(2)
-      )
+      .map((item) => +parseFloat(item.wage * item.length).toFixed(2))
       .reduce((a, b) => a + b, 0.0);
 
     return hourly;
   };
 
-  const getTotalWage = (type) => {
+  const getTotalWage = () => {
     let total = 0;
     result.forEach((item) => {
       total += getWage(item, employee);
-      total += getHourly(item, type);
+      total += getHourly(item);
     });
     return total.toFixed(2);
   };
@@ -100,14 +87,10 @@ const Employee = (props) => {
       </Link>
 
       <p className="rotaEmployee__hours">
-        {getHours(
-          employee.id,
-          `${financialMode == "actual" ? "actual" : "predicted"}`
-        )}{" "}
-        Hours{" "}
+        {getHours(employee.id)} Hours{" "}
         {permissions.includes("view_wages") &&
           getTotalWage() != 0.0 &&
-          `(£${getTotalWage(`${financialMode == "actual" ? "p" : ""}`)})`}
+          `(£${getTotalWage()})`}
       </p>
     </div>
   );

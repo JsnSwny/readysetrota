@@ -278,6 +278,7 @@ class TimeClock(models.Model):
         Employee, related_name="employee_timeclock", on_delete=models.SET_NULL, null=True, blank=True)
     department = models.ForeignKey(
         Department, related_name="timeclock_department", on_delete=models.SET_NULL, null=True, blank=True)
+    site = models.ForeignKey(Site, related_name="timeclock_site", on_delete=models.SET_NULL, null=True, blank=True)
     clock_in = models.TimeField()
     clock_out = models.TimeField(null=True)
     STAGE_TYPES = [

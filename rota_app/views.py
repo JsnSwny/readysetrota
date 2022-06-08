@@ -73,8 +73,8 @@ class CheckUUID(APIView):
 class GetPopularTimes(APIView):
     def get(self, request):
         site_id = request.query_params.get('site')
-        shifts = Shift.objects.filter(department__site=site_id)
-        most_common = shifts.values("start_time", "end_time", "break_length", "department__site").annotate(
+        shifts = Shift.objects.filter(site=site_id)
+        most_common = shifts.values("start_time", "end_time", "break_length", "site").annotate(
             count=Count('start_time')).order_by("-count")[:10]
         for i in most_common:
             i['start_time'] = str(i['start_time'])[0:5]
@@ -189,7 +189,7 @@ class GetTimeclock(APIView):
         site = int(request.query_params.get('site'))
         pin = int(pin.replace(',', ''))
         
-        employee = Employee.objects.get(position__department__site=site, pin=pin)
+        employee = Employee.objects.get(position__site=site, pin=pin)
         shifts = None
         if employee:
             shifts = Shift.objects.filter(employee=employee, date=datetime.today()).exclude(timeclock__stage="CLOCKED_OUT")
@@ -213,7 +213,7 @@ class GetStats(APIView):
         end_date = datetime.strptime(end_date, '%d/%m/%Y')
         id = request.query_params.get('id')
         if stat_type == "business":
-            shifts = Shift.objects.filter(stage="Published", department__site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
+            shifts = Shift.objects.filter(stage="Published", site=id, date__gte=start_date, date__lte=end_date).exclude(end_time__isnull=True)
             
         else:
             employee_id = request.query_params.get('employee_id')
@@ -236,7 +236,7 @@ class GetStats(APIView):
             total_hours = sum(item['length'] for item in serializer if str(item['date']) == date_str)
             forecast_dif = 0.00
             if stat_type == "business":
-                salaries = Wage.objects.filter(employee__position__department__site=id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
+                salaries = Wage.objects.filter(employee__site=id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None))
                 forecast = Forecast.objects.filter(site=id, date=date)
                 if forecast:
                     forecast_dif = float(forecast.first().predicted) - cost
@@ -275,13 +275,13 @@ class ExportShifts(APIView):
 class ExportAllShifts(APIView):
     def get(self, request):
         shifts = Shift.objects.filter(stage="Published", date__gte=request.query_params.get('start_date'), date__lte=request.query_params.get(
-            'end_date'), department__site__id=request.query_params.get('id')).order_by('date')
+            'end_date'), site__id=request.query_params.get('id')).order_by('date')
         all_shifts = {}
         for i in shifts:
             all_shifts[i.date] = {}
         for i in all_shifts:
             all_shifts[i] = Shift.objects.filter(
-                date=i, stage="Published", department__site__id=request.query_params.get('id')).order_by('start_time')
+                date=i, stage="Published", site__id=request.query_params.get('id')).order_by('start_time')
             
         site = Site.objects.get(pk=request.query_params.get('id'))
         resp = HttpResponse(content_type='application/pdf')
@@ -694,7 +694,7 @@ def costAndHours(date, based_on, site_id):
     total_cost = Decimal(0)
     total_hours = 0
     if(based_on == "predicted"):
-        shifts = Shift.objects.filter(stage="Published", date=date, department__site=site_id).values('employee', 'start_time', 'end_time', 'break_length')
+        shifts = Shift.objects.filter(stage="Published", date=date, site=site_id).values('employee', 'start_time', 'end_time', 'break_length')
         
         for i in shifts:
             if i['end_time'] != "Finish":
@@ -710,7 +710,7 @@ def costAndHours(date, based_on, site_id):
                 if(wage_at_time):
                     total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
     else:
-        timeclocks = TimeClock.objects.filter(date=date, department__site=site_id).values('employee', 'clock_in', 'clock_out', 'break_length')
+        timeclocks = TimeClock.objects.filter(date=date, site=site_id).values('employee', 'clock_in', 'clock_out', 'break_length')
         for i in timeclocks:
             if i['clock_out']:
                 employee = i['employee']
@@ -728,7 +728,7 @@ def costAndHours(date, based_on, site_id):
                     total_cost += Decimal(total_length) * Decimal(wage_at_time.wage)
 
 
-    salaries = Wage.objects.filter(employee__position__department__site=site_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
+    salaries = Wage.objects.filter(employee__site=site_id, wage_type="S", start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date=None)).distinct()
     for salary in salaries:
         total_cost += salary.wage / 52 / 7
 
@@ -783,10 +783,10 @@ class GetReportData(APIView):
             obj['total_hours'] = total_hours
 
             if based_on == "predicted":
-                total_shifts = Shift.objects.filter(stage="Published", department__site=site_id, date=date).exclude(end_time__isnull=True).count()
+                total_shifts = Shift.objects.filter(stage="Published", site=site_id, date=date).exclude(end_time__isnull=True).count()
                 obj['total_shifts'] = total_shifts
             else:
-                total_shifts = TimeClock.objects.filter(date=date, department__site=site_id).count()
+                total_shifts = TimeClock.objects.filter(date=date, site=site_id).count()
                 obj['total_shifts'] = total_shifts
 
             forecast = Forecast.objects.filter(site=site_id, date=date).values('actual', 'predicted', 'labourGoal').first()

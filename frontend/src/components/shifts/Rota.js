@@ -172,7 +172,6 @@ const Rota = () => {
               <Employee
                 employee={employee}
                 current_employee={false}
-                shifts={[]}
                 user={user}
                 result={result}
                 financialMode={financialMode}

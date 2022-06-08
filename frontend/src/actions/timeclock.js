@@ -41,7 +41,7 @@ export const resetTimeclock = () => (dispatch, getState) => {
 export const getTimeclocks = (date) => (dispatch, getState) => {
   axios
     .get(
-      `/api/timeclocks/?date=${format(date, "yyyy-MM-dd")}&department__site=${
+      `/api/timeclocks/?date=${format(date, "yyyy-MM-dd")}&site=${
         getState().employees.current.site.id
       }&ordering=date,clock_in`,
       tokenConfig(getState)

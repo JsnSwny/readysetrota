@@ -16,6 +16,7 @@ const TimeclockForm = ({ setOpen, extraInfo }) => {
   );
 
   const employees = useSelector((state) => state.employees.employees);
+  const current = useSelector((state) => state.employees.current);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ const TimeclockForm = ({ setOpen, extraInfo }) => {
       break_length: breakLength,
       date: format(extraInfo.currentDate, "yyyy-MM-dd"),
       department_id: extraInfo.department.id,
+      site_id: current.site.id,
     };
 
     dispatch(addTimeclock(timeclockObj));

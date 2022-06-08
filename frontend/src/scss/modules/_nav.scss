@@ -290,32 +290,33 @@
       color: white !important;
     }
   }
-  .highlight,
-  .highlightOption {
-    background-color: rgba($pink, 0.3) !important;
-    background: rgba($pink, 0.3) !important;
-  }
-  .option {
-    color: black;
-  }
-  .checkbox {
-    width: auto;
-    height: auto;
-    display: inline-block;
-  }
-  &__option,
-  .option {
+
+  &__option {
     &:hover {
-      background-color: rgba($pink, 0.3) !important;
+      background-color: rgba($pink, 0.2) !important;
     }
     &--is-focused {
-      background-color: rgba($pink, 0.3) !important;
-      background: rgba($pink, 0.3) !important;
+      background-color: rgba($pink, 0.2) !important;
+      background: rgba($pink, 0.2) !important;
     }
     &--is-selected {
       background-color: $pink !important;
+      &:hover {
+        background-color: $pink !important;
+      }
     }
     font-size: 14px !important;
+  }
+  &__menu-list--is-multi {
+    .react-select__option {
+      &--is-selected {
+        background-color: white !important;
+        color: rgba($pink, 1);
+        &:hover {
+          background-color: white !important;
+        }
+      }
+    }
   }
 }
 
@@ -349,7 +350,7 @@
     }
     &__option {
       &:hover {
-        background-color: rgba($pink, 0.3) !important;
+        // background-color: rgba($pink, 0.3) !important;
       }
       &--is-focused {
         background-color: rgba($pink, 0.3) !important;

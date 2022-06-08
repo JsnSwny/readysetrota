@@ -69,7 +69,7 @@ export const getShifts =
       .get(
         `/api/shifts/?date_after=${startdate}&date_before=${enddate}${
           user ? `&employee__user__id=${id}&stage=Published` : `&employee=${id}`
-        }&ordering=date,start_time`,
+        }${currentSite(getState)}&ordering=date,start_time`,
         tokenConfig(getState)
       )
       .then((res) => {

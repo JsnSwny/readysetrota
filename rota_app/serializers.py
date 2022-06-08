@@ -29,6 +29,8 @@ def gettingStartedValues(obj):
     return uncomplete
 
 def getPermList(request, site=False):
+    print(request.query_params.get('site', None))
+
     if not site:
         site = request.query_params.get('site', None)
     perm_list = []
@@ -40,7 +42,7 @@ def getPermList(request, site=False):
             perm_list = list(PermissionType.objects.all().values_list('code_name'))
             perm_list = [item for t in perm_list for item in t]
         else:
-            employee = Employee.objects.filter(user=user, position__department__site=site).first()
+            employee = Employee.objects.filter(user=user, site=site).first()
 
             perm_list = [perm.code_name for perm in employee.permissions.all()]
     return perm_list
@@ -124,21 +126,21 @@ class SiteSerializer(serializers.ModelSerializer):
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(
-            position__department__site=obj.id, status__start_date__lte=date.today(
+            site=obj.id, status__start_date__lte=date.today(
             )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
     def get_unpublished_shifts(self, obj):
         shifts = Shift.objects.filter(
-            department__site=obj.id, stage="Unpublished", date__gte=date.today())
+            site=obj.id, stage="Unpublished", date__gte=date.today())
         return len(shifts)
 
     def get_tasks(self, obj):
         tasks = {}
 
-        tasks["shifts"] = Shift.objects.filter(department__site=obj, stage="Unpublished").count()
+        tasks["shifts"] = Shift.objects.filter(site=obj, stage="Unpublished").count()
         tasks["holidays"] = Leave.objects.filter(site=obj, status="Pending").count()
-        tasks["uninvited"] = Employee.objects.filter(position__department__site=obj, user=None).count()
+        tasks["uninvited"] = Employee.objects.filter(site=obj, user=None).count()
         tasks["actual_revenue"] = Forecast.objects.filter(actual=0, site=obj, date__lte=datetime.today()).count()
 
 
@@ -344,7 +346,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         employee = Employee.objects.create(**validated_data)
         number = random.randint(1000,9999)
-        while len(Employee.objects.filter(pin=number, position__department__site=site[0])) > 0:
+        while len(Employee.objects.filter(pin=number, site=site[0])) > 0:
             number = random.randint(1000,9999)
         employee.pin = number
         employee.position.set(position)
@@ -509,10 +511,14 @@ class TimeClockSerializer(serializers.ModelSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
         queryset=Department.objects.all(), source='department', write_only=True, required=False)
 
+    site = SiteSerializer(read_only=True)
+    site_id = serializers.PrimaryKeyRelatedField(
+        queryset=Site.objects.all(), source='site', write_only=True, required=False)
+
     class Meta:
         model = TimeClock
         fields = ('id', 'clock_in', 'clock_out', 'break_length',
-                  'employee', 'employee_id', 'length', 'stage', 'department', 'department_id', 'date', 'shift',)
+                  'employee', 'employee_id', 'length', 'stage', 'department', 'department_id', 'site', 'site_id', 'date', 'shift',)
 
     def get_length(self, obj):
         if obj.clock_in and obj.clock_out:
@@ -588,6 +594,7 @@ class ShiftListSerializer(serializers.ModelSerializer):
             employee = Employee.objects.get(id=obj.employee_id)
             wages = Wage.objects.filter(
                     employee=employee, start_date__lte=obj.date).filter(Q(end_date__gte=obj.date) | Q(end_date=None)).first()
+
             if wages:
                 if wages.wage_type == "H":
                     return wages.wage
@@ -619,7 +626,9 @@ class ShiftListSerializer(serializers.ModelSerializer):
         if instance.end_time != "Finish":
             end_time = datetime.strptime(instance.end_time, '%H:%M').time()
 
-        tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department)
+
+
+        tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department, site=instance.site)
 
         tc.save()
 

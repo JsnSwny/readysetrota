@@ -11,23 +11,6 @@ const Permissions = ({ permissions, setPermissions }) => {
 
   return (
     <div>
-      {/* <Multiselect
-        options={permission_types.map((item) => ({
-          name: item.name,
-          id: item.id,
-        }))}
-        className="react-select"
-        selectedValues={permissions}
-        onSelect={(e) => {
-          setPermissions(e);
-        }}
-        onRemove={(e) => {
-          setPermissions(e);
-        }}
-        displayValue="name" // Property name to display in the dropdown options
-        showCheckbox
-        placeholder={"Select Permission(s)"}
-      /> */}
       <Select
         isMulti
         options={permission_types.map((item) => ({
@@ -42,6 +25,7 @@ const Permissions = ({ permissions, setPermissions }) => {
         }}
         placeholder={"Select position(s)"}
         closeMenuOnSelect={false}
+        hideSelectedOptions={false}
       />
     </div>
   );
