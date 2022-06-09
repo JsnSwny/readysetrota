@@ -164,8 +164,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.privateemail.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'jason@readysetrota.com'
-EMAIL_HOST_PASSWORD = "***REMOVED***"
+EMAIL_HOST_USER = 'info@readysetrota.com'
+EMAIL_HOST_PASSWORD = (os.environ.get("EMAIL_PASSWORD"))
 
 django_heroku.settings(locals())
 
