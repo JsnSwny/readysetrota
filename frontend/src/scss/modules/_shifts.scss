@@ -600,6 +600,9 @@
     display: block;
     // width: fit-content;
     // padding: 0.25rem;
+    @include wi-mq(laptop) {
+      font-size: 10px;
+    }
   }
   &__text {
     text-transform: capitalize;
