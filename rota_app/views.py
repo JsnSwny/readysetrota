@@ -150,7 +150,7 @@ class Publish(APIView):
                 html_message = render_to_string("emailshifts.html", context={
                                                 'shifts': shifts, 'employee': employee})
                 mail_item = mail.EmailMultiAlternatives(
-                    "Rota Updated - " + today_date, "", "readysetrota <jason@readysetrota.com>", [employee.user.email])
+                    "Rota Updated - " + today_date, "", "readysetrota <info@readysetrota.com>", [employee.user.email])
                 mail_item.attach_alternative(html_message, "text/html")
                 email.append(mail_item)
         connection.send_messages(email)
