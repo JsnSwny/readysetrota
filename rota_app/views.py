@@ -143,7 +143,7 @@ class Publish(APIView):
 
             if employee.user:
                 shifts = Shift.objects.filter(
-                    employee__user__id=employee.user.id, stage="Published", date__gte=datetime.now()).order_by('date')
+                    employee__user__id=employee.user.id, date__gte=datetime.now()).order_by('date')
 
                 print(shifts)
 

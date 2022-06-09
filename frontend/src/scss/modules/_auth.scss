@@ -246,7 +246,6 @@
 
 .register {
   font-family: $secondary-font-family;
-  min-height: calc(100vh - 12rem);
   display: flex;
   flex-direction: column;
 
@@ -309,6 +308,7 @@
   }
 
   &__btn-wrapper {
+    margin-top: 2rem;
     &--half {
       .register__button {
         width: calc(50% - 0.5rem);

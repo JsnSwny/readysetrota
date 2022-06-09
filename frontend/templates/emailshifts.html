@@ -171,7 +171,7 @@
             {% for shift in shifts %}
             <div class="shifts__item">
               <h3>{{ shift.date|date:"l jS F" }}</h3>
-              <p class="shifts__time">{{ shift.start_time|time:"H:i" }} - {{ shift.end_time }} ({{ shift.position.name }})</p>
+              <p class="shifts__time">{{ shift.start_time|time:"H:i" }} - {{ shift.end_time }} {% if shift.position %}({{ shift.position.name }}){% endif %}</p>
             </div>            
             {% endfor %}
 

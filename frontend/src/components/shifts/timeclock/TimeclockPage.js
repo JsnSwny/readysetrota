@@ -44,7 +44,13 @@ const TimeclockPage = () => {
   }, [currentDate]);
 
   useEffect(() => {
-    dispatch(getEmployees(true, false, currentDate, currentDate));
+    console.log("getting employees");
+    dispatch(
+      getEmployees(
+        format(currentDate, "yyyy-MM-dd"),
+        format(currentDate, "yyyy-MM-dd")
+      )
+    );
   }, [current.site]);
 
   useEffect(() => {

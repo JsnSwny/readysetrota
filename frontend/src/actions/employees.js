@@ -260,7 +260,8 @@ export const updateBusinessName = (id, name) => (dispatch, getState) => {
 };
 
 export const getEmployees =
-  (start_date, end_date, department) => (dispatch, getState) => {
+  (start_date, end_date, department = 0) =>
+  (dispatch, getState) => {
     let query = "";
 
     if (start_date && end_date) {
@@ -289,9 +290,7 @@ export const getAllEmployees =
   (dispatch, getState) => {
     let current = getState().employees.current;
     let query = "";
-    query += `&position__department__site=${
-      current.site.id ? current.site.id : null
-    }`;
+    query += `&site=${current.site.id ? current.site.id : null}`;
 
     axios
       .get(
@@ -601,7 +600,7 @@ export const getAllAvailability =
   (site, startdate, enddate) => (dispatch, getState) => {
     axios
       .get(
-        `/api/availability/?employee__position__department__site=${site}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
+        `/api/availability/?employee__site=${site}&date_after=${startdate}&date_before=${enddate}&ordering=date`,
         tokenConfig(getState)
       )
       .then((res) => {

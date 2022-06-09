@@ -28,6 +28,7 @@ const QuickEmployeeForm = ({ setOpen }) => {
     const employeeObj = {
       first_name: firstName,
       last_name: lastName,
+      email: email,
       position_id: [],
       permissions_id: [],
       site_id: [current.site.id],

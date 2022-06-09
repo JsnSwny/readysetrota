@@ -8,7 +8,10 @@
   }
   &--xs {
     @extend .wrapper;
-    max-width: 600px;
+    max-width: 800px;
+    @include wi-mq(widescreen) {
+      max-width: 600px;
+    }
   }
   &--sm {
     @extend .wrapper;

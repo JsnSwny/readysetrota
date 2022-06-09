@@ -97,8 +97,6 @@ const FinancialBar = ({
     let formatDate = format(date, "yyyy-MM-dd");
     let shifts_filtered = shifts.filter((item) => item.date == formatDate);
 
-    console.log(shifts_filtered);
-
     let hourly = shifts_filtered
       .map(
         (item) =>
@@ -139,18 +137,18 @@ const FinancialBar = ({
     <div className="financialBar">
       <div className="wrapper--md flex-container">
         <div className="container-left">
-          <div>
+          <div className="financialBar__item">
             <p className="flex-container--between">
               <strong>Hours:</strong> {getHours(dates)}hrs
             </p>
           </div>
-          <div>
+          <div className="financialBar__item">
             <p className="flex-container--between">
               <strong>Pay/Sales:</strong> £{getWeeklyCost(dates, getCost)} / £
               {getWeeklyCost(dates, getAmount)}
             </p>
           </div>
-          <div>
+          <div className="financialBar__item">
             <p className="flex-container--between">
               <strong>Percentage:</strong>{" "}
               {forecast.length > 0 && settings.forecasting
@@ -167,16 +165,16 @@ const FinancialBar = ({
           {dates.map((date) => (
             <div key={date} className="item-block">
               <Fragment>
-                <div>
+                <div className="financialBar__item">
                   <Fragment>{getHours([date])}hrs</Fragment>
                 </div>
-                <div>
+                <div className="financialBar__item">
                   <Fragment>
                     £{getWeeklyCost([date], getCost)} / £
                     {getWeeklyCost([date], getAmount)}
                   </Fragment>
                 </div>
-                <div>
+                <div className="financialBar__item">
                   <p
                     className={`${getPercentage(date) > 100 ? "red" : "green"}`}
                   >

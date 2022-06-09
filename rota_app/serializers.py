@@ -15,13 +15,13 @@ def gettingStartedValues(obj):
     if Position.objects.filter(department__business=obj).count() == 0:
         uncomplete.append('positions')
 
-    if Employee.objects.filter(position__department__business=obj).count() == 0:
+    if Employee.objects.filter(site__business=obj).count() == 0:
         uncomplete.append('employees')
 
-    if Shift.objects.filter(department__business=obj).count() == 0:
+    if Shift.objects.filter(site__business=obj).count() == 0:
         uncomplete.append('shifts')
 
-    if Shift.objects.filter(department__business=obj, stage="Published").count() == 0:
+    if Shift.objects.filter(site__business=obj, stage="Published").count() == 0:
         uncomplete.append('publish')
 
     if Forecast.objects.filter(site__business=obj).count() == 0:

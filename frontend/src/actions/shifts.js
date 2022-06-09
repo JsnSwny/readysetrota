@@ -90,7 +90,7 @@ export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
   });
   axios
     .get(
-      `/api/shifts/?date_after=${startDate}&date_before=${endDate}&stage=Published&department__site=${
+      `/api/shifts/?date_after=${startDate}&date_before=${endDate}&stage=Published&site=${
         getState().employees.current.site.id
       }
       &ordering=date,start_time`,
@@ -109,7 +109,7 @@ export const getTodayShifts = (startDate, endDate) => (dispatch, getState) => {
 export const getAbsences = (startdate, site) => (dispatch, getState) => {
   axios
     .get(
-      `/api/shifts/?date_after=${startdate}&department__site=${
+      `/api/shifts/?date_after=${startdate}&site=${
         getState().employees.current.site.id
       }&absence__not=None&ordering=date,start_time`,
       tokenConfig(getState)

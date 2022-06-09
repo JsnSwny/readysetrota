@@ -137,43 +137,45 @@ const Register = (props) => {
     }
   } else {
     return (
-      <div className="wrapper--xs register">
-        <Loading active={loading} />
-        <h1 className="register__title">Start your 30-day Free Trial</h1>
-        <p className="register__subtitle">No Card Required.</p>
+      <div className="wrapper--xs">
+        <div class="register">
+          <Loading active={loading} />
+          <h1 className="register__title">Start your 30-day Free Trial</h1>
+          <p className="register__subtitle">No Card Required.</p>
 
-        <div className="progress">
-          <div
-            className={`progress__item ${stage == 1 ? "active" : ""} ${
-              stage >= 1 ? "post-active" : ""
-            }`}
-          >
-            <div className="progress__counter">1</div>
-            <div className="progress__name">Personal Details</div>
+          <div className="progress">
+            <div
+              className={`progress__item ${stage == 1 ? "active" : ""} ${
+                stage >= 1 ? "post-active" : ""
+              }`}
+            >
+              <div className="progress__counter">1</div>
+              <div className="progress__name">Personal Details</div>
+            </div>
+            <div
+              className={`progress__item ${stage == 2 ? "active" : ""} ${
+                stage >= 2 ? "post-active" : ""
+              }`}
+            >
+              <div className="progress__counter">2</div>
+              <div className="progress__name">Business Details</div>
+            </div>
+            <div
+              className={`progress__item ${stage == 3 ? "active" : ""} ${
+                stage >= 3 ? "post-active" : ""
+              }`}
+            >
+              <div className="progress__counter">3</div>
+              <div className="progress__name">Password</div>
+            </div>
           </div>
-          <div
-            className={`progress__item ${stage == 2 ? "active" : ""} ${
-              stage >= 2 ? "post-active" : ""
-            }`}
-          >
-            <div className="progress__counter">2</div>
-            <div className="progress__name">Business Details</div>
-          </div>
-          <div
-            className={`progress__item ${stage == 3 ? "active" : ""} ${
-              stage >= 3 ? "post-active" : ""
-            }`}
-          >
-            <div className="progress__counter">3</div>
-            <div className="progress__name">Password</div>
-          </div>
+
+          <form onSubmit={onSubmit} className="register__form">
+            <div className="register__fields">{currentSlide()}</div>
+
+            {getButton()}
+          </form>
         </div>
-
-        <form onSubmit={onSubmit} className="register__form">
-          <div className="register__fields">{currentSlide()}</div>
-
-          {getButton()}
-        </form>
       </div>
     );
   }

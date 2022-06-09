@@ -58,9 +58,11 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
           pos = positionOptions.find((e) =>
             e.options.some((item) => item.value == editShift.position.id)
           );
-          pos = pos.options.find((e) => {
-            return e.value == editShift.position.id;
-          });
+          if (pos) {
+            pos = pos.options.find((e) => {
+              return e.value == editShift.position.id;
+            });
+          }
         }
         setPosition(pos);
       }
@@ -138,8 +140,6 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
     label: item.full_name,
     value: item.id,
   }));
-
-  console.log(shiftFormInfo.employee.position);
 
   const positionOptions = departments.map((item) => ({
     label: item.name,

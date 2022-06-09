@@ -86,7 +86,7 @@ class SiteViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
             business = self.request.user.business
             return Site.objects.filter(business=business).distinct()
         sites = Site.objects.filter(
-            department_site__pos_department__position__user=self.request.user).distinct()
+            employee_site__user=self.request.user).distinct()
 
         return sites
 
@@ -137,10 +137,10 @@ class DepartmentViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
         if hasattr(self.request.user, "business"):
             return Department.objects.filter(business=self.request.user.business)
 
-        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
 
         departments = Department.objects.filter(
-            Q(id__in=user_departments) | Q(owner=self.request.user))
+            Q(site__in=user_sites) | Q(owner=self.request.user))
 
         return departments
 
@@ -175,7 +175,17 @@ class PositionViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_class = PositionFilter
-    queryset = Position.objects.all()
+
+    def get_queryset(self):
+        if hasattr(self.request.user, "business"):
+            return Position.objects.filter(department__business=self.request.user.business)
+
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
+
+        positions = Position.objects.filter(
+            Q(department__site__in=user_sites) | Q(owner=self.request.user))
+
+        return positions
 
 class BasicPositionViewSet(PositionViewSet, viewsets.ModelViewSet):
     serializer_class = BasicPositionSerializer
@@ -221,9 +231,9 @@ class EmployeeViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
             print(Employee.objects.filter(business=self.request.user.business))
             return Employee.objects.filter(business=self.request.user.business).distinct()
 
-        user_employees = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        user_employees = Employee.objects.filter(user=self.request.user).values_list('site')
         employees = Employee.objects.filter(
-            position__department__site__in=user_employees).distinct()
+            site__in=user_employees).distinct()
 
 
         
@@ -277,9 +287,9 @@ class ShiftViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
         if hasattr(self.request.user, "business"):
             return Shift.objects.filter(site__business=self.request.user.business)
 
-        user_departments = Employee.objects.filter(user=self.request.user).values_list('position__department')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
 
-        shifts = Shift.objects.filter(department__in=user_departments)
+        shifts = Shift.objects.filter(site__in=user_sites)
         return shifts
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
@@ -298,7 +308,7 @@ class AvailabilityFilter(django_filters.FilterSet):
     class Meta:
         model = Availability
         fields = ['employee__id', 'employee__user', 'employee__owner__id', 'employee__business',
-                  'date', 'name', 'status', 'employee__position__department__site']
+                  'date', 'name', 'status', 'employee__site']
 
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
@@ -316,7 +326,7 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, "business"):
             return Availability.objects.filter(site__business=self.request.user.business)
 
-        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
 
         availabilities = Availability.objects.filter(site__in=user_sites)
         return availabilities
@@ -408,7 +418,7 @@ class LeaveViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
             return Leave.objects.filter(site__business=self.request.user.business)
-        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
         leaves = Leave.objects.filter(site__in=user_sites)
         return leaves
 
@@ -422,7 +432,7 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
             return SiteSettings.objects.filter(site__business=self.request.user.business)
-        user_sites = Employee.objects.filter(user=self.request.user).values_list('position__department__site')
+        user_sites = Employee.objects.filter(user=self.request.user).values_list('site')
         settings = SiteSettings.objects.filter(site__in=user_sites)
         return settings
 

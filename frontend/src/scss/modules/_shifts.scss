@@ -498,6 +498,10 @@
   @extend .shadow;
   text-align: center;
   font-size: 12px;
+
+  &__item {
+    padding: 0.1rem;
+  }
   p {
     &.red {
       color: $red;
@@ -512,9 +516,6 @@
     &:hover {
       color: $pink;
     }
-  }
-  strong {
-    font-size: 10px;
   }
 }
 
@@ -626,8 +627,9 @@
       }
     }
     // color: white;
+
     &.date-before {
-      opacity: 0.5;
+      opacity: 0.4;
       .shift__add {
         visibility: hidden;
       }
@@ -777,7 +779,7 @@
   }
   &__shift-noshift {
     @extend .shift__shift;
-    background: white;
+    background-color: white;
   }
   &__add {
     cursor: pointer;
@@ -801,10 +803,6 @@
       opacity: 0.6;
     }
   }
-}
-
-.shift__shift-noshift {
-  background: white;
 }
 
 @media only screen and (max-width: 1000px) {
