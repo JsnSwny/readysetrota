@@ -319,7 +319,7 @@ class CreateCheckoutSession(APIView):
                 cancel_url=domain_url + "/billing/?success=false",
                 mode='subscription',
                 line_items=[{
-                    'price': "price_1KyyttE5eS8rS5Q26udlwknx",
+                    'price': "price_1L98I6E5eS8rS5Q2e8R6aPTe",
                     'quantity': request.data['quantity'],
                 }],
                 client_reference_id=self.request.user.id,
@@ -394,7 +394,7 @@ class RetrieveUpcomingInvoice(APIView):
             else:
                 params["subscription_items"] = [
                     {
-                        "price": price_1KyyttE5eS8rS5Q26udlwknx,
+                        "price": price_1L98I6E5eS8rS5Q2e8R6aPTe,
                         "quantity": quantity
                     }
                 ]
