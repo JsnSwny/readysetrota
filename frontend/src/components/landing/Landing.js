@@ -110,8 +110,7 @@ const Landing = ({ setOpen, setType }) => {
         <div className="landing__wrapper wrapper--lg">
           <h2>Pricing</h2>
           <h4 class="landing__subtitle">
-            We offer a free and premium plan so that whether you're a small or
-            large business, you can benefit from readysetrota.
+            We offer one plan that gives you access to all of the features.
           </h4>
           <div className="pricing">
             {/* <div className="pricing__item">
