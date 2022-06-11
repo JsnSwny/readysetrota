@@ -47,8 +47,6 @@ const ShiftForm = ({ shiftFormInfo, setOpen, editShift }) => {
           return e.value == editShift.break_length;
         })
       );
-      console.log(editShift);
-      console.log(positionOptions);
       if (editShift.position) {
         let pos = positionOptions.find((e) => {
           return e.value == editShift.position.id;

@@ -35,7 +35,6 @@ const Billing = () => {
       setLoading(true);
 
       axios.post("/retrieve-subscription/", { subscriptionId }).then((res) => {
-        console.log(res.data);
         setInvoices(res.data.invoices.data);
         setSubscriptionInfo(res.data);
         setLoading(false);
@@ -67,14 +66,11 @@ const Billing = () => {
   };
 
   useEffect(() => {
-    console.log(business);
     getSubscriptionInformation(business.subscription_id);
     if (business.payment_method_id) {
       getPaymentMethod(business.payment_method_id);
     }
   }, [business]);
-
-  console.log(subscriptionInfo);
 
   return (
     <Fragment>

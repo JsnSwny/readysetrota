@@ -44,7 +44,6 @@ const TimeclockPage = () => {
   }, [currentDate]);
 
   useEffect(() => {
-    console.log("getting employees");
     dispatch(
       getEmployees(
         format(currentDate, "yyyy-MM-dd"),

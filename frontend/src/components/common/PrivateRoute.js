@@ -49,7 +49,6 @@ const PrivateRoute = ({
     business.subscription_status != "trialing" &&
     business.subscription_status != "active"
   ) {
-    console.log("go to billing");
     return <Billing />;
   }
 

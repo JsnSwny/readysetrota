@@ -56,10 +56,9 @@ const Employees = () => {
   };
 
   const sendInvite = (email, uuid) => {
-    console.log(email, uuid);
     axios
       .post("/api/auth/send-invite", { email, uuid })
-      .then((res) => console.log(res));
+      .then((res) => toast.success(`You have sent an invite to ${email}`));
   };
 
   return (

@@ -62,7 +62,6 @@ const Rota = () => {
     dispatch(getAllAvailability(current.site.id, start_date, end_date));
     dispatch(getShifts(start_date, end_date));
     dispatch(getForecast(start_date, end_date));
-    console.log(selectedDepartment);
     dispatch(getEmployees(start_date, end_date, selectedDepartment.value));
   };
 

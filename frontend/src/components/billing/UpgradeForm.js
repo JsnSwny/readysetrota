@@ -85,8 +85,6 @@ const UpgradeForm = ({ setOpen, setLoading, getSubscriptionInformation }) => {
         headerConfig
       );
 
-      console.log(response);
-
       setUpdatingInvoice(false);
     } else {
       const obj = {
@@ -100,14 +98,10 @@ const UpgradeForm = ({ setOpen, setLoading, getSubscriptionInformation }) => {
         headerConfig
       );
 
-      console.log(response);
-
       // When the customer clicks on the button, redirect them to Checkout.
       const result = await stripe.redirectToCheckout({
         sessionId: response.data.id,
       });
-
-      console.log(result);
     }
 
     dispatch(updateTotalEmployees(numberOfEmployees));

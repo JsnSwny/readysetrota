@@ -32,7 +32,6 @@ const Register = (props) => {
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submitting");
     if (stage != 3) {
       setStage(stage + 1);
     } else {

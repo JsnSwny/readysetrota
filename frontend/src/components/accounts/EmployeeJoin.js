@@ -31,8 +31,6 @@ const EmployeeJoin = () => {
       code: id,
     };
 
-    console.log(id);
-
     dispatch(register(newUser));
   };
 

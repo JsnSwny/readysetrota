@@ -33,8 +33,6 @@ const PaymentMethod = ({ subscriptionInfo, setLoading }) => {
       sessionId: response.data.id,
     });
 
-    console.log(result);
-
     setLoading(false);
   };
 

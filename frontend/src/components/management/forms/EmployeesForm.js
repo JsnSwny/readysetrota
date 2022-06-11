@@ -190,8 +190,6 @@ const EmployeesForm = () => {
     ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  console.log(personalRef);
-
   return (
     <Fragment>
       <div className={`employees__section tab active`}>

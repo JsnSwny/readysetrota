@@ -25,7 +25,6 @@ const ShiftItem = ({ item, interval, setMonth, refObj }) => {
   const isActive = (date, index) => {
     let middle = middleOfMonth(date);
     if (!middle) return false;
-    console.log(refObj);
     return true;
     return isInViewport(ref);
   };
