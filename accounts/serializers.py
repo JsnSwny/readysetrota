@@ -140,8 +140,8 @@ class RegisterSerializer(serializers.ModelSerializer):
                     email=validated_data['email']
                 )
 
-                trial_date = datetime.datetime.today() + datetime.timedelta(minutes=2)
-                # trial_date = datetime.datetime.today() + datetime.timedelta(30)
+                # trial_date = datetime.datetime.today() + datetime.timedelta(minutes=2)
+                trial_date = datetime.datetime.today() + datetime.timedelta(30)
 
                 subscription = stripe.Subscription.create(
                     customer=customer.id,
