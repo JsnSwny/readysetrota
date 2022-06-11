@@ -165,6 +165,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  &__name {
+    @include wi-mq(mobile) {
+      font-size: 12px;
+    }
+  }
   &__item {
     position: relative;
     display: flex;
@@ -256,6 +261,10 @@
 
   margin: 6rem auto;
 
+  @include wi-mq(mobile) {
+    padding: 3rem 1rem;
+  }
+
   &--sm {
     min-height: 0;
   }
@@ -263,6 +272,9 @@
   &__title {
     text-align: center;
     font-size: 36px;
+    @include wi-mq(mobile) {
+      font-size: 24px;
+    }
   }
   &__subtitle {
     text-align: center;
@@ -272,6 +284,9 @@
     margin-top: 0.25rem;
     strong {
       color: $pink;
+    }
+    @include wi-mq(mobile) {
+      font-size: 16px;
     }
   }
   .progress {
@@ -327,6 +342,9 @@
     &--half {
       @extend .register__control;
       width: calc(50% - 0.5rem);
+      @include wi-mq(mobile) {
+        width: 100%;
+      }
     }
     label {
       display: block;

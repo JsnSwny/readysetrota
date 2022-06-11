@@ -147,7 +147,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     customer=customer.id,
                     items=[
                         {
-                        'price': 'price_1KyyttE5eS8rS5Q26udlwknx',
+                        'price': 'price_1L98I6E5eS8rS5Q2e8R6aPTe',
                         'quantity': validated_data['numberOfEmployees']
                         },
                     ],

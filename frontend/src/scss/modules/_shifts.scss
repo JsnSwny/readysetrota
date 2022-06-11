@@ -233,9 +233,14 @@
   .react-select-container {
     min-width: 225px;
     margin-right: 10px;
+    @include wi-mq(mobile) {
+      min-width: 100%;
+      margin-right: 0;
+    }
   }
   &__wrapper {
     display: flex;
+    flex-wrap: wrap;
     @include wi-mq(laptop) {
       width: auto;
     }
@@ -274,10 +279,11 @@
 
     @include wi-mq(tablet) {
       flex-wrap: wrap;
-      margin-bottom: -10px;
     }
     @include wi-mq(mobile) {
       width: 100%;
+      height: auto;
+      margin-top: 1rem;
     }
   }
   &__selector {
@@ -594,6 +600,9 @@
     display: block;
     // width: fit-content;
     // padding: 0.25rem;
+    @include wi-mq(laptop) {
+      font-size: 10px;
+    }
   }
   &__text {
     text-transform: capitalize;
