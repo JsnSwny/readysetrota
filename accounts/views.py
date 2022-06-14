@@ -89,7 +89,7 @@ class SendInvite(APIView):
         message = EmailMultiAlternatives(
         subject='You have been invited to join readysetrota!',
         body="",
-        from_email='readysetrota <jason@readysetrota.com>',
+        from_email='readysetrota <info@readysetrota.com>',
         to=[email]
         )
         message.attach_alternative(html_body, "text/html")
