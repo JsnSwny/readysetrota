@@ -307,7 +307,7 @@ class CreateCheckoutSession(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        domain_url = "http://localhost:8000"
+        domain_url = "https://www.readysetrota.com"
         stripe.api_key = STRIPE_SECRET_KEY
 
         stripe_id = request.data['stripe_id']
@@ -337,7 +337,7 @@ class CreateSetupCheckoutSession(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        domain_url = "http://localhost:8000"
+        domain_url = "https://www.readysetrota.com"
         stripe.api_key = STRIPE_SECRET_KEY
 
         stripe_id = request.data['stripe_id']
