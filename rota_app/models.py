@@ -31,6 +31,8 @@ class Business(models.Model):
     subscription_id=models.CharField(max_length=100, null=True, blank=True)
     payment_method_id=models.CharField(max_length=100, null=True, blank=True)
     subscription_status=models.CharField(max_length=100, null=True, blank=True)
+    show_welcome = models.BooleanField(default=True)
+
 
 class PermissionType(models.Model):
     name = models.CharField(max_length=30)
@@ -311,6 +313,20 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return f'{self.site.business.name} - {self.site.name} [ID: {self.id}]'
+
+
+class Checklist(models.Model):
+
+    business = models.OneToOneField(
+        Business, related_name='checklist', on_delete=models.CASCADE, null=True, blank=True)
+    has_created_employee = models.BooleanField(default=False)
+    has_created_shift = models.BooleanField(default=False)
+    has_invited_employee = models.BooleanField(default=False)
+    has_created_position = models.BooleanField(default=False)
+    has_created_department = models.BooleanField(default=False)
+    has_created_account = models.BooleanField(default=False)
+    has_published_shift = models.BooleanField(default=False)
+
 
 
 class ShiftSwap(models.Model):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Employee, Shift, Position, SiteSettings, Department, Forecast, UserProfile, ShiftSwap, Business, Availability, Site, Wage, EmployeeStatus, TimeClock, Leave, PermissionType
+from .models import Employee, Shift, Position, Checklist, SiteSettings, Department, Forecast, UserProfile, ShiftSwap, Business, Availability, Site, Wage, EmployeeStatus, TimeClock, Leave, PermissionType
 from django.contrib.auth.models import Permission
 from guardian.admin import GuardedModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
@@ -33,3 +33,4 @@ admin.site.register(EmployeeStatus)
 admin.site.register(TimeClock)
 admin.site.register(Leave)
 admin.site.register(PermissionType)
+admin.site.register(Checklist)

@@ -129,11 +129,7 @@ const Register = (props) => {
   };
 
   if (useSelector((state) => state.auth.isAuthenticated)) {
-    if (path) {
-      return <Redirect to={path} />;
-    } else {
-      return <Redirect to="/" />;
-    }
+    return <Redirect to="/welcome" />;
   } else {
     return (
       <div className="wrapper--xs">

@@ -59,12 +59,12 @@ const Positions = () => {
       )}
 
       <div className="list-banner">
-        <SearchField
+        {/* <SearchField
           placeholder="Search positions..."
           setFilteredObjects={setFilteredPositions}
           objs={positions}
           filterField={"name"}
-        />
+        /> */}
         <div className="list-banner__right">
           <button className="btn-3" onClick={() => setOpen(true)}>
             + Add Position

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shift, Employee, Position, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, Leave, PermissionType
+from .models import Shift, Employee, Position, Checklist, Department, Business, Availability, Site, Forecast, SiteSettings, Wage, EmployeeStatus, TimeClock, Leave, PermissionType
 from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, time, date
@@ -8,25 +8,24 @@ import numpy as np
 import random
 
 def gettingStartedValues(obj):
-    uncomplete = []
-    if Department.objects.filter(business=obj).count() == 0:
-        uncomplete.append('departments')
 
-    if Position.objects.filter(department__business=obj).count() == 0:
-        uncomplete.append('positions')
+    values = {'has_created_department': False, 'has_created_position': False, 'has_created_employee': False, 'has_created_shift': False, 'has_invited_employee': False}
 
-    if Employee.objects.filter(site__business=obj).count() == 0:
-        uncomplete.append('employees')
+    if Department.objects.filter(business=obj).count() > 0:
+        values['has_created_department'] = True
 
-    if Shift.objects.filter(site__business=obj).count() == 0:
-        uncomplete.append('shifts')
+    if Position.objects.filter(department__business=obj).count() > 0:
+        values['has_created_position'] = True
 
-    if Shift.objects.filter(site__business=obj, stage="Published").count() == 0:
-        uncomplete.append('publish')
+    if Employee.objects.filter(site__business=obj).count() > 0:
+        values['has_created_employee'] = True
 
-    if Forecast.objects.filter(site__business=obj).count() == 0:
-        uncomplete.append('forecast')
-    return uncomplete
+    if Shift.objects.filter(site__business=obj).count() > 0:
+        values['has_created_shift'] = True
+
+    if Employee.objects.filter(site__business=obj, has_been_invited=True).count() > 0:
+        values['has_invited_employee'] = True
+    return values
 
 def getPermList(request, site=False):
     print(request.query_params.get('site', None))
@@ -61,6 +60,11 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         fields = ('id', 'forecasting', 'max_time', 'min_time',
                   'shift_approval', 'time_increment',)
 
+class ChecklistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Checklist
+        field = '__all__'
+
 
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
@@ -71,7 +75,7 @@ class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = ('id', 'name', 'plan', 'total_employees',
-                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'getting_started', 'subscription_id', 'payment_method_id', 'subscription_status',)
+                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'getting_started', 'subscription_id', 'payment_method_id', 'subscription_status', 'show_welcome',)
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id, status__start_date__lte=date.today(
@@ -188,6 +192,15 @@ class DepartmentSerializer(serializers.ModelSerializer):
             )).filter(Q(status__end_date__gte=date.today()) | Q(status__end_date=None)).distinct()
         return len(employees)
 
+    def create(self, validated_data):
+        department = Department.objects.create(**validated_data)
+
+        checklist = Checklist.objects.get(business=department.business)
+        checklist.has_created_department = True
+        checklist.save()
+
+        return department
+
 class BasicPositionSerializer(serializers.ModelSerializer):
     department = BasicDepartmentSerializer(read_only=True)
     class Meta:
@@ -201,6 +214,15 @@ class PositionSerializer(BasicPositionSerializer, serializers.ModelSerializer):
     class Meta:
         model = Position
         fields = ('__all__')
+
+    def create(self, validated_data):
+        position = Position.objects.create(**validated_data)
+
+        checklist = Checklist.objects.get(business=position.business)
+        checklist.has_created_position = True
+        checklist.save()
+
+        return position
 
 
 
@@ -390,6 +412,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 new_status = EmployeeStatus(
                     employee=employee, start_date=start_working_date, end_date=end_working_date)
                 new_status.save()
+
+
+        checklist = Checklist.objects.get(business=employee.business)
+        checklist.has_created_employee = True
+        checklist.save()
 
         return employee
 
@@ -631,6 +658,12 @@ class ShiftListSerializer(serializers.ModelSerializer):
         tc = TimeClock(shift=instance, date=instance.date, clock_in=instance.start_time, clock_out=end_time, break_length=instance.break_length, employee=instance.employee, department=instance.department, site=instance.site)
 
         tc.save()
+
+        checklist = Checklist.objects.get(business=instance.site.business)
+        checklist.has_created_shift = True
+        checklist.save()
+
+
 
         return instance
 

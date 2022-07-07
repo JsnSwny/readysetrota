@@ -11,10 +11,12 @@ import availability from "./availability";
 import timeclock from "./timeclock";
 import report from "./report";
 import permissions from "./permissions";
+import checklist from "./checklist";
 
 const appReducer = combineReducers({
   shifts,
   employees,
+  checklist,
   auth,
   responsive,
   errors,

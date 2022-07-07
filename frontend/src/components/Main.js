@@ -44,6 +44,9 @@ import YourShifts from "./shifts/YourShifts";
 import EmployeeJoin from "./accounts/EmployeeJoin";
 
 import Billing from "./billing/Billing";
+import Welcome from "./accounts/Welcome";
+
+import ChecklistPopup from "./accounts/ChecklistPopup";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -54,6 +57,7 @@ const Main = () => {
   let loading = useSelector((state) => state.loading);
   let sites = useSelector((state) => state.employees.sites);
   let auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (
@@ -106,6 +110,10 @@ const Main = () => {
       <ScrollToTop />
       <ToastContainer position="bottom-center" autoClose={2500} />
       <Nav />
+      {user && user.business && user.business.show_welcome && (
+        <ChecklistPopup />
+      )}
+
       <div className={`App`}>
         <Switch>
           <PrivateRoute path="/" exact component={Home} user_only_pass={true} />
@@ -199,6 +207,7 @@ const Main = () => {
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsAndConditions} />
           <PrivateRoute path="/changepassword" component={ChangePassword} />
+          <PrivateRoute path="/welcome" component={Welcome} />
           <PrivateRoute path="/shifts" component={YourShifts} />
           <PrivateRoute path="/settings" component={Settings} />
           <PrivateRoute path="/profile/:id" component={StaffProfile} />

@@ -10,7 +10,7 @@ from .serializers import ChangePasswordSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth.password_validation import validate_password
-from rota_app.models import Employee
+from rota_app.models import Employee, Checklist
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse
 from django.core import serializers
@@ -76,9 +76,6 @@ class SendInvite(APIView):
         business = employee.business.name
 
         employee.has_been_invited = True
-
-        print(employee)
-
         employee.save()
 
         data = {"uuid": uuid, "email": email, "business": business, "employee": employee}
@@ -94,5 +91,8 @@ class SendInvite(APIView):
         )
         message.attach_alternative(html_body, "text/html")
         message.send(fail_silently=False)
+
+        checklist = Checklist.objects.get(business=employee.business)
+        checklist.has_invited_employee = True
 
         return Response(True)

@@ -152,23 +152,23 @@ export default function (state = initialState, action) {
         ...state,
         popular_times: action.payload,
       };
-    case PUBLISHED_SHIFTS:
-      return {
-        ...state,
-        isLoading: false,
-        shifts: state.shifts.map((item) => {
-          if (action.payload.includes(item.id)) {
-            return {
-              ...item,
-              stage: action.stage,
-            };
-          } else {
-            return {
-              ...item,
-            };
-          }
-        }),
-      };
+    // case PUBLISHED_SHIFTS:
+    //   return {
+    //     ...state,
+    //     isLoading: false,
+    //     shifts: state.shifts.map((item) => {
+    //       if (action.payload.includes(item.id)) {
+    //         return {
+    //           ...item,
+    //           stage: action.stage,
+    //         };
+    //       } else {
+    //         return {
+    //           ...item,
+    //         };
+    //       }
+    //     }),
+    //   };
     case GET_SWAP_REQUESTS:
       return {
         ...state,

@@ -56,12 +56,12 @@ const Departments = () => {
       )}
 
       <div className="list-banner">
-        <SearchField
+        {/* <SearchField
           placeholder="Search departments..."
           setFilteredObjects={setFilteredDepartments}
           objs={departments}
           filterField={"name"}
-        />
+        /> */}
         <div className="list-banner__right">
           <button
             className="btn-3"

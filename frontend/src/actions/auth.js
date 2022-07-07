@@ -11,9 +11,11 @@ import {
   UUID_SUCCESS,
   SUCCESS,
   REGISTER_LOADING,
+  SEND_INVITE,
 } from "./types";
 
 import { getErrors } from "./errors";
+import { toast } from "react-toastify";
 
 export const loadUser = () => (dispatch, getState) => {
   //User Loading
@@ -39,11 +41,23 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR,
       });
     });
+};
+
+export const sendInvite = (email, uuid) => (dispatch) => {
+  console.log("sending invite");
+  axios.post("/api/auth/send-invite", { email, uuid }).then((res) => {
+    toast.success(`You have sent an invite to ${email}`);
+    dispatch({
+      type: SEND_INVITE,
+      payload: res.data,
+    });
+  });
 };
 
 export const login = (username, password) => (dispatch) => {
@@ -66,6 +80,7 @@ export const login = (username, password) => (dispatch) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       dispatch(getErrors(err.response.data, err.response.status));
       dispatch({
         type: LOGIN_FAIL,

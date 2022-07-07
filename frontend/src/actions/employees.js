@@ -244,6 +244,21 @@ export const setSite = (id) => (dispatch, getState) => {
   });
 };
 
+export const updateBusiness = (id, obj) => (dispatch, getState) => {
+  axios
+    .put(`/api/business/${id}/`, obj, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: UPDATE_BUSINESS,
+        payload: res.data,
+      });
+    })
+
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
 export const updateBusinessName = (id, name) => (dispatch, getState) => {
   axios
     .put(`/api/business/${id}/`, name, tokenConfig(getState))
@@ -414,7 +429,7 @@ export const addEmployee = (employee) => (dispatch, getState) => {
 
       dispatch(resetErrors());
     })
-    .catch((err) => console.log(err.response));
+    .catch((err) => console.log(err));
 };
 // Get Positions
 export const getPositions =

@@ -53,19 +53,26 @@ const Nav = () => {
             <Fragment>
               <div className="nav__section nav__section--links">
                 <ul className="nav__list">
-                  <NavLink
-                    title="Home"
-                    link=""
-                    dropdown={
-                      !user.business && [
-                        {
-                          name: "Your Shifts",
-                          link: "/shifts",
-                          perm: false,
-                        },
-                      ]
-                    }
-                  ></NavLink>
+                  {user.business ? (
+                    user.business.show_welcome && (
+                      <NavLink title="Welcome" link="welcome"></NavLink>
+                    )
+                  ) : (
+                    <NavLink
+                      title="Home"
+                      link=""
+                      dropdown={
+                        !user.business && [
+                          {
+                            name: "Your Shifts",
+                            link: "/shifts",
+                            perm: false,
+                          },
+                        ]
+                      }
+                    ></NavLink>
+                  )}
+
                   <NavLink
                     title="Rota"
                     link="rota"

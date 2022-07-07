@@ -55,12 +55,12 @@ const Sites = () => {
       )}
 
       <div className="list-banner">
-        <SearchField
+        {/* <SearchField
           placeholder="Search sites..."
           setFilteredObjects={setFilteredSites}
           objs={sites}
           filterField={"name"}
-        />
+        /> */}
         <div className="list-banner__right">
           <button
             className="btn-3"

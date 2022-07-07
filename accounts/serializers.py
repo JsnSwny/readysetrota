@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rota_app.models import UserProfile, Employee, Department, Business, Position, Site, SiteSettings, PermissionType
+from rota_app.models import UserProfile, Shift, Checklist, Employee, Department, Business, Position, Site, SiteSettings, PermissionType
 from django.contrib.auth import authenticate, logout
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
@@ -15,24 +15,54 @@ from rotaready.settings import STRIPE_SECRET_KEY
 
 stripe.api_key = STRIPE_SECRET_KEY
 
+def gettingStartedValues(obj):
+    values = {'has_created_department': False, 'has_created_position': False, 'has_created_employee': False, 'has_created_shift': False, 'has_invited_employee': False, 
+    'has_created_account': True}
+
+    if Department.objects.filter(business=obj).count() > 0:
+        values['has_created_department'] = True
+
+    if Position.objects.filter(department__business=obj).count() > 0:
+        values['has_created_position'] = True
+
+    if Employee.objects.filter(site__business=obj).count() > 0:
+        values['has_created_employee'] = True
+
+    if Shift.objects.filter(site__business=obj).count() > 0:
+        values['has_created_shift'] = True
+
+    if Employee.objects.filter(site__business=obj, has_been_invited=True).count() > 0:
+        values['has_invited_employee'] = True
+    return values
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('role',)
 
+class ChecklistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Checklist
+        fields = ('has_created_employee', 'has_created_shift', 'has_invited_employee', 'has_created_position', 'has_created_department', 'has_created_account',)
+
 
 class BusinessSerializer(serializers.ModelSerializer):
     number_of_employees = serializers.SerializerMethodField(read_only=True)
+    checklist = ChecklistSerializer(read_only=True)
+    getting_started = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Business
         fields = ('id', 'name', 'plan', 'total_employees',
-                  'subscription_cancellation', 'number_of_employees', 'trial_end',)
+                  'subscription_cancellation', 'number_of_employees', 'trial_end', 'show_welcome', 'checklist', 'getting_started')
 
     def get_number_of_employees(self, obj):
         employees = Employee.objects.filter(business=obj.id).distinct()
         return len(employees)
+
+    def get_getting_started(self, obj):
+        return gettingStartedValues(obj)
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -160,7 +190,13 @@ class RegisterSerializer(serializers.ModelSerializer):
                 profile.stripe_id = customer.id
                 business.subscription_status = subscription.status
 
+                
+
                 business.save()
+
+                checklist = Checklist(business=business)
+                checklist.has_created_account = True
+                checklist.save()
 
                 site = Site(business=business, name="My First Site")
                 site.save()

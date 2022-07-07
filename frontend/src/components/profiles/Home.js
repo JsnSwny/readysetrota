@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import StaffProfile from "./StaffProfile";
 import AdminPanel from "../profiles/dashboard/AdminPanel";
 import StaffManagement from "./StaffManagement";
+import Rota from "../shifts/Rota";
+import { Redirect } from "react-router-dom";
 
 const Home = ({ modalProps }) => {
   let user = useSelector((state) => state.auth.user);
@@ -13,8 +15,9 @@ const Home = ({ modalProps }) => {
   useEffect(() => {
     setDashboardView(user.business ? "business" : "employee");
   }, [current.site]);
-  if (dashboardView == "business") {
-    return <AdminPanel setDashboardView={setDashboardView} />;
+
+  if (user.business) {
+    return <Redirect to="/rota" />;
   } else {
     return (
       <StaffProfile

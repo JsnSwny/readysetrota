@@ -228,7 +228,6 @@ class EmployeeViewSet(ViewSetActionPermissionMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, "business"):
-            print(Employee.objects.filter(business=self.request.user.business))
             return Employee.objects.filter(business=self.request.user.business).distinct()
 
         user_employees = Employee.objects.filter(user=self.request.user).values_list('site')

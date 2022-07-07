@@ -281,6 +281,11 @@ export const publish = () => (dispatch, getState) => {
     .then((res) => {
       dispatch(getShifts(getState().shifts.date, getState().shifts.end_date));
 
+      console.log("published");
+
+      dispatch({
+        type: PUBLISHED_SHIFTS,
+      });
       // dispatch({
       //   type: PUBLISHED_SHIFTS,
       //   payload: res.data,

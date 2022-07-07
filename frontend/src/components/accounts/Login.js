@@ -13,6 +13,8 @@ const Login = (props) => {
     path = location.state;
   }
 
+  const user = useSelector((state) => state.auth.user);
+
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +22,11 @@ const Login = (props) => {
   };
 
   if (useSelector((state) => state.auth.isAuthenticated)) {
+    if (user.business) {
+      if (user.business.show_welcome) {
+        return <Redirect to="/welcome" />;
+      }
+    }
     return <Redirect to={path.url} />;
   } else {
     return (

@@ -36,6 +36,7 @@
     "chart.js": "^3.4.1",
     "css-loader": "^3.4.2",
     "date-fns": "^2.11.1",
+    "gsap": "^3.10.4",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",

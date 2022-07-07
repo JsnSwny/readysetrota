@@ -147,9 +147,6 @@
       background-color: rgba($green, 0.3);
     }
   }
-  .profile-picture {
-    margin-right: 0.75rem;
-  }
   &__heading {
     margin-top: 4rem;
     margin-bottom: 1rem;
@@ -164,7 +161,7 @@
       margin-left: 0.75rem;
       cursor: pointer;
     }
-    font-size: 12px;
+    font-size: 14px;
     @include wi-mq(tablet) {
       font-size: 10px;
     }
@@ -177,7 +174,7 @@
       padding: 0.5rem;
     }
     font-weight: bold;
-    padding: 0.75rem 2rem;
+    padding: 1rem 2rem;
   }
   td,
   th {
@@ -200,6 +197,7 @@
     padding: 0 2rem;
     height: 50px;
     font-size: 14px;
+    color: #7D808B;
     @include wi-mq(tablet) {
       font-size: 12px;
     }
@@ -214,7 +212,7 @@
   }
 
   thead {
-    background-color: rgba($pink, 0.1);
+    background-color: #F9FAFC;
     // color: white;
     tr {
       td {
@@ -241,7 +239,8 @@
           color: $pink;
         }
         &.bold {
-          font-weight: bold;
+          color: black;
+          font-weight: 400;
         }
       }
       &:last-child {
@@ -347,8 +346,8 @@
 }
 
 .profile-picture {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   background-color: $pink;
   border-radius: 50%;
   display: inline-flex;
@@ -357,6 +356,7 @@
   font-weight: normal;
   font-size: 14px;
   color: white;
+  margin: 1rem 1rem 1rem 0;
 }
 
 .list-banner {

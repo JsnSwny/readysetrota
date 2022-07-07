@@ -7,17 +7,13 @@ import {
   updateEmployee,
   deleteEmployee,
 } from "../../../actions/employees";
+import { sendInvite } from "../../../actions/auth";
 import { parseISO, format } from "date-fns";
-import Title from "../../common/Title";
 import ListAction from "./ListAction";
-import SearchField from "../SearchField";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../../layout/confirm/ConfirmModal";
 import { numberWithCommas } from "../../Utilities";
 import ManagementPage from "../ManagementPage";
-import { copyToClipboard } from "../../../utils/copyToClipboard";
-import { toast } from "react-toastify";
-import axios from "axios";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -53,12 +49,6 @@ const Employees = () => {
 
   const isArchived = (date) => {
     return parseISO(date) <= new Date();
-  };
-
-  const sendInvite = (email, uuid) => {
-    axios
-      .post("/api/auth/send-invite", { email, uuid })
-      .then((res) => toast.success(`You have sent an invite to ${email}`));
   };
 
   return (
@@ -108,12 +98,12 @@ const Employees = () => {
         />
       )}
       <div className="list-banner">
-        <SearchField
+        {/* <SearchField
           placeholder="Search employees..."
           setFilteredObjects={setFilteredEmployees}
           objs={employees}
           filterField={"full_name"}
-        />
+        /> */}
 
         {/* <div className="list-dropdown">
           Actions
@@ -153,7 +143,6 @@ const Employees = () => {
               />
             </th> */}
             <th>Name</th>
-            <th>Email</th>
             <th>Wage</th>
             <th className="hide-mobile">Status</th>
             <th className="right"></th>
@@ -177,31 +166,40 @@ const Employees = () => {
                   />
                 </td> */}
                 <td className="bold">
-                  <span className="profile-picture hide-tablet">
-                    {item.first_name.substr(0, 1)}
-                    {item.last_name.substr(0, 1)}
-                  </span>
-                  {item.full_name}
-                </td>
-                {item.email ? (
-                  <td className="flex-container--align-center">
-                    {item.email}{" "}
-                    {!item.user &&
-                      (item.has_been_invited ? (
-                        <i
-                          onClick={() => sendInvite(item.email, item.uuid)}
-                          className="invite-btn fas fa-sync"
-                        ></i>
+                  <div className="flex-container--align-center">
+                    <span className="profile-picture hide-tablet">
+                      {item.first_name.substr(0, 1)}
+                      {item.last_name.substr(0, 1)}
+                    </span>
+                    <div>
+                      <p>{item.full_name}</p>
+
+                      {!item.user ? (
+                        item.has_been_invited ? (
+                          <p
+                            className="link"
+                            onClick={() =>
+                              dispatch(sendInvite(item.email, item.uuid))
+                            }
+                          >
+                            Send invite
+                          </p>
+                        ) : (
+                          <p
+                            className="link"
+                            onClick={() =>
+                              dispatch(sendInvite(item.email, item.uuid))
+                            }
+                          >
+                            Resend invite
+                          </p>
+                        )
                       ) : (
-                        <i
-                          onClick={() => sendInvite(item.email, item.uuid)}
-                          className="invite-btn fas fa-envelope"
-                        ></i>
-                      ))}
-                  </td>
-                ) : (
-                  <td></td>
-                )}
+                        <p>{item.email}</p>
+                      )}
+                    </div>
+                  </div>
+                </td>
                 <td>
                   {item.current_wage &&
                     `£${numberWithCommas(item.current_wage.amount)} per ${

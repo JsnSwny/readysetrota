@@ -38,8 +38,9 @@
 .link {
   color: $pink;
   transition: 0.2s ease color;
+  cursor: pointer;
   &:hover {
-    color: black;
+    color: lighten($pink, 10%);
     text-decoration: underline;
   }
 }

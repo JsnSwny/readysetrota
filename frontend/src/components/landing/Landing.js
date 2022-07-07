@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Feature from "./Feature";
 import { Link } from "react-router-dom";
 import HowItWorks from "./HowItWorks";
 import { toast } from "react-toastify";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Landing = ({ setOpen, setType }) => {
   const [showVideo, setShowVideo] = useState(false);
-
   return (
     <div className="landing">
       <div className={`video-modal ${showVideo ? "open" : ""}`}>
@@ -27,7 +28,7 @@ const Landing = ({ setOpen, setType }) => {
       <section className="hero section">
         <div className="hero__wrapper wrapper--lg">
           <div className="hero__left">
-            <h1>Improve the way you manage your rotas.</h1>
+            <h1 ref={titleRef}>Improve the way you manage your rotas.</h1>
             <p>
               readysetrota is an intuitive application which aims to make your
               life easier

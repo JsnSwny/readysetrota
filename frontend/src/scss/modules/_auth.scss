@@ -367,6 +367,146 @@
   }
 }
 
+.percentage-progress {
+  width: 100%;
+  height: 15px;
+  border-radius: 20px;
+  background-color: #F6F8FA;
+  border: 0.5px solid #dee6ee;
+  margin-top: 1rem;
+  &.reverse {
+    background-color: $pink;
+  }
+  &__complete {
+    background-color: $pink;
+    height: 100%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    transition: 2s ease-out width;
+    &.reverse {
+      background-color: white;
+    }
+  }
+  &__amount {
+    margin-top: 0.5rem;
+    color: $pink;
+    font-weight: bold;
+    &.reverse {
+      color: white;
+    }
+  }
+}
+
+.welcome {
+  // background-image: url("/static/media/confetti.webp");
+  width: 100%;
+  min-height: calc(100vh - 45px);
+  background-position: center;
+  background-size: cover;
+  display: flex;
+}
+
+.welcome-block {
+  @extend .shadow;
+  width: 100%;
+  padding: 3rem;
+  background-color: white;
+  margin: 2rem 0;
+  border-radius: 5px;
+  @include wi-mq(tablet) {
+    padding: 2rem;
+  }
+  &__separator {
+    margin: 1.5rem 0;
+    background-color: #dee6ee;
+    border: 0;
+    height: 1px;
+  }
+  &__link {
+    color: $pink;
+    display: block;
+    margin-top: 0.25rem;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: 0.2s ease-in-out color;
+    &:hover {
+      color: lighten($pink, 10%);
+    }
+  }
+  h2 {
+    margin-bottom: 1rem;
+  }
+  button {
+    margin-top: 1rem;
+  }
+  p {
+    line-height: 1.4rem;
+  }
+}
+
+.welcome-checklist {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  margin-top: 1.5rem;
+  &__left {
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    background-color: #F6F8FA;
+    border-top: 0.5px solid #dee6ee;
+    border-bottom: 0.5px solid #dee6ee;
+    padding: 0 2rem;
+    height: 60px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    &.complete {
+      .welcome-checklist {
+        &__circle {
+          background-color: $pink;
+          color: white;
+        }
+      }
+    }
+    transition: 0.2s ease-in-out color;
+    .fa-angle-right {
+      transition: 0.2s ease-in-out color;
+    }
+    &:hover {
+      color: $pink;
+      .fa-angle-right {
+        color: $pink;
+      }
+    }
+    &--alt {
+      background-color: white;
+      padding: 0;
+      height: auto;
+      border: 0;
+      margin: 0.75rem 0;
+    }
+    
+  }
+  &__circle {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    background-color: white;
+    @extend .shadow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+  }
+}
+
+
+
+
 @media only screen and (max-width: 1000px) {
   .enterid {
     &__box {
