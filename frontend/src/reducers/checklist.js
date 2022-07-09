@@ -87,26 +87,32 @@ const setInitialChecklist = (items) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     case REGISTER_SUCCESS:
-      return {
-        ...state,
-        items: setInitialChecklist(action.payload.user.business.checklist),
-      };
+      return action.payload.user.business
+        ? {
+            ...state,
+            items: setInitialChecklist(action.payload.user.business.checklist),
+          }
+        : { ...state };
+
     case LOGIN_SUCCESS:
-      return {
-        ...state,
-        items: setInitialChecklist(action.payload.user.business.checklist),
-      };
+      return action.payload.user.business
+        ? {
+            ...state,
+            items: setInitialChecklist(action.payload.user.business.checklist),
+          }
+        : { ...state };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         items: [],
       };
     case USER_LOADED:
-      return {
-        ...state,
-        items: setInitialChecklist(action.payload.business.checklist),
-      };
-
+      return action.payload.business
+        ? {
+            ...state,
+            items: setInitialChecklist(action.payload.business.checklist),
+          }
+        : { ...state };
     case ADD_EMPLOYEE:
       return { ...state, items: activateItem("has_created_employee") };
 

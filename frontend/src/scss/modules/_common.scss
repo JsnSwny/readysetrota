@@ -105,22 +105,11 @@
   }
 }
 
-.radial-underline {
-  &::after {
-    content: "";
-    display: block;
-    width: 50%;
-    height: 1px;
-    background: radial-gradient(#ccc, #f6f8fa);
-    margin-top: 8px;
-  }
-}
-
 .separator {
-  margin: 1rem 0 2rem 0;
-  background-color: $light-gray;
+  margin: 1.5rem 0;
+  background-color: #dee6ee;
   border: 0;
-  height: 1px;
+  height: 1.5px;
   @include wi-mq(mobile) {
     margin: 20px 0;
   }
@@ -282,9 +271,6 @@
   align-items: center;
 }
 
-.react-datepicker-wrapper {
-  width: 100%;
-}
 
 .tag {
   background-color: $pink;

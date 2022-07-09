@@ -99,9 +99,10 @@
   }
   &--report {
     margin-top: 1rem;
-    min-height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 5px;
+    @extend .shadow;
+    margin-bottom: 1.5rem;
   }
 }

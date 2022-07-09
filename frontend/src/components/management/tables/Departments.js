@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDepartments } from "../../../actions/employees";
 import SmallModal from "../../layout/SmallModal";
 import DepartmentForm from "../forms/DepartmentForm";
 import { deleteDepartment } from "../../../actions/employees";
 import ConfirmModal from "../../layout/confirm/ConfirmModal";
-import SearchField from "../SearchField";
-import ManagementPage from "../ManagementPage";
+import Title from "../../common/Title";
+import EmptyView from "../../layout/EmptyView";
 
 const Departments = () => {
   const dispatch = useDispatch();
   let departments = useSelector((state) => state.employees.departments);
+  const loading = useSelector((state) => state.loading.departments);
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -27,8 +28,32 @@ const Departments = () => {
     setFilteredDepartments(departments);
   }, [departments]);
 
+  if (departments.length == 0 && !loading) {
+    return (
+      <Fragment>
+        {open && (
+          <SmallModal
+            open={open}
+            setOpen={setOpen}
+            title={"Add a new department"}
+          >
+            <DepartmentForm setOpen={setOpen} />
+          </SmallModal>
+        )}
+        <EmptyView
+          title="You haven't added any departments yet"
+          subtitle="Departments allow you to separate your employees for easier management (e.g. Floor and Kitchen)"
+          button={{
+            title: "Add a department",
+            clickAction: () => setOpen(true),
+          }}
+        />
+      </Fragment>
+    );
+  }
+
   return (
-    <ManagementPage currentSection="Departments">
+    <div className="wrapper--md">
       {open && (
         <SmallModal
           open={open}
@@ -54,26 +79,19 @@ const Departments = () => {
           }}
         />
       )}
-
-      <div className="list-banner">
-        {/* <SearchField
-          placeholder="Search departments..."
-          setFilteredObjects={setFilteredDepartments}
-          objs={departments}
-          filterField={"name"}
-        /> */}
-        <div className="list-banner__right">
-          <button
-            className="btn-3"
-            onClick={() => {
+      <Title
+        name="Departments"
+        subtitle="Manage your departments"
+        buttons={[
+          {
+            name: "+ Add a department",
+            clickAction: () => {
               setEditDepartment(false);
               setOpen(true);
-            }}
-          >
-            + Add Department
-          </button>
-        </div>
-      </div>
+            },
+          },
+        ]}
+      />
       <table className="listing">
         <thead>
           <tr>
@@ -101,7 +119,7 @@ const Departments = () => {
           {filteredDepartments.length > 0 &&
             filteredDepartments.map((item) => (
               <tr className="listing__row">
-                <td className="bold">{item.name}</td>
+                <td className="text-black font-bold">{item.name}</td>
                 <td>{item.number_of_employees}</td>
                 <td className="right">
                   <div className="action-sm">
@@ -125,7 +143,7 @@ const Departments = () => {
             ))}
         </tbody>
       </table>
-    </ManagementPage>
+    </div>
   );
 };
 

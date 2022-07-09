@@ -11,7 +11,7 @@ const DepartmentForm = ({ setOpen, editDepartment }) => {
   let errors = useSelector((state) => state.errors.msg);
 
   useEffect(() => {
-    setName(editDepartment.name);
+    if (editDepartment) setName(editDepartment.name);
   }, [editDepartment]);
 
   const onSubmit = (e) => {

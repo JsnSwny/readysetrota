@@ -22,6 +22,7 @@ import {
   REGISTER_LOADING,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  GET_ALL_EMPLOYEES,
 } from "../actions/types";
 
 const initialState = {
@@ -107,6 +108,7 @@ export default function (state = initialState, action) {
         positions: false,
       };
     case GET_EMPLOYEES:
+    case GET_ALL_EMPLOYEES:
       return {
         ...state,
         employees: false,

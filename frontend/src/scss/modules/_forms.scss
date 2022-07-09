@@ -428,33 +428,17 @@
   &:focus {
     outline: none;
   }
-  @include wi-mq(mobile) {
-    font-size: 8px;
-  }
 }
 
 .listing-timesheet {
   th,
   td {
-    &:not(.no-padding) {
-      @include wi-mq(tablet) {
-        padding: 0 0.5rem !important;
-      }
-    }
     &.no-padding {
       @include wi-mq(tablet) {
         .input--table {
           padding: 0 0.5rem !important;
         }
       }
-    }
-  }
-  th {
-    @include wi-mq(tablet) {
-      font-size: 12px !important;
-    }
-    @include wi-mq(mobile) {
-      font-size: 10px !important;
     }
   }
   td {

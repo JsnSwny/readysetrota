@@ -5,9 +5,8 @@ import SmallModal from "../../layout/SmallModal";
 import DepartmentForm from "../forms/DepartmentForm";
 import { deleteDepartment } from "../../../actions/employees";
 import ConfirmModal from "../../layout/confirm/ConfirmModal";
-import SearchField from "../SearchField";
-import ManagementPage from "../ManagementPage";
 import SiteForm from "../forms/SiteForm";
+import Title from "../../common/Title";
 
 const Sites = () => {
   const dispatch = useDispatch();
@@ -31,7 +30,7 @@ const Sites = () => {
   }, [sites]);
 
   return (
-    <ManagementPage currentSection="Sites">
+    <div className="wrapper--md">
       {open && (
         <SmallModal
           open={open}
@@ -54,44 +53,23 @@ const Sites = () => {
         />
       )}
 
-      <div className="list-banner">
-        {/* <SearchField
-          placeholder="Search sites..."
-          setFilteredObjects={setFilteredSites}
-          objs={sites}
-          filterField={"name"}
-        /> */}
-        <div className="list-banner__right">
-          <button
-            className="btn-3"
-            onClick={() => {
+      <Title
+        name="Sites"
+        subtitle="Manage your sites"
+        buttons={[
+          {
+            name: "+ Add a site",
+            clickAction: () => {
               setEditSite(false);
               setOpen(true);
-            }}
-          >
-            + Add Site
-          </button>
-        </div>
-      </div>
+            },
+          },
+        ]}
+      />
       <table className="listing">
         <thead>
           <tr>
-            <th>
-              Name{" "}
-              <i
-                class="fas fa-sort"
-                onClick={() => {
-                  let sortedArray = [...filteredSites].sort((a, b) => {
-                    return !nameSortAZ
-                      ? a.name.localeCompare(b.name)
-                      : b.name.localeCompare(a.name);
-                  });
-                  setNameSortAZ(!nameSortAZ);
-
-                  setFilteredSites(sortedArray);
-                }}
-              ></i>
-            </th>
+            <th>Name</th>
             <th>No. of Employees</th>
             <th className="right"></th>
           </tr>
@@ -100,7 +78,7 @@ const Sites = () => {
           {filteredSites.length > 0 &&
             filteredSites.map((item) => (
               <tr className="listing__row">
-                <td className="bold">{item.name}</td>
+                <td className="text-black font-bold">{item.name}</td>
                 <td>{item.number_of_employees}</td>
                 <td className="right">
                   <div className="action-sm">
@@ -124,7 +102,7 @@ const Sites = () => {
             ))}
         </tbody>
       </table>
-    </ManagementPage>
+    </div>
   );
 };
 

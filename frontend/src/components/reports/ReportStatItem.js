@@ -4,7 +4,7 @@ import CountUp from "react-countup";
 import { Line } from "react-chartjs-2";
 import { format } from "date-fns";
 
-const ReportStatItem = ({ data, range, color }) => {
+const ReportStatItem = ({ data, data2, range, color }) => {
   const loading = useSelector((state) => state.loading);
 
   const [interval, setInterval] = useState([]);
@@ -21,11 +21,22 @@ const ReportStatItem = ({ data, range, color }) => {
     labels: interval.map((item) => format(item, "d MMM yyyy")),
     datasets: [
       {
-        data: dataset,
+        label: "Labour cost",
+        data: data,
         backgroundColor: [color],
         borderColor: [color],
-        borderWidth: 1,
-        lineTension: 0.2,
+        borderWidth: 2,
+        lineTension: 0.4,
+        // fill: true,
+      },
+      {
+        label: "Revenue",
+        data: data2,
+        backgroundColor: ["rgb(91, 208, 117)"],
+        borderColor: ["rgb(91, 208, 117)"],
+        borderWidth: 2,
+        lineTension: 0.4,
+        // fill: true,
       },
     ],
   };
@@ -70,14 +81,16 @@ const ReportStatItem = ({ data, range, color }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    legend: {
-      display: false,
-    },
     interaction: {
       intersect: false,
     },
     plugins: {
-      legend: false,
+      // legend: false,
+      legend: {
+        // display: false,
+        position: "right",
+        align: "start",
+      },
       title: {
         display: false,
       },
@@ -91,14 +104,13 @@ const ReportStatItem = ({ data, range, color }) => {
     zoomEnabled: true,
     scales: {
       y: {
+        suggestedMax: Math.max(...data),
         grid: {
           drawBorder: false,
           display: false,
         },
         beginAtZero: true,
-        ticks: {
-          display: false,
-        },
+        type: "linear",
       },
       x: {
         grid: {
@@ -106,8 +118,15 @@ const ReportStatItem = ({ data, range, color }) => {
           display: false,
         },
         ticks: {
-          autoSkip: true,
-          display: false,
+          callback: (value, index, values) => {
+            if (
+              index === 0 ||
+              index === Math.floor(chartData.labels.length / 2) ||
+              index === chartData.labels.length - 1
+            ) {
+              return chartData.labels[index];
+            }
+          },
         },
       },
     },
@@ -115,11 +134,16 @@ const ReportStatItem = ({ data, range, color }) => {
 
   return (
     <div className="stats-graph--report">
-      {!loading.stats ? (
-        <Line data={chartData} options={options} />
-      ) : (
-        <div className="dot-pulse"></div>
-      )}
+      <h3 className="mb-8 font-normal text-xl text-gray">
+        Labour cost vs Revenue
+      </h3>
+      <div className="w-full h-60">
+        {!loading.stats ? (
+          <Line data={chartData} options={options} />
+        ) : (
+          <div className="dot-pulse"></div>
+        )}
+      </div>
     </div>
   );
 };

@@ -13,7 +13,6 @@ const ChecklistItem = ({
   const checklist = useSelector((state) => state.checklist.items);
 
   const isComplete = () => {
-    console.log(checklist);
     return checklist.find((item) => item.codename == checklistItem).active;
   };
 

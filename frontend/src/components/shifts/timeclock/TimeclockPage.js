@@ -15,6 +15,8 @@ import DateBubblePicker from "../../common/DateBubblePicker";
 import TimeclockModal from "./TimeclockModal";
 import { getShifts } from "../../../actions/shifts";
 import TimeclockList from "./TimeclockList";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TimeclockPage = () => {
   const dispatch = useDispatch();
@@ -106,46 +108,48 @@ const TimeclockPage = () => {
   };
 
   return (
-    <Fragment>
-      <Title name="Timesheet" />
-      <div className="wrapper--md">
-        {confirmOpen && selectedTimeclock && (
-          <ConfirmModal
-            title={`Are you sure you want to delete this timeclock?`}
-            open={confirmOpen}
-            setOpen={setConfirmOpen}
-            setConfirmOpen={setConfirmOpen}
-            action={() => {
-              dispatch(deleteTimeclock(selectedTimeclock.id));
-            }}
-          />
-        )}
-
-        <TimeclockModal
-          open={open}
-          setOpen={setOpen}
-          extraInfo={{ currentDate, department: current.department }}
-        />
-
-        <h2>{format(currentDate, "do MMMM yyyy")}</h2>
-        <div className="list-banner">
-          <DateBubblePicker
-            currentDate={currentDate}
-            setCurrentDate={setCurrentDate}
-            maxDate={new Date()}
-          />
-          <div className="list-banner__right">
+    <div className="wrapper--md">
+      <Title
+        name="Timesheet"
+        subtitle="Manage your timesheets"
+        customButtons={
+          <>
+            <DatePicker
+              selected={currentDate}
+              onChange={(date) => setCurrentDate(date)}
+              className="form__input"
+              dateFormat="MMMM do yyyy"
+              maxDate={new Date()}
+            />
             <button
-              className="btn-3"
+              className="btn-3 ml-2"
               onClick={() => {
                 setOpen(true);
               }}
             >
               + Add Timeclock
             </button>
-          </div>
-        </div>
+          </>
+        }
+      />
+      {confirmOpen && selectedTimeclock && (
+        <ConfirmModal
+          title={`Are you sure you want to delete this timeclock?`}
+          open={confirmOpen}
+          setOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          action={() => {
+            dispatch(deleteTimeclock(selectedTimeclock.id));
+          }}
+        />
+      )}
 
+      <TimeclockModal
+        open={open}
+        setOpen={setOpen}
+        extraInfo={{ currentDate, department: current.department }}
+      />
+      <div className="overflow-x-auto mb-16">
         <table className="listing listing-timesheet">
           <thead>
             <tr>
@@ -169,7 +173,7 @@ const TimeclockPage = () => {
           </tbody>
         </table>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

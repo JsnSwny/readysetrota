@@ -171,6 +171,7 @@ export const register =
         });
       })
       .catch((err) => {
+        console.log(err);
         console.log(err.response);
         dispatch(getErrors(err.response.data, err.response.status));
         dispatch({

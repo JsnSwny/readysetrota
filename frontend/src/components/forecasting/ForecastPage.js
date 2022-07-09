@@ -14,6 +14,7 @@ import {
   eachDayOfInterval,
   parseISO,
   isAfter,
+  endOfMonth,
 } from "date-fns";
 import WeeklyBubblePicker from "../common/WeeklyBubblePicker";
 import {
@@ -21,6 +22,8 @@ import {
   updateForecast,
   addForecast,
 } from "../../actions/employees";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ForecastPage = () => {
   const dispatch = useDispatch();
@@ -38,7 +41,7 @@ const ForecastPage = () => {
   const initDateRange = () => {
     let range = eachDayOfInterval({
       start: currentDate,
-      end: endOfWeek(currentDate, { weekStartsOn: 1 }),
+      end: endOfMonth(currentDate, { weekStartsOn: 1 }),
     });
     range = range.map((item) => ({
       id: null,
@@ -56,7 +59,7 @@ const ForecastPage = () => {
     dispatch(
       getForecast(
         format(currentDate, "yyyy-MM-dd"),
-        format(endOfWeek(currentDate, { weekStartsOn: 1 }), "yyyy-MM-dd")
+        format(endOfMonth(currentDate, { weekStartsOn: 1 }), "yyyy-MM-dd")
       )
     );
     initDateRange();
@@ -123,33 +126,42 @@ const ForecastPage = () => {
   };
 
   return (
-    <Fragment>
-      <Title name="Forecasting" />
-      <div className="wrapper--md">
-        {confirmOpen && selectedTimeclock && (
-          <ConfirmModal
-            title={`Are you sure you want to delete this timeclock?`}
-            open={confirmOpen}
-            setOpen={setConfirmOpen}
-            setConfirmOpen={setConfirmOpen}
-            action={() => {
-              dispatch(deleteTimeclock(selectedTimeclock.id));
-            }}
-          />
-        )}
-
-        <h2>
-          {format(currentDate, "do MMMM yyyy")} -{" "}
-          {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "do MMMM yyyy")}
-        </h2>
-        <div className="list-banner">
-          <WeeklyBubblePicker
-            currentDate={currentDate}
-            setCurrentDate={setCurrentDate}
-          />
-          <div className="list-banner__right"></div>
-        </div>
-
+    <div className="wrapper--md">
+      <Title
+        name="Forecast"
+        subtitle="Manage your forecast"
+        customButtons={
+          <>
+            <DatePicker
+              selected={currentDate}
+              onChange={(date) => setCurrentDate(date)}
+              className="form__input"
+              dateFormat="MMMM yyyy"
+              showMonthYearPicker
+            />
+            <button
+              className="btn-3 ml-2"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              + Add Timeclock
+            </button>
+          </>
+        }
+      />
+      {confirmOpen && selectedTimeclock && (
+        <ConfirmModal
+          title={`Are you sure you want to delete this timeclock?`}
+          open={confirmOpen}
+          setOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          action={() => {
+            dispatch(deleteTimeclock(selectedTimeclock.id));
+          }}
+        />
+      )}
+      <div className="overflow-x-auto mb-16">
         <table className="listing listing-timesheet">
           <thead>
             <tr>
@@ -164,7 +176,7 @@ const ForecastPage = () => {
             {dateRange.map((item, idx) => {
               return (
                 <tr className="listing__row listing-timesheet">
-                  <td className="bold">
+                  <td className="font-bold text-black">
                     {format(parseISO(item.date), "iiii do MMMM")}
                   </td>
                   <td>
@@ -230,7 +242,7 @@ const ForecastPage = () => {
           </tbody>
         </table>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

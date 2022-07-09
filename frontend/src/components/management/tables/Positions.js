@@ -7,15 +7,15 @@ import { parseISO, format } from "date-fns";
 import Title from "../../common/Title";
 import SmallModal from "../../layout/SmallModal";
 import ConfirmModal from "../../layout/confirm/ConfirmModal";
-import SearchField from "../SearchField";
-import ManagementPage from "../ManagementPage";
 import PositionForm from "../forms/PositionForm";
+import EmptyView from "../../layout/EmptyView";
 
 const Positions = () => {
   const dispatch = useDispatch();
 
   let positions = useSelector((state) => state.employees.positions);
   const employees = useSelector((state) => state.employees.employees);
+  const loading = useSelector((state) => state.loading.positions);
   const departments = useSelector((state) => state.employees.departments);
 
   const [open, setOpen] = useState(false);
@@ -32,8 +32,35 @@ const Positions = () => {
     setFilteredPositions(positions);
   }, [positions]);
 
+  if (positions.length == 0 && !loading) {
+    return (
+      <Fragment>
+        {open && (
+          <SmallModal
+            title={"Add a new position"}
+            open={open}
+            setOpen={setOpen}
+          >
+            <PositionForm setOpen={setOpen} />
+          </SmallModal>
+        )}
+        <EmptyView
+          title="You haven't added any positions yet"
+          subtitle="You can use positions to assign to employees and then to set roles
+  for individual shifts."
+          button={{
+            title: "Add a position",
+            clickAction: () => {
+              setOpen(true);
+            },
+          }}
+        />
+      </Fragment>
+    );
+  }
+
   return (
-    <ManagementPage currentSection="Positions">
+    <div className="wrapper--md flex-1 flex flex-col">
       {open && (
         <SmallModal
           title={
@@ -45,7 +72,6 @@ const Positions = () => {
           <PositionForm setOpen={setOpen} editPosition={editPosition} />
         </SmallModal>
       )}
-
       {confirmOpen && selectedPosition && (
         <ConfirmModal
           title={`Are you sure you want to delete the ${selectedPosition.name} position?`}
@@ -57,67 +83,62 @@ const Positions = () => {
           }}
         />
       )}
-
-      <div className="list-banner">
-        {/* <SearchField
-          placeholder="Search positions..."
-          setFilteredObjects={setFilteredPositions}
-          objs={positions}
-          filterField={"name"}
-        /> */}
-        <div className="list-banner__right">
-          <button className="btn-3" onClick={() => setOpen(true)}>
-            + Add Position
-          </button>
-        </div>
-      </div>
+      <Title
+        name="Positions"
+        subtitle="Manage your positions"
+        buttons={[
+          {
+            name: "+ Add a position",
+            clickAction: () => {
+              setOpen(true);
+            },
+          },
+        ]}
+      />
       <table className="listing">
         <thead>
           <tr>
-            <th>
-              Name <i class="fas fa-sort"></i>
-            </th>
-            <th>Department</th>
+            <th>Name</th>
+            <th className="hidden sm:table-cell">Department</th>
             <th>No. of Employees</th>
             <th className="right"></th>
           </tr>
         </thead>
         <tbody>
-          {filteredPositions.length > 0 &&
-            filteredPositions.map((item) => (
-              <tr className="listing__row">
-                <td className="bold">{item.name}</td>
-                <td>{item.department.name}</td>
-                <td>
-                  {
-                    employees.filter((employee) =>
-                      employee.position.some((pos) => pos.id == item.id)
-                    ).length
-                  }
-                </td>
-                <td className="right">
-                  <div className="action-sm">
-                    <i
-                      className="fas fa-edit"
-                      onClick={() => {
-                        setEditPosition(item);
-                        setOpen(true);
-                      }}
-                    ></i>
-                    <i
-                      className="fas fa-trash"
-                      onClick={() => {
-                        setSelectedPosition(item);
-                        setConfirmOpen(true);
-                      }}
-                    ></i>
-                  </div>
-                </td>
-              </tr>
-            ))}
+          {positions.map((item) => (
+            <tr className="listing__row">
+              <td className="text-black font-bold">{item.name}</td>
+              <td className="hidden sm:table-cell">{item.department.name}</td>
+              <td>
+                {
+                  employees.filter((employee) =>
+                    employee.position.some((pos) => pos.id == item.id)
+                  ).length
+                }
+              </td>
+              <td className="right">
+                <div className="action-sm">
+                  <i
+                    className="fas fa-edit"
+                    onClick={() => {
+                      setEditPosition(item);
+                      setOpen(true);
+                    }}
+                  ></i>
+                  <i
+                    className="fas fa-trash"
+                    onClick={() => {
+                      setSelectedPosition(item);
+                      setConfirmOpen(true);
+                    }}
+                  ></i>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-    </ManagementPage>
+    </div>
   );
 };
 

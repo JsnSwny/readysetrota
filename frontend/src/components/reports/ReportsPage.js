@@ -3,18 +3,31 @@ import { useSelector, useDispatch } from "react-redux";
 import Title from "../common/Title";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { addMonths, eachDayOfInterval, format, parseISO } from "date-fns";
+import {
+  addMonths,
+  eachDayOfInterval,
+  format,
+  parseISO,
+  subDays,
+  subWeeks,
+  subMonths,
+} from "date-fns";
 import { getForecast } from "../../actions/employees";
 import { getReportData } from "../../actions/stats";
 import ReportStatItem from "./ReportStatItem";
 import Select from "react-select";
 import CountUp from "react-countup";
 import axios from "axios";
+import ReportItem from "./ReportItem";
 
 const ReportsPage = () => {
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(addMonths(new Date(), -1));
+  const [startDate, setStartDate] = useState(subMonths(new Date(), 3));
   const [endDate, setEndDate] = useState(new Date());
+  const [dateRange, setDateRange] = useState({
+    value: "3 months",
+    label: "Last 3 months",
+  });
   const [range, setRange] = useState([]);
   const forecast = useSelector((state) => state.employees.forecast);
   const report = useSelector((state) => state.report.data);
@@ -73,36 +86,46 @@ const ReportsPage = () => {
   };
 
   return (
-    <Fragment>
-      <Title name="Reports" />
-      <div className="wrapper--md">
-        <div className="list-banner list-banner--report">
-          <div className="date-range-selector flex-container--align-center">
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              className="form__input"
-              dateFormat="MMMM do yyyy"
-            />
-            <p>to</p>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              className="form__input"
-              dateFormat="MMMM do yyyy
-            "
-            />
-          </div>
-          <div className="list-banner__right">
+    <div className="wrapper--md">
+      <Title
+        name="Reports"
+        subtitle="Financial overview based on shift information"
+        customButtons={
+          <>
             <Select
               className="react-select-container"
+              classNamePrefix="react-select"
+              value={dateRange}
+              onChange={(e) => {
+                setDateRange(e);
+                switch (e.value) {
+                  case "7 days":
+                    setStartDate(subDays(new Date(), 6));
+                    break;
+                  case "4 weeks":
+                    setStartDate(subDays(new Date(), 27));
+                    break;
+                  case "3 months":
+                    setStartDate(addDays(subMonths(new Date(), 3), 1));
+                    break;
+                  case "6 months":
+                    setStartDate(addDays(subMonths(new Date(), 6), 1));
+                    break;
+                  case "12 months":
+                    setStartDate(addDays(subMonths(new Date(), 12), 1));
+                    break;
+                }
+              }}
+              options={[
+                { value: "7 days", label: "Last 7 days" },
+                { value: "4 weeks", label: "Last 4 weeks" },
+                { value: "3 months", label: "Last 3 months" },
+                { value: "6 months", label: "Last 6 months" },
+                { value: "12 months", label: "Last 12 months" },
+              ]}
+            />
+            <Select
+              className="react-select-container ml-2"
               classNamePrefix="react-select"
               value={basedOn}
               onChange={(e) => setBasedOn(e)}
@@ -112,166 +135,49 @@ const ReportsPage = () => {
               ]}
               placeholder={"Select which values to use"}
             />
-            <button onClick={exportReport} className="btn-3 btn-3--export">
+            <button onClick={exportReport} className="btn-3 ml-2">
               Export
             </button>
-          </div>
-        </div>
-        <ul className="report-boxes">
-          <li
-            className={`report-boxes__item report-boxes__item--yellow ${
-              activeGraph == "Shifts" ? "active" : activeGraph ? "hide" : ""
-            }`}
-          >
-            <div className="flex-container--between">
-              <h3>Shifts</h3>
-              <i
-                class="fas fa-expand"
-                onClick={() =>
-                  setActiveGraph(activeGraph != "Shifts" ? "Shifts" : false)
-                }
-              ></i>
-            </div>
-
-            {!loading.stats ? (
-              <CountUp
-                start={0}
-                end={report.reduce((a, b) => a + b.total_shifts, 0)}
-                duration={1}
-                decimals={0}
-                separator={","}
-              />
-            ) : (
-              <span>0</span>
-            )}
-            <ReportStatItem
-              data={[...report].reverse().map((item) => item.total_shifts)}
-              range={[...range].reverse()}
-              color="rgb(255,211,0)"
-            />
-          </li>
-          <li
-            className={`report-boxes__item report-boxes__item--orange ${
-              activeGraph == "Labour Cost"
-                ? "active"
-                : activeGraph
-                ? "hide"
-                : ""
-            }`}
-          >
-            <div className="flex-container--between">
-              <h3>Labour Cost</h3>
-              <i
-                class="fas fa-expand"
-                onClick={() =>
-                  setActiveGraph(
-                    activeGraph != "Labour Cost" ? "Labour Cost" : false
-                  )
-                }
-              ></i>
-            </div>
-
-            {/* <p>£{numberWithCommas(sumValues(report.total_cost))}</p> */}
-            {!loading.stats ? (
-              <CountUp
-                start={0}
-                end={report.reduce((a, b) => a + b.total_cost, 0)}
-                duration={1}
-                decimals={2}
-                prefix={"£"}
-                separator={","}
-              />
-            ) : (
-              <span>£0</span>
-            )}
-            <ReportStatItem
-              data={[...report]
-                .reverse()
-                .map((item) => parseInt(item.total_cost))}
-              range={[...range].reverse()}
-              color="rgb(34,198,240)"
-            />
-          </li>
-          <li
-            className={`report-boxes__item report-boxes__item--green ${
-              activeGraph == "Revenue" ? "active" : activeGraph ? "hide" : ""
-            }`}
-          >
-            <div className="flex-container--between">
-              <h3>Revenue</h3>
-              <i
-                class="fas fa-expand"
-                onClick={() =>
-                  setActiveGraph(activeGraph != "Revenue" ? "Revenue" : false)
-                }
-              ></i>
-            </div>
-
-            {!loading.stats ? (
-              <CountUp
-                start={0}
-                end={report.reduce((a, b) => a + b.revenue, 0)}
-                duration={1}
-                decimals={2}
-                prefix={"£"}
-                separator={","}
-              />
-            ) : (
-              <span>£0</span>
-            )}
-            <ReportStatItem
-              data={[...report].reverse().map((item) => parseInt(item.revenue))}
-              range={[...range].reverse()}
-              color="rgb(91,208,117)"
-            />
-          </li>
-          <li
-            className={`report-boxes__item report-boxes__item--pink ${
-              activeGraph == "Labour %" ? "active" : activeGraph ? "hide" : ""
-            }`}
-          >
-            <div className="flex-container--between">
-              <h3>Labour % (Average)</h3>
-              <i
-                class="fas fa-expand"
-                onClick={() =>
-                  setActiveGraph(activeGraph != "Labour %" ? "Labour %" : false)
-                }
-              ></i>
-            </div>
-
-            {!loading.stats ? (
-              <Fragment>
-                <CountUp
-                  start={0}
-                  end={
-                    report.reduce((a, b) => a + b.labour_percentage, 0) /
-                    report.length
-                  }
-                  duration={1}
-                  decimals={2}
-                  suffix={"%"}
-                />
-                {/* <span>
-                {report.reduce((a, b) => a + b.labour_diff, 0) / report.length}%
-              </span> */}
-              </Fragment>
-            ) : (
-              <span>0.00%</span>
-            )}
-
-            <ReportStatItem
-              data={[...report].reverse().map((item) => item.labour_percentage)}
-              range={[...range].reverse()}
-              color="rgb(253,128,158)"
-            />
-          </li>
-        </ul>
+          </>
+        }
+      />
+      <ul className="flex flex-wrap justify-between list-none mb-4 sm:mb-2 xl:mb-6">
+        <ReportItem
+          name="Shifts"
+          value={report.reduce((a, b) => a + b.total_shifts, 0)}
+          icon="fa-calendar-alt"
+        />
+        <ReportItem
+          name="Labour cost"
+          value={`£${report.reduce((a, b) => a + b.total_cost, 0)}`}
+          icon="fa-briefcase"
+        />
+        <ReportItem
+          name="Revenue"
+          value={`£${report.reduce((a, b) => a + b.revenue, 0)}`}
+          icon="fa-money-bill"
+        />
+        <ReportItem
+          name="Labour percentage"
+          value={`${(
+            report.reduce((a, b) => a + b.labour_percentage, 0) / report.length
+          ).toFixed(2)}
+        %`}
+          icon="fa-percentage"
+        />
+      </ul>
+      <ReportStatItem
+        data={[...report].reverse().map((item) => parseInt(item.total_cost))}
+        data2={[...report].reverse().map((item) => parseInt(item.revenue))}
+        range={[...range].reverse()}
+        color="rgb(239,12,68)"
+      />
+      <div className="overflow-x-auto mb-16">
         <table className="listing">
           <thead>
             <tr>
               <th>Date</th>
-              <th className="hide-mobile">Shifts / Hours</th>
+              <th>Shifts / Hours</th>
               <th>Labour Cost</th>
               <th>Revenue</th>
               <th>Labour Percentage (% Diff)</th>
@@ -282,10 +188,10 @@ const ReportsPage = () => {
               if (report) {
                 return (
                   <tr>
-                    <td className="bold">
+                    <td className="text-black font-bold">
                       {format(parseISO(item.date), "dd/MM/yyyy")}
                     </td>
-                    <td className="hide-mobile">
+                    <td>
                       {item.total_shifts} / {item.total_hours}hrs
                     </td>
                     <td>£{item.total_cost}</td>
@@ -310,7 +216,7 @@ const ReportsPage = () => {
           </tbody>
         </table>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

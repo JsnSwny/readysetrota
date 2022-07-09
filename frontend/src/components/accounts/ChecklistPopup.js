@@ -8,7 +8,6 @@ const ChecklistPopup = () => {
   const [showChecklist, setShowChecklist] = useState(false);
   const checklist = useSelector((state) => state.checklist.items);
   const user = useSelector((state) => state.auth.user);
-  console.log(checklist);
   const getChecklistPercentage = () => {
     let values = checklist.map((item) => item.active);
     return (

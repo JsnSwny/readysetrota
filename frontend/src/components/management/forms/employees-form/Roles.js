@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import SearchField from "../../SearchField";
 import { useSelector } from "react-redux";
 import Multiselect from "multiselect-react-dropdown";
 import Select from "react-select";

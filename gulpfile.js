@@ -1,5 +1,5 @@
 var gulp = require("gulp");
-var sass = require("gulp-sass");
+const sass = require("gulp-sass")(require("sass"));
 var cssnano = require("gulp-cssnano");
 var uglify = require("gulp-uglify");
 var gulpIf = require("gulp-if");
@@ -10,15 +10,20 @@ var cleanCSS = require("gulp-clean-css");
 var wait = require("gulp-wait");
 var uglify = require("gulp-uglify");
 var streamify = require("gulp-streamify");
+const postcss = require("gulp-postcss"); //For Compiling tailwind utilities with tailwind config
+
+function devStyles() {}
 
 gulp.task("sass", function () {
+  const tailwindcss = require("tailwindcss");
   return gulp
     .src("frontend/src/scss/main.scss")
-    .pipe(concat("styles.css"))
-    .pipe(wait(1500))
     .pipe(sassGlob())
     .pipe(sass.sync().on("error", sass.logError))
-    .pipe(cleanCSS())
+    .pipe(
+      postcss([tailwindcss("./tailwind.config.js"), require("autoprefixer")])
+    )
+    .pipe(concat("styles.css"))
     .pipe(gulp.dest("frontend/src/css"));
 });
 

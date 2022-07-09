@@ -45,14 +45,11 @@
     th {
       padding: 20px 15px;
       @include wi-mq(tablet) {
-        font-size: 12px;
-        padding: 10px;
         input[type="checkbox"] {
           width: 10px;
         }
       }
       @include wi-mq(mobile) {
-        font-size: 10px;
         padding: 15px 10px;
         &.no-mobile {
           display: none;
@@ -62,7 +59,6 @@
         }
       }
       @include wi-mq(stamp) {
-        font-size: 8px;
         padding: 10px 5px;
       }
     }
@@ -102,7 +98,6 @@
 
 .listing {
   width: 100%;
-  margin-bottom: 4rem;
   border-collapse: separate;
   border-radius: 5px;
   border-spacing: 0;
@@ -162,23 +157,16 @@
       cursor: pointer;
     }
     font-size: 14px;
-    @include wi-mq(tablet) {
-      font-size: 10px;
-    }
-    @include wi-mq(mobile) {
-      font-size: 8px;
-      padding: 0 1rem;
-    }
-    @include wi-mq(thumb) {
-      font-size: 6px;
-      padding: 0.5rem;
-    }
     font-weight: bold;
     padding: 1rem 2rem;
+    @include wi-mq(mobile) {
+      padding: 1rem;
+    }
   }
   td,
   th {
     text-align: left;
+    min-width: 150px;
     &.center {
       text-align: center;
     }
@@ -194,26 +182,22 @@
     }
   }
   td {
-    padding: 0 2rem;
+    
+    padding: 1rem 2rem;
     height: 50px;
     font-size: 14px;
     color: #7D808B;
-    @include wi-mq(tablet) {
-      font-size: 12px;
+    border-top: 0.5px solid #dee6ee;
+    &.text-black {
+      color: rgba(0,0,0)
     }
     @include wi-mq(mobile) {
-      font-size: 10px;
-      padding: 0 1rem;
-    }
-    @include wi-mq(thumb) {
-      font-size: 8px;
-      padding: 0.5rem;
+      padding: 1rem;
     }
   }
 
   thead {
     background-color: #F9FAFC;
-    // color: white;
     tr {
       td {
         font-weight: bold;
@@ -237,10 +221,6 @@
         .highlight {
           cursor: pointer;
           color: $pink;
-        }
-        &.bold {
-          color: black;
-          font-weight: 400;
         }
       }
       &:last-child {
@@ -356,13 +336,10 @@
   font-weight: normal;
   font-size: 14px;
   color: white;
-  margin: 1rem 1rem 1rem 0;
 }
 
 .list-banner {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid $light-gray-2;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;

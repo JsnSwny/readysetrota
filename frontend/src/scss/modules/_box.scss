@@ -7,42 +7,18 @@
   &__item {
     background-color: white;
     border-radius: 10px;
-    width: calc(25% - 1rem);
-    padding: 2rem 2rem;
+    width: calc(25% - 0.75rem);
+    padding: 2rem;
     @extend .shadow;
-    min-height: 250px;
     // transition: 1s ease width, 0.2s ease opacity;
-    margin-bottom: 2rem;
     // display: block;
     @include wi-mq(laptop-sm) {
-      width: calc(50% - 1rem);
+      width: calc(50% - 0.5rem);
+      margin-bottom: 1rem;
     }
     @include wi-mq(mobile) {
       width: calc(100%);
-    }
-    .fa-expand {
-      cursor: pointer;
-      transition: 0.2s ease color;
-      &:hover {
-        color: $pink;
-      }
-      @include wi-mq(laptop-sm) {
-        display: none;
-      }
-    }
-    &.hide {
-      width: calc(33.33% - 1rem);
-    }
-    &.active {
-      width: 100%;
-      order: 0;
-    }
-    &:not(.active) {
-      order: 1;
-    }
-    span {
-      font-size: 32px;
-      font-weight: bold;
+      margin-bottom: 0.5rem;
     }
     &--orange {
       span {

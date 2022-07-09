@@ -24,6 +24,7 @@ import RotaEmployeeShifts from "./RotaEmployeeShifts";
 import ShiftModal from "./ShiftModal";
 import OpenShifts from "./OpenShifts";
 import Select from "react-select";
+import EmptyView from "../layout/EmptyView";
 
 import QuickAddEmployeeModal from "../management/forms/QuickAddEmployeeModal";
 
@@ -125,6 +126,16 @@ const Rota = () => {
     start: parseISO(date),
     end: parseISO(enddate),
   });
+
+  if (employees.length == 0 && !loading.employees) {
+    return (
+      <EmptyView
+        title="You haven't added any employees yet"
+        subtitle="Once you have created an employee, you will be able to start creating shifts."
+        button={{ title: "Add an employee", link: "/employees/create" }}
+      />
+    );
+  }
 
   return (
     <div>
